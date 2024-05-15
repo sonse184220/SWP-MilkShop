@@ -2,6 +2,10 @@
 
 Project Cửa hàng sữa Mẹ & Bé
 
+Frontend: javascript, HTML, css,  
+Backend: javascript, Nodejs,  
+Database: 
+
 MilkShop/  
 ├── public/    
 │   ├── img/  
