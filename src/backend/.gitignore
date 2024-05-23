@@ -1,0 +1,11 @@
+/.git-ignore
+/srcMAIN
+/node_modules
+package-lock.json
+package.json
+tsconfig.json
+package.json
+package-lock.json
+*.ts
+*TEST.js
+node_modules/.package-lock.json
