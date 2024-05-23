@@ -12,6 +12,7 @@ export async function checkSearchString(req, res, next) {
         .trim()
         .escape()
         .run(req);
+        
     const result = validationResult(req);
     if (!result.isEmpty()) {
         return res.status(400).send({ error: result.array() });
