@@ -5,9 +5,11 @@ import { getProducts } from "../services/dbProducts.js";
 
 const router = Router();
 
-// search product bằng name, lấy data trong query của URL: /product/searchByName?s={...string...}
-router.get("/searchByName", checkSearchString, async (req, res) => {
-    const name = req.query.s as string;
+/* Search product bằng name, lấy data trong query của URL: api/product/search?n={...}
+* Nếu không cung cấp "n" => n mặc định = "" để search toàn bộ product
+*/
+router.get("/search", checkSearchString, async (req, res) => {
+    const name = req.query.n as string;
 
     const products = await getProducts(name);
     res.status(200).send(products);

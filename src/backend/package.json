@@ -5,7 +5,8 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon node ./src/index.js",
+    "start": "nodemon --watch src --ext js --exec node ./src/index.js",
+    "ts": "nodemon --watch TEST --ext ts --exec node --no-warnings=ExperimentalWarning --loader=ts-node/esm ./TEST/srcTS/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
