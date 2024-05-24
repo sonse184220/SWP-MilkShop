@@ -7,31 +7,3 @@ Backend: javascript, Nodejs, Express
 Database: MySQL
 
 MilkShop/  
-├── public/    
-│   ├── img/  
-│   ├── css/  
-│   └── .html  
-├── src/  
-│   ├── backend/  
-│   │   ├── controllers/            # Cho file API  
-│   │   │   ├──   
-│   │   ├── models/  
-│   │   │   └──   
-│   │   ├── routes/  
-│   │   │   ├──       
-│   │   ├── services/  
-│   │   │   ├──   
-│   │   ├── utils/  
-│   │   │   ├──   
-│   ├── frontend/  
-│   │   ├──   
-│   │   ├──   
-│   │   │   └──   
-│   │   ├──   
-│   │   │   └──   
-│   │   ├──   
-│   │   │   └──   
-│   │   ├──   
-│   │   │   └──   
-└── README.md  
-  
