@@ -1,5 +1,5 @@
 import express from "express";
-import routeProducts from "./routes/routeProducts.js";
+import productsRouter from "./routes/productsRouter.js";
 
 const PORT = 8080; // tùy chọn cổng kết nối localhost:xxxx
 
@@ -12,7 +12,7 @@ app.use(express.json()); // dùng json
 /***** API không bảo mật ****/
 
 // API liên quan đến product
-app.use("/api/product", routeProducts);
+app.use("/api/products", productsRouter);
 
 
 

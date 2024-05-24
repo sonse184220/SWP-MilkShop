@@ -1,7 +1,7 @@
 import express, { Request, Response, NextFunction } from "express";
 
-import routeProducts from "./routes/routeProducts.js";
-import routeBlogs from "./routes/routeBlogs.js";
+import productsRouter from "./routes/productsRouter.js";
+import blogsRouter from "./routes/blogsRouter.js";
 
 const PORT = 3300; // tùy chọn cổng kết nối localhost:xxxx
 
@@ -14,10 +14,10 @@ app.use(express.json()); // dùng json
 /***** API không bảo mật ****/
 
 // API liên quan đến products
-app.use("/api/product", routeProducts);
+app.use("/api/products", productsRouter);
 
 // API liên quan đến blogs
-app.use("/api/blog", routeBlogs);
+app.use("/api/blogs", blogsRouter);
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

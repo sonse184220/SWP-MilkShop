@@ -1,7 +1,7 @@
 import { query, validationResult, matchedData } from 'express-validator';
 
-// kiểm tra string đầu vào, đảm bảo không undefined hay null và không có dấu cách 2 bên
-export async function checkSearchString(req, res, next) {
+// kiểm tra data đầu vào cho search product
+export async function checkPSearchString(req, res, next) {
     await query("n")
         .customSanitizer((value) => {
         if (value === undefined || null) {
