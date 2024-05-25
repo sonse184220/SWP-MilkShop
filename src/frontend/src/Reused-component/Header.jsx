@@ -1,7 +1,8 @@
+import './index.css';
 export function Header() {
     return (
         <header>
-            <div className="header-content"> 
+            <div className="header-content">
                 <h3 className="site-name"><a href="index.html">Home</a></h3>
                 <nav className="navigate-content">
                     <a href="#">Milk-Type</a>
@@ -10,7 +11,7 @@ export function Header() {
                     <button onClick={() => ('/login')}>Login</button>
                 </nav>
             </div>
-            <hr/>
+            <hr />
         </header>
     );
 }
