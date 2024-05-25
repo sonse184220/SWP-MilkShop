@@ -1,0 +1,46 @@
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Distribute space between items */
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.header-content h3 {
+  margin: 0 20px 0 0; /* Adjust margin as needed */
+  padding-left: 30px;
+}
+
+.site-name a{
+  color: black;
+}
+
+
+.navigate-content {
+  display: flex;
+  gap: 30px; /* Space between navigation links */
+  padding-right: 30px;
+  
+}
+
+.navigate-content a {
+  padding: 10px;
+  cursor: pointer;
+  color: black;
+}
+
+.navigate-content button{
+  background-color: hsl(248, 92%, 65%);
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 75px;
+}
+
+.navigate-content button:hover {
+  color: black;
+}
+
+.navigate-content a:hover{
+  color: hsl(248, 92%, 65%);
+}
