@@ -1,15 +1,15 @@
 import express from "express";
-import routeProducts from "./routes/routeProducts.js";
-import routeBlogs from "./routes/routeBlogs.js";
+import productsRouter from "./routes/productsRouter.js";
+import blogsRouter from "./routes/blogsRouter.js";
 const PORT = 3300; // tùy chọn cổng kết nối localhost:xxxx
 const app = express(); // khởi chạy express
 app.use(express.json()); // dùng json
 /***** API có bảo mật ********/
 /***** API không bảo mật ****/
 // API liên quan đến products
-app.use("/api/product", routeProducts);
+app.use("/api/products", productsRouter);
 // API liên quan đến blogs
-app.use("/api/blog", routeBlogs);
+app.use("/api/blogs", blogsRouter);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // bắt error bị lọt qua các check
 app.use((err, req, res, next) => {
