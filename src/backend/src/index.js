@@ -1,6 +1,6 @@
 import express from "express";
 
-import productsRouter from "./routes/productsRouter.js";
+import { productsRouter } from "./routes/productRoutes.js";
 import cors from "cors"; // Import CORS middleware
 
 
