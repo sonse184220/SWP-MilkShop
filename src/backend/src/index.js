@@ -1,18 +1,14 @@
 import express from "express";
-import productsRouter from "./routes/productsRouter.js";
+import { productRoutes } from "./routes/productRoutes.js";
 
 const PORT = 8080; // tùy chọn cổng kết nối localhost:xxxx
 
 const app = express(); // khởi chạy express
 app.use(express.json()); // dùng json
 
-/***** API có bảo mật ********/
-
-
-/***** API không bảo mật ****/
 
 // API liên quan đến product
-app.use("/api/products", productsRouter);
+app.use("/api/products", productRoutes);
 
 
 
@@ -31,7 +27,7 @@ app.use((err, req, res, next) => {
     });
 });
 
-// đảm bảo server khởi chạy
+// khởi chạy server 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });

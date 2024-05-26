@@ -13,4 +13,4 @@ router.get("/search", async (req, res) => {
 
 
 // export router
-export default router;
+export { router as blogRoutes};

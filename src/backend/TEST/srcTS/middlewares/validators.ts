@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { body, query, validationResult, matchedData } from 'express-validator';
 
 // kiểm tra data đầu vào cho search product
-export async function checkPSearchString(req: Request, res: Response, next: NextFunction) {
+export async function checkProductSearch(req: Request, res: Response, next: NextFunction) {
   await query("n")
   .if((value) => {value == null})
   .customSanitizer(() => {return ""})

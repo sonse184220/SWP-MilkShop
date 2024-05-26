@@ -1,15 +1,13 @@
 import express from "express";
-import productsRouter from "./routes/productsRouter.js";
-import blogsRouter from "./routes/blogsRouter.js";
+import { productRoutes } from "./routes/productRoutes.js";
+import { blogRoutes } from "./routes/blogRoutes.js";
 const PORT = 3300; // tùy chọn cổng kết nối localhost:xxxx
 const app = express(); // khởi chạy express
 app.use(express.json()); // dùng json
-/***** API có bảo mật ********/
-/***** API không bảo mật ****/
 // API liên quan đến products
-app.use("/api/products", productsRouter);
+app.use("/api/products", productRoutes);
 // API liên quan đến blogs
-app.use("/api/blogs", blogsRouter);
+app.use("/api/blogs", blogRoutes);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // bắt error bị lọt qua các check
 app.use((err, req, res, next) => {
@@ -22,7 +20,7 @@ app.use((err, req, res, next) => {
         message,
     });
 });
-// đảm bảo server khởi chạy
+// khởi chạy server 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
