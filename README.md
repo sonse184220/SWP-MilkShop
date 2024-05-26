@@ -6,4 +6,4 @@ Frontend: javascript, HTML, css, REACT
 Backend: javascript, Nodejs, Express  
 Database: MySQL
 
-MilkShop/  
+MilkShop
