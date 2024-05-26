@@ -4,6 +4,9 @@
   justify-content: space-between;
   padding-top: 10px;
   padding-bottom: 10px;
+  border-radius: 5px;
+  background-color: hsl(0, 0%, 97%);
+  border: 1px solid hsl(0, 0%, 91%);
 }
 
 .header-content h3 {
@@ -47,9 +50,9 @@
 }
 
 footer {
-  background-color: #f8f8f8;
+  background-color: hsl(0, 0%, 97%);
   padding: 20px;
-  border: 1px solid #e7e7e7;
+  border: 1px solid hsl(0, 0%, 91%);
   border-radius: 5px;
   padding-bottom: 20px;
 }
