@@ -1,3 +1,4 @@
+//Header.jsx
 .header-content {
   display: flex;
   align-items: center;
@@ -49,6 +50,7 @@
   color: hsl(248, 92%, 65%);
 }
 
+//Footer.jsx
 footer {
   background-color: hsl(0, 0%, 97%);
   padding: 20px;
