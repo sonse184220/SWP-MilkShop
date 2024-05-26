@@ -1,3 +1,4 @@
+//Header.jsx
 .header-content {
   display: flex;
   align-items: center;
@@ -46,50 +47,5 @@
 }
 
 .navigate-content a:hover{
-  color: hsl(248, 92%, 65%);
-}
-
-footer {
-  background-color: hsl(0, 0%, 97%);
-  padding: 20px;
-  border: 1px solid hsl(0, 0%, 91%);
-  border-radius: 5px;
-  padding-bottom: 20px;
-}
-
-.footer-container {
-  display: flex;
-  justify-content: space-between;
-}
-
-.footer-sitename {
-  display: flex;
-  flex-direction: column;
-  margin-left: 30px;
-}
-
-.footer-topics {
-  display: flex;
-  gap: 50px;
-  justify-content: space-between;
-  margin-right: 50px;
-  width: 50%;
-}
-
-.topic-list ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.topic-list li {
-  margin-bottom: 10px;
-}
-
-.topic-list h4 {
-  margin-bottom: 30px;
-}
-
-.topic-list a:hover{
   color: hsl(248, 92%, 65%);
 }

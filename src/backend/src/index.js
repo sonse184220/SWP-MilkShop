@@ -1,5 +1,8 @@
 import express from "express";
-import { productRoutes } from "./routes/productRoutes.js";
+
+import productsRouter from "./routes/productsRouter.js";
+import cors from "cors"; // Import CORS middleware
+
 
 const PORT = 8080; // tùy chọn cổng kết nối localhost:xxxx
 
@@ -8,7 +11,11 @@ app.use(express.json()); // dùng json
 
 
 // API liên quan đến product
-app.use("/api/products", productRoutes);
+
+// Enable CORS for specific origin
+app.use(cors({ origin: 'http://localhost:3000' }));
+app.use("/api/products", productsRouter);
+
 
 
 
@@ -31,3 +38,7 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+
+// Enable CORS for specific origin
+app.use(cors({ origin: 'http://localhost:3000' }));
+
