@@ -1,18 +1,15 @@
 import { query, validationResult, matchedData } from 'express-validator';
 
 // kiểm tra data đầu vào cho search product
-export async function checkPSearchString(req, res, next) {
+export async function checkProductSearch(req, res, next) {
     await query("n")
-        .customSanitizer((value) => {
-        if (value === undefined || null) {
-            value = "";
-        }
-        return value;
-    })
+        .if((value) => { value == null; })
+        .customSanitizer(() => { return ""; })
+        .run(req);
+    await query("n")
         .trim()
         .escape()
         .run(req);
-        
     const result = validationResult(req);
     if (!result.isEmpty()) {
         return res.status(400).send({ error: result.array() });

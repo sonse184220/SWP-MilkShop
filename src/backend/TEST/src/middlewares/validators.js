@@ -1,8 +1,8 @@
 import { query, validationResult, matchedData } from 'express-validator';
 // kiểm tra data đầu vào cho search product
-export async function checkPSearchString(req, res, next) {
+export async function checkProductSearch(req, res, next) {
     await query("n")
-        .if((value) => { value === null || undefined; })
+        .if((value) => { value == null; })
         .customSanitizer(() => { return ""; })
         .run(req);
     await query("n")
