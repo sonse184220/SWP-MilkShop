@@ -25,6 +25,8 @@ function App() {
           {/* <div><Test /></div> */}
           <br />
           <div style={{ with: '100%' }}><Footer /></div>
+          <br />
+          <div style={{ with: '100%' }}><BlogList /></div>
         </div >
       )}
     </>
