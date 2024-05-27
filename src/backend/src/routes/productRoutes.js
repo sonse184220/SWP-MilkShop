@@ -33,4 +33,4 @@ router.get("/search", checkProductSearch, async (req, res) => {
 
 
 // export router
-export { router as productsRouter };
+export { router as productRoutes };
