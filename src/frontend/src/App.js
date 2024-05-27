@@ -3,18 +3,29 @@
 import Header from './Header/Header.jsx';
 import Footer from './Footer/Footer.jsx';
 import Test from './Test-GetSearchAPI.js';
+import { useState } from 'react';
+import Login from './Login/Login.js';
 
 function App() {
+  const [isLogin, setIsLogin] = useState(false)
+
+  const handleLogin = () => {
+    setIsLogin(true)
+  }
+
   return (
-    <>    
-    <div>
-      <div><Header /></div>
-      <br />
-      <div><Test /></div>
-      <br />
-      <div><Footer /></div>      
-    </div>
-    
+    <>
+      {!isLogin && <Login onLogin={handleLogin} />}
+
+      {isLogin && (
+        <div>
+          <div style={{ with: '100%' }}><Header /></div>
+          <br />
+          {/* <div><Test /></div> */}
+          <br />
+          <div style={{ with: '100%' }}><Footer /></div>
+        </div >
+      )}
     </>
 
   );

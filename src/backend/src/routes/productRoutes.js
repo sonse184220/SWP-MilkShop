@@ -25,7 +25,7 @@ router.get("/id/:id", checkProductId, async (req, res) => {
  */
 router.get("/search", checkProductSearch, async (req, res) => {
     const name = req.query.n;
-    
+
     const products = await productService.getProducts(name);
     res.status(200).send(products);
 });
@@ -33,4 +33,4 @@ router.get("/search", checkProductSearch, async (req, res) => {
 
 
 // export router
-export {router as productRoutes};
+export { router as productsRouter };
