@@ -1,6 +1,7 @@
 import express from "express";
 
-import productsRouter from "./routes/productsRouter.js";
+import { productRoutes } from "./routes/productRoutes.js";
+import { blogRoutes } from "./routes/blogRoutes.js";
 import cors from "cors"; // Import CORS middleware
 
 
@@ -14,7 +15,11 @@ app.use(express.json()); // dùng json
 
 // Enable CORS for specific origin
 app.use(cors({ origin: 'http://localhost:3000' }));
-app.use("/api/products", productsRouter);
+app.use("/api/products", productRoutes);
+
+
+// API liên quan đến blogs
+app.use("/api/blogs", blogRoutes);
 
 
 

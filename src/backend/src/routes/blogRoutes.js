@@ -12,10 +12,10 @@ const blogService = new BlogService();
  */
 router.get("/id/:id", checkBlogId, async (req, res) => {
     const id = req.params.id;
-    
+
     const blog = await blogService.getBlog(id);
     if (blog.length === 0) {
-        return res.status(404).send({error: "Blog not found!"});
+        return res.status(404).send({ error: "Blog not found!" });
     }
     res.status(200).send(blog);
 });
@@ -25,13 +25,13 @@ router.get("/id/:id", checkBlogId, async (req, res) => {
  * - "n" là tên của blog. Nếu không cung cấp "n" => n mặc định = "" để search toàn bộ blog
  */
 router.get("/search", checkBlogSearch, async (req, res) => {
-    const name = req.query.n as string;
+    const name = req.query.n;
 
     const blogs = await blogService.searchBlogs(name);
     res.status(200).send(blogs);
-})
+});
 
 
 
 // export router
-export { router as blogRoutes};
+export { router as blogRoutes };
