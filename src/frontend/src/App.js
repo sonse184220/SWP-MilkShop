@@ -3,6 +3,7 @@
 import Header from './Header/Header.jsx';
 import Footer from './Footer/Footer.jsx';
 import Test from './Test-GetSearchAPI.js';
+import BlogList from './Blog/BlogList.jsx';
 import { useState } from 'react';
 import Login from './Login/Login.js';
 
