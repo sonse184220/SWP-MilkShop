@@ -1,6 +1,7 @@
 import express from "express";
 
-import { productsRouter } from "./routes/productRoutes.js";
+import { productRoutes } from "./routes/productRoutes.js";
+import { blogRoutes } from "./routes/blogRoutes.js";
 import cors from "cors"; // Import CORS middleware
 
 
@@ -9,12 +10,14 @@ const PORT = 8080; // tùy chọn cổng kết nối localhost:xxxx
 const app = express(); // khởi chạy express
 app.use(express.json()); // dùng json
 
-
-// API liên quan đến product
-
 // Enable CORS for specific origin
 app.use(cors({ origin: 'http://localhost:3000' }));
-app.use("/api/products", productsRouter);
+
+// API liên quan đến product
+app.use(productRoutes);
+
+// API liên quan đến blogs
+app.use(blogRoutes);
 
 
 
