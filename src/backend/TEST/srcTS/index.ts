@@ -9,10 +9,10 @@ const app = express(); // khởi chạy express
 app.use(express.json()); // dùng json
 
 // API liên quan đến products
-app.use("/api/products", productRoutes);
+app.use(productRoutes);
 
 // API liên quan đến blogs
-app.use("/api/blogs", blogRoutes);
+app.use(blogRoutes);
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

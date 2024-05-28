@@ -5,7 +5,7 @@ import Footer from './Footer/Footer.jsx';
 import Test from './Test-GetSearchAPI.js';
 import BlogList from './Blog/BlogList.jsx';
 import { useState } from 'react';
-import Login from './Login/Login.js';
+import Login from './Login/Login.jsx';
 
 function App() {
   const [isLogin, setIsLogin] = useState(false)

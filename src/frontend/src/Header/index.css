@@ -1,4 +1,4 @@
-//Header.jsx
+/* //Header.jsx */
 .header-content {
   display: flex;
   align-items: center;
@@ -15,7 +15,7 @@
   padding-left: 30px;
 }
 
-.site-name a{
+.site-name a {
   color: black;
   text-decoration: none;
 }
@@ -25,7 +25,7 @@
   display: flex;
   gap: 30px;
   padding-right: 30px;
-  
+
 }
 
 .navigate-content a {
@@ -34,7 +34,7 @@
   color: black;
 }
 
-.navigate-content button{
+.navigate-content button {
   background-color: hsl(248, 92%, 65%);
   color: white;
   border-radius: 5px;
@@ -46,6 +46,6 @@
   color: black;
 }
 
-.navigate-content a:hover{
+.navigate-content a:hover {
   color: hsl(248, 92%, 65%);
 }
