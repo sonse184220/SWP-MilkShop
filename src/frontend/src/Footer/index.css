@@ -1,4 +1,4 @@
-//Footer.jsx
+/* //Footer.jsx */
 footer {
   background-color: hsl(0, 0%, 97%);
   padding: 20px;
@@ -21,9 +21,9 @@ footer {
 .footer-topics {
   display: flex;
   gap: 50px;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   margin-right: 50px;
-  width: 50%;
+  width: auto;
 }
 
 .topic-list ul {
@@ -40,6 +40,6 @@ footer {
   margin-bottom: 30px;
 }
 
-.topic-list a:hover{
+.topic-list a:hover {
   color: hsl(248, 92%, 65%);
 }

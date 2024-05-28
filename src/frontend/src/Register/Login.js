@@ -26,9 +26,12 @@ class Login extends Component {
         const showLogin = this.state.showLoginForm
         return (
             <div className="login-page">
+                <div>Login</div>
                 <div className="form">
+
                     {showLogin ? (
                         <form className="login-form" onSubmit={this.handleSubmit}>
+
                             <input type="text" placeholder="username" />
                             <input type="password" placeholder="password" />
                             <button type="submit">login</button>
