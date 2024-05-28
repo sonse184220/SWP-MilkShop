@@ -1,4 +1,3 @@
-// NodeJS-Session01/services/authService.js
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const connection = require('../utils/db');
@@ -43,7 +42,4 @@ const loginUser = (userData, callback) => {
     });
 };
 
-module.exports = {
-    registerUser,
-    loginUser
-};
+module.exports = { registerUser, loginUser };

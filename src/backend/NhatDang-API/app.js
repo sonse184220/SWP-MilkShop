@@ -11,6 +11,7 @@ app.use(bodyParser.json());
 app.use('/auth', authRoutes);
 app.use('/product', productRoutes);
 
+
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });

@@ -1,5 +1,13 @@
 const connection = require('../utils/db');
 
+const getAllProducts = (callback) => {
+    const query = 'SELECT * FROM PRODUCT';
+    connection.query(query, (err, results) => {
+        if (err) return callback(err);
+        callback(null, results);
+    });
+};
+
 const getProductById = (productId, callback) => {
     const query = 'SELECT * FROM PRODUCT WHERE ProductID = ?';
     connection.query(query, [productId], (err, results) => {
@@ -9,4 +17,4 @@ const getProductById = (productId, callback) => {
     });
 };
 
-module.exports = { getProductById };
+module.exports = { getAllProducts, getProductById };
