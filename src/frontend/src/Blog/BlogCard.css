@@ -1,0 +1,43 @@
+.blog-card {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px hsla(0, 0%, 0%, 0.102);
+  padding: 20px;
+  margin: 10px;
+  text-align: left;
+  flex: 0 0 auto;
+  width: 19%;
+}
+
+.blog-card blockquote {
+  font-style: italic;
+  color: hsl(0, 0%, 33%);
+}
+
+.author {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.author-image {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+
+.author-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.author-info h4 {
+  margin: 0;
+}
+
+.author-info p {
+  margin: 0;
+  color: hsl(0, 0%, 47%);
+}
+
