@@ -7,7 +7,6 @@ require('dotenv').config();
 const registerUser = (userData, req, callback) => {
     const { UserID, Password, Name, Email, Phone, Address } = userData;
 
-
     const checkQuery = 'SELECT * FROM MEMBER WHERE UserID = ? OR Email = ? OR Phone = ?';
     connection.query(checkQuery, [UserID, Email, Phone], (err, results) => {
         if (err) return callback(err);
@@ -48,6 +47,33 @@ const registerUser = (userData, req, callback) => {
     });
 };
 
+const loginUser = (userData, callback) => {
+    const { UserID, Password } = userData;
+
+    const query = 'SELECT * FROM MEMBER WHERE UserID = ?';
+    connection.query(query, [UserID], (err, results) => {
+        if (err) return callback(err);
+
+        if (results.length === 0) {
+            return callback(null, { message: 'Invalid UserID', status: 401 });
+        }
+
+        const user = results[0];
+
+        bcrypt.compare(Password, user.Password, (err, isMatch) => {
+            if (err) return callback(err);
+
+            if (!isMatch) {
+                return callback(null, { message: 'Invalid Password', status: 401 });
+            }
+
+            const token = jwt.sign({ userId: user.UserID }, process.env.JWT_SECRET, { expiresIn: '1h' });
+            const { Password, ...userWithoutPassword } = user;
+            callback(null, { message: 'Login successful', token, user: userWithoutPassword });
+        });
+    });
+};
+
 const verifyEmail = (token, callback) => {
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -78,5 +104,6 @@ const verifyEmail = (token, callback) => {
 
 module.exports = {
     registerUser,
+    loginUser,
     verifyEmail
 };

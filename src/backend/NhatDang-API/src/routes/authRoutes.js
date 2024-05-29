@@ -1,6 +1,6 @@
 const express = require('express');
-const { registerUser, verifyEmail } = require('../services/authService');
-const { checkRegister } = require('../middlewares/validationMiddleware');
+const { registerUser, loginUser, verifyEmail } = require('../services/authService');
+const { checkRegister, checkLogin } = require('../middlewares/validationMiddleware');
 require('dotenv').config();
 
 const router = express.Router();
@@ -10,6 +10,14 @@ router.post('/register', checkRegister, (req, res) => {
         if (err) return res.status(500).json({ error: err.message });
         if (result.status) return res.status(result.status).json({ message: result.message });
         res.status(201).json(result);
+    });
+});
+
+router.post('/login', checkLogin, (req, res) => {
+    loginUser(req.body, (err, result) => {
+        if (err) return res.status(500).json({ error: err.message });
+        if (result.status) return res.status(result.status).json({ message: result.message });
+        res.status(200).json(result);
     });
 });
 
