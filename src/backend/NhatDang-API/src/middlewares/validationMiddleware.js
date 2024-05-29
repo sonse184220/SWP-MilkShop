@@ -35,7 +35,6 @@ const checkRegister = [
     }
 ];
 
-
 const checkLogin = [
     body('UserID')
         .trim()
@@ -55,7 +54,43 @@ const checkLogin = [
     }
 ];
 
+const checkResetPasswordRequest = [
+    body('email')
+        .trim()
+        .exists().withMessage('Email is required')
+        .isEmail().withMessage('Email is invalid'),
+    (req, res, next) => {
+        const result = validationResult(req);
+        if (!result.isEmpty()) {
+            return res.status(400).send({ error: result.array() });
+        }
+        Object.assign(req.body, matchedData(req));
+        next();
+    }
+];
+
+const checkResetPassword = [
+    body('token')
+        .trim()
+        .exists().withMessage('Token is required')
+        .notEmpty().withMessage('Token cannot be empty'),
+    body('newPassword')
+        .trim()
+        .exists().withMessage('New password is required')
+        .isLength({ min: 6 }).withMessage('New password must be at least 6 characters long'),
+    (req, res, next) => {
+        const result = validationResult(req);
+        if (!result.isEmpty()) {
+            return res.status(400).send({ error: result.array() });
+        }
+        Object.assign(req.body, matchedData(req));
+        next();
+    }
+];
+
 module.exports = {
     checkRegister,
-    checkLogin
+    checkLogin,
+    checkResetPasswordRequest,
+    checkResetPassword
 };
