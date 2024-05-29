@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import BlogCard from './BlogCard';
-import './index.css'
+import './BlogList.css';
 
 const BlogList = () => {
   const blogListRef = useRef(null);
