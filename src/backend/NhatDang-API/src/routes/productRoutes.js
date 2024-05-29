@@ -1,6 +1,13 @@
 const express = require('express');
-const { getProductById } = require('../services/productService');
+const { getAllProducts, getProductById } = require('../services/productService');
 const router = express.Router();
+
+router.get('/', (req, res) => {
+    getAllProducts((err, products) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.status(200).json(products);
+    });
+});
 
 router.get('/:productId', (req, res) => {
     const { productId } = req.params;
