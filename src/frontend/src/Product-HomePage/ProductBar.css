@@ -30,10 +30,10 @@
     border-radius: 4px;
 }
 
-/* .product-preview img {
+.product-preview img {
     max-width: 100%;
-    height: auto;
-} */
+    height: 60%;
+}
 
 .product-preview h3 {
     margin-top: 10px;

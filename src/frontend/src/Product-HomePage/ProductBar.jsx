@@ -58,7 +58,7 @@ const ProductBar = () => {
             <div className="product-container">
                 {products.map((product) => (
                     <div key={product.id} className="product-preview">
-                        <img src={product.imageUrl} alt={product.name} />
+                        <img src={`/img/${product.id}.jpg`} alt={product.name} />
                         <h3>{product.name}</h3>
                         <p>{product.description}</p>
                         <p>{product.price}</p>
