@@ -7,6 +7,7 @@ import BlogList from './Blog/BlogList.jsx';
 import { useState } from 'react';
 import Login from './Login/Login.jsx';
 import ProductBar from './Product-HomePage/ProductBar.jsx';
+import HomePage from './Member/HomePage.jsx';
 
 function App() {
   const [isLogin, setIsLogin] = useState(false)
@@ -20,16 +21,7 @@ function App() {
       {!isLogin && <Login onLogin={handleLogin} />}
 
       {isLogin && (
-        <div>
-          <div style={{ with: '100%' }}><Header /></div>
-          <br />
-          {/* <div><Test /></div> */}
-          <br />
-          <div style={{ with: '100%' }}><Footer /></div>
-          <br />
-          <div style={{ with: '100%' }}><BlogList /></div>
-          < ProductBar />
-        </div >
+        <HomePage />
       )
       }
 

@@ -10,12 +10,6 @@
     margin-top: 0;
 }
 
-/* .view-all {
-    float: right;
-    text-decoration: none;
-    color: #007bff;
-} */
-
 .product-container {
     border-radius: 20px;
     display: grid;
@@ -63,6 +57,5 @@ a {
 }
 
 .header a {
-    align-items: right;
-    padding-right: 0;
+    margin-left: 70%;
 }
