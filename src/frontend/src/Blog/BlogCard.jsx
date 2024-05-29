@@ -1,6 +1,6 @@
 
 import PropTypes from 'prop-types';
-
+import "./BlogCard.css";
 
 const BlogCard = ({ title, authorName, authorDescription, authorImage }) => {
   return (
