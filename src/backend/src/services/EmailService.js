@@ -6,14 +6,26 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export class EmailService {
+    constructor() {
+        this.transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS
+            },
+            tls: {
+                rejectUnauthorized: false
+            }
+        });
+    }
 
-    transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS
-        }
-    });
+    // transporter = nodemailer.createTransport({
+    //     service: 'gmail',
+    //     auth: {
+    //         user: process.env.EMAIL_USER,
+    //         pass: process.env.EMAIL_PASS
+    //     }
+    // });
 
     sendResetPasswordEmail = (email, token, req) => {
         const url = `${req.protocol}://${req.get('host')}/reset-password?token=${token}`;
@@ -24,7 +36,7 @@ export class EmailService {
             text: `You requested to reset your password. Click the link below to reset your password:\n\n${url}`
         };
 
-        return transporter.sendMail(mailOptions)
+        return this.transporter.sendMail(mailOptions)
             .then(info => {
                 console.log(`Email sent: ${info.response}`);
             })
@@ -42,7 +54,7 @@ export class EmailService {
             text: `Thank you for registering and join our milk shop. Please verify your email by clicking the link below:\n\n${url}\n\nYour details:\nUserID: ${userId}\nPhone: ${phone}\nEmail: ${email}`
         };
 
-        return transporter.sendMail(mailOptions)
+        return this.transporter.sendMail(mailOptions)
             .then(info => {
                 console.log(`Verification email sent: ${info.response}`);
             })
