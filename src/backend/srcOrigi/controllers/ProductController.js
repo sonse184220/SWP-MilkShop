@@ -1,7 +1,7 @@
-import { poolConnect, connection } from "../utils/dbConnection.js";
 import { ProductService } from "../services/ProductService.js";
 
 export class ProductController {
+
     constructor() {
         this.productService = new ProductService();
     }
@@ -23,13 +23,4 @@ export class ProductController {
         }
         res.status(200).send(products);
     };
-
-    getAllProducts = (req, res) => {
-        const query = 'SELECT * FROM PRODUCT';
-        connection.query(query, (err, results) => {
-            if (err) return res.status(500).json({ error: err.message });
-            res.status(200).json(results);
-        });
-    };
-
 }

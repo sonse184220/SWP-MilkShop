@@ -6,11 +6,6 @@ import { ProductController } from "../controllers/ProductController.js";
 const router = Router();
 const productController = new ProductController();
 
-/**
- * 
- */
-router.get('/', productController.getAllProducts);
-
 /** URL: localhost:xxxx/api/products/id/{...}
  * Lấy thông tin 1 product bằng ID
  * - ID không được phép để trống, phải cung cấp ít nhất 1 ID nếu không sẽ trả về lỗi

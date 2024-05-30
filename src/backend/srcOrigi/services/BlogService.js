@@ -1,4 +1,4 @@
-import { poolConnect, connection } from "../utils/dbConnection.js";
+import { poolConnect } from "../utils/dbConnection.js";
 
 
 export class BlogService {

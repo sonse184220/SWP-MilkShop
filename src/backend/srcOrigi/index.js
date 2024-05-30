@@ -1,21 +1,14 @@
 import express from "express";
 
-const bodyParser = require('body-parser');
-const authRoutes = require('./routes/authRoutes');
-const resetPasswordRoutes = require('./routes/resetPasswordRoutes');
-const brandRoutes = require('./routes/brandRoutes');
-require('dotenv').config();
-
 import { productRoutes } from "./routes/productRoutes.js";
 import { blogRoutes } from "./routes/blogRoutes.js";
 import cors from "cors"; // Import CORS middleware
 
 
-const port = process.env.PORT || 3000; // cổng kết nối localhost:xxxx
+const PORT = 8080; // tùy chọn cổng kết nối localhost:xxxx
 
 const app = express(); // khởi chạy express
 app.use(express.json()); // dùng json
-app.use(bodyParser.json());
 
 // Enable CORS for specific origin
 app.use(cors({ origin: 'http://localhost:3000' }));
@@ -25,11 +18,6 @@ app.use(productRoutes);
 
 // API liên quan đến blogs
 app.use(blogRoutes);
-
-app.use('/auth', authRoutes);
-app.use('/product', productRoutes);
-app.use('/reset-password', resetPasswordRoutes);
-app.use('/brand', brandRoutes);
 
 
 

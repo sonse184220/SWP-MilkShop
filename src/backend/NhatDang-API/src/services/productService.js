@@ -13,7 +13,7 @@ const getProductById = (productId, callback) => {
     connection.query(query, [productId], (err, results) => {
         if (err) return callback(err);
         if (results.length === 0) return callback(null, { message: 'Product not found', status: 404 });
-        callback(null, results[0]);
+        callback(null, results[0]); 
     });
 };
 

@@ -1,6 +1,7 @@
 import { BlogService } from "../services/BlogService.js";
 
 export class BlogController {
+
     constructor() {
         this.blogService = new BlogService();
     }

@@ -1,4 +1,4 @@
-import { poolConnect, connection } from "../utils/dbConnection.js";
+import { poolConnect } from "../utils/dbConnection.js";
 
 
 export class ProductService {
@@ -14,14 +14,4 @@ export class ProductService {
         const [products] = await poolConnect.query('SELECT * FROM product WHERE Name LIKE ?', [search]);
         return products;
     }
-
-    // 
-    getAllProducts = (callback) => {
-        const query = 'SELECT * FROM PRODUCT';
-        connection.query(query, (err, results) => {
-            if (err) return callback(err);
-            callback(null, results);
-        });
-    };
-
 }
