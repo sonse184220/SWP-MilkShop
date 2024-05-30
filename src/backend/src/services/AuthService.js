@@ -1,9 +1,11 @@
 import { poolConnect, connection } from "../utils/dbConnection.js";
 import { EmailService } from "./EmailService.js";
 
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-require('dotenv').config();
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export class AuthService {
     constructor() {

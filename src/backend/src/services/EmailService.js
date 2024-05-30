@@ -1,7 +1,9 @@
 import { poolConnect, connection } from "../utils/dbConnection.js";
 
-const nodemailer = require('nodemailer');
-require('dotenv').config();
+import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export class EmailService {
 
