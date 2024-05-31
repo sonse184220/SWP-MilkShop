@@ -10,7 +10,7 @@ const Login = ({ onLogin }) => {
         e.preventDefault();
         // Perform login validation or API call here
         // If the login is successful, call the onLogin function passed down as a prop
-        onLogin();
+        onLogin(false);
     };
 
     const Toggle = () => {
