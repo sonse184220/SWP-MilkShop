@@ -2,15 +2,20 @@ import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import './Register.css'
 
+//prop showLogin chuyền từ App.js, 
+//dùng để set showLogin state
 const Register = ({ showLogin }) => {
     const navigate = useNavigate();
 
+    //Chuyển state showLogin trong app.js (Route '/login-register')
+    //Chuyển sang màn hình Login.jsx lúc bấm Sign In
     const handleShowLogin = (event) => {
         event.preventDefault();
         navigate('/login-register');
         showLogin(false);
     };
 
+    //component register
     return (
         <div className="wrapper" >
             <div class="inner">

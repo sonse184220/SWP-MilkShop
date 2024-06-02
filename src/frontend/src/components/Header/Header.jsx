@@ -3,9 +3,12 @@ import './Header.css';
 import { useNavigate } from "react-router-dom";
 
 
-
+//prop onLogin chuyền từ app.js -> HomePage.jsx -> Header.jsx
+//dùng để set state isLogin
 export function Header({ onLogin }) {
     const navigate = useNavigate();
+
+    //Chuyển sang Route('/login-register') lúc bấm nút logout
     const showLogin = (event) => {
         event.preventDefault();
         navigate('/login-register')

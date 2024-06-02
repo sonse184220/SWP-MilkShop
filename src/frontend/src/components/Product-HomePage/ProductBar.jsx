@@ -2,6 +2,7 @@ import React from 'react';
 import './ProductBar.css';
 
 const ProductBar = () => {
+    //List dể ví dụ cho thanh product bar
     const products = [
         {
             id: 1,

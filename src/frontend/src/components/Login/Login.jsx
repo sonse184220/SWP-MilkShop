@@ -3,16 +3,22 @@ import './Login.css'
 import { useNavigate } from "react-router-dom";
 
 
-
+//prop chuyền từ app.js
+//onLogin dùng để set state isLogin
+//showLogin dùng để set state showLogin
 const Login = ({ onLogin, showLogin }) => {
     const navigate = useNavigate();
 
+    //Chuyển state isLogin trong app.js (Route '/')
+    //Chuyển từ màn hình Login.jsx sang HomePage.jsx (trong folder Member) lúc bấm nút Login
     const handleIsLogin = (event) => {
         event.preventDefault();
         navigate('/');
         onLogin(true);
     };
 
+    //Chuyển state showLogin trong app.js (Route '/')
+    //Chuyển sang màn hình Register.jsx lúc bấm 'Create an account'
     const handleShowLogin = (event) => {
         event.preventDefault();
         navigate('/login-register');

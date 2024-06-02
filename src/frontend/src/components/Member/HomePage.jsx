@@ -4,6 +4,8 @@ import Header from "../Header/Header"
 import ProductBar from "../Product-HomePage/ProductBar"
 import './HomePage.css'
 
+//prop onLogin chuyền từ app.js -> HomePage.jsx -> Header.jsx
+//dùng để set state isLogin
 const HomePage = ({ onLogin }) => {
     return (
         <div className="body">
