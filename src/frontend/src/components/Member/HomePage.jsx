@@ -4,10 +4,10 @@ import Header from "../Header/Header"
 import ProductBar from "../Product-HomePage/ProductBar"
 import './HomePage.css'
 
-const HomePage = () => {
+const HomePage = ({ onLogin }) => {
     return (
         <div className="body">
-            <div><Header /></div>
+            <div><Header onLogin={onLogin} /></div>
             <img class='image' src="/img/4.jpg" />
             <div className="welcome">Welcome User1</div>
             <div><ProductBar /></div>

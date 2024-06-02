@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-// import reportWebVitals from './reportWebVitals';
-// import './index.css';
+
 import App from './App';
-import './styles/bootstrap.min.css';
+import './styles/bootstrap.min.css/bootstrap.min.css';
+import './styles/material-design-iconic-font/css/material-design-iconic-font.min.css'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

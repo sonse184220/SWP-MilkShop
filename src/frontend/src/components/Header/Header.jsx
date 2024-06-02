@@ -1,8 +1,17 @@
 import React from 'react';
 import './Header.css';
+import { useNavigate } from "react-router-dom";
 
 
-export function Header({ loginHeader }) {
+
+export function Header({ onLogin }) {
+    const navigate = useNavigate();
+    const showLogin = (event) => {
+        event.preventDefault();
+        navigate('/login-register')
+
+    }
+
     return (
         <header class="header-area header-sticky">
             <div class="container">
@@ -26,7 +35,7 @@ export function Header({ loginHeader }) {
                                     </ul>
                                 </li>
                                 <li class="scroll-to-section"><a href="#courses">Courses</a></li>
-                                <li class="scroll-to-section"><a href="#contact">Contact Us</a></li>
+                                <li class="scroll-to-section"><a href="#contact" onClick={showLogin}>Logout</a></li>
                             </ul>
                             <a class='menu-trigger'>
                                 <span>Menu</span>
