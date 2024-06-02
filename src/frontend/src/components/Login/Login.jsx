@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import './Login.css'
 import { useNavigate } from "react-router-dom";
+
+import './Login.css'
+import handleLoginApi from '../../services/loginService';
 
 
 //prop chuyền từ app.js
@@ -9,12 +11,23 @@ import { useNavigate } from "react-router-dom";
 const Login = ({ onLogin, showLogin }) => {
     const navigate = useNavigate();
 
+    const [UserID, setUsername] = useState('');
+    const [Password, setPassword] = useState('');
+
     //Chuyển state isLogin trong app.js (Route '/')
     //Chuyển từ màn hình Login.jsx sang HomePage.jsx (trong folder Member) lúc bấm nút Login
-    const handleIsLogin = (event) => {
+    const handleIsLogin = async (event) => {
         event.preventDefault();
-        navigate('/');
-        onLogin(true);
+
+        const userInfo = { UserID, Password };
+        try {
+            const response = await handleLoginApi(userInfo);
+            console.log('Response:', response);
+            navigate('/');
+            onLogin(true);
+        } catch (error) {
+            console.log(error)
+        }
     };
 
     //Chuyển state showLogin trong app.js (Route '/')
@@ -37,11 +50,23 @@ const Login = ({ onLogin, showLogin }) => {
                             Log in
                         </span>
                         <div class="wrap-input100 validate-input" data-validate="Enter username">
-                            <input class="input100" type="text" name="username" placeholder="Username" />
+                            <input
+                                class="input100"
+                                type="text"
+                                name="username"
+                                placeholder="Username"
+                                value={UserID}
+                                onChange={(e) => setUsername(e.target.value)} />
                             <span class="focus-input100" data-placeholder=""></span>
                         </div>
                         <div class="wrap-input100 validate-input" data-validate="Enter password">
-                            <input class="input100" type="password" name="pass" placeholder="Password" />
+                            <input
+                                class="input100"
+                                type="password"
+                                name="pass"
+                                placeholder="Password"
+                                value={Password}
+                                onChange={(e) => setPassword(e.target.value)} />
                             <span class="focus-input100" data-placeholder=""></span>
                         </div>
                         <div class="contact100-form-checkbox">
