@@ -13,6 +13,7 @@ const Login = ({ onLogin, showLogin }) => {
 
     const [UserID, setUsername] = useState('');
     const [Password, setPassword] = useState('');
+    const [ErrorMessage, setErrorMessage] = useState('');
 
     //Chuyển state isLogin trong app.js (Route '/')
     //Chuyển từ màn hình Login.jsx sang HomePage.jsx (trong folder Member) lúc bấm nút Login
@@ -23,12 +24,26 @@ const Login = ({ onLogin, showLogin }) => {
         try {
             const response = await handleLoginApi(userInfo);
             console.log('Response:', response);
+            setErrorMessage('');
             navigate('/');
             onLogin(true);
         } catch (error) {
-            console.log(error)
-        }
-    };
+            if (error.response && error.response.data) {
+                let errorMessage;
+                // Try to parse the error response data as JSON
+                // const parsedData = JSON.parse(error.response.data);
+                if (typeof error.response.data === 'object')
+                    errorMessage = error.response.data || 'An error occurred';
+                else if (Array.isArray(error.response.data) && error.response.data.length > 0)
+                    errorMessage = error.response.data[0];
+
+                setErrorMessage(errorMessage);
+            } else {
+                setErrorMessage('An error occurred');
+            }
+            console.log(error);
+        };
+    }
 
     //Chuyển state showLogin trong app.js (Route '/')
     //Chuyển sang màn hình Register.jsx lúc bấm 'Create an account'
@@ -68,6 +83,14 @@ const Login = ({ onLogin, showLogin }) => {
                                 value={Password}
                                 onChange={(e) => setPassword(e.target.value)} />
                             <span class="focus-input100" data-placeholder=""></span>
+                        </div>
+                        <div className="error-message-container">
+                            {ErrorMessage && (
+                                <>
+                                    {ErrorMessage.message && <p className="error-message">{ErrorMessage.message}</p>}
+                                    {ErrorMessage.error && ErrorMessage.error.length > 0 && <p className="error-message">{ErrorMessage.error[0].msg}</p>}
+                                </>
+                            )}
                         </div>
                         <div class="contact100-form-checkbox">
                             <input class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me" />
