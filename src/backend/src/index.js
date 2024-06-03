@@ -15,7 +15,7 @@ import cors from "cors"; // Import CORS middleware
 const PORT = process.env.PORT || 3000; // cổng kết nối localhost:xxxx
 
 const app = express(); // khởi chạy express
-app.use(express.json()); // dùng json 
+app.use(express.json()); // dùng json
 app.use(bodyParser.json());
 
 // Enable CORS for specific origin
