@@ -15,10 +15,12 @@ router.get("/api/products/id/:id", checkProductId, async (req, res) => {
     await productController.getProductById(req, res);
 });
 
-/** URL: localhost:xxxx/api/products/search?n={...}
+/** URL: localhost:xxxx/api/products/search?name={...}&limit={...}&page={...}&sort={...}
  * Search product, lấy data trong query của API
- * - "n" là tên của product. Nếu không cung cấp "n" => n mặc định = "" để search toàn bộ product
- * 
+ * - "name" là tên của product. Nếu không cung cấp "name" => mặc định = "" để search toàn bộ product
+ * - "limit" là giới hạn số lượng product trả về cho 1 trang. Nếu không cung cấp, "limit" mặc định là 20
+ * - "page" là số trang. Nếu không cung cấp, "page" mặc định là 1
+ * - "sort" là cách sắp xếp. Nếu không cung cấp, "sort" mặc định là newest. "sort" bao gồm [newest, oldest, highest, lowest]
  */
 router.get("/api/products/search", checkProductSearch, async (req, res) => {
     await productController.searchProducts(req, res);

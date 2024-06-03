@@ -47,32 +47,41 @@ function checkProductSearch(_x4, _x5, _x6) {
 }
 function _checkProductSearch() {
   _checkProductSearch = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(req, res, next) {
-    var result;
+    var sortList, result;
     return _regeneratorRuntime().wrap(function _callee2$(_context2) {
       while (1) switch (_context2.prev = _context2.next) {
         case 0:
           _context2.next = 2;
-          return (0, _expressValidator.query)("n")["if"](function (value) {
-            value == null;
-          }).customSanitizer(function () {
-            return "";
-          }).run(req);
+          return (0, _expressValidator.query)("name")["default"]("").trim().escape().run(req);
         case 2:
           _context2.next = 4;
-          return (0, _expressValidator.query)("n").trim().escape().run(req);
+          return (0, _expressValidator.query)("limit")["default"]("20").isInt({
+            min: 1,
+            allow_leading_zeroes: false
+          }).withMessage("invalid limit input! limit must be an integer number and no less than 1").trim().escape().run(req);
         case 4:
+          _context2.next = 6;
+          return (0, _expressValidator.query)("page")["default"]("1").isInt({
+            min: 1,
+            allow_leading_zeroes: false
+          }).withMessage("invalid page input! page must be an integer number and no less than 1").trim().escape().run(req);
+        case 6:
+          sortList = ["newest", "oldest", "highest", "lowest"];
+          _context2.next = 9;
+          return (0, _expressValidator.query)("sort")["default"]("newest").trim().escape().toLowerCase().isIn(sortList).withMessage("invalid sort input! sort can only be: ".concat(sortList)).run(req);
+        case 9:
           result = (0, _expressValidator.validationResult)(req);
           if (result.isEmpty()) {
-            _context2.next = 7;
+            _context2.next = 12;
             break;
           }
           return _context2.abrupt("return", res.status(400).send({
             error: result.array()
           }));
-        case 7:
+        case 12:
           Object.assign(req.query, (0, _expressValidator.matchedData)(req));
           next();
-        case 9:
+        case 14:
         case "end":
           return _context2.stop();
       }

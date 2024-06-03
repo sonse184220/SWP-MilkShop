@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --watch src --ext js --exec \"npm run build && node dist/index.js\"",
-    "ts": "nodemon --watch TEST --ext ts --exec node --no-warnings=ExperimentalWarning --loader=ts-node/esm ./TEST/srcTS/index.ts",
+    "ts": "nodemon --watch TEST --ext js --exec node ./TEST/src/index.js",
     "build": "babel src --out-dir dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

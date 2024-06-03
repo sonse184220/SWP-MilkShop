@@ -63,29 +63,60 @@ var ProductService = exports.ProductService = /*#__PURE__*/function () {
   }, {
     key: "searchProducts",
     value: function () {
-      var _searchProducts = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(name) {
-        var search, _yield$poolConnect$qu3, _yield$poolConnect$qu4, products;
+      var _searchProducts = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(sname, slimit, ssortBy, soffset) {
+        var search, limit, sortBy, offset, _yield$poolConnect$qu3, _yield$poolConnect$qu4, products;
         return _regeneratorRuntime().wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
-              search = "%".concat(name, "%");
-              _context2.next = 3;
-              return _dbConnection.poolConnect.query('SELECT * FROM product WHERE Name LIKE ?', [search]);
-            case 3:
+              search = "%".concat(sname, "%");
+              limit = slimit;
+              sortBy = ssortBy;
+              offset = soffset; // const [products] = await poolConnect.query('SELECT * FROM product WHERE Name LIKE ?', [search]);
+              _context2.next = 6;
+              return _dbConnection.poolConnect.query("SELECT * FROM PRODUCT WHERE Name LIKE ? ORDER BY ".concat(sortBy, " LIMIT ? OFFSET ?"), [search, limit, offset]);
+            case 6:
               _yield$poolConnect$qu3 = _context2.sent;
               _yield$poolConnect$qu4 = _slicedToArray(_yield$poolConnect$qu3, 1);
               products = _yield$poolConnect$qu4[0];
               return _context2.abrupt("return", products);
-            case 7:
+            case 10:
             case "end":
               return _context2.stop();
           }
         }, _callee2);
       }));
-      function searchProducts(_x2) {
+      function searchProducts(_x2, _x3, _x4, _x5) {
         return _searchProducts.apply(this, arguments);
       }
       return searchProducts;
+    }() // đếm số lượng product trong database bằng name
+  }, {
+    key: "getTotalProductsByName",
+    value: function () {
+      var _getTotalProductsByName = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(name) {
+        var search, _yield$poolConnect$qu5, _yield$poolConnect$qu6, total, count;
+        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+          while (1) switch (_context3.prev = _context3.next) {
+            case 0:
+              search = "%".concat(name, "%");
+              _context3.next = 3;
+              return _dbConnection.poolConnect.query('SELECT COUNT(*) as count FROM PRODUCT WHERE Name LIKE ?', [search]);
+            case 3:
+              _yield$poolConnect$qu5 = _context3.sent;
+              _yield$poolConnect$qu6 = _slicedToArray(_yield$poolConnect$qu5, 1);
+              total = _yield$poolConnect$qu6[0];
+              count = total[0].count;
+              return _context3.abrupt("return", count);
+            case 8:
+            case "end":
+              return _context3.stop();
+          }
+        }, _callee3);
+      }));
+      function getTotalProductsByName(_x6) {
+        return _getTotalProductsByName.apply(this, arguments);
+      }
+      return getTotalProductsByName;
     }()
   }]);
 }();

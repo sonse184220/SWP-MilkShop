@@ -19,13 +19,33 @@ export async function checkProductId(req: Request, res: Response, next: NextFunc
 
 // kiểm tra data đầu vào cho search product
 export async function checkProductSearch(req: Request, res: Response, next: NextFunction) {
-  await query("n")
-  .if((value) => {value == null})
-  .customSanitizer(() => {return ""})
-  .run(req);
-  await query("n")
+  await query("name")
+  .default("")
   .trim()
   .escape()
+  .run(req);
+
+  await query("limit")
+  .default("20")
+  .isInt({ min: 1, allow_leading_zeroes: false }).withMessage("invalid limit input! limit must be an integer number and no less than 1")
+  .trim()
+  .escape()
+  .run(req);
+
+  await query("page")
+  .default("1")
+  .isInt({ min: 1, allow_leading_zeroes: false }).withMessage("invalid page input! page must be an integer number and no less than 1")
+  .trim()
+  .escape()
+  .run(req);
+
+  const sortList: string[] = [ "newest", "oldest", "highest", "lowest" ];
+  await query("sort")
+  .default("newest")
+  .trim()
+  .escape()
+  .toLowerCase()
+  .isIn(sortList).withMessage(`invalid sort input! sort can only be: ${sortList}`)
   .run(req);
 
   const result = validationResult(req);

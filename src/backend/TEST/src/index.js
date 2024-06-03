@@ -1,7 +1,7 @@
 import express from "express";
 import { productRoutes } from "./routes/productRoutes.js";
 import { blogRoutes } from "./routes/blogRoutes.js";
-const PORT = 3300; // tùy chọn cổng kết nối localhost:xxxx
+const PORT = 4500; // tùy chọn cổng kết nối localhost:xxxx
 const app = express(); // khởi chạy express
 app.use(express.json()); // dùng json
 // API liên quan đến products

@@ -56,25 +56,42 @@ var BlogController = exports.BlogController = /*#__PURE__*/function () {
     key: "searchBlogs",
     value: function () {
       var _searchBlogs = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(req, res) {
-        var name, blogs;
+        var name, limit, page, sort, offset, sortBy, blogs, total;
         return _regeneratorRuntime().wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
-              name = req.query.n;
-              _context2.next = 3;
-              return this.blogService.searchBlogs(name);
-            case 3:
+              name = req.query.name;
+              limit = parseInt(req.query.limit);
+              page = parseInt(req.query.page);
+              sort = req.query.sort;
+              offset = (page - 1) * limit;
+              _context2.t0 = sort;
+              _context2.next = _context2.t0 === "newest" ? 8 : _context2.t0 === "oldest" ? 10 : 12;
+              break;
+            case 8:
+              sortBy = "updated DESC";
+              return _context2.abrupt("break", 13);
+            case 10:
+              sortBy = "updated ASC";
+              return _context2.abrupt("break", 13);
+            case 12:
+              sortBy = "updated DESC";
+            case 13:
+              _context2.next = 15;
+              return this.blogService.searchBlogs(name, limit, sortBy, offset);
+            case 15:
               blogs = _context2.sent;
-              if (!(blogs.length === 0)) {
-                _context2.next = 6;
-                break;
-              }
-              return _context2.abrupt("return", res.status(404).send({
-                error: "Blogs not found!"
-              }));
-            case 6:
-              res.status(200).send(blogs);
-            case 7:
+              _context2.next = 18;
+              return this.blogService.getTotalBlogsByName(name);
+            case 18:
+              total = _context2.sent;
+              res.status(200).send({
+                data: blogs,
+                total: total,
+                page: page,
+                totalPages: Math.ceil(total / limit)
+              });
+            case 20:
             case "end":
               return _context2.stop();
           }

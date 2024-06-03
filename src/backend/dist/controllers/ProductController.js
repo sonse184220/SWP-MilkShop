@@ -67,25 +67,48 @@ var ProductController = exports.ProductController = /*#__PURE__*/function () {
     key: "searchProducts",
     value: function () {
       var _searchProducts = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(req, res) {
-        var name, products;
+        var name, limit, page, sort, offset, sortBy, products, total;
         return _regeneratorRuntime().wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
-              name = req.query.n;
-              _context2.next = 3;
-              return this.productService.searchProducts(name);
-            case 3:
+              name = req.query.name;
+              limit = parseInt(req.query.limit);
+              page = parseInt(req.query.page);
+              sort = req.query.sort;
+              offset = (page - 1) * limit;
+              _context2.t0 = sort;
+              _context2.next = _context2.t0 === "newest" ? 8 : _context2.t0 === "oldest" ? 10 : _context2.t0 === "lowest" ? 12 : _context2.t0 === "highest" ? 14 : 16;
+              break;
+            case 8:
+              sortBy = "updated DESC";
+              return _context2.abrupt("break", 17);
+            case 10:
+              sortBy = "updated ASC";
+              return _context2.abrupt("break", 17);
+            case 12:
+              sortBy = "Price ASC";
+              return _context2.abrupt("break", 17);
+            case 14:
+              sortBy = "Price DESC";
+              return _context2.abrupt("break", 17);
+            case 16:
+              sortBy = "updated DESC";
+            case 17:
+              _context2.next = 19;
+              return this.productService.searchProducts(name, limit, sortBy, offset);
+            case 19:
               products = _context2.sent;
-              if (!(products.length === 0)) {
-                _context2.next = 6;
-                break;
-              }
-              return _context2.abrupt("return", res.status(404).send({
-                error: "Products not found!"
-              }));
-            case 6:
-              res.status(200).send(products);
-            case 7:
+              _context2.next = 22;
+              return this.productService.getTotalProductsByName(name);
+            case 22:
+              total = _context2.sent;
+              res.status(200).send({
+                data: products,
+                total: total,
+                page: page,
+                totalPages: Math.ceil(total / limit)
+              });
+            case 24:
             case "end":
               return _context2.stop();
           }

@@ -54,29 +54,60 @@ var BlogService = exports.BlogService = /*#__PURE__*/function () {
   }, {
     key: "searchBlogs",
     value: function () {
-      var _searchBlogs = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(name) {
-        var search, _yield$poolConnect$qu3, _yield$poolConnect$qu4, blogs;
+      var _searchBlogs = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(sname, slimit, ssortBy, soffset) {
+        var search, limit, sortBy, offset, _yield$poolConnect$qu3, _yield$poolConnect$qu4, blogs;
         return _regeneratorRuntime().wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
-              search = "%".concat(name, "%");
-              _context2.next = 3;
-              return _dbConnection.poolConnect.query('SELECT * FROM blog WHERE Name LIKE ?', [search]);
-            case 3:
+              search = "%".concat(sname, "%");
+              limit = slimit;
+              sortBy = ssortBy;
+              offset = soffset;
+              _context2.next = 6;
+              return _dbConnection.poolConnect.query("SELECT * FROM BLOG WHERE Name LIKE ? ORDER BY ".concat(sortBy, " LIMIT ? OFFSET ?"), [search, limit, offset]);
+            case 6:
               _yield$poolConnect$qu3 = _context2.sent;
               _yield$poolConnect$qu4 = _slicedToArray(_yield$poolConnect$qu3, 1);
               blogs = _yield$poolConnect$qu4[0];
               return _context2.abrupt("return", blogs);
-            case 7:
+            case 10:
             case "end":
               return _context2.stop();
           }
         }, _callee2);
       }));
-      function searchBlogs(_x2) {
+      function searchBlogs(_x2, _x3, _x4, _x5) {
         return _searchBlogs.apply(this, arguments);
       }
       return searchBlogs;
+    }() // đếm số lượng blog trong database bằng name
+  }, {
+    key: "getTotalBlogsByName",
+    value: function () {
+      var _getTotalBlogsByName = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(name) {
+        var search, _yield$poolConnect$qu5, _yield$poolConnect$qu6, total, count;
+        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+          while (1) switch (_context3.prev = _context3.next) {
+            case 0:
+              search = "%".concat(name, "%");
+              _context3.next = 3;
+              return _dbConnection.poolConnect.query('SELECT COUNT(*) as count FROM BLOG WHERE Name LIKE ?', [search]);
+            case 3:
+              _yield$poolConnect$qu5 = _context3.sent;
+              _yield$poolConnect$qu6 = _slicedToArray(_yield$poolConnect$qu5, 1);
+              total = _yield$poolConnect$qu6[0];
+              count = total[0].count;
+              return _context3.abrupt("return", count);
+            case 8:
+            case "end":
+              return _context3.stop();
+          }
+        }, _callee3);
+      }));
+      function getTotalBlogsByName(_x6) {
+        return _getTotalBlogsByName.apply(this, arguments);
+      }
+      return getTotalBlogsByName;
     }()
   }]);
 }();
