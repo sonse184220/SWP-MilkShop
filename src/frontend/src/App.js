@@ -37,7 +37,7 @@ function App() {
     <Router>
       <Routes>
         {/* Route '/' */}
-        <Route path="/" element={!isLogin ? <Login onLogin={handleLogin} /> : <HomePage onLogin={handleLogin} />} />
+        <Route path="/" element={!isLogin ? <Login onLogin={handleLogin} showLogin={handleShowLogin} /> : <HomePage onLogin={handleLogin} />} />
         {/* Route '/login-register' */}
         <Route path='/login-register' element={!showLogin ? <Login onLogin={handleLogin} showLogin={handleShowLogin} /> : <Register showLogin={handleShowLogin} />} />
       </Routes>

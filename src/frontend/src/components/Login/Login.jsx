@@ -11,12 +11,14 @@ import handleLoginApi from '../../services/loginService';
 const Login = ({ onLogin, showLogin }) => {
     const navigate = useNavigate();
 
-    const [UserID, setUsername] = useState('');
+    const [UserID, setUserID] = useState('');
     const [Password, setPassword] = useState('');
     const [ErrorMessage, setErrorMessage] = useState('');
 
     //Chuyển state isLogin trong app.js (Route '/')
-    //Chuyển từ màn hình Login.jsx sang HomePage.jsx (trong folder Member) lúc bấm nút Login
+    //Kiểm tra userid và password
+    //Chuyển từ màn hình Login.jsx sang HomePage.jsx (trong folder Member) lúc bấm nút Login(Nếu true)
+    //Hiện lỗi(nếu false)
     const handleIsLogin = async (event) => {
         event.preventDefault();
 
@@ -69,9 +71,9 @@ const Login = ({ onLogin, showLogin }) => {
                                 class="input100"
                                 type="text"
                                 name="username"
-                                placeholder="Username"
+                                placeholder="UserID"
                                 value={UserID}
-                                onChange={(e) => setUsername(e.target.value)} />
+                                onChange={(e) => setUserID(e.target.value)} />
                             <span class="focus-input100" data-placeholder=""></span>
                         </div>
                         <div class="wrap-input100 validate-input" data-validate="Enter password">
