@@ -5,7 +5,7 @@ import './AllBlog.css';
 import Footer from "../Footer/Footer";
 import Header from "../Header/Header";
 import BlogList from "./BlogList";
-import ProductList from './ProductList';
+import ProductList from '../Product/ProductList';
 
 const blogs = [
   {
