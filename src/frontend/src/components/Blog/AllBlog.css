@@ -1,0 +1,69 @@
+
+.blog-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+}
+
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  width: 100%;
+}
+
+.all-blog-list-container {
+  display: flex;
+  align-items: flex-start;
+  margin-left: 2rem; 
+  overflow: hidden;
+} 
+
+.all-blog-list-container .blog-list-content{
+  display: none;
+}  
+ .all-blog-list-container .blog-list {
+  width: 300px;
+  margin-left: 10px;
+  background-color: #f8f8f8;
+  border-radius: 5px;
+  padding: 1.5rem;
+}
+
+.all-blog-list-container .scroll-button {
+  display: none;
+}
+
+.all-blog-list-container .blog-list-container {
+  display: flex;
+  padding: 20px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.all-blog-list-container .blog-list-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.heading-blog-list h3{
+  display: flex;
+  justify-content: center;
+}
+
+/* AllBlog.css */
+.container {
+  margin-top: 20px;
+}
+
+.product-list-container {
+  width: 100%;
+  padding: 10px;
+  background-color: #f8f9fa;
+}
