@@ -1,8 +1,8 @@
 import { useRef } from 'react';
 import BlogCard from './BlogCard';
 import './BlogList.css';
-import {Link} from 'react-router-dom'
-const BlogList = ( { columnLayout = false }) => {
+import { Link } from 'react-router-dom'
+const BlogList = ({ columnLayout = false }) => {
   const blogListRef = useRef(null);
 
   const blogs = [
@@ -29,7 +29,7 @@ const BlogList = ( { columnLayout = false }) => {
       authorName: 'Name',
       authorDescription: 'Description',
       authorImage: 'https://via.placeholder.com/40',
-    },    {
+    }, {
       title: '“A genuinely glowing review”',
       authorName: 'Name',
       authorDescription: 'Description',
@@ -55,7 +55,7 @@ const BlogList = ( { columnLayout = false }) => {
     <div className={`blog-list-container ${columnLayout ? 'column-layout' : ''}`}>
       <div className="blog-list-content">
         <h2>Suggested blogs</h2>
-        <Link to='/Blog'>All Blog</Link>
+        <Link to='/Blogs'>All Blog</Link>
       </div>
       <div className="blog-list-wrapper">
         <button className="scroll-button left" onClick={scrollLeft}>

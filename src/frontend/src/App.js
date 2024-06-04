@@ -40,9 +40,10 @@ function App() {
         <Route path="/" element={!isLogin ? <Login onLogin={handleLogin} showLogin={handleShowLogin} /> : <HomePage onLogin={handleLogin} />} />
         {/* Route '/login-register' */}
         <Route path='/login-register' element={!showLogin ? <Login onLogin={handleLogin} showLogin={handleShowLogin} /> : <Register showLogin={handleShowLogin} />} />
+        {/* Route '/Blogs */}
+        <Route path='/Blogs' element={<AllBlog />}></Route>
       </Routes>
-         {/* Route '/Blogs */}
-        <Route path='/Blogs' element={<AllBlog/>}></Route>          
+
     </Router>
   );
 }
