@@ -9,10 +9,10 @@ const BlogCard = ({ title, authorName, authorDescription, authorImage }) => {
       <div className="author">
         <img src={authorImage} alt={`${authorName}`} className="author-image" />
         <div className="author-info">
-          <h4>{authorName}</h4>
-          <p>{authorDescription}</p>
+          <h4>{authorName}</h4>          
         </div>
       </div>
+       <p className="author-description">{authorDescription}</p>
     </div>
   );
 };
