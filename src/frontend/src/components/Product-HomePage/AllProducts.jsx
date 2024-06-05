@@ -1,8 +1,11 @@
 import React from 'react';
-import './ProductBar.css';
-import { Link } from 'react-router-dom';
 
-const ProductBar = () => {
+import Footer from "../Footer/Footer"
+import Header from "../Header/Header"
+import './ProductBar.css';
+import Brand from '../Brand/Brand';
+
+const AllProducts = () => {
     //List dể ví dụ cho thanh product bar
     const products = [
         {
@@ -50,25 +53,30 @@ const ProductBar = () => {
     ];
 
     return (
-        <div className="product-bar">
-            <div className='header'>
-                <h2>Products</h2>
-                <Link to={"/Products"} className="view-all">
-                    View all
-                </Link>
+        <div className="body">
+            <div><Header /></div>
+            <img class='image' src="/img/4.jpg" />
+
+            <Brand />
+
+            <div className="product-bar">
+                <div className='header'>
+                    <h2>Products</h2>
+                </div>
+                <div className="product-container">
+                    {products.map((product) => (
+                        <div key={product.id} className="product-preview">
+                            <img src={`/img/${product.id}.jpg`} alt={product.name} />
+                            <h3>{product.name}</h3>
+                            <p>{product.description}</p>
+                            <p>{product.price}</p>
+                        </div>
+                    ))}
+                </div>
             </div>
-            <div className="product-container">
-                {products.map((product) => (
-                    <div key={product.id} className="product-preview">
-                        <img src={`/img/${product.id}.jpg`} alt={product.name} />
-                        <h3>{product.name}</h3>
-                        <p>{product.description}</p>
-                        <p>{product.price}</p>
-                    </div>
-                ))}
-            </div>
+            <div><Footer /></div>
         </div>
     );
 };
 
-export default ProductBar;
+export default AllProducts;
