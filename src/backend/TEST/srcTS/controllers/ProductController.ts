@@ -54,4 +54,40 @@ export class ProductController {
             totalPages: Math.ceil(total / limit),
         });
     };
+
+    async searchProductsByBrand(req: Request, res: Response) {
+        const brand = req.query.brand as string; 
+        const limit = parseInt(req.query.limit as string);
+        const page = parseInt(req.query.page as string);
+        const sort = req.query.sort as string;
+        const offset = (page - 1) * limit;
+
+        let sortBy;
+        switch (sort) {
+            case "newest":
+                sortBy = "updated DESC";
+                break;
+            case "oldest":
+                sortBy = "updated ASC";
+                break;
+            case "lowest":
+                sortBy = "Price ASC";
+                break;
+            case "highest":
+                sortBy = "Price DESC";
+                break;
+            default:
+                sortBy = "updated DESC";
+        }
+
+        const products = await this.productService.searchProductsByBrand(brand, limit, sortBy, offset);
+        const total = await this.productService.getTotalProductsByBrand(brand);
+
+        res.status(200).send({
+            data: products,
+            total: total,
+            page: page,
+            totalPages: Math.ceil(total / limit),
+        });
+    };
 }

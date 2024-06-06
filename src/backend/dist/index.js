@@ -15,7 +15,7 @@ _dotenv["default"].config();
 var PORT = process.env.PORT || 3000; // cổng kết nối localhost:xxxx
 
 var app = (0, _express["default"])(); // khởi chạy express
-app.use(_express["default"].json()); // dùng json 
+app.use(_express["default"].json()); // dùng json
 app.use(_bodyParser["default"].json());
 
 // Enable CORS for specific origin

@@ -119,5 +119,61 @@ var ProductController = exports.ProductController = /*#__PURE__*/function () {
       }
       return searchProducts;
     }()
+  }, {
+    key: "searchProductsByBrand",
+    value: function () {
+      var _searchProductsByBrand = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(req, res) {
+        var brand, limit, page, sort, offset, sortBy, products, total;
+        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+          while (1) switch (_context3.prev = _context3.next) {
+            case 0:
+              brand = req.query.brand;
+              limit = parseInt(req.query.limit);
+              page = parseInt(req.query.page);
+              sort = req.query.sort;
+              offset = (page - 1) * limit;
+              _context3.t0 = sort;
+              _context3.next = _context3.t0 === "newest" ? 8 : _context3.t0 === "oldest" ? 10 : _context3.t0 === "lowest" ? 12 : _context3.t0 === "highest" ? 14 : 16;
+              break;
+            case 8:
+              sortBy = "updated DESC";
+              return _context3.abrupt("break", 17);
+            case 10:
+              sortBy = "updated ASC";
+              return _context3.abrupt("break", 17);
+            case 12:
+              sortBy = "Price ASC";
+              return _context3.abrupt("break", 17);
+            case 14:
+              sortBy = "Price DESC";
+              return _context3.abrupt("break", 17);
+            case 16:
+              sortBy = "updated DESC";
+            case 17:
+              _context3.next = 19;
+              return this.productService.searchProductsByBrand(brand, limit, sortBy, offset);
+            case 19:
+              products = _context3.sent;
+              _context3.next = 22;
+              return this.productService.getTotalProductsByBrand(brand);
+            case 22:
+              total = _context3.sent;
+              res.status(200).send({
+                data: products,
+                total: total,
+                page: page,
+                totalPages: Math.ceil(total / limit)
+              });
+            case 24:
+            case "end":
+              return _context3.stop();
+          }
+        }, _callee3, this);
+      }));
+      function searchProductsByBrand(_x5, _x6) {
+        return _searchProductsByBrand.apply(this, arguments);
+      }
+      return searchProductsByBrand;
+    }()
   }]);
 }();

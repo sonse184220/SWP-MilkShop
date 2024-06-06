@@ -19,6 +19,6 @@ router.get("/api/blogs/id/:id", checkBlogId, async (req, res) => {
  */
 router.get("/api/blogs/search", checkBlogSearch, async (req, res) => {
     await blogController.searchBlogs(req, res);
-}); 
+});
 // export router
 export { router as blogRoutes };

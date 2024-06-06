@@ -21,5 +21,5 @@ export class BlogService {
         const [total] = await poolConnect.query('SELECT COUNT(*) as count FROM BLOG WHERE Name LIKE ?', [search]);
         const count = total[0].count;
         return count;
-    } 
+    }
 }
