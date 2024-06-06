@@ -47,7 +47,7 @@ export async function checkProductSearch(req, res, next) {
     Object.assign(req.query, matchedData(req));
     next();
 }
-// kiểm tra data đầu vào cho search brand 
+// kiểm tra data đầu vào cho search brand
 export async function checkProductSearchBrand(req, res, next) {
     await query("brand")
         .default("")

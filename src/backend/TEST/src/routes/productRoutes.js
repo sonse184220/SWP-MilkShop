@@ -9,7 +9,7 @@ const productController = new ProductController();
  *
  */
 router.get("/api/products/id/:id", checkProductId, async (req, res) => {
-    await productController.getProductById(req, res); 
+    await productController.getProductById(req, res);
 });
 /** URL: localhost:xxxx/api/products/search?name={...}&limit={...}&page={...}&sort={...}
  * Search product, lấy data trong query của API
@@ -22,7 +22,7 @@ router.get("/api/products/search", checkProductSearch, async (req, res) => {
     await productController.searchProducts(req, res);
 });
 /** URL: localhost:xxxx/api/products/search/brand?brand={...}&limit={...}&page={...}&sort={...}
- * Search product bằng brand, lấy data trong query của API
+ * Search product bằng brand name, lấy data trong query của API
  * - "brand" là name của brand. Nếu không cung cấp "brand" => mặc định = "" để search toàn bộ
  * - "limit" là giới hạn số lượng product trả về cho 1 trang. Nếu không cung cấp, "limit" mặc định là 20
  * - "page" là số trang. Nếu không cung cấp, "page" mặc định là 1

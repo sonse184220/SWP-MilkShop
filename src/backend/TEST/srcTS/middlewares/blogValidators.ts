@@ -19,7 +19,7 @@ export async function checkBlogId(req: Request, res: Response, next: NextFunctio
   
   // kiểm tra data đầu vào cho search blog
 export async function checkBlogSearch(req: Request, res: Response, next: NextFunction) {
-  await query("name")
+  await query("content")
   .default("")
   .trim()
   .escape()
