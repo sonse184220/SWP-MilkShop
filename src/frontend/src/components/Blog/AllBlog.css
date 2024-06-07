@@ -108,3 +108,10 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   color: hsl(328, 93%, 72%);
 }
+
+.col-lg-4 h3{
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  padding-top: 30px;
+}
