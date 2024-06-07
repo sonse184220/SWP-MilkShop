@@ -97,6 +97,9 @@ const AllBlog = () => {
         <div className="row">
           <div className="col-lg-8">
             <h3>All Blogs</h3>
+            <div className='searchBlog'>Search blog: <input type='text' placeholder='Search blog'/>
+                <button>Search</button>
+            </div>
             {blogs.map((blog, index) => (
               <BlogPost
                 key={index}
