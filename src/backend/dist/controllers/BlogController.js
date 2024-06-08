@@ -53,38 +53,62 @@ var BlogController = exports.BlogController = /*#__PURE__*/function () {
       return getBlogById;
     }()
   }, {
-    key: "searchBlogs",
+    key: "getAllBlogs",
     value: function () {
-      var _searchBlogs = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(req, res) {
-        var name, limit, page, sort, offset, sortBy, blogs, total;
+      var _getAllBlogs = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(req, res) {
+        var blogs;
         return _regeneratorRuntime().wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
-              name = req.query.name;
+              _context2.next = 2;
+              return this.blogService.getAllBlogs();
+            case 2:
+              blogs = _context2.sent;
+              res.status(200).send(blogs);
+            case 4:
+            case "end":
+              return _context2.stop();
+          }
+        }, _callee2, this);
+      }));
+      function getAllBlogs(_x3, _x4) {
+        return _getAllBlogs.apply(this, arguments);
+      }
+      return getAllBlogs;
+    }()
+  }, {
+    key: "searchBlogs",
+    value: function () {
+      var _searchBlogs = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(req, res) {
+        var content, limit, page, sort, offset, sortBy, blogs, total;
+        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+          while (1) switch (_context3.prev = _context3.next) {
+            case 0:
+              content = req.query.content;
               limit = parseInt(req.query.limit);
               page = parseInt(req.query.page);
               sort = req.query.sort;
               offset = (page - 1) * limit;
-              _context2.t0 = sort;
-              _context2.next = _context2.t0 === "newest" ? 8 : _context2.t0 === "oldest" ? 10 : 12;
+              _context3.t0 = sort;
+              _context3.next = _context3.t0 === "newest" ? 8 : _context3.t0 === "oldest" ? 10 : 12;
               break;
             case 8:
               sortBy = "updated DESC";
-              return _context2.abrupt("break", 13);
+              return _context3.abrupt("break", 13);
             case 10:
               sortBy = "updated ASC";
-              return _context2.abrupt("break", 13);
+              return _context3.abrupt("break", 13);
             case 12:
               sortBy = "updated DESC";
             case 13:
-              _context2.next = 15;
-              return this.blogService.searchBlogs(name, limit, sortBy, offset);
+              _context3.next = 15;
+              return this.blogService.searchBlogs(content, limit, sortBy, offset);
             case 15:
-              blogs = _context2.sent;
-              _context2.next = 18;
-              return this.blogService.getTotalBlogsByName(name);
+              blogs = _context3.sent;
+              _context3.next = 18;
+              return this.blogService.getTotalBlogsByContent(content);
             case 18:
-              total = _context2.sent;
+              total = _context3.sent;
               res.status(200).send({
                 data: blogs,
                 total: total,
@@ -93,11 +117,11 @@ var BlogController = exports.BlogController = /*#__PURE__*/function () {
               });
             case 20:
             case "end":
-              return _context2.stop();
+              return _context3.stop();
           }
-        }, _callee2, this);
+        }, _callee3, this);
       }));
-      function searchBlogs(_x3, _x4) {
+      function searchBlogs(_x5, _x6) {
         return _searchBlogs.apply(this, arguments);
       }
       return searchBlogs;

@@ -57,7 +57,6 @@
   justify-content: center;
 }
 
-/* AllBlog.css */
 .container {
   margin-top: 20px;
 }
@@ -66,4 +65,53 @@
   width: 100%;
   padding: 10px;
   background-color: #f8f9fa;
+}
+
+/* search blog */
+.searchBlog {
+  display: flex;
+  font-size: 18px;
+  font-weight: bold;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 20px;
+}
+
+.searchBlog input {
+  border: solid 1px #ccc;
+  border-radius: 5px;
+  width: 400px;
+  padding: 10px;
+  font-size: 15px;
+}
+
+.searchBlog input:focus {
+  outline: none;
+  border-color:hsl(328, 83%, 77%);
+  box-shadow: 0 0 5px hsl(328, 93%, 72%);
+}
+
+.searchBlog button {
+  border: solid 1px;
+  border-radius: 5px;
+  background-color: hsl(328, 93%, 72%);
+  color: white;
+  padding: 10px 20px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.searchBlog button:hover {
+  background-color: snow;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  color: hsl(328, 93%, 72%);
+}
+
+.col-lg-4 h3{
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  padding-top: 30px;
 }

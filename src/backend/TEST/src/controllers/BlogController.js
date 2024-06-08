@@ -11,9 +11,13 @@ export class BlogController {
         }
         res.status(200).send(blog);
     }
-    ;
+    ; 
+    async getAllBlogs(req, res) {
+        const blogs = await this.blogService.getAllBlogs();
+        res.status(200).send(blogs);
+    }
     async searchBlogs(req, res) {
-        const name = req.query.name;
+        const content = req.query.content;
         const limit = parseInt(req.query.limit);
         const page = parseInt(req.query.page);
         const sort = req.query.sort;
@@ -29,8 +33,8 @@ export class BlogController {
             default:
                 sortBy = "updated DESC";
         }
-        const blogs = await this.blogService.searchBlogs(name, limit, sortBy, offset);
-        const total = await this.blogService.getTotalBlogsByName(name);
+        const blogs = await this.blogService.searchBlogs(content, limit, sortBy, offset);
+        const total = await this.blogService.getTotalBlogsByContent(content);
         res.status(200).send({
             data: blogs,
             total: total,

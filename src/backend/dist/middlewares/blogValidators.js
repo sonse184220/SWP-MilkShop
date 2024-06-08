@@ -52,7 +52,7 @@ function _checkBlogSearch() {
       while (1) switch (_context2.prev = _context2.next) {
         case 0:
           _context2.next = 2;
-          return (0, _expressValidator.query)("name")["default"]("").trim().escape().run(req);
+          return (0, _expressValidator.query)("content")["default"]("").trim().escape().run(req);
         case 2:
           _context2.next = 4;
           return (0, _expressValidator.query)("limit")["default"]("20").isInt({

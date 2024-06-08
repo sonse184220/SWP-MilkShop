@@ -13,9 +13,9 @@ export async function checkBlogId(req, res, next) {
     Object.assign(req.params, matchedData(req));
     next();
 }
-// kiểm tra data đầu vào cho search blog 
+// kiểm tra data đầu vào cho search blog
 export async function checkBlogSearch(req, res, next) {
-    await query("name")
+    await query("content")
         .default("")
         .trim()
         .escape()

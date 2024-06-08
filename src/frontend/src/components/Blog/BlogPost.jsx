@@ -16,7 +16,7 @@ const BlogPost = ({ title, author, content, date, image, products }) => {
         </div>
       </div>
       <div className="blog-post-content">
-        {image && <img src={image} alt={title} />}
+        {<img src={image} alt={title} />}
         <p>{content}</p>
       </div>
       <div className="blog-post-footer">

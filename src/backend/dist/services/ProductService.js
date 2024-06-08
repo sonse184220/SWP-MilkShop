@@ -117,6 +117,64 @@ var ProductService = exports.ProductService = /*#__PURE__*/function () {
         return _getTotalProductsByName.apply(this, arguments);
       }
       return getTotalProductsByName;
+    }() // tìm product trong database bằng brand name
+  }, {
+    key: "searchProductsByBrand",
+    value: function () {
+      var _searchProductsByBrand = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(sbrand, slimit, ssortBy, soffset) {
+        var brand, limit, sortBy, offset, _yield$poolConnect$qu7, _yield$poolConnect$qu8, products;
+        return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+          while (1) switch (_context4.prev = _context4.next) {
+            case 0:
+              brand = "%".concat(sbrand, "%");
+              limit = slimit;
+              sortBy = ssortBy;
+              offset = soffset;
+              _context4.next = 6;
+              return _dbConnection.poolConnect.query("SELECT p.*, b.Name AS brandName \n                                                    FROM PRODUCT AS p \n                                                    JOIN brand AS b ON p.BrandID = b.BrandID \n                                                    WHERE b.Name LIKE ? ORDER BY ".concat(sortBy, " LIMIT ? OFFSET ?"), [brand, limit, offset]);
+            case 6:
+              _yield$poolConnect$qu7 = _context4.sent;
+              _yield$poolConnect$qu8 = _slicedToArray(_yield$poolConnect$qu7, 1);
+              products = _yield$poolConnect$qu8[0];
+              return _context4.abrupt("return", products);
+            case 10:
+            case "end":
+              return _context4.stop();
+          }
+        }, _callee4);
+      }));
+      function searchProductsByBrand(_x7, _x8, _x9, _x10) {
+        return _searchProductsByBrand.apply(this, arguments);
+      }
+      return searchProductsByBrand;
+    }() // đếm số lượng product trong database bằng brand name
+  }, {
+    key: "getTotalProductsByBrand",
+    value: function () {
+      var _getTotalProductsByBrand = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(brand) {
+        var search, _yield$poolConnect$qu9, _yield$poolConnect$qu10, total, count;
+        return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+          while (1) switch (_context5.prev = _context5.next) {
+            case 0:
+              search = "%".concat(brand, "%");
+              _context5.next = 3;
+              return _dbConnection.poolConnect.query("SELECT COUNT(*) as count \n                                                                        FROM PRODUCT AS p \n                                                                        JOIN brand AS b ON p.BrandID = b.BrandID \n                                                                        WHERE b.Name LIKE ?", [search]);
+            case 3:
+              _yield$poolConnect$qu9 = _context5.sent;
+              _yield$poolConnect$qu10 = _slicedToArray(_yield$poolConnect$qu9, 1);
+              total = _yield$poolConnect$qu10[0];
+              count = total[0].count;
+              return _context5.abrupt("return", count);
+            case 8:
+            case "end":
+              return _context5.stop();
+          }
+        }, _callee5);
+      }));
+      function getTotalProductsByBrand(_x11) {
+        return _getTotalProductsByBrand.apply(this, arguments);
+      }
+      return getTotalProductsByBrand;
     }()
   }]);
 }();

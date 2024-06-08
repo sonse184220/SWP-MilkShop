@@ -36,20 +36,16 @@ router.get("/api/blogs/id/:id", _blogValidators.checkBlogId, /*#__PURE__*/functi
   };
 }());
 
-/** URL: localhost:xxxx/api/blogs/search?name={...}&limit={...}&page={...}&sort={...}
- * Search blog, lấy data trong query của API
- * - "name" là tên của blog. Nếu không cung cấp "name" => mặc định = "" để search toàn bộ blog
- * - "limit" là giới hạn số lượng blog trả về cho 1 trang. Nếu không cung cấp, "limit" mặc định là 20
- * - "page" là số trang. Nếu không cung cấp, "page" mặc định là 1
- * - "sort" là cách sắp xếp. Nếu không cung cấp, "sort" mặc định là newest. "sort" bao gồm [newest, oldest]
+/** URL: localhost:xxxx/api/blogs
+ * Lấy toàn bộ blog trong database
  */
-router.get("/api/blogs/search", _blogValidators.checkBlogSearch, /*#__PURE__*/function () {
+router.get("/api/blogs", /*#__PURE__*/function () {
   var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(req, res) {
     return _regeneratorRuntime().wrap(function _callee2$(_context2) {
       while (1) switch (_context2.prev = _context2.next) {
         case 0:
           _context2.next = 2;
-          return blogController.searchBlogs(req, res);
+          return blogController.getAllBlogs(req, res);
         case 2:
         case "end":
           return _context2.stop();
@@ -58,6 +54,31 @@ router.get("/api/blogs/search", _blogValidators.checkBlogSearch, /*#__PURE__*/fu
   }));
   return function (_x3, _x4) {
     return _ref2.apply(this, arguments);
+  };
+}());
+
+/** URL: localhost:xxxx/api/blogs/search?content={...}&limit={...}&page={...}&sort={...}
+ * Search blog, lấy data trong query của API
+ * - "content" là nội dung của blog, bao gồm tiêu đề và nội dung chi tiết. Nếu không cung cấp "content" => mặc định = "" để search toàn bộ
+ * - "limit" là giới hạn số lượng blog trả về cho 1 trang. Nếu không cung cấp, "limit" mặc định là 20
+ * - "page" là số trang. Nếu không cung cấp, "page" mặc định là 1
+ * - "sort" là cách sắp xếp. Nếu không cung cấp, "sort" mặc định là newest. "sort" bao gồm [newest, oldest]
+ */
+router.get("/api/blogs/search", _blogValidators.checkBlogSearch, /*#__PURE__*/function () {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(req, res) {
+    return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+      while (1) switch (_context3.prev = _context3.next) {
+        case 0:
+          _context3.next = 2;
+          return blogController.searchBlogs(req, res);
+        case 2:
+        case "end":
+          return _context3.stop();
+      }
+    }, _callee3);
+  }));
+  return function (_x5, _x6) {
+    return _ref3.apply(this, arguments);
   };
 }());
 
