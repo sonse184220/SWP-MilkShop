@@ -14,6 +14,8 @@ import Register from './components/Register/Register.jsx';
 import HomePage from './components/Member/HomePage.jsx';
 import AllBlog from './components/Blog/AllBlog.jsx';
 import AllProducts from './components/Product-HomePage/AllProducts.jsx';
+import EditProfile from './components/Member/EditProfile.jsx';
+
 //import file bootstrap và material-design-iconic-font trong index.js
 
 function App() {
@@ -41,6 +43,7 @@ function App() {
         <Route path='/login-register' element={!showLogin ? <Login onLogin={handleLogin} showLogin={handleShowLogin} /> : <Register showLogin={handleShowLogin} />} />
         <Route path='/Blogs' element={<AllBlog />}></Route>
         <Route path='/Products' element={<AllProducts />}></Route>
+        <Route path='/EditProfile' element={<EditProfile />}></Route>
       </Routes>
 
     </Router>
