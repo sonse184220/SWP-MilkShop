@@ -1,73 +1,78 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './ProductBar.css';
 import { Link } from 'react-router-dom';
+import handleGetAllProduct from '../../services/getAllProductService';
 
 const ProductBar = () => {
-    //List dể ví dụ cho thanh product bar
-    const products = [
-        {
-            id: 1,
-            imageUrl: 'https://example.com/pears.jpg',
-            name: 'Product',
-            description: 'Description of first product',
-            price: '$10.99',
-        },
-        {
-            id: 2,
-            imageUrl: 'https://example.com/chili-peppers.jpg',
-            name: 'Product',
-            description: 'Description of second product',
-            price: '$10.99',
-        },
-        {
-            id: 3,
-            imageUrl: 'https://example.com/tomatoes.jpg',
-            name: 'Product',
-            description: 'Description of third product',
-            price: '$10.99',
-        },
-        {
-            id: 4,
-            imageUrl: 'https://example.com/mushrooms.jpg',
-            name: 'Product',
-            description: 'Description of fourth product',
-            price: '$10.99',
-        },
-        {
-            id: 5,
-            imageUrl: 'https://example.com/eggplant.jpg',
-            name: 'Product',
-            description: 'Description of fifth product',
-            price: '$10.99',
-        },
-        {
-            id: 6,
-            imageUrl: 'https://example.com/persimmons.jpg',
-            name: 'Product',
-            description: 'Description of sixth product',
-            price: '$10.99',
-        },
-    ];
+    const [currentSlide, setCurrentSlide] = useState(0);
+    const [direction, setDirection] = useState(1);
+    const [products, setProducts] = useState([]);
+
+    const GetAllProduct = async () => {
+        try {
+            const response = await handleGetAllProduct();
+            console.log(response);
+            setProducts(response.data);
+        } catch (error) {
+
+        }
+    }
+
+    useEffect(() => {
+        GetAllProduct();
+    }, [])
+
+
+
+    const numSlides = Math.ceil(products.length / 6);
+    const intervalRef = useRef(null);
+
+    //chuyển qua lại giữa hiển thị 6 product đầu và 6 product sau
+    useEffect(() => {
+        const handleSlideUpdate = () => {
+            setCurrentSlide((prevSlide) => {
+                if (prevSlide >= 0 || prevSlide <= numSlides - 1) {
+                    setDirection(1); // Change direction to forward
+                } else if (prevSlide === numSlides - 1) {
+                    setDirection(-1); // Change direction to backward
+                }
+                const newSlide = prevSlide + direction;
+                if (newSlide < 0) {
+                    return numSlides - 1; // Wrap around to the last slide
+                } else if (newSlide > numSlides - 1) {
+                    return 0; // Wrap around to the first slide
+                }
+                return newSlide;
+            });
+        };
+
+        intervalRef.current = setInterval(handleSlideUpdate, 4000);
+
+        return () => clearInterval(intervalRef.current);
+    }, [numSlides]);
+
+    //chuyển qua lại giữa hiển thị 6 product đầu và 6 product sau
+    const productSlide = products.slice(currentSlide * 6, (currentSlide + 1) * 6);
 
     return (
         <div className="product-bar">
             <div className='header'>
-                <h2>Products</h2>
+                <h2 className='title'>Products</h2>
                 <Link to={"/Products"} className="view-all">
                     View all
                 </Link>
             </div>
-            <div className="product-container">
-                {products.map((product) => (
-                    <div key={product.id} className="product-preview">
-                        <img src={`/img/${product.id}.jpg`} alt={product.name} />
-                        <h3>{product.name}</h3>
-                        <p>{product.description}</p>
-                        <p>{product.price}</p>
+            <div className="product-container" >
+                {productSlide.map((product) => (
+                    <div key={product.ProductID} className="product-preview">
+                        <img src={`/img/${product.ProductID}.jpg`} alt={product.Name} />
+                        <h3>{product.Name}</h3>
+                        <p>{product.Content}</p>
+                        <p>{product.Price}</p>
                     </div>
                 ))}
             </div>
-        </div>
+        </div >
     );
 };
 

@@ -55,23 +55,24 @@ const AllProducts = () => {
     return (
         <div className="body">
             <div><Header /></div>
-            <img class='image' src="/img/4.jpg" />
+            <img class='image' src="/img/P004.jpg" />
+            <div className='brand-product'>
+                <div className='brand-bar'><Brand /></div>
 
-            <Brand />
-
-            <div className="product-bar">
-                <div className='header'>
-                    <h2>Products</h2>
-                </div>
-                <div className="product-container">
-                    {products.map((product) => (
-                        <div key={product.id} className="product-preview">
-                            <img src={`/img/${product.id}.jpg`} alt={product.name} />
-                            <h3>{product.name}</h3>
-                            <p>{product.description}</p>
-                            <p>{product.price}</p>
-                        </div>
-                    ))}
+                <div className="product-bar">
+                    <div className='header'>
+                        <h2 className='title'>Products</h2>
+                    </div>
+                    <div className="product-container">
+                        {products.map((product) => (
+                            <div key={product.id} className="product-preview">
+                                <img src={`/img/${product.id}.jpg`} alt={product.name} />
+                                <h3>{product.name}</h3>
+                                <p>{product.description}</p>
+                                <p>{product.price}</p>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
             <div><Footer /></div>

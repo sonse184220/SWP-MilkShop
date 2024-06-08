@@ -23,21 +23,21 @@ export function Header({ onLogin }) {
                         <nav class="main-nav">
 
                             <a href="index.html" class="logo">
-                                Edu Meeting
+                                Milk Shop
                             </a>
 
                             <ul class="nav">
                                 <li class="scroll-to-section"><a href="#top" class="active">Home</a></li>
-                                <li><a href="meetings.html">Meetings</a></li>
-                                <li class="scroll-to-section"><a href="#apply">Apply Now</a></li>
+                                <li><a href="meetings.html">Products</a></li>
+                                <li class="scroll-to-section"><a href="#apply">Blogs</a></li>
                                 <li class="has-sub">
-                                    <a href="javascript:void(0)">Pages</a>
+                                    <a href="javascript:void(0)">Cart</a>
                                     <ul class="sub-menu">
-                                        <li><a href="meetings.html">Upcoming Meetings</a></li>
-                                        <li><a href="meeting-details.html">Meeting Details</a></li>
+                                        <li><a href="meetings.html">Wishlist</a></li>
+                                        <li><a href="meeting-details.html">Reward Point</a></li>
                                     </ul>
                                 </li>
-                                <li class="scroll-to-section"><a href="#courses">Courses</a></li>
+                                <li class="scroll-to-section"><a href="#courses">User1</a></li>
                                 <li class="scroll-to-section"><a href="#contact" onClick={showLogin}>Logout</a></li>
                             </ul>
                             <a class='menu-trigger'>

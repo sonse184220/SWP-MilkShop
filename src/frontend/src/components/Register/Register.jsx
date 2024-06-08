@@ -70,7 +70,7 @@ const Register = ({ showLogin }) => {
         <div className="wrapper" >
             <div class="inner">
                 <div class="image-holder">
-                    <img src="/img/4.jpg" alt="" />
+                    <img src="/img/P004.jpg" alt="" />
                 </div>
                 <form>
                     <h3>Registration Form</h3>

@@ -10,7 +10,7 @@ const HomePage = ({ onLogin }) => {
     return (
         <div className="body">
             <div><Header onLogin={onLogin} /></div>
-            <img class='image' src="/img/4.jpg" />
+            <img class='image' src="/img/P004.jpg" />
             <div className="welcome">Welcome User1</div>
             <div><ProductBar /></div>
             <div><BlogList /></div>

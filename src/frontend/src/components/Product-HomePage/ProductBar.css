@@ -56,12 +56,12 @@
     margin-bottom: 20px;
 }
 
-/* 
-.header h2,
-a {
-    width: 50%;
-} */
-
 .header a {
     margin-left: 70%;
+}
+
+.title {
+    font-size: 26px;
+    font-weight: 700;
+    text-transform: uppercase;
 }

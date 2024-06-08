@@ -91,7 +91,7 @@ const allProducts = blogs.flatMap(blog => blog.products);
 const AllBlog = () => {
   return (
     <>
-      <img className="image" src="/img/4.jpg" alt="Blog Header" />
+      <img className="image" src="/img/P004.jpg" alt="Blog Header" />
       <Header />
       <div className="container">
         <div className="row">

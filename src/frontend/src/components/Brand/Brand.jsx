@@ -1,21 +1,53 @@
+import { useEffect, useState } from 'react';
+
 import './Brand.css';
+import { handleAllBrand } from '../../services/getAllBrand';
+
 function Brand() {
+    const [brands, setBrands] = useState([]);
+
+    const GetAllBrand = async () => {
+        try {
+            const response = await handleAllBrand();
+            console.log(response);
+            setBrands(response.data)
+        } catch (error) {
+
+        }
+    }
+
+    useEffect(() => {
+        GetAllBrand();
+    }, []);
+
     return (
-        <div>
-            <ul class="menu">
-                <li class="menu-item">
-                    <a href="#">Sửa bột cao cấp</a>
-                </li>
-                <li class="menu-item has-submenu">
-                    <a href="#">Vitamin & sức khỏe</a>
-                    <ul class="submenu">
-                        <li class="submenu-item"><a href="#">Vitamin cho bé</a></li>
-                        <li class="submenu-item"><a href="#">Men vi sinh</a></li>
-                        <li class="submenu-item"><a href="#">Thực phẩm lợi sữa</a></li>
+        <div className='brand-container'>
+            < div class="sidebar-single-widget" >
+                <div>
+                    <form>
+                        <div className="search-container">
+                            <input
+                                type='text'
+                                className='search'
+                                placeholder='Search'
+                            />
+                            <button type="submit" className="search-btn">
+                                <i className="zmdi zmdi-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <h6 class="sidebar-title">CATEGORIES</h6>
+                <div class="sidebar-content">
+                    <ul class="sidebar-menu">
+                        {brands.map((brand) => (
+                            <li><a key={brand.BrandID} href="#" >{brand.Name}</a></li>
+                        ))}
                     </ul>
-                </li>
-            </ul>
-        </div>
+                </div>
+
+            </div>
+        </div >
     );
 }
 
