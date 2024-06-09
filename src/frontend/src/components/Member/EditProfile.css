@@ -1,4 +1,4 @@
-.wrapper {
+.editProfile .wrapper {
     min-height: 100vh;
     background-size: cover;
     background-repeat: no-repeat;
@@ -9,14 +9,14 @@
 }
 
 
-.inner {
+.editProfile .inner {
     padding: 20px;
     background: #fff;
     display: flex;
     justify-content: center;
 }
 
-.inner .image-holder {
+.editProfile .inner .image-holder {
     width: 350px;
     border: solid 1px;
     display: flex;
@@ -24,7 +24,7 @@
     border-radius: 5px;
 }
 
-.inner .image-holder img {
+.editProfile .inner .image-holder img {
     width: 200px;
     height: 200px;
     border-radius: 50%;
@@ -32,26 +32,26 @@
     margin-left: 5px
 }
 
-.image-holder-content{
+.editProfile .image-holder-content{
    margin-top: 70px;
 }
-.inner form {
+.editProfile .inner form {
     width: 500px;
     padding-top: 40px;
     padding-left: 20px;
     padding-right: 50px;
 }
 
-.inner h3 {
+.editProfile .inner h3 {
     margin-bottom: 10px;
     text-align: center;
 }
 
-.form-group input {
+.editProfile .form-group input {
     width: 50%;
 }
 
-.form-control {
+.editProfile .form-control {
     border: 1px solid hsl(328, 93%, 72%);
     border-top: none;
     border-right: none;
@@ -62,7 +62,7 @@
     padding: 0;
     margin-bottom: 25px;
 }
-
+.editProfile
 .inner input,
 .inner textarea,
 .inner select,
@@ -72,17 +72,17 @@
     font-size: 13px;
 }
 
-.form-wrapper {
+.editProfile .form-wrapper {
     position: relative;
 }
 
-.form-wrapper i {
+.editProfile .form-wrapper i {
     position: absolute;
     bottom: 9px;
     right: 0;
 }
 
-.inner button {
+.editProfile .inner button {
     border: none;
     width: 164px;
     height: 51px;
@@ -105,39 +105,40 @@
     border-radius: 10px;
 }
 
-.inner button:hover {
+.editProfile .inner button:hover {
     background-color: snow;
     color: hsl(328, 93%, 72%);
 }
 
-.inner button i {
+.editProfile .inner button i {
     margin-left: 10px;
     -webkit-transform: translateZ(0);
     transform: translateZ(0);
 }
 
-.switchlogin {
+.editProfile .switchlogin {
     display: flex;
     font-size: 15px;
     text-align: center;
     padding-left: 17%;
     height: 20px;
 }
-
+.editProfile
 .switchlogin p,
 .switchlogin a {
     width: 50%;
 }
 
-.switchlogin a {
+.editProfile .switchlogin a {
     text-align: left;
     color: #5072A7;
 }
 
-.switchlogin a:hover {
+.editProfile .switchlogin a:hover {
     color: #4B5320;
 }
 
+.editProfile
 .zmdi-account,
 .zmdi-email,
 .zmdi-phone,
@@ -147,7 +148,7 @@
     padding-right: 5px;
 }
 
-.error-message {
+.editProfile .error-message {
     color: red;
     font-size: 16px;
     font-weight: 500;
@@ -156,7 +157,7 @@
     padding-right: 25px;
 }
 
-.success-message {
+.editProfile .success-message {
     color: green;
     font-size: 16px;
     font-weight: 500;
@@ -165,7 +166,7 @@
     padding-right: 25px;
 }
 
-.importButton button{
+.editProfile .importButton button{
     display: flex;
     justify-content: center;
     align-items: center;
