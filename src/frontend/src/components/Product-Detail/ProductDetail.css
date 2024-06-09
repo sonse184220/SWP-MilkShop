@@ -1,0 +1,145 @@
+/* ProductDetail.css */
+.detail-img img {
+    width: 100%;
+    border-radius: 15px;
+}
+
+.product-detail {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    margin: 20px;
+}
+
+.detail-img {
+    width: 40%;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.detail-info {
+    width: 60%;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.product-details-text {
+    margin-bottom: 20px;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.review-star {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+.review-star li {
+    color: gold;
+}
+
+.customer-review {
+    text-decoration: none;
+    color: #333;
+    margin-left: 5px;
+}
+
+.price {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.product-details-variable {
+    margin-bottom: 20px;
+}
+
+.variable-single-item {
+    margin-bottom: 10px;
+}
+
+.product-stock {
+    font-weight: bold;
+}
+
+.product-variable-quantity input {
+    width: 60px;
+    padding: 5px;
+}
+
+.product-add-to-cart-btn .btn {
+    background-color: #333;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-left: 10px;
+}
+
+.product-details-meta {
+    margin-bottom: 10px;
+}
+
+.product-details-meta a {
+    text-decoration: none;
+    color: #333;
+    margin-right: 10px;
+}
+
+.product-details-catagory {
+    margin-bottom: 10px;
+}
+
+.product-details-catagory ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+.product-details-catagory li {
+    margin-right: 10px;
+}
+
+.product-details-catagory a {
+    text-decoration: none;
+    color: #333;
+}
+
+.product-details-social ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+.product-details-social li {
+    margin-right: 10px;
+}
+
+.product-details-social a {
+    color: #333;
+    text-decoration: none;
+}
+
+@media (max-width: 768px) {
+    .product-detail {
+        flex-direction: column;
+    }
+
+    .detail-img,
+    .detail-info {
+        width: 1
+    }
+}
+
+.feedback {
+    width: 90%;
+    margin: auto;
+}

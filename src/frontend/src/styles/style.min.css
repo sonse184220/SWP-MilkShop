@@ -17258,7 +17258,7 @@ input {
 }
 
 .default-form-box textarea {
-    height: 200px;
+    height: auto;
     padding: 20px
 }
 

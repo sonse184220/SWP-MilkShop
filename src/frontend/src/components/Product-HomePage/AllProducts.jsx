@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import Footer from "../Footer/Footer"
 import Header from "../Header/Header"
@@ -45,12 +46,12 @@ const AllProducts = () => {
                     </div>
                     <div className="product-container">
                         {filteredProducts.map((product) => (
-                            <div key={product.ProductID} className="product-preview">
+                            <Link key={product.ProductID} className="product-preview">
                                 <img src={`/img/${product.ProductID}.jpg`} alt={product.Name} />
                                 <h3>{product.Name}</h3>
                                 <p>{product.Content}</p>
                                 <p>{product.Price}</p>
-                            </div>
+                            </Link>
                         ))}
                     </div>
                 </div>

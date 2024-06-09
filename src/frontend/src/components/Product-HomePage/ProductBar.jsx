@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './ProductBar.css';
 import { Link } from 'react-router-dom';
+
+import './ProductBar.css';
 import handleGetAllProduct from '../../services/getAllProductService';
 
 const ProductBar = () => {
@@ -64,12 +65,12 @@ const ProductBar = () => {
             </div>
             <div className="product-container" >
                 {productSlide.map((product) => (
-                    <div key={product.ProductID} className="product-preview">
+                    <Link key={product.ProductID} className="product-preview">
                         <img src={`/img/${product.ProductID}.jpg`} alt={product.Name} />
                         <h3>{product.Name}</h3>
                         <p>{product.Content}</p>
                         <p>{product.Price}</p>
-                    </div>
+                    </Link>
                 ))}
             </div>
         </div >

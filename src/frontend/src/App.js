@@ -1,10 +1,3 @@
-// import logo from './logo.svg';
-// import './App.css';
-// import ProductBar from './components/Product-HomePage/ProductBar.jsx';
-// import Header from './components/Header/Header.jsx';
-// import Footer from './components/Footer/Footer.jsx';
-// import Test from './Test-GetSearchAPI.js';
-// import BlogList from './components/Blog/BlogList.jsx';
 import { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
@@ -15,6 +8,7 @@ import HomePage from './components/Member/HomePage.jsx';
 import AllBlog from './components/Blog/AllBlog.jsx';
 import AllProducts from './components/Product-HomePage/AllProducts.jsx';
 import EditProfile from './components/Member/EditProfile.jsx';
+import ProductDetail from './components/Product-Detail/ProductDetail.jsx';
 
 //import file bootstrap và material-design-iconic-font trong index.js
 
@@ -44,6 +38,7 @@ function App() {
         <Route path='/Blogs' element={<AllBlog />}></Route>
         <Route path='/Products' element={<AllProducts />}></Route>
         <Route path='/EditProfile' element={<EditProfile />}></Route>
+        <Route path='/ProductDetail' element={<ProductDetail />}></Route>
       </Routes>
 
     </Router>
