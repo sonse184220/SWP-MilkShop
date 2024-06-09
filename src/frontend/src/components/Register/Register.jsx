@@ -145,7 +145,7 @@ const Register = ({ showLogin }) => {
                         <p>Already registered?</p>
                         <a href='#' onClick={handleShowLogin}>Sign In</a>
                     </div>
-                    <button onClick={handleRegister}>Register
+                    <button className='registerbt' onClick={handleRegister}>Register
                         <i class="zmdi zmdi-arrow-right"></i>
                     </button>
                 </form>

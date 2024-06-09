@@ -51,111 +51,111 @@ const EditProfile = ({ showLogin }) => {
   //component register
   return (
     <>
-      <img className="image" src="/img/4.jpg" alt="Blog Header" />
+      <img className="image" src="/img/P004.jpg" alt="Blog Header" />
       <Header />
       <div className="editProfile">
-      <div className="wrapper">
-        <div class="inner">
-          <div className="container">
-            <div className="row">
-              <div class="col-lg-6 image-holder">
-                <div className="image-holder-content">
-                  <img src="https://via.placeholder.com/40" alt="" />
-                  <div className="importButton">
-                    <button>Import image</button>
+        <div className="wrapper">
+          <div class="inner">
+            <div className="container">
+              <div className="row">
+                <div class="col-lg-6 image-holder">
+                  <div className="image-holder-content">
+                    <img src="https://via.placeholder.com/40" alt="" />
+                    <div className="importButton">
+                      <button>Import image</button>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="col-lg-6">
-                <form>
-                  <h3>Edit profile</h3>
-                  <div class="form-wrapper">
-                    <input
-                      type="password"
-                      placeholder="Password"
-                      class="form-control"
-                      onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <i class="zmdi zmdi-lock"></i>
-                  </div>
-                  <div class="form-wrapper">
-                    <input
-                      type="password"
-                      placeholder="Confirm Password"
-                      class="form-control"
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                    />
-                    <i class="zmdi zmdi-lock"></i>
-                  </div>
-                  <div class="form-wrapper">
-                    <input
-                      type="text"
-                      placeholder="Name"
-                      class="form-control"
-                      onChange={(e) => setName(e.target.value)}
-                    />
-                    <i class="zmdi zmdi-account"></i>
-                  </div>
-                  <div class="form-wrapper">
-                    <input
-                      type="text"
-                      placeholder="Email Address"
-                      class="form-control"
-                      onChange={(e) => setEmail(e.target.value)}
-                    />
-                    <i class="zmdi zmdi-email"></i>
-                  </div>
-                  <div class="form-wrapper">
-                    <input
-                      type="text"
-                      placeholder="Phone"
-                      class="form-control"
-                      onChange={(e) => setPhone(e.target.value)}
-                    />
-                    <i class="zmdi zmdi-phone"></i>
-                  </div>
-                  <div class="form-wrapper">
-                    <input
-                      type="text"
-                      placeholder="Address"
-                      class="form-control"
-                      onChange={(e) => setAddress(e.target.value)}
-                    />
-                    <i class="zmdi zmdi-home"></i>
-                  </div>
+                <div className="col-lg-6">
+                  <form>
+                    <h3>Edit profile</h3>
+                    <div class="form-wrapper">
+                      <input
+                        type="password"
+                        placeholder="Password"
+                        class="form-control"
+                        onChange={(e) => setPassword(e.target.value)}
+                      />
+                      <i class="zmdi zmdi-lock"></i>
+                    </div>
+                    <div class="form-wrapper">
+                      <input
+                        type="password"
+                        placeholder="Confirm Password"
+                        class="form-control"
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                      />
+                      <i class="zmdi zmdi-lock"></i>
+                    </div>
+                    <div class="form-wrapper">
+                      <input
+                        type="text"
+                        placeholder="Name"
+                        class="form-control"
+                        onChange={(e) => setName(e.target.value)}
+                      />
+                      <i class="zmdi zmdi-account"></i>
+                    </div>
+                    <div class="form-wrapper">
+                      <input
+                        type="text"
+                        placeholder="Email Address"
+                        class="form-control"
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
+                      <i class="zmdi zmdi-email"></i>
+                    </div>
+                    <div class="form-wrapper">
+                      <input
+                        type="text"
+                        placeholder="Phone"
+                        class="form-control"
+                        onChange={(e) => setPhone(e.target.value)}
+                      />
+                      <i class="zmdi zmdi-phone"></i>
+                    </div>
+                    <div class="form-wrapper">
+                      <input
+                        type="text"
+                        placeholder="Address"
+                        class="form-control"
+                        onChange={(e) => setAddress(e.target.value)}
+                      />
+                      <i class="zmdi zmdi-home"></i>
+                    </div>
 
-                  <div>
-                    {(ErrorMessage || SuccessMessage) && (
-                      <>
-                        {(!isPasswordMatch || ErrorMessage.message) && (
-                          <p className="error-message">
-                            {ErrorMessage.message}
-                          </p>
-                        )}
-                        {ErrorMessage.error &&
-                          ErrorMessage.error.length > 0 && (
+                    <div>
+                      {(ErrorMessage || SuccessMessage) && (
+                        <>
+                          {(!isPasswordMatch || ErrorMessage.message) && (
                             <p className="error-message">
-                              {ErrorMessage.error[0].msg}
+                              {ErrorMessage.message}
                             </p>
                           )}
-                        {SuccessMessage.message && (
-                          <p className="success-message">
-                            {SuccessMessage.message}
-                          </p>
-                        )}
-                      </>
-                    )}
-                  </div>
-                  <button onClick={handleEditProfile}>
-                    Edit profile
-                    <i class="zmdi zmdi-arrow-right"></i>
-                  </button>
-                </form>
+                          {ErrorMessage.error &&
+                            ErrorMessage.error.length > 0 && (
+                              <p className="error-message">
+                                {ErrorMessage.error[0].msg}
+                              </p>
+                            )}
+                          {SuccessMessage.message && (
+                            <p className="success-message">
+                              {SuccessMessage.message}
+                            </p>
+                          )}
+                        </>
+                      )}
+                    </div>
+                    <button onClick={handleEditProfile}>
+                      Edit profile
+                      <i class="zmdi zmdi-arrow-right"></i>
+                    </button>
+                  </form>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
       </div>
       <Footer />
     </>

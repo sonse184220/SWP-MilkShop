@@ -32,9 +32,10 @@
     margin-left: 5px
 }
 
-.editProfile .image-holder-content{
-   margin-top: 70px;
+.editProfile .image-holder-content {
+    margin-top: 70px;
 }
+
 .editProfile .inner form {
     width: 500px;
     padding-top: 40px;
@@ -62,8 +63,8 @@
     padding: 0;
     margin-bottom: 25px;
 }
-.editProfile
-.inner input,
+
+.editProfile .inner input,
 .inner textarea,
 .inner select,
 .inner button {
@@ -123,9 +124,8 @@
     padding-left: 17%;
     height: 20px;
 }
-.editProfile
-.switchlogin p,
-.switchlogin a {
+
+.editProfile .switchlogin p {
     width: 50%;
 }
 
@@ -138,8 +138,7 @@
     color: #4B5320;
 }
 
-.editProfile
-.zmdi-account,
+.editProfile .zmdi-account,
 .zmdi-email,
 .zmdi-phone,
 .zmdi-home,
@@ -166,7 +165,7 @@
     padding-right: 25px;
 }
 
-.editProfile .importButton button{
+.editProfile .importButton button {
     display: flex;
     justify-content: center;
     align-items: center;
