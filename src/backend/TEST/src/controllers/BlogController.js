@@ -11,7 +11,7 @@ export class BlogController {
         }
         res.status(200).send(blog);
     }
-    ; 
+    ;
     async getAllBlogs(req, res) {
         const blogs = await this.blogService.getAllBlogs();
         res.status(200).send(blogs);

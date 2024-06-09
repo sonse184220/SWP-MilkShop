@@ -3,7 +3,7 @@ import { poolConnect } from "../utils/dbConnection.js";
 
 
 export class ProductService {
-    // Lấy thông tin của 1 product bằng ID
+    // Lấy thông tin của 1 product bằng ID 
     async getProduct(id: string) {
         const [product] = await poolConnect.query('SELECT * FROM product WHERE ProductID = ?', [id]);
         return product as QueryResult[];
@@ -33,9 +33,9 @@ export class ProductService {
         return count;
     }
 
-    // tìm product trong database bằng brand name
-    async searchProductsByBrand(sbrand: string, slimit: number, ssortBy: string, soffset: number) {
-        const brand = `%${sbrand}%`;
+    // tìm product trong database bằng brand id
+    async searchProductsByBrand(sid: string, slimit: number, ssortBy: string, soffset: number) {
+        const id = sid;
         const limit =  slimit;
         const sortBy = ssortBy;
         const offset = soffset;
@@ -44,24 +44,22 @@ export class ProductService {
         //                                             [brand, limit, offset]
         // );
 
-        const [products] = await poolConnect.query(`SELECT p.*, b.Name AS brandName 
-                                                    FROM PRODUCT AS p 
-                                                    JOIN brand AS b ON p.BrandID = b.BrandID 
-                                                    WHERE b.Name LIKE ? ORDER BY ${sortBy} LIMIT ? OFFSET ?`,
-                                                    [brand, limit, offset]
+        const [products] = await poolConnect.query(`SELECT * 
+                                                    FROM PRODUCT 
+                                                    WHERE BrandID = ? ORDER BY ${sortBy} LIMIT ? OFFSET ?`,
+                                                    [id, limit, offset]
         );
 
-        return products as QueryResult[];
+        return products as QueryResult[]; 
     }
 
-    // đếm số lượng product trong database bằng brand name
-    async getTotalProductsByBrand(brand: string) {
-        const search = `%${brand}%`;
+    // đếm số lượng product trong database bằng brand id
+    async getTotalProductsByBrand(id: string) {
+        const search = id;
 
         const [total]: [RowDataPacket[], any] = await poolConnect.query(`SELECT COUNT(*) as count 
-                                                                        FROM PRODUCT AS p 
-                                                                        JOIN brand AS b ON p.BrandID = b.BrandID 
-                                                                        WHERE b.Name LIKE ?`, [search]);
+                                                                        FROM PRODUCT 
+                                                                        WHERE BrandID = ?`, [search]);
         const count: number = total[0].count;
 
         return count;

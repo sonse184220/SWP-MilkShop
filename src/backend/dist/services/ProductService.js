@@ -117,21 +117,21 @@ var ProductService = exports.ProductService = /*#__PURE__*/function () {
         return _getTotalProductsByName.apply(this, arguments);
       }
       return getTotalProductsByName;
-    }() // tìm product trong database bằng brand name
+    }() // tìm product trong database bằng brand id
   }, {
     key: "searchProductsByBrand",
     value: function () {
-      var _searchProductsByBrand = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(sbrand, slimit, ssortBy, soffset) {
-        var brand, limit, sortBy, offset, _yield$poolConnect$qu7, _yield$poolConnect$qu8, products;
+      var _searchProductsByBrand = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(sid, slimit, ssortBy, soffset) {
+        var id, limit, sortBy, offset, _yield$poolConnect$qu7, _yield$poolConnect$qu8, products;
         return _regeneratorRuntime().wrap(function _callee4$(_context4) {
           while (1) switch (_context4.prev = _context4.next) {
             case 0:
-              brand = "%".concat(sbrand, "%");
+              id = sid;
               limit = slimit;
               sortBy = ssortBy;
               offset = soffset;
               _context4.next = 6;
-              return _dbConnection.poolConnect.query("SELECT p.*, b.Name AS brandName \n                                                    FROM PRODUCT AS p \n                                                    JOIN brand AS b ON p.BrandID = b.BrandID \n                                                    WHERE b.Name LIKE ? ORDER BY ".concat(sortBy, " LIMIT ? OFFSET ?"), [brand, limit, offset]);
+              return _dbConnection.poolConnect.query("SELECT * \n                                                    FROM PRODUCT \n                                                    WHERE BrandID = ? ORDER BY ".concat(sortBy, " LIMIT ? OFFSET ?"), [id, limit, offset]);
             case 6:
               _yield$poolConnect$qu7 = _context4.sent;
               _yield$poolConnect$qu8 = _slicedToArray(_yield$poolConnect$qu7, 1);
@@ -147,18 +147,18 @@ var ProductService = exports.ProductService = /*#__PURE__*/function () {
         return _searchProductsByBrand.apply(this, arguments);
       }
       return searchProductsByBrand;
-    }() // đếm số lượng product trong database bằng brand name
+    }() // đếm số lượng product trong database bằng brand id
   }, {
     key: "getTotalProductsByBrand",
     value: function () {
-      var _getTotalProductsByBrand = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(brand) {
+      var _getTotalProductsByBrand = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(id) {
         var search, _yield$poolConnect$qu9, _yield$poolConnect$qu10, total, count;
         return _regeneratorRuntime().wrap(function _callee5$(_context5) {
           while (1) switch (_context5.prev = _context5.next) {
             case 0:
-              search = "%".concat(brand, "%");
+              search = id;
               _context5.next = 3;
-              return _dbConnection.poolConnect.query("SELECT COUNT(*) as count \n                                                                        FROM PRODUCT AS p \n                                                                        JOIN brand AS b ON p.BrandID = b.BrandID \n                                                                        WHERE b.Name LIKE ?", [search]);
+              return _dbConnection.poolConnect.query("SELECT COUNT(*) as count \n                                                                        FROM PRODUCT \n                                                                        WHERE BrandID = ?", [search]);
             case 3:
               _yield$poolConnect$qu9 = _context5.sent;
               _yield$poolConnect$qu10 = _slicedToArray(_yield$poolConnect$qu9, 1);

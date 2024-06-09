@@ -45,7 +45,7 @@ function _checkProductId() {
 }
 function checkProductSearch(_x4, _x5, _x6) {
   return _checkProductSearch.apply(this, arguments);
-} // kiểm tra data đầu vào cho search brand
+} // kiểm tra data đầu vào cho search product thuộc brand
 function _checkProductSearch() {
   _checkProductSearch = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(req, res, next) {
     var sortList, result;
@@ -100,7 +100,7 @@ function _checkProductSearchBrand() {
       while (1) switch (_context3.prev = _context3.next) {
         case 0:
           _context3.next = 2;
-          return (0, _expressValidator.query)("brand")["default"]("").trim().escape().run(req);
+          return (0, _expressValidator.query)("id")["default"]("").trim().escape().run(req);
         case 2:
           _context3.next = 4;
           return (0, _expressValidator.query)("limit")["default"]("20").isInt({

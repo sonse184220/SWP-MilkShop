@@ -55,8 +55,8 @@ export class ProductController {
         });
     };
 
-    async searchProductsByBrand(req: Request, res: Response) {
-        const brand = req.query.brand as string; 
+    async searchProductsByBrandId(req: Request, res: Response) {
+        const id = req.query.id as string; 
         const limit = parseInt(req.query.limit as string);
         const page = parseInt(req.query.page as string);
         const sort = req.query.sort as string;
@@ -80,8 +80,8 @@ export class ProductController {
                 sortBy = "updated DESC";
         }
 
-        const products = await this.productService.searchProductsByBrand(brand, limit, sortBy, offset);
-        const total = await this.productService.getTotalProductsByBrand(brand);
+        const products = await this.productService.searchProductsByBrand(id, limit, sortBy, offset);
+        const total = await this.productService.getTotalProductsByBrand(id);
 
         res.status(200).send({
             data: products,

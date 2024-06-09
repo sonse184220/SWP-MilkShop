@@ -120,14 +120,14 @@ var ProductController = exports.ProductController = /*#__PURE__*/function () {
       return searchProducts;
     }()
   }, {
-    key: "searchProductsByBrand",
+    key: "searchProductsByBrandId",
     value: function () {
-      var _searchProductsByBrand = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(req, res) {
-        var brand, limit, page, sort, offset, sortBy, products, total;
+      var _searchProductsByBrandId = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(req, res) {
+        var id, limit, page, sort, offset, sortBy, products, total;
         return _regeneratorRuntime().wrap(function _callee3$(_context3) {
           while (1) switch (_context3.prev = _context3.next) {
             case 0:
-              brand = req.query.brand;
+              id = req.query.id;
               limit = parseInt(req.query.limit);
               page = parseInt(req.query.page);
               sort = req.query.sort;
@@ -151,11 +151,11 @@ var ProductController = exports.ProductController = /*#__PURE__*/function () {
               sortBy = "updated DESC";
             case 17:
               _context3.next = 19;
-              return this.productService.searchProductsByBrand(brand, limit, sortBy, offset);
+              return this.productService.searchProductsByBrand(id, limit, sortBy, offset);
             case 19:
               products = _context3.sent;
               _context3.next = 22;
-              return this.productService.getTotalProductsByBrand(brand);
+              return this.productService.getTotalProductsByBrand(id);
             case 22:
               total = _context3.sent;
               res.status(200).send({
@@ -170,10 +170,10 @@ var ProductController = exports.ProductController = /*#__PURE__*/function () {
           }
         }, _callee3, this);
       }));
-      function searchProductsByBrand(_x5, _x6) {
-        return _searchProductsByBrand.apply(this, arguments);
+      function searchProductsByBrandId(_x5, _x6) {
+        return _searchProductsByBrandId.apply(this, arguments);
       }
-      return searchProductsByBrand;
+      return searchProductsByBrandId;
     }()
   }]);
 }();
