@@ -53,6 +53,7 @@ const EditProfile = ({ showLogin }) => {
     <>
       <img className="image" src="/img/4.jpg" alt="Blog Header" />
       <Header />
+      <div className="editProfile">
       <div className="wrapper">
         <div class="inner">
           <div className="container">
@@ -154,6 +155,7 @@ const EditProfile = ({ showLogin }) => {
             </div>
           </div>
         </div>
+      </div>
       </div>
       <Footer />
     </>
