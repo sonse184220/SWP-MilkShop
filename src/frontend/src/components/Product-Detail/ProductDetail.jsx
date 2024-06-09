@@ -4,8 +4,11 @@ import Footer from "../Footer/Footer";
 import Header from "../Header/Header";
 import ProductList from '../Product/ProductList';
 import Feedback from '../Feedback/Feedback';
+import { useState } from 'react';
 
 const ProductDetail = () => {
+    const [quantity, setQuantity] = useState(1);
+
     const products = [
         {
             name: 'Product 1',
@@ -39,6 +42,16 @@ const ProductDetail = () => {
         }
     ];
 
+    const handleIncrement = (step = 1) => {
+        setQuantity(prevQuantity => prevQuantity + step);
+    };
+
+    const handleDecrement = (step = 1) => {
+        if (quantity > 1) {
+            setQuantity(prevQuantity => prevQuantity - step);
+        }
+    };
+
     return (
         <div className='body'>
             <div><Header /></div>
@@ -49,9 +62,9 @@ const ProductDetail = () => {
                 </div>
                 <div class="product-details-content-area product-details--golden aos-init aos-animate detail-info" data-aos="fade-up" data-aos-delay="200">
                     <div class="product-details-text">
-                        <h4 class="title">Ornare sed consequat</h4>
+                        <h4 class="title">Milk</h4>
                         <div class="price">$80.00</div>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam fringilla augue nec est tristique auctor. Donec non est at libero vulputate rutrum. Morbi ornare lectus quis justo gravida semper. Nulla tellus mi, vulputate adipiscing cursus eu, suscipit id nulla.</p>
+                        <p>Milk contains high-quality protein and is a great post-workout recovery drink. Learn how it can help you build and repair muscle tissue.</p>
                     </div>
                     <div class="product-details-variable">
                         <h4 class="title">Available Options</h4>
@@ -64,7 +77,10 @@ const ProductDetail = () => {
                             <div class="variable-single-item ">
                                 <span>Quantity</span>
                                 <div class="product-variable-quantity">
-                                    <input min="1" max="100" value="1" type="number" />
+                                    <input min="1" max="100" value={quantity} type="number"
+                                        onChange={e => setQuantity(parseInt(e.target.value))}
+                                        onIncrement={handleIncrement}
+                                        onDecrement={handleDecrement} />
                                 </div>
                             </div>
 
