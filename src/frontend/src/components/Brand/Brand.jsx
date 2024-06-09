@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import './Brand.css';
 import { handleAllBrand } from '../../services/getAllBrand';
 
-function Brand() {
+function Brand({ onBrandClick }) {
     const [brands, setBrands] = useState([]);
 
     const GetAllBrand = async () => {
@@ -40,8 +40,9 @@ function Brand() {
                 <h6 class="sidebar-title">CATEGORIES</h6>
                 <div class="sidebar-content">
                     <ul class="sidebar-menu">
+                        <li><a onClick={() => onBrandClick(null)} href="#" >All Brands</a></li>
                         {brands.map((brand) => (
-                            <li><a key={brand.BrandID} href="#" >{brand.Name}</a></li>
+                            <li><a key={brand.BrandID} onClick={() => onBrandClick(brand.BrandID)} href="#" >{brand.Name}</a></li>
                         ))}
                     </ul>
                 </div>

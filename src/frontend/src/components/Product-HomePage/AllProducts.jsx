@@ -1,75 +1,55 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Footer from "../Footer/Footer"
 import Header from "../Header/Header"
-import './ProductBar.css';
+import './AllProducts.css';
 import Brand from '../Brand/Brand';
+import handleGetAllProduct from '../../services/getAllProductService';
 
 const AllProducts = () => {
-    //List dể ví dụ cho thanh product bar
-    const products = [
-        {
-            id: 1,
-            imageUrl: 'https://example.com/pears.jpg',
-            name: 'Product',
-            description: 'Description of first product',
-            price: '$10.99',
-        },
-        {
-            id: 2,
-            imageUrl: 'https://example.com/chili-peppers.jpg',
-            name: 'Product',
-            description: 'Description of second product',
-            price: '$10.99',
-        },
-        {
-            id: 3,
-            imageUrl: 'https://example.com/tomatoes.jpg',
-            name: 'Product',
-            description: 'Description of third product',
-            price: '$10.99',
-        },
-        {
-            id: 4,
-            imageUrl: 'https://example.com/mushrooms.jpg',
-            name: 'Product',
-            description: 'Description of fourth product',
-            price: '$10.99',
-        },
-        {
-            id: 5,
-            imageUrl: 'https://example.com/eggplant.jpg',
-            name: 'Product',
-            description: 'Description of fifth product',
-            price: '$10.99',
-        },
-        {
-            id: 6,
-            imageUrl: 'https://example.com/persimmons.jpg',
-            name: 'Product',
-            description: 'Description of sixth product',
-            price: '$10.99',
-        },
-    ];
+    const [products, setProducts] = useState([]);
+    const [CurrentBrand, SetCurrentBrand] = useState(null);
+
+    const handleBrandClick = (BrandID) => {
+        SetCurrentBrand(BrandID);
+    }
+
+    const filteredProducts = CurrentBrand
+        ? products.filter(product => product.BrandID === CurrentBrand)
+        : products;
+
+    const GetAllProduct = async () => {
+        try {
+            const response = await handleGetAllProduct();
+            console.log(response);
+            setProducts(response.data);
+        } catch (error) {
+
+        }
+    }
+
+    useEffect(() => {
+        GetAllProduct();
+    }, [])
 
     return (
         <div className="body">
             <div><Header /></div>
             <img class='image' src="/img/P004.jpg" />
             <div className='brand-product'>
-                <div className='brand-bar'><Brand /></div>
+                <div className='brand-bar'><Brand onBrandClick={handleBrandClick} /></div>
 
                 <div className="product-bar">
                     <div className='header'>
                         <h2 className='title'>Products</h2>
                     </div>
                     <div className="product-container">
-                        {products.map((product) => (
-                            <div key={product.id} className="product-preview">
-                                <img src={`/img/${product.id}.jpg`} alt={product.name} />
-                                <h3>{product.name}</h3>
-                                <p>{product.description}</p>
-                                <p>{product.price}</p>
+                        {filteredProducts.map((product) => (
+                            <div key={product.ProductID} className="product-preview">
+                                <img src={`/img/${product.ProductID}.jpg`} alt={product.Name} />
+                                <h3>{product.Name}</h3>
+                                <p>{product.Content}</p>
+                                <p>{product.Price}</p>
                             </div>
                         ))}
                     </div>
