@@ -55,9 +55,9 @@ export async function checkProductSearch(req, res, next) {
     next();
 }
 
-// kiểm tra data đầu vào cho search brand
+// kiểm tra data đầu vào cho search product thuộc brand
 export async function checkProductSearchBrand(req, res, next) {
-    await query("brand")
+    await query("id")
         .default("")
         .trim()
         .escape()

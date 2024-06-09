@@ -66,9 +66,9 @@ router.get("/api/products/search", _productValidators.checkProductSearch, /*#__P
   };
 }());
 
-/** URL: localhost:xxxx/api/products/search/brand?brand={...}&limit={...}&page={...}&sort={...}
- * Search product bằng brand name, lấy data trong query của API
- * - "brand" là name của brand. Nếu không cung cấp "brand" => mặc định = "" để search toàn bộ
+/** URL: localhost:xxxx/api/products/search/brand?id={...}&limit={...}&page={...}&sort={...}
+ * Search product bằng brand id, lấy data trong query của API
+ * - "brand" là id của brand. Nếu không cung cấp "brand" => mặc định = "" và trả về not found
  * - "limit" là giới hạn số lượng product trả về cho 1 trang. Nếu không cung cấp, "limit" mặc định là 20
  * - "page" là số trang. Nếu không cung cấp, "page" mặc định là 1
  * - "sort" là cách sắp xếp. Nếu không cung cấp, "sort" mặc định là newest. "sort" bao gồm [newest, oldest, highest, lowest]
@@ -79,7 +79,7 @@ router.get("/api/products/search/brand", _productValidators.checkProductSearchBr
       while (1) switch (_context3.prev = _context3.next) {
         case 0:
           _context3.next = 2;
-          return productController.searchProductsByBrand(req, res);
+          return productController.searchProductsByBrandId(req, res);
         case 2:
         case "end":
           return _context3.stop();
