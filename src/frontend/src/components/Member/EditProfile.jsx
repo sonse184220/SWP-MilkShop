@@ -68,7 +68,7 @@ const EditProfile = ({ showLogin }) => {
               </div>
               <div className="col-lg-6">
                 <form>
-                  <h3>Edit profile: </h3>
+                  <h3>Edit profile</h3>
                   <div class="form-wrapper">
                     <input
                       type="password"
