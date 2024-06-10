@@ -176,5 +176,84 @@ var ProductService = exports.ProductService = /*#__PURE__*/function () {
       }
       return getTotalProductsByBrand;
     }()
+  }, {
+    key: "getFeedback",
+    value: // lấy feedback bằng id của nó
+    function () {
+      var _getFeedback = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(id) {
+        var _yield$poolConnect$qu11, _yield$poolConnect$qu12, feedback;
+        return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+          while (1) switch (_context6.prev = _context6.next) {
+            case 0:
+              _context6.next = 2;
+              return _dbConnection.poolConnect.query("Select * FROM feedback WHERE FeedbackID = ?", [id]);
+            case 2:
+              _yield$poolConnect$qu11 = _context6.sent;
+              _yield$poolConnect$qu12 = _slicedToArray(_yield$poolConnect$qu11, 1);
+              feedback = _yield$poolConnect$qu12[0];
+              return _context6.abrupt("return", feedback);
+            case 6:
+            case "end":
+              return _context6.stop();
+          }
+        }, _callee6);
+      }));
+      function getFeedback(_x12) {
+        return _getFeedback.apply(this, arguments);
+      }
+      return getFeedback;
+    }() // lấy feedbacks từ 1 product
+  }, {
+    key: "getFeedbacksByProductID",
+    value: function () {
+      var _getFeedbacksByProductID = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7(id) {
+        var _yield$poolConnect$qu13, _yield$poolConnect$qu14, feedbacks;
+        return _regeneratorRuntime().wrap(function _callee7$(_context7) {
+          while (1) switch (_context7.prev = _context7.next) {
+            case 0:
+              _context7.next = 2;
+              return _dbConnection.poolConnect.query("Select * FROM feedback WHERE ProductID = ?", [id]);
+            case 2:
+              _yield$poolConnect$qu13 = _context7.sent;
+              _yield$poolConnect$qu14 = _slicedToArray(_yield$poolConnect$qu13, 1);
+              feedbacks = _yield$poolConnect$qu14[0];
+              return _context7.abrupt("return", feedbacks);
+            case 6:
+            case "end":
+              return _context7.stop();
+          }
+        }, _callee7);
+      }));
+      function getFeedbacksByProductID(_x13) {
+        return _getFeedbacksByProductID.apply(this, arguments);
+      }
+      return getFeedbacksByProductID;
+    }() // tạo feedback và lưu xuống database
+  }, {
+    key: "createFeedback",
+    value: function () {
+      var _createFeedback = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee8(productId, userId, rating, content) {
+        var _yield$poolConnect$qu15, _yield$poolConnect$qu16, feedback;
+        return _regeneratorRuntime().wrap(function _callee8$(_context8) {
+          while (1) switch (_context8.prev = _context8.next) {
+            case 0:
+              _context8.next = 2;
+              return _dbConnection.poolConnect.query("INSERT INTO feedback (ProductID, UserID, Rating, Content) VALUES (?, ?, ?, ?)", [productId, userId, rating, content]);
+            case 2:
+              _yield$poolConnect$qu15 = _context8.sent;
+              _yield$poolConnect$qu16 = _slicedToArray(_yield$poolConnect$qu15, 1);
+              feedback = _yield$poolConnect$qu16[0];
+              return _context8.abrupt("return", feedback);
+            case 6:
+            case "end":
+              return _context8.stop();
+          }
+        }, _callee8);
+      }));
+      function createFeedback(_x14, _x15, _x16, _x17) {
+        return _createFeedback.apply(this, arguments);
+      }
+      return createFeedback;
+    }()
   }]);
 }();

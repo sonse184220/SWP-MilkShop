@@ -19,11 +19,11 @@ var productController = new _ProductController.ProductController();
  */
 router.get('/', productController.getAllProducts);
 
-/** URL: localhost:xxxx/api/products/id/{...}
+/** URL: localhost:xxxx/api/product/{...}
  * Lấy thông tin 1 product bằng ID
  * - ID không được phép để trống, phải cung cấp ít nhất 1 ID nếu không sẽ trả về lỗi
  */
-router.get("/api/products/id/:id", _productValidators.checkProductId, /*#__PURE__*/function () {
+router.get("/api/product/:id", _productValidators.checkProductId, /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(req, res) {
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
@@ -88,6 +88,95 @@ router.get("/api/products/search/brand", _productValidators.checkProductSearchBr
   }));
   return function (_x5, _x6) {
     return _ref3.apply(this, arguments);
+  };
+}());
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/** URL: localhost:xxxx/api/product/{...}/feedbacks
+ * Lấy danh sách feedbacks của một product bằng product id
+ * - {...} là product id
+ */
+router.get("/api/product/:id/feedbacks", _productValidators.checkProductId, /*#__PURE__*/function () {
+  var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(req, res) {
+    return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+      while (1) switch (_context4.prev = _context4.next) {
+        case 0:
+          _context4.next = 2;
+          return productController.getFeedbacks(req, res);
+        case 2:
+        case "end":
+          return _context4.stop();
+      }
+    }, _callee4);
+  }));
+  return function (_x7, _x8) {
+    return _ref4.apply(this, arguments);
+  };
+}());
+
+/** URL: localhost:xxxx/api/product/{...}/feedbacks
+ * tạo 1 feedback cho một product bằng product id và lưu xuống database
+ * - {...} là product id
+ * file json gửi lên API phải có thông tin như sau:
+ * - {
+ *      "userId": "",
+ *      "rating": "",
+ *      "content": ""
+ *   }
+ * - cả 3 dòng đều không được để trống và rating chỉ có thể là từ 1 -> 5
+ */
+router.post("/api/product/:id/feedbacks", _productValidators.checkProductId, _productValidators.checkFeedbackData, /*#__PURE__*/function () {
+  var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(req, res) {
+    return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+      while (1) switch (_context5.prev = _context5.next) {
+        case 0:
+          _context5.next = 2;
+          return productController.createFeedback(req, res);
+        case 2:
+        case "end":
+          return _context5.stop();
+      }
+    }, _callee5);
+  }));
+  return function (_x9, _x10) {
+    return _ref5.apply(this, arguments);
+  };
+}());
+
+/**
+ * 
+ */
+router.patch("/api/product/:id/feedbacks", _productValidators.checkProductId, /*#__PURE__*/function () {
+  var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(req, res) {
+    return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+      while (1) switch (_context6.prev = _context6.next) {
+        case 0:
+        case "end":
+          return _context6.stop();
+      }
+    }, _callee6);
+  }));
+  return function (_x11, _x12) {
+    return _ref6.apply(this, arguments);
+  };
+}());
+
+/**
+ * 
+ */
+router["delete"]("/api/product/:id/feedbacks", _productValidators.checkProductId, /*#__PURE__*/function () {
+  var _ref7 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7(req, res) {
+    return _regeneratorRuntime().wrap(function _callee7$(_context7) {
+      while (1) switch (_context7.prev = _context7.next) {
+        case 0:
+        case "end":
+          return _context7.stop();
+      }
+    }, _callee7);
+  }));
+  return function (_x13, _x14) {
+    return _ref7.apply(this, arguments);
   };
 }());
 

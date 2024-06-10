@@ -62,4 +62,22 @@ export class ProductService {
         });
     };
 
+    // lấy feedback bằng id của nó
+    async getFeedback(id) {
+        const [feedback] = await poolConnect.query("Select * FROM feedback WHERE FeedbackID = ?", [id]);
+        return feedback;
+    }
+
+    // lấy feedbacks từ 1 product
+    async getFeedbacksByProductID(id) {
+        const [feedbacks] = await poolConnect.query("Select * FROM feedback WHERE ProductID = ?", [id]);
+        return feedbacks;
+    }
+    
+    // tạo feedback và lưu xuống database
+    async createFeedback(productId, userId, rating, content) {
+        const [feedback] = await poolConnect.query("INSERT INTO feedback (ProductID, UserID, Rating, Content) VALUES (?, ?, ?, ?)", [productId, userId, rating, content]);
+        return feedback;
+    }
+
 }

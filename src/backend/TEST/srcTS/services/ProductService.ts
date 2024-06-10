@@ -1,4 +1,4 @@
-import { QueryResult, RowDataPacket } from "mysql2";
+import { QueryResult, ResultSetHeader, RowDataPacket } from "mysql2";
 import { poolConnect } from "../utils/dbConnection.js";
 
 
@@ -63,5 +63,29 @@ export class ProductService {
         const count: number = total[0].count;
 
         return count;
+    }
+
+    // lấy feedback bằng id của nó
+    async getFeedback(id: string | number) {
+        const [feedback]: [RowDataPacket[], any] = await poolConnect.query("Select * FROM feedback WHERE FeedbackID = ?",
+                                                                            [id]
+        );
+        return feedback;
+    }
+
+    // lấy feedbacks từ 1 product
+    async getFeedbacksByProductID(id: string) {
+        const [feedbacks]: [RowDataPacket[], any] = await poolConnect.query("Select * FROM feedback WHERE ProductID = ?",
+                                                                            [id]
+        );
+        return feedbacks;
+    }
+
+    // tạo feedback và lưu xuống database
+    async createFeedback(productId: string, userId: string, rating: number, content: string) {
+        const [feedback]: [ResultSetHeader, any] = await poolConnect.query("INSERT INTO feedback (ProductID, UserID, Rating, Content) VALUES (?, ?, ?, ?)",
+                                                                            [productId, userId, rating, content]
+        )
+        return feedback;
     }
 }
