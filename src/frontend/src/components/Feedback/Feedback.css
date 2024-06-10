@@ -1,5 +1,12 @@
 /* Feedback.css */
 
+.single-tab-content-item {
+    padding: 30px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 .comment {
     list-style: none;
     padding: 0;
@@ -7,7 +14,7 @@
 }
 
 .comment-list {
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 
 .comment-wrapper {
@@ -20,7 +27,7 @@
     height: 60px;
     border-radius: 50%;
     overflow: hidden;
-    margin-right: 15px;
+    margin-right: 20px;
 }
 
 .comment-img img {
@@ -91,15 +98,6 @@
     margin-bottom: 5px;
 }
 
-/* .default-form-box input,
-.default-form-box textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-
-} */
-
 .btn-black-default-hover {
     background-color: #333;
     color: #fff;
@@ -112,4 +110,10 @@
 
 .btn-black-default-hover:hover {
     background-color: #555;
+}
+
+.feedback-title {
+    color: #333;
+    font-size: 30px;
+    margin-bottom: 25px;
 }

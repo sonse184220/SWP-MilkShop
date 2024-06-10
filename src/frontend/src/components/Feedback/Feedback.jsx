@@ -5,6 +5,7 @@ const Feedback = () => {
         <>
             <div class="tab-pane active" id="review">
                 <div class="single-tab-content-item">
+                    <h2 className='feedback-title'>Feedbacks</h2>
                     <ul class="comment">
                         <li class="comment-list">
                             <div class="comment-wrapper">

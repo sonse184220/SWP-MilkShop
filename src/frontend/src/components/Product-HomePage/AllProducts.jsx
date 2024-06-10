@@ -6,18 +6,26 @@ import Header from "../Header/Header"
 import './AllProducts.css';
 import Brand from '../Brand/Brand';
 import handleGetAllProduct from '../../services/getAllProductService';
+import GetProductByBrandID from '../../services/getProductByBrandID';
 
 const AllProducts = () => {
     const [products, setProducts] = useState([]);
     const [CurrentBrand, SetCurrentBrand] = useState(null);
 
-    const handleBrandClick = (BrandID) => {
-        SetCurrentBrand(BrandID);
-    }
+    const handleBrandClick = async (BrandID) => {
+        // SetCurrentBrand(BrandID);
+        try {
+            const response = await GetProductByBrandID(BrandID);
+            console.log(response);
+            if (response.data.data.length > 0) {
+                setProducts(response.data.data)
+            } else if (response.data.data.length === 0) {
+                GetAllProduct();
+            }
+        } catch (error) {
 
-    const filteredProducts = CurrentBrand
-        ? products.filter(product => product.BrandID === CurrentBrand)
-        : products;
+        }
+    }
 
     const GetAllProduct = async () => {
         try {
@@ -25,12 +33,13 @@ const AllProducts = () => {
             console.log(response);
             setProducts(response.data);
         } catch (error) {
-
+            console.log(error)
         }
     }
 
     useEffect(() => {
         GetAllProduct();
+        handleBrandClick();
     }, [])
 
     return (
@@ -45,7 +54,7 @@ const AllProducts = () => {
                         <h2 className='title'>Products</h2>
                     </div>
                     <div className="product-container">
-                        {filteredProducts.map((product) => (
+                        {products.map((product) => (
                             <Link key={product.ProductID} className="product-preview">
                                 <img src={`/img/${product.ProductID}.jpg`} alt={product.Name} />
                                 <h3>{product.Name}</h3>
