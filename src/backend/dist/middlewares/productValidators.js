@@ -3,6 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.checkFeedbackData = checkFeedbackData;
 exports.checkProductId = checkProductId;
 exports.checkProductSearch = checkProductSearch;
 exports.checkProductSearchBrand = checkProductSearchBrand;
@@ -22,7 +23,7 @@ function _checkProductId() {
       while (1) switch (_context.prev = _context.next) {
         case 0:
           _context.next = 2;
-          return (0, _expressValidator.param)("id").trim().exists().withMessage("ID is required!").notEmpty().withMessage("ID can not be blank!").run(req);
+          return (0, _expressValidator.param)("id").trim().escape().exists().withMessage("ID is required!").notEmpty().withMessage("ID can not be blank!").run(req);
         case 2:
           result = (0, _expressValidator.validationResult)(req);
           if (result.isEmpty()) {
@@ -92,7 +93,7 @@ function _checkProductSearch() {
 }
 function checkProductSearchBrand(_x7, _x8, _x9) {
   return _checkProductSearchBrand.apply(this, arguments);
-}
+} // kiểm tra data đầu vào để tạo feedback
 function _checkProductSearchBrand() {
   _checkProductSearchBrand = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(req, res, next) {
     var sortList, result;
@@ -136,4 +137,45 @@ function _checkProductSearchBrand() {
     }, _callee3);
   }));
   return _checkProductSearchBrand.apply(this, arguments);
+}
+function checkFeedbackData(_x10, _x11, _x12) {
+  return _checkFeedbackData.apply(this, arguments);
+}
+function _checkFeedbackData() {
+  _checkFeedbackData = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(req, res, next) {
+    var result;
+    return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+      while (1) switch (_context4.prev = _context4.next) {
+        case 0:
+          _context4.next = 2;
+          return (0, _expressValidator.body)("userId").trim().escape().exists().withMessage("UserID is required!").notEmpty().withMessage("UserID can not be blank!").run(req);
+        case 2:
+          _context4.next = 4;
+          return (0, _expressValidator.body)("rating").trim().escape().exists().withMessage("Rating is required!").notEmpty().withMessage("Rating can not be blank!").isInt({
+            min: 1,
+            max: 5,
+            allow_leading_zeroes: false
+          }).withMessage("Rating must be an integer and between 1 to 5!").run(req);
+        case 4:
+          _context4.next = 6;
+          return (0, _expressValidator.body)("content").trim().escape().exists().withMessage("Feedback content is required!").notEmpty().withMessage("Feedback content can not be blank!").run(req);
+        case 6:
+          result = (0, _expressValidator.validationResult)(req);
+          if (result.isEmpty()) {
+            _context4.next = 9;
+            break;
+          }
+          return _context4.abrupt("return", res.status(400).send({
+            error: result.array()
+          }));
+        case 9:
+          Object.assign(req.body, (0, _expressValidator.matchedData)(req));
+          next();
+        case 11:
+        case "end":
+          return _context4.stop();
+      }
+    }, _callee4);
+  }));
+  return _checkFeedbackData.apply(this, arguments);
 }

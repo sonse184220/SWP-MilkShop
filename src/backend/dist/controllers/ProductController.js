@@ -51,7 +51,7 @@ var ProductController = exports.ProductController = /*#__PURE__*/function () {
                 error: "Product not found!"
               }));
             case 6:
-              res.status(200).send(product);
+              return _context.abrupt("return", res.status(200).send(product));
             case 7:
             case "end":
               return _context.stop();
@@ -102,12 +102,12 @@ var ProductController = exports.ProductController = /*#__PURE__*/function () {
               return this.productService.getTotalProductsByName(name);
             case 22:
               total = _context2.sent;
-              res.status(200).send({
+              return _context2.abrupt("return", res.status(200).send({
                 data: products,
                 total: total,
                 page: page,
                 totalPages: Math.ceil(total / limit)
-              });
+              }));
             case 24:
             case "end":
               return _context2.stop();
@@ -158,12 +158,12 @@ var ProductController = exports.ProductController = /*#__PURE__*/function () {
               return this.productService.getTotalProductsByBrand(id);
             case 22:
               total = _context3.sent;
-              res.status(200).send({
+              return _context3.abrupt("return", res.status(200).send({
                 data: products,
                 total: total,
                 page: page,
                 totalPages: Math.ceil(total / limit)
-              });
+              }));
             case 24:
             case "end":
               return _context3.stop();
@@ -174,6 +174,91 @@ var ProductController = exports.ProductController = /*#__PURE__*/function () {
         return _searchProductsByBrandId.apply(this, arguments);
       }
       return searchProductsByBrandId;
+    }()
+  }, {
+    key: "getFeedbacks",
+    value: function () {
+      var _getFeedbacks = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(req, res) {
+        var productId, feedbacks;
+        return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+          while (1) switch (_context4.prev = _context4.next) {
+            case 0:
+              productId = req.params.id;
+              _context4.next = 3;
+              return this.productService.getFeedbacksByProductID(productId);
+            case 3:
+              feedbacks = _context4.sent;
+              if (!(feedbacks.length === 0)) {
+                _context4.next = 6;
+                break;
+              }
+              return _context4.abrupt("return", res.status(404).send({
+                error: "No feedbacks found!"
+              }));
+            case 6:
+              return _context4.abrupt("return", res.status(200).send(feedbacks));
+            case 7:
+            case "end":
+              return _context4.stop();
+          }
+        }, _callee4, this);
+      }));
+      function getFeedbacks(_x7, _x8) {
+        return _getFeedbacks.apply(this, arguments);
+      }
+      return getFeedbacks;
+    }()
+  }, {
+    key: "createFeedback",
+    value: function () {
+      var _createFeedback = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(req, res) {
+        var productId, userId, rating, content, product, creatingFeedback, createdFeedback;
+        return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+          while (1) switch (_context5.prev = _context5.next) {
+            case 0:
+              productId = req.params.id;
+              userId = req.body.userId;
+              rating = req.body.rating;
+              content = req.body.content;
+              _context5.next = 6;
+              return this.productService.getProduct(productId);
+            case 6:
+              product = _context5.sent;
+              if (!(product.length === 0)) {
+                _context5.next = 9;
+                break;
+              }
+              return _context5.abrupt("return", res.status(404).send({
+                error: "Product not found!"
+              }));
+            case 9:
+              _context5.next = 11;
+              return this.productService.createFeedback(productId, userId, rating, content);
+            case 11:
+              creatingFeedback = _context5.sent;
+              if (!(creatingFeedback.affectedRows === 0)) {
+                _context5.next = 14;
+                break;
+              }
+              return _context5.abrupt("return", res.status(500).send({
+                error: "Feedback failed to create!"
+              }));
+            case 14:
+              _context5.next = 16;
+              return this.productService.getFeedback(creatingFeedback.insertId);
+            case 16:
+              createdFeedback = _context5.sent;
+              return _context5.abrupt("return", res.status(201).send(createdFeedback));
+            case 18:
+            case "end":
+              return _context5.stop();
+          }
+        }, _callee5, this);
+      }));
+      function createFeedback(_x9, _x10) {
+        return _createFeedback.apply(this, arguments);
+      }
+      return createFeedback;
     }()
   }]);
 }();

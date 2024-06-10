@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { checkProductSearch, checkProductId, checkProductSearchBrand } from "../middlewares/productValidators.js";
+import { checkProductSearch, checkProductId, checkProductSearchBrand, checkFeedbackData } from "../middlewares/productValidators.js";
 import { ProductController } from "../controllers/ProductController.js";
 
 const router = Router();
@@ -11,11 +11,11 @@ const productController = new ProductController();
  */
 router.get('/', productController.getAllProducts);
 
-/** URL: localhost:xxxx/api/products/id/{...}
+/** URL: localhost:xxxx/api/product/{...}
  * Lấy thông tin 1 product bằng ID
  * - ID không được phép để trống, phải cung cấp ít nhất 1 ID nếu không sẽ trả về lỗi
  */
-router.get("/api/products/id/:id", checkProductId, async (req, res) => {
+router.get("/api/product/:id", checkProductId, async (req, res) => {
     await productController.getProductById(req, res);
 });
 
@@ -40,6 +40,45 @@ router.get("/api/products/search", checkProductSearch, async (req, res) => {
 router.get("/api/products/search/brand", checkProductSearchBrand, async (req, res) => {
     await productController.searchProductsByBrandId(req, res);
 });
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/** URL: localhost:xxxx/api/product/{...}/feedbacks
+ * Lấy danh sách feedbacks của một product bằng product id
+ * - {...} là product id
+ */
+router.get("/api/product/:id/feedbacks", checkProductId, async (req, res) => {
+    await productController.getFeedbacks(req, res);
+});
+
+/** URL: localhost:xxxx/api/product/{...}/feedbacks
+ * tạo 1 feedback cho một product bằng product id và lưu xuống database
+ * - {...} là product id
+ * file json gửi lên API phải có thông tin như sau:
+ * - {
+ *      "userId": "",
+ *      "rating": "",
+ *      "content": ""
+ *   }
+ * - cả 3 dòng đều không được để trống và rating chỉ có thể là từ 1 -> 5
+ */
+router.post("/api/product/:id/feedbacks", checkProductId, checkFeedbackData, async (req, res) => {
+    await productController.createFeedback(req, res);
+});
+
+/**
+ * 
+ */
+router.patch("/api/product/:id/feedbacks", checkProductId, async (req, res) => {
+
+})
+
+/**
+ * 
+ */
+router.delete("/api/product/:id/feedbacks", checkProductId, async (req, res) => {
+
+})
 
 
 

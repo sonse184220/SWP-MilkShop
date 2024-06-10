@@ -1,8 +1,9 @@
-import { query, validationResult, matchedData, param } from 'express-validator';
+import { body, query, validationResult, matchedData, param } from 'express-validator';
 // kiểm tra id data đầu vào cho product
 export async function checkProductId(req, res, next) {
     await param("id")
         .trim()
+        .escape()
         .exists().withMessage("ID is required!")
         .notEmpty().withMessage("ID can not be blank!")
         .run(req);
@@ -79,5 +80,33 @@ export async function checkProductSearchBrand(req, res, next) {
         return res.status(400).send({ error: result.array() });
     }
     Object.assign(req.query, matchedData(req));
+    next();
+}
+// kiểm tra data đầu vào để tạo feedback
+export async function checkFeedbackData(req, res, next) {
+    await body("userId")
+        .trim()
+        .escape()
+        .exists().withMessage("UserID is required!")
+        .notEmpty().withMessage("UserID can not be blank!")
+        .run(req);
+    await body("rating")
+        .trim()
+        .escape()
+        .exists().withMessage("Rating is required!")
+        .notEmpty().withMessage("Rating can not be blank!")
+        .isInt({ min: 1, max: 5, allow_leading_zeroes: false }).withMessage("Rating must be an integer and between 1 to 5!")
+        .run(req);
+    await body("content")
+        .trim()
+        .escape()
+        .exists().withMessage("Feedback content is required!")
+        .notEmpty().withMessage("Feedback content can not be blank!")
+        .run(req);
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+        return res.status(400).send({ error: result.array() });
+    }
+    Object.assign(req.body, matchedData(req));
     next();
 }
