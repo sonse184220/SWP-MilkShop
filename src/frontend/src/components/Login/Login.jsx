@@ -27,7 +27,7 @@ const Login = ({ onLogin, showLogin }) => {
             const response = await handleLoginApi(userInfo);
             console.log('Response:', response);
             setErrorMessage('');
-            navigate('/');
+            navigate('/home');
             onLogin(true);
         } catch (error) {
             if (error.response && error.response.data) {

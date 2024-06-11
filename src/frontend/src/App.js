@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 
 import Login from './components/Login/Login.jsx';
 import Register from './components/Register/Register.jsx';
@@ -33,12 +33,13 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={!isLogin ? <Login onLogin={handleLogin} showLogin={handleShowLogin} /> : <HomePage onLogin={handleLogin} />} />
+        <Route path='/' element={<Navigate to={'/login-register'} />} />
+        <Route path='/home' element={<HomePage onLogin={handleLogin} />} />
         <Route path='/login-register' element={!showLogin ? <Login onLogin={handleLogin} showLogin={handleShowLogin} /> : <Register showLogin={handleShowLogin} />} />
         <Route path='/Blogs' element={<AllBlog />}></Route>
         <Route path='/Products' element={<AllProducts />}></Route>
         <Route path='/EditProfile' element={<EditProfile />}></Route>
-        <Route path='/ProductDetail' element={<ProductDetail />}></Route>
+        <Route path='/ProductDetail/:ProductID' element={<ProductDetail />}></Route>
       </Routes>
 
     </Router>

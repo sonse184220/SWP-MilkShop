@@ -13,7 +13,8 @@ const ProductBar = () => {
         try {
             const response = await handleGetAllProduct();
             console.log(response);
-            setProducts(response.data);
+            const slicedProducts = response.data.slice(0, 12); // Get only the first 12 elements
+            setProducts(slicedProducts);
         } catch (error) {
 
         }
@@ -65,7 +66,7 @@ const ProductBar = () => {
             </div>
             <div className="product-container" >
                 {productSlide.map((product) => (
-                    <Link key={product.ProductID} className="product-preview">
+                    <Link to={`/ProductDetail/${product.ProductID}`} key={product.ProductID} className="product-preview">
                         <img src={`/img/${product.ProductID}.jpg`} alt={product.Name} />
                         <h3>{product.Name}</h3>
                         <p>{product.Content}</p>
