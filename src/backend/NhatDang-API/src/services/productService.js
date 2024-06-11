@@ -1,20 +1,21 @@
-const connection = require('../utils/db');
+const productController = require('../controllers/productController');
 
-const getAllProducts = (callback) => {
-    const query = 'SELECT * FROM PRODUCT';
-    connection.query(query, (err, results) => {
-        if (err) return callback(err);
-        callback(null, results);
+const getAllProducts = (req, res) => {
+    productController.getAllProducts((err, results) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.status(200).json(results);
     });
 };
 
-const getProductById = (productId, callback) => {
-    const query = 'SELECT * FROM PRODUCT WHERE ProductID = ?';
-    connection.query(query, [productId], (err, results) => {
-        if (err) return callback(err);
-        if (results.length === 0) return callback(null, { message: 'Product not found', status: 404 });
-        callback(null, results[0]); 
+const getProductById = (req, res) => {
+    const { id } = req.params;
+    productController.getProductById(id, (err, results) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.status(200).json(results);
     });
 };
 
-module.exports = { getAllProducts, getProductById };
+module.exports = {
+    getAllProducts,
+    getProductById
+};

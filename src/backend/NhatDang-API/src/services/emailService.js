@@ -10,7 +10,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendResetPasswordEmail = (email, token, req) => {
-    const url = `${req.protocol}://${req.get('host')}/reset-password?token=${token}`;
+    const url = `${req.protocol}://${req.get('host')}/api/reset-password?token=${token}`;
     const mailOptions = {
         from: process.env.EMAIL_USER,
         to: email,
@@ -28,12 +28,12 @@ const sendResetPasswordEmail = (email, token, req) => {
 };
 
 const sendVerificationEmail = (email, token, userId, phone, req) => {
-    const url = `${req.protocol}://${req.get('host')}/auth/verify-email?token=${token}`;
+    const url = `${req.protocol}://${req.get('host')}/api/auth/verify-email?token=${token}`;
     const mailOptions = {
         from: process.env.EMAIL_USER,
         to: email,
         subject: 'Verify Your Email',
-        text: `Thank you for registering and join our milk shop. Please verify your email by clicking the link below:\n\n${url}\n\nYour details:\nUserID: ${userId}\nPhone: ${phone}\nEmail: ${email}`
+        text: `Thank you for registering and joining our milk shop. Please verify your email by clicking the link below:\n\n${url}\n\nYour details:\nUserID: ${userId}\nPhone: ${phone}\nEmail: ${email}`
     };
 
     return transporter.sendMail(mailOptions)
