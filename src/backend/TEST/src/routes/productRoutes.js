@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { checkProductSearch, checkProductId, checkProductSearchBrand, checkFeedbackData } from "../middlewares/productValidators.js";
+import { checkProductSearch, checkProductId, checkProductSearchBrand, checkFeedbackData, checkFeedbackId } from "../middlewares/productValidators.js";
 import { ProductController } from "../controllers/ProductController.js";
 const router = Router();
 const productController = new ProductController();
@@ -47,10 +47,16 @@ router.get("/api/product/:id/feedbacks", checkProductId, async (req, res) => {
  *      "rating": "",
  *      "content": ""
  *   }
+ * - cả 3 dòng đều không được để trống và rating chỉ có thể là từ 1 -> 5
  */
 router.post("/api/product/:id/feedbacks", checkProductId, checkFeedbackData, async (req, res) => {
     await productController.createFeedback(req, res);
 });
-router.patch;
+/** URL: localhost:xxxx/api/product/feedbacks/{...}
+ * xóa 1 feedback dựa vào feedbackId
+ * - {...} là feedback id
+ */
+router.delete("/api/product/feedbacks/:id", checkFeedbackId, async (req, res) => {
+});
 // export router
 export { router as productRoutes };

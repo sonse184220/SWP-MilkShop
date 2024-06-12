@@ -75,7 +75,11 @@ export class ProductService {
 
     // lấy feedbacks từ 1 product
     async getFeedbacksByProductID(id: string) {
-        const [feedbacks]: [RowDataPacket[], any] = await poolConnect.query("Select * FROM feedback WHERE ProductID = ?",
+        const [feedbacks]: [RowDataPacket[], any] = await poolConnect.query(`Select f.*, m.Name
+                                                                            FROM feedback as f 
+                                                                            JOIN member as m
+                                                                            ON f.UserID = m.UserID
+                                                                            WHERE ProductID = ?`,
                                                                             [id]
         );
         return feedbacks;

@@ -102,4 +102,7 @@ export class ProductController {
         const createdFeedback = await this.productService.getFeedback(creatingFeedback.insertId);
         return res.status(201).send(createdFeedback);
     }
+    async deleteFeedback(req, res) {
+        const feedbackId = req.query.id;
+    }
 }

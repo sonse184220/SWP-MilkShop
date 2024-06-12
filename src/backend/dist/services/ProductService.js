@@ -212,7 +212,7 @@ var ProductService = exports.ProductService = /*#__PURE__*/function () {
           while (1) switch (_context7.prev = _context7.next) {
             case 0:
               _context7.next = 2;
-              return _dbConnection.poolConnect.query("Select * FROM feedback WHERE ProductID = ?", [id]);
+              return _dbConnection.poolConnect.query("Select f.*, m.Name\n                                                    FROM feedback as f \n                                                    JOIN member as m\n                                                    ON f.UserID = m.UserID\n                                                    WHERE ProductID = ?", [id]);
             case 2:
               _yield$poolConnect$qu13 = _context7.sent;
               _yield$poolConnect$qu14 = _slicedToArray(_yield$poolConnect$qu13, 1);

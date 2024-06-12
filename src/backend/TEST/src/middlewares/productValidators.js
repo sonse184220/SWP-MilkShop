@@ -110,3 +110,18 @@ export async function checkFeedbackData(req, res, next) {
     Object.assign(req.body, matchedData(req));
     next();
 }
+// kiểm tra id data đầu vào cho feedback
+export async function checkFeedbackId(req, res, next) {
+    await param("id")
+        .trim()
+        .escape()
+        .exists().withMessage("FeedbackID is required!")
+        .notEmpty().withMessage("FeedbackID can not be blank!")
+        .run(req);
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+        return res.status(400).send({ error: result.array() });
+    }
+    Object.assign(req.params, matchedData(req));
+    next();
+}

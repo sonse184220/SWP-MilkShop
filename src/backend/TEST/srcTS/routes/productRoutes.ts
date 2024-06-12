@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { checkProductSearch, checkProductId, checkProductSearchBrand, checkFeedbackData } from "../middlewares/productValidators.js";
+import { checkProductSearch, checkProductId, checkProductSearchBrand, checkFeedbackData, checkFeedbackId } from "../middlewares/productValidators.js";
 import { ProductController } from "../controllers/ProductController.js";
 
 const router = Router();
@@ -61,17 +61,11 @@ router.post("/api/product/:id/feedbacks", checkProductId, checkFeedbackData, asy
     await productController.createFeedback(req, res);
 })
 
-/**
- * 
+/** URL: localhost:xxxx/api/product/feedbacks/{...}
+ * xóa 1 feedback dựa vào feedbackId
+ * - {...} là feedback id
  */
-router.patch("/api/product/:id/feedbacks", checkProductId, async (req, res) => {
-
-})
-
-/**
- * 
- */
-router.delete("/api/product/:id/feedbacks", checkProductId, async (req, res) => {
+router.delete("/api/product/feedbacks/:id", checkFeedbackId, async (req, res) => {
 
 })
 
