@@ -68,67 +68,67 @@ const Register = ({ showLogin }) => {
     //component register
     return (
         <div className="wrapper" >
-            <div class="inner">
-                <div class="image-holder">
+            <div className="inner">
+                <div className="image-holder">
                     <img src="/img/P004.jpg" alt="" />
                 </div>
                 <form>
                     <h3>Registration Form</h3>
-                    <div class="form-wrapper">
+                    <div className="form-wrapper">
                         <input
                             type="text"
                             placeholder="UserID"
-                            class="form-control"
+                            className="form-control"
                             onChange={(e) => setUserID(e.target.value)} />
                     </div>
-                    <div class="form-wrapper">
+                    <div className="form-wrapper" >
                         <input
                             type="password"
                             placeholder="Password"
-                            class="form-control"
+                            className="form-control"
                             onChange={(e) => setPassword(e.target.value)} />
-                        <i class="zmdi zmdi-lock"></i>
-                    </div>
-                    <div class="form-wrapper">
+                        <i className="zmdi zmdi-lock"></i>
+                    </div >
+                    <div className="form-wrapper" >
                         <input
                             type="password"
                             placeholder="Confirm Password"
-                            class="form-control"
+                            className="form-control"
                             onChange={(e) => setConfirmPassword(e.target.value)} />
-                        <i class="zmdi zmdi-lock"></i>
-                    </div>
-                    <div class="form-wrapper">
+                        <i className="zmdi zmdi-lock"></i>
+                    </div >
+                    <div className="form-wrapper" >
                         <input
                             type="text"
                             placeholder="Name"
-                            class="form-control"
+                            className="form-control"
                             onChange={(e) => setName(e.target.value)} />
-                        <i class="zmdi zmdi-account"></i>
-                    </div>
-                    <div class="form-wrapper">
+                        <i className="zmdi zmdi-account"></i>
+                    </div >
+                    <div className="form-wrapper" >
                         <input
                             type="text"
                             placeholder="Email Address"
-                            class="form-control"
+                            className="form-control"
                             onChange={(e) => setEmail(e.target.value)} />
-                        <i class="zmdi zmdi-email"></i>
-                    </div>
-                    <div class="form-wrapper">
+                        <i className="zmdi zmdi-email"></i>
+                    </div >
+                    <div className="form-wrapper" >
                         <input
                             type="text"
                             placeholder="Phone"
-                            class="form-control"
+                            className="form-control"
                             onChange={(e) => setPhone(e.target.value)} />
-                        <i class="zmdi zmdi-phone"></i>
-                    </div>
-                    <div class="form-wrapper">
+                        <i className="zmdi zmdi-phone"></i>
+                    </div >
+                    <div className="form-wrapper" >
                         <input
                             type="text"
                             placeholder="Address"
-                            class="form-control"
+                            className="form-control"
                             onChange={(e) => setAddress(e.target.value)} />
-                        <i class="zmdi zmdi-home"></i>
-                    </div>
+                        <i className="zmdi zmdi-home"></i>
+                    </div >
 
                     <div>
                         {(ErrorMessage || SuccessMessage) &&
@@ -146,11 +146,11 @@ const Register = ({ showLogin }) => {
                         <a href='#' onClick={handleShowLogin}>Sign In</a>
                     </div>
                     <button className='registerbt' onClick={handleRegister}>Register
-                        <i class="zmdi zmdi-arrow-right"></i>
-                    </button>
-                </form>
-            </div>
-        </div>
+                        <i className="zmdi zmdi-arrow-right"></i>
+                    </button >
+                </form >
+            </div >
+        </div >
 
     )
 }

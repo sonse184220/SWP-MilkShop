@@ -1,15 +1,16 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 
 import './Login.css'
 import handleLoginApi from '../../services/loginService';
-
+import MemberContext from '../../context/MemberContext';
 
 //prop chuyền từ app.js
 //onLogin dùng để set state isLogin
 //showLogin dùng để set state showLogin
 const Login = ({ onLogin, showLogin }) => {
     const navigate = useNavigate();
+    // const { updateMemberData } = useContext(MemberContext);
 
     const [UserID, setUserID] = useState('');
     const [Password, setPassword] = useState('');
@@ -26,14 +27,18 @@ const Login = ({ onLogin, showLogin }) => {
         try {
             const response = await handleLoginApi(userInfo);
             console.log('Response:', response);
-            setErrorMessage('');
-            navigate('/home');
-            onLogin(true);
+            if (response.data) {
+                setErrorMessage('');
+                localStorage.setItem('userData', JSON.stringify(response.data.user));
+                localStorage.setItem('token', response.data.token);
+                navigate('/home');
+                onLogin(true);
+            } else {
+                setErrorMessage('Something went wrong');
+            }
         } catch (error) {
             if (error.response && error.response.data) {
                 let errorMessage;
-                // Try to parse the error response data as JSON
-                // const parsedData = JSON.parse(error.response.data);
                 if (typeof error.response.data === 'object')
                     errorMessage = error.response.data || 'An error occurred';
                 else if (Array.isArray(error.response.data) && error.response.data.length > 0)
@@ -44,7 +49,7 @@ const Login = ({ onLogin, showLogin }) => {
                 setErrorMessage('An error occurred');
             }
             console.log(error);
-        };
+        }
     }
 
     //Chuyển state showLogin trong app.js (Route '/')
@@ -56,35 +61,35 @@ const Login = ({ onLogin, showLogin }) => {
     };
 
     return (
-        <div class="limiter">
-            <div class="container-login100">
-                <div class="wrap-login100">
-                    <form class="login100-form validate-form">
-                        <span class="login100-form-logo">
-                            <i class="zmdi zmdi-landscape"></i>
+        <div className="limiter">
+            <div className="container-login100">
+                <div className="wrap-login100">
+                    <form className="login100-form validate-form">
+                        <span className="login100-form-logo">
+                            <i className="zmdi zmdi-landscape"></i>
                         </span>
-                        <span class="login100-form-title p-b-34 p-t-27">
+                        <span className="login100-form-title p-b-34 p-t-27">
                             Log in
                         </span>
-                        <div class="wrap-input100 validate-input" data-validate="Enter username">
+                        <div className="wrap-input100 validate-input" data-validate="Enter username">
                             <input
-                                class="input100"
+                                className="input100"
                                 type="text"
                                 name="username"
                                 placeholder="UserID"
                                 value={UserID}
                                 onChange={(e) => setUserID(e.target.value)} />
-                            <span class="focus-input100" data-placeholder=""></span>
+                            <span className="focus-input100" data-placeholder=""></span>
                         </div>
-                        <div class="wrap-input100 validate-input" data-validate="Enter password">
+                        <div className="wrap-input100 validate-input" data-validate="Enter password">
                             <input
-                                class="input100"
+                                className="input100"
                                 type="password"
                                 name="pass"
                                 placeholder="Password"
                                 value={Password}
                                 onChange={(e) => setPassword(e.target.value)} />
-                            <span class="focus-input100" data-placeholder=""></span>
+                            <span className="focus-input100" data-placeholder=""></span>
                         </div>
                         <div className="error-message-container">
                             {ErrorMessage && (
@@ -94,14 +99,14 @@ const Login = ({ onLogin, showLogin }) => {
                                 </>
                             )}
                         </div>
-                        <div class="contact100-form-checkbox">
-                            <input class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me" />
-                            <label class="label-checkbox100" for="ckb1">
+                        <div className="contact100-form-checkbox">
+                            <input className="input-checkbox100" id="ckb1" type="checkbox" name="remember-me" />
+                            <label className="label-checkbox100" htmlFor="ckb1">
                                 Remember me
                             </label>
                         </div>
-                        <div class="container-login100-form-btn">
-                            <button class="login100-form-btn" onClick={handleIsLogin}>
+                        <div className="container-login100-form-btn">
+                            <button className="login100-form-btn" onClick={handleIsLogin}>
                                 Login
                             </button>
                         </div>
@@ -109,8 +114,8 @@ const Login = ({ onLogin, showLogin }) => {
                             <p>Not registered?</p>
                             <a href='' onClick={handleShowLogin}>Create an account</a>
                         </div>
-                        <div class="text-center p-t-90">
-                            <a class="txt1" href="#">
+                        <div className="text-center p-t-90">
+                            <a className="txt1" href="#">
                                 Forgot Password?
                             </a>
                         </div>

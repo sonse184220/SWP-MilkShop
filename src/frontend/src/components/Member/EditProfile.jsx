@@ -55,10 +55,10 @@ const EditProfile = ({ showLogin }) => {
       <Header />
       <div className="editProfile">
         <div className="wrapper">
-          <div class="inner">
+          <div className="inner">
             <div className="container">
               <div className="row">
-                <div class="col-lg-6 image-holder">
+                <div className="col-lg-6 image-holder">
                   <div className="image-holder-content">
                     <img src="https://via.placeholder.com/40" alt="" />
                     <div className="importButton">
@@ -69,59 +69,59 @@ const EditProfile = ({ showLogin }) => {
                 <div className="col-lg-6">
                   <form>
                     <h3>Edit profile</h3>
-                    <div class="form-wrapper">
+                    <div className="form-wrapper">
                       <input
                         type="password"
                         placeholder="Password"
-                        class="form-control"
+                        className="form-control"
                         onChange={(e) => setPassword(e.target.value)}
                       />
-                      <i class="zmdi zmdi-lock"></i>
+                      <i className="zmdi zmdi-lock"></i>
                     </div>
-                    <div class="form-wrapper">
+                    <div className="form-wrapper">
                       <input
                         type="password"
                         placeholder="Confirm Password"
-                        class="form-control"
+                        className="form-control"
                         onChange={(e) => setConfirmPassword(e.target.value)}
                       />
-                      <i class="zmdi zmdi-lock"></i>
+                      <i className="zmdi zmdi-lock"></i>
                     </div>
-                    <div class="form-wrapper">
+                    <div className="form-wrapper">
                       <input
                         type="text"
                         placeholder="Name"
-                        class="form-control"
+                        className="form-control"
                         onChange={(e) => setName(e.target.value)}
                       />
-                      <i class="zmdi zmdi-account"></i>
+                      <i className="zmdi zmdi-account"></i>
                     </div>
-                    <div class="form-wrapper">
+                    <div className="form-wrapper">
                       <input
                         type="text"
                         placeholder="Email Address"
-                        class="form-control"
+                        className="form-control"
                         onChange={(e) => setEmail(e.target.value)}
                       />
-                      <i class="zmdi zmdi-email"></i>
+                      <i className="zmdi zmdi-email"></i>
                     </div>
-                    <div class="form-wrapper">
+                    <div className="form-wrapper">
                       <input
                         type="text"
                         placeholder="Phone"
-                        class="form-control"
+                        className="form-control"
                         onChange={(e) => setPhone(e.target.value)}
                       />
-                      <i class="zmdi zmdi-phone"></i>
+                      <i className="zmdi zmdi-phone"></i>
                     </div>
-                    <div class="form-wrapper">
+                    <div className="form-wrapper">
                       <input
                         type="text"
                         placeholder="Address"
-                        class="form-control"
+                        className="form-control"
                         onChange={(e) => setAddress(e.target.value)}
                       />
-                      <i class="zmdi zmdi-home"></i>
+                      <i className="zmdi zmdi-home"></i>
                     </div>
 
                     <div>
@@ -148,7 +148,7 @@ const EditProfile = ({ showLogin }) => {
                     </div>
                     <button onClick={handleEditProfile}>
                       Edit profile
-                      <i class="zmdi zmdi-arrow-right"></i>
+                      <i className="zmdi zmdi-arrow-right"></i>
                     </button>
                   </form>
                 </div>

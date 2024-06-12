@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import './Header.css';
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, Link } from "react-router-dom";
 
 
 //prop onLogin chuyền từ app.js -> HomePage.jsx -> Header.jsx
@@ -35,32 +35,36 @@ export function Header({ onLogin }) {
 
     }
 
-    return (
-        <header ref={headerRef} class="header-area header-sticky">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <nav class="main-nav">
+    const isActive = (match, location) => {
+        return location.pathname === match.pathname;
+    };
 
-                            <a href="index.html" class="logo">
+    return (
+        <header ref={headerRef} className="header-area header-sticky">
+            <div className="container">
+                <div className="row">
+                    <div className="col-12">
+                        <nav className="main-nav">
+
+                            <a href="index.html" className="logo">
                                 Milk Shop
                             </a>
 
-                            <ul class="nav">
-                                <li class="scroll-to-section"><Link to={'/home'} href="#top" class="active">Home</Link></li>
-                                <li><Link to={'/Products'} href="meetings.html">Products</Link></li>
-                                <li class="scroll-to-section"><Link to={'/Blogs'} href="#apply">Blogs</Link></li>
-                                <li class="has-sub">
-                                    <a href="javascript:void(0)">Cart</a>
-                                    <ul class="sub-menu">
+                            <ul className="nav">
+                                <li className="scroll-to-section"><NavLink to={'/home'} href="#top">Home</NavLink></li>
+                                <li><NavLink to={'/Products'} href="meetings.html">Products</NavLink></li>
+                                <li className="scroll-to-section"><NavLink to={'/Blogs'} href="#apply">Blogs</NavLink></li>
+                                <li className="has-sub">
+                                    <a href='#'>Cart</a>
+                                    <ul className="sub-menu">
                                         <li><a href="meetings.html">Wishlist</a></li>
                                         <li><a href="meeting-details.html">Reward Point</a></li>
                                     </ul>
                                 </li>
-                                <li class="scroll-to-section"><a href="#courses">User1</a></li>
-                                <li class="scroll-to-section"><a href="#contact" onClick={showLogin}>Logout</a></li>
+                                <li className="scroll-to-section"><a href="#courses">User1</a></li>
+                                <li className="scroll-to-section"><a href="#contact" onClick={showLogin}>Logout</a></li>
                             </ul>
-                            <a class='menu-trigger'>
+                            <a className='menu-trigger'>
                                 <span>Menu</span>
                             </a>
 

@@ -45,7 +45,7 @@ const AllProducts = () => {
     return (
         <div className="body">
             <div><Header /></div>
-            <img class='image' src="/img/P004.jpg" />
+            <img className='image' src="/img/P004.jpg" />
             <div className='brand-product'>
                 <div className='brand-bar'><Brand onBrandClick={handleBrandClick} /></div>
 

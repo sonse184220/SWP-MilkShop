@@ -12,7 +12,7 @@ function Brand({ onBrandClick }) {
             console.log(response);
             setBrands(response.data)
         } catch (error) {
-
+            console.error("Failed to fetch brands", error);
         }
     }
 
@@ -22,7 +22,7 @@ function Brand({ onBrandClick }) {
 
     return (
         <div className='brand-container'>
-            < div class="sidebar-single-widget" >
+            <div className="sidebar-single-widget">
                 <div>
                     <form>
                         <div className="search-container">
@@ -37,18 +37,19 @@ function Brand({ onBrandClick }) {
                         </div>
                     </form>
                 </div>
-                <h6 class="sidebar-title">CATEGORIES</h6>
-                <div class="sidebar-content">
-                    <ul class="sidebar-menu">
+                <h6 className="sidebar-title">CATEGORIES</h6>
+                <div className="sidebar-content">
+                    <ul className="sidebar-menu">
                         <li><a onClick={() => onBrandClick(null)} href="#" >All Brands</a></li>
-                        {brands.map((brand) => (
-                            <li><a key={brand.BrandID} onClick={() => onBrandClick(brand.BrandID)} href="#" >{brand.Name}</a></li>
-                        ))}
+                        {
+                            brands.map((brand) => (
+                                <li key={brand.BrandID}><a onClick={() => onBrandClick(brand.BrandID)} href="#" >{brand.Name}</a></li>
+                            ))
+                        }
                     </ul>
                 </div>
-
             </div>
-        </div >
+        </div>
     );
 }
 

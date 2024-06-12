@@ -8,11 +8,20 @@ import { useEffect, useState } from 'react';
 import getProductById from '../../services/getProductByID';
 import Page404 from '../404NotFound/404Page';
 import { useParams } from 'react-router-dom';
+import GetFeedback from '../../services/getFeedback';
+import AddFeedback from '../../services/addNewFeedback';
+
 
 const ProductDetail = () => {
     const { ProductID } = useParams();
     const [quantity, setQuantity] = useState(1);
     const [CurrentProduct, setCurrentProduct] = useState(null);
+    const [feedbacks, setFeedbacks] = useState([])
+    const [newFeedback, setNewFeedback] = useState({
+        userId: JSON.parse(localStorage.getItem('userData')).UserID,
+        rating: 0,
+        content: ''
+    });
 
     const products = [
         {
@@ -47,6 +56,25 @@ const ProductDetail = () => {
         }
     ];
 
+    const handleAddFeedback = async () => {
+        try {
+            const response = await AddFeedback(ProductID, newFeedback);
+            console.log("===========", response);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const handleGetFeedback = async () => {
+        try {
+            const response = await GetFeedback(ProductID);
+            console.log(response);
+            setFeedbacks(response.data)
+        } catch (error) {
+
+        }
+    }
+
     const handleGetProductByID = async () => {
         try {
             const response = await getProductById(ProductID);
@@ -69,34 +97,35 @@ const ProductDetail = () => {
 
     useEffect(() => {
         handleGetProductByID();
+        handleGetFeedback();
     }, [])
 
     return (
         <div className='body'>
             <div><Header /></div>
-            <img class='image' src="/img/P004.jpg" />
+            <img className='image' src="/img/P004.jpg" />
             {CurrentProduct ? (
                 <div><div className="product-detail">
                     <div className="detail-img">
                         <img src={`/img/${CurrentProduct[0].ProductID}.jpg`} />
                     </div>
-                    <div class="product-details-content-area product-details--golden aos-init aos-animate detail-info" data-aos="fade-up" data-aos-delay="200">
-                        <div class="product-details-text">
-                            <h4 class="title">{CurrentProduct[0].Name}</h4>
-                            <div class="price">{CurrentProduct[0].Price}</div>
+                    <div className="product-details-content-area product-details--golden aos-init aos-animate detail-info" data-aos="fade-up" data-aos-delay="200">
+                        <div className="product-details-text">
+                            <h4 className="title">{CurrentProduct[0].Name}</h4>
+                            <div className="price">{CurrentProduct[0].Price}</div>
                             <p>{CurrentProduct[0].Content}</p>
                         </div>
-                        <div class="product-details-variable">
-                            <h4 class="title">Available Options</h4>
+                        <div className="product-details-variable">
+                            <h4 className="title">Available Options</h4>
 
-                            <div class="variable-single-item">
-                                <div class="product-stock"> <span class="product-stock-in"><i className="zmdi zmdi-check-circle"></i></span> {CurrentProduct[0].Quantity} IN STOCK</div>
+                            <div className="variable-single-item">
+                                <div className="product-stock"> <span className="product-stock-in"><i className="zmdi zmdi-check-circle"></i></span> {CurrentProduct[0].Quantity} IN STOCK</div>
                             </div>
 
-                            <div class="d-flex align-items-center ">
-                                <div class="variable-single-item ">
+                            <div className="d-flex align-items-center ">
+                                <div className="variable-single-item ">
                                     <span>Quantity</span>
-                                    <div class="product-variable-quantity">
+                                    <div className="product-variable-quantity">
                                         <input min="1" max="100" value={quantity} type="number"
                                             onChange={e => setQuantity(parseInt(e.target.value))}
                                             onIncrement={handleIncrement}
@@ -104,18 +133,18 @@ const ProductDetail = () => {
                                     </div>
                                 </div>
 
-                                <div class="product-add-to-cart-btn">
-                                    <a href="#" class="btn btn-block btn-lg btn-black-default-hover" data-bs-toggle="modal" data-bs-target="#modalAddcart">+ Add To Cart</a>
+                                <div className="product-add-to-cart-btn">
+                                    <a href="#" className="btn btn-block btn-lg btn-black-default-hover" data-bs-toggle="modal" data-bs-target="#modalAddcart">+ Add To Cart</a>
                                 </div>
                             </div>
 
-                            <div class="product-details-meta mb-20">
-                                <a href="wishlist.html" class="icon-space-right"><i className="zmdi zmdi-favorite"></i>Add to wishlist</a>
-                                <a href="compare.html" class="icon-space-right"><i className="zmdi zmdi-refresh"></i>Compare</a>
+                            <div className="product-details-meta mb-20">
+                                <a href="wishlist.html" className="icon-space-right"><i className="zmdi zmdi-favorite"></i>Add to wishlist</a>
+                                <a href="compare.html" className="icon-space-right"><i className="zmdi zmdi-refresh"></i>Compare</a>
                             </div>
                         </div>
-                        <div class="product-details-catagory mb-2">
-                            <span class="title">CATEGORIES:</span>
+                        <div className="product-details-catagory mb-2">
+                            <span className="title">CATEGORIES:</span>
                             <ul>
                                 <li><a href="#">BAR STOOL</a></li>
                                 <li><a href="#">KITCHEN UTENSILS</a></li>
@@ -124,7 +153,12 @@ const ProductDetail = () => {
                         </div>
                     </div>
                 </div>
-                    <div className='feedback'><Feedback /></div>
+                    <div className='feedback'>
+                        <Feedback
+                            feedbacks={feedbacks}
+                            onAddFeedback={handleAddFeedback}
+                            newFeedback={newFeedback}
+                            setNewFeedback={setNewFeedback} /></div>
                     <div><ProductList products={products} /></div></div>
             ) : (
                 <div><Page404 /></div>
