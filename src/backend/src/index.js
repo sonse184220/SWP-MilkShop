@@ -1,16 +1,16 @@
 import express from "express";
 
 import bodyParser from 'body-parser';
-import {authRoutes} from './routes/authRoutes.js'; 
-import {brandRoutes} from './routes/brandRoutes.js';
 import dotenv from 'dotenv';
-
-dotenv.config();
-
-import { productRoutes } from "./routes/productRoutes.js";
-import { blogRoutes } from "./routes/blogRoutes.js";
 import cors from "cors"; // Import CORS middleware
 
+import {authRoutes} from './routes/authRoutes.js'; 
+import {brandRoutes} from './routes/brandRoutes.js';
+import { productRoutes } from "./routes/productRoutes.js";
+import { blogRoutes } from "./routes/blogRoutes.js";
+import { wishlistRoutes } from "./routes/wishlistRoutes.js";
+
+dotenv.config();
 
 const PORT = process.env.PORT || 3000; // cổng kết nối localhost:xxxx
 
@@ -26,6 +26,9 @@ app.use(productRoutes);
 
 // API liên quan đến blogs
 app.use(blogRoutes);
+
+// API liên quan đến wishlist
+app.use(wishlistRoutes);
 
 app.use('/auth', authRoutes);
 app.use('/product', productRoutes);

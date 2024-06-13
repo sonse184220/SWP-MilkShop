@@ -17,6 +17,21 @@ export async function checkProductId(req: Request, res: Response, next: NextFunc
   Object.assign(req.params, matchedData(req));
   next();
 }
+export async function checkProductIdInQuery(req: Request, res: Response, next: NextFunction) {
+  await query("productId")
+  .trim()
+  .escape()
+  .exists().withMessage("ID is required!")
+  .notEmpty().withMessage("ID can not be blank!")
+  .run(req);
+
+  const result = validationResult(req);
+  if (!result.isEmpty()) {
+      return res.status(400).send({ error: result.array() });
+  }
+  Object.assign(req.params, matchedData(req));
+  next();
+}
 
 // kiểm tra data đầu vào cho search product
 export async function checkProductSearch(req: Request, res: Response, next: NextFunction) {
@@ -135,6 +150,7 @@ export async function checkFeedbackId(req: Request, res: Response, next: NextFun
   .escape()
   .exists().withMessage("FeedbackID is required!")
   .notEmpty().withMessage("FeedbackID can not be blank!")
+  .isInt({ allow_leading_zeroes: false }).withMessage("FeedbackID must be a number!")
   .run(req);
 
   const result = validationResult(req);

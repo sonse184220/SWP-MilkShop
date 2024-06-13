@@ -2,16 +2,17 @@
 
 var _express = _interopRequireDefault(require("express"));
 var _bodyParser = _interopRequireDefault(require("body-parser"));
+var _dotenv = _interopRequireDefault(require("dotenv"));
+var _cors = _interopRequireDefault(require("cors"));
 var _authRoutes = require("./routes/authRoutes.js");
 var _brandRoutes = require("./routes/brandRoutes.js");
-var _dotenv = _interopRequireDefault(require("dotenv"));
 var _productRoutes = require("./routes/productRoutes.js");
 var _blogRoutes = require("./routes/blogRoutes.js");
-var _cors = _interopRequireDefault(require("cors"));
+var _wishlistRoutes = require("./routes/wishlistRoutes.js");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { "default": e }; }
-_dotenv["default"].config();
 // Import CORS middleware
 
+_dotenv["default"].config();
 var PORT = process.env.PORT || 3000; // cổng kết nối localhost:xxxx
 
 var app = (0, _express["default"])(); // khởi chạy express
@@ -28,6 +29,9 @@ app.use(_productRoutes.productRoutes);
 
 // API liên quan đến blogs
 app.use(_blogRoutes.blogRoutes);
+
+// API liên quan đến wishlist
+app.use(_wishlistRoutes.wishlistRoutes);
 app.use('/auth', _authRoutes.authRoutes);
 app.use('/product', _productRoutes.productRoutes);
 app.use('/brand', _brandRoutes.brandRoutes);

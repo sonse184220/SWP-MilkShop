@@ -64,4 +64,9 @@ export class ProductService {
         const [feedback] = await poolConnect.query("INSERT INTO feedback (ProductID, UserID, Rating, Content) VALUES (?, ?, ?, ?)", [productId, userId, rating, content]);
         return feedback;
     }
+    // xóa feedback khỏi database
+    async removeFeedback(id) {
+        const [result] = await poolConnect.query('DELETE FROM feedback WHERE FeedbackID = ?', [id]);
+        return result;
+    }
 }

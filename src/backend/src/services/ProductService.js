@@ -84,4 +84,10 @@ export class ProductService {
         return feedback;
     }
 
+    // xóa feedback khỏi database
+    async removeFeedback(id) {
+        const [result] = await poolConnect.query('DELETE FROM feedback WHERE FeedbackID = ?', [id]);
+        return result;
+    }
+
 }

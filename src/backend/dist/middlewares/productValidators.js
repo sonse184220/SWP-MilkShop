@@ -4,7 +4,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.checkFeedbackData = checkFeedbackData;
+exports.checkFeedbackId = checkFeedbackId;
 exports.checkProductId = checkProductId;
+exports.checkProductIdInQuery = checkProductIdInQuery;
 exports.checkProductSearch = checkProductSearch;
 exports.checkProductSearchBrand = checkProductSearchBrand;
 var _expressValidator = require("express-validator");
@@ -15,7 +17,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 // kiểm tra id data đầu vào cho product
 function checkProductId(_x, _x2, _x3) {
   return _checkProductId.apply(this, arguments);
-} // kiểm tra data đầu vào cho search product
+}
 function _checkProductId() {
   _checkProductId = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(req, res, next) {
     var result;
@@ -44,64 +46,48 @@ function _checkProductId() {
   }));
   return _checkProductId.apply(this, arguments);
 }
-function checkProductSearch(_x4, _x5, _x6) {
-  return _checkProductSearch.apply(this, arguments);
-} // kiểm tra data đầu vào cho search product thuộc brand
-function _checkProductSearch() {
-  _checkProductSearch = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(req, res, next) {
-    var sortList, result;
+function checkProductIdInQuery(_x4, _x5, _x6) {
+  return _checkProductIdInQuery.apply(this, arguments);
+} // kiểm tra data đầu vào cho search product
+function _checkProductIdInQuery() {
+  _checkProductIdInQuery = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(req, res, next) {
+    var result;
     return _regeneratorRuntime().wrap(function _callee2$(_context2) {
       while (1) switch (_context2.prev = _context2.next) {
         case 0:
           _context2.next = 2;
-          return (0, _expressValidator.query)("name")["default"]("").trim().escape().run(req);
+          return (0, _expressValidator.query)("productId").trim().escape().exists().withMessage("ID is required!").notEmpty().withMessage("ID can not be blank!").run(req);
         case 2:
-          _context2.next = 4;
-          return (0, _expressValidator.query)("limit")["default"]("20").isInt({
-            min: 1,
-            allow_leading_zeroes: false
-          }).withMessage("invalid limit input! limit must be an integer number and no less than 1").trim().escape().run(req);
-        case 4:
-          _context2.next = 6;
-          return (0, _expressValidator.query)("page")["default"]("1").isInt({
-            min: 1,
-            allow_leading_zeroes: false
-          }).withMessage("invalid page input! page must be an integer number and no less than 1").trim().escape().run(req);
-        case 6:
-          sortList = ["newest", "oldest", "highest", "lowest"];
-          _context2.next = 9;
-          return (0, _expressValidator.query)("sort")["default"]("newest").trim().escape().toLowerCase().isIn(sortList).withMessage("invalid sort input! sort can only be: ".concat(sortList)).run(req);
-        case 9:
           result = (0, _expressValidator.validationResult)(req);
           if (result.isEmpty()) {
-            _context2.next = 12;
+            _context2.next = 5;
             break;
           }
           return _context2.abrupt("return", res.status(400).send({
             error: result.array()
           }));
-        case 12:
-          Object.assign(req.query, (0, _expressValidator.matchedData)(req));
+        case 5:
+          Object.assign(req.params, (0, _expressValidator.matchedData)(req));
           next();
-        case 14:
+        case 7:
         case "end":
           return _context2.stop();
       }
     }, _callee2);
   }));
-  return _checkProductSearch.apply(this, arguments);
+  return _checkProductIdInQuery.apply(this, arguments);
 }
-function checkProductSearchBrand(_x7, _x8, _x9) {
-  return _checkProductSearchBrand.apply(this, arguments);
-} // kiểm tra data đầu vào để tạo feedback
-function _checkProductSearchBrand() {
-  _checkProductSearchBrand = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(req, res, next) {
+function checkProductSearch(_x7, _x8, _x9) {
+  return _checkProductSearch.apply(this, arguments);
+} // kiểm tra data đầu vào cho search product thuộc brand
+function _checkProductSearch() {
+  _checkProductSearch = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(req, res, next) {
     var sortList, result;
     return _regeneratorRuntime().wrap(function _callee3$(_context3) {
       while (1) switch (_context3.prev = _context3.next) {
         case 0:
           _context3.next = 2;
-          return (0, _expressValidator.query)("id")["default"]("").trim().escape().run(req);
+          return (0, _expressValidator.query)("name")["default"]("").trim().escape().run(req);
         case 2:
           _context3.next = 4;
           return (0, _expressValidator.query)("limit")["default"]("20").isInt({
@@ -136,36 +122,83 @@ function _checkProductSearchBrand() {
       }
     }, _callee3);
   }));
+  return _checkProductSearch.apply(this, arguments);
+}
+function checkProductSearchBrand(_x10, _x11, _x12) {
   return _checkProductSearchBrand.apply(this, arguments);
-}
-function checkFeedbackData(_x10, _x11, _x12) {
-  return _checkFeedbackData.apply(this, arguments);
-}
-function _checkFeedbackData() {
-  _checkFeedbackData = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(req, res, next) {
-    var result;
+} // kiểm tra data đầu vào để tạo feedback
+function _checkProductSearchBrand() {
+  _checkProductSearchBrand = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(req, res, next) {
+    var sortList, result;
     return _regeneratorRuntime().wrap(function _callee4$(_context4) {
       while (1) switch (_context4.prev = _context4.next) {
         case 0:
           _context4.next = 2;
-          return (0, _expressValidator.body)("userId").trim().escape().exists().withMessage("UserID is required!").notEmpty().withMessage("UserID can not be blank!").run(req);
+          return (0, _expressValidator.query)("id")["default"]("").trim().escape().run(req);
         case 2:
           _context4.next = 4;
+          return (0, _expressValidator.query)("limit")["default"]("20").isInt({
+            min: 1,
+            allow_leading_zeroes: false
+          }).withMessage("invalid limit input! limit must be an integer number and no less than 1").trim().escape().run(req);
+        case 4:
+          _context4.next = 6;
+          return (0, _expressValidator.query)("page")["default"]("1").isInt({
+            min: 1,
+            allow_leading_zeroes: false
+          }).withMessage("invalid page input! page must be an integer number and no less than 1").trim().escape().run(req);
+        case 6:
+          sortList = ["newest", "oldest", "highest", "lowest"];
+          _context4.next = 9;
+          return (0, _expressValidator.query)("sort")["default"]("newest").trim().escape().toLowerCase().isIn(sortList).withMessage("invalid sort input! sort can only be: ".concat(sortList)).run(req);
+        case 9:
+          result = (0, _expressValidator.validationResult)(req);
+          if (result.isEmpty()) {
+            _context4.next = 12;
+            break;
+          }
+          return _context4.abrupt("return", res.status(400).send({
+            error: result.array()
+          }));
+        case 12:
+          Object.assign(req.query, (0, _expressValidator.matchedData)(req));
+          next();
+        case 14:
+        case "end":
+          return _context4.stop();
+      }
+    }, _callee4);
+  }));
+  return _checkProductSearchBrand.apply(this, arguments);
+}
+function checkFeedbackData(_x13, _x14, _x15) {
+  return _checkFeedbackData.apply(this, arguments);
+} // kiểm tra id data đầu vào cho feedback
+function _checkFeedbackData() {
+  _checkFeedbackData = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(req, res, next) {
+    var result;
+    return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+      while (1) switch (_context5.prev = _context5.next) {
+        case 0:
+          _context5.next = 2;
+          return (0, _expressValidator.body)("userId").trim().escape().exists().withMessage("UserID is required!").notEmpty().withMessage("UserID can not be blank!").run(req);
+        case 2:
+          _context5.next = 4;
           return (0, _expressValidator.body)("rating").trim().escape().exists().withMessage("Rating is required!").notEmpty().withMessage("Rating can not be blank!").isInt({
             min: 1,
             max: 5,
             allow_leading_zeroes: false
           }).withMessage("Rating must be an integer and between 1 to 5!").run(req);
         case 4:
-          _context4.next = 6;
+          _context5.next = 6;
           return (0, _expressValidator.body)("content").trim().escape().exists().withMessage("Feedback content is required!").notEmpty().withMessage("Feedback content can not be blank!").run(req);
         case 6:
           result = (0, _expressValidator.validationResult)(req);
           if (result.isEmpty()) {
-            _context4.next = 9;
+            _context5.next = 9;
             break;
           }
-          return _context4.abrupt("return", res.status(400).send({
+          return _context5.abrupt("return", res.status(400).send({
             error: result.array()
           }));
         case 9:
@@ -173,9 +206,42 @@ function _checkFeedbackData() {
           next();
         case 11:
         case "end":
-          return _context4.stop();
+          return _context5.stop();
       }
-    }, _callee4);
+    }, _callee5);
   }));
   return _checkFeedbackData.apply(this, arguments);
+}
+function checkFeedbackId(_x16, _x17, _x18) {
+  return _checkFeedbackId.apply(this, arguments);
+}
+function _checkFeedbackId() {
+  _checkFeedbackId = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(req, res, next) {
+    var result;
+    return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+      while (1) switch (_context6.prev = _context6.next) {
+        case 0:
+          _context6.next = 2;
+          return (0, _expressValidator.param)("id").trim().escape().exists().withMessage("FeedbackID is required!").notEmpty().withMessage("FeedbackID can not be blank!").isInt({
+            allow_leading_zeroes: false
+          }).withMessage("FeedbackID must be a number!").run(req);
+        case 2:
+          result = (0, _expressValidator.validationResult)(req);
+          if (result.isEmpty()) {
+            _context6.next = 5;
+            break;
+          }
+          return _context6.abrupt("return", res.status(400).send({
+            error: result.array()
+          }));
+        case 5:
+          Object.assign(req.params, (0, _expressValidator.matchedData)(req));
+          next();
+        case 7:
+        case "end":
+          return _context6.stop();
+      }
+    }, _callee6);
+  }));
+  return _checkFeedbackId.apply(this, arguments);
 }

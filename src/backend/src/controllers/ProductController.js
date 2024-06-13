@@ -99,9 +99,6 @@ export class ProductController {
         const productId = req.params.id;
 
         const feedbacks = await this.productService.getFeedbacksByProductID(productId);
-        if (feedbacks.length === 0) {
-            return res.status(404).send({ error: "No feedbacks found!" });
-        }
         return res.status(200).send(feedbacks);
     }
     
@@ -123,6 +120,22 @@ export class ProductController {
 
         const createdFeedback = await this.productService.getFeedback(creatingFeedback.insertId);
         return res.status(201).send(createdFeedback);
+    }
+
+    async deleteFeedback(req, res) {
+        const feedbackId = req.params.id;
+
+        const checkExist = await this.productService.getFeedback(feedbackId);
+        if (checkExist.length === 0) {
+            return res.status(404).send({ error: "Feedback not found!" });
+        }
+
+        const deletedFeedback = await this.productService.removeFeedback(feedbackId);
+        if (deletedFeedback.affectedRows === 0) {
+            return res.status(500).send({ msg: "Failed to delete feedback!" });
+        }
+        
+        return res.status(200).send({ msg: `Feedback ${feedbackId} successfully deleted!` });
     }
 
 }

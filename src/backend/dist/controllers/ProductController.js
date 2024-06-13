@@ -188,16 +188,8 @@ var ProductController = exports.ProductController = /*#__PURE__*/function () {
               return this.productService.getFeedbacksByProductID(productId);
             case 3:
               feedbacks = _context4.sent;
-              if (!(feedbacks.length === 0)) {
-                _context4.next = 6;
-                break;
-              }
-              return _context4.abrupt("return", res.status(404).send({
-                error: "No feedbacks found!"
-              }));
-            case 6:
               return _context4.abrupt("return", res.status(200).send(feedbacks));
-            case 7:
+            case 5:
             case "end":
               return _context4.stop();
           }
@@ -259,6 +251,53 @@ var ProductController = exports.ProductController = /*#__PURE__*/function () {
         return _createFeedback.apply(this, arguments);
       }
       return createFeedback;
+    }()
+  }, {
+    key: "deleteFeedback",
+    value: function () {
+      var _deleteFeedback = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(req, res) {
+        var feedbackId, checkExist, deletedFeedback;
+        return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+          while (1) switch (_context6.prev = _context6.next) {
+            case 0:
+              feedbackId = req.params.id;
+              _context6.next = 3;
+              return this.productService.getFeedback(feedbackId);
+            case 3:
+              checkExist = _context6.sent;
+              if (!(checkExist.length === 0)) {
+                _context6.next = 6;
+                break;
+              }
+              return _context6.abrupt("return", res.status(404).send({
+                error: "Feedback not found!"
+              }));
+            case 6:
+              _context6.next = 8;
+              return this.productService.removeFeedback(feedbackId);
+            case 8:
+              deletedFeedback = _context6.sent;
+              if (!(deletedFeedback.affectedRows === 0)) {
+                _context6.next = 11;
+                break;
+              }
+              return _context6.abrupt("return", res.status(500).send({
+                msg: "Failed to delete feedback!"
+              }));
+            case 11:
+              return _context6.abrupt("return", res.status(200).send({
+                msg: "Feedback ".concat(feedbackId, " successfully deleted!")
+              }));
+            case 12:
+            case "end":
+              return _context6.stop();
+          }
+        }, _callee6, this);
+      }));
+      function deleteFeedback(_x11, _x12) {
+        return _deleteFeedback.apply(this, arguments);
+      }
+      return deleteFeedback;
     }()
   }]);
 }();

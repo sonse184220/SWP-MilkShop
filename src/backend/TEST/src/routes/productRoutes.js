@@ -51,12 +51,15 @@ router.get("/api/product/:id/feedbacks", checkProductId, async (req, res) => {
  */
 router.post("/api/product/:id/feedbacks", checkProductId, checkFeedbackData, async (req, res) => {
     await productController.createFeedback(req, res);
+    // chờ ông nhật xong login/logout thì cập nhật bảo mật kiểm tra JWT sau
 });
 /** URL: localhost:xxxx/api/product/feedbacks/{...}
  * xóa 1 feedback dựa vào feedbackId
  * - {...} là feedback id
  */
 router.delete("/api/product/feedbacks/:id", checkFeedbackId, async (req, res) => {
+    await productController.deleteFeedback(req, res); 
+    // chờ ông nhật xong login/logout thì cập nhật bảo mật kiểm tra JWT sau
 });
 // export router
 export { router as productRoutes };

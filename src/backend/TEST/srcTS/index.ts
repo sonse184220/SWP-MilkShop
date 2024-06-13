@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from "express";
 
 import { productRoutes } from "./routes/productRoutes.js";
 import { blogRoutes } from "./routes/blogRoutes.js";
+import { wishlistRoutes } from "./routes/wishlistRoutes.js";
 
 const PORT = 4500; // tùy chọn cổng kết nối localhost:xxxx
 
@@ -13,6 +14,9 @@ app.use(productRoutes);
 
 // API liên quan đến blogs
 app.use(blogRoutes);
+
+// API liên quan đến wishlist
+app.use(wishlistRoutes);
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

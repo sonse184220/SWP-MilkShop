@@ -6,7 +6,7 @@ export class ProductService {
     // Lấy thông tin của 1 product bằng ID 
     async getProduct(id: string) {
         const [product] = await poolConnect.query('SELECT * FROM product WHERE ProductID = ?', [id]);
-        return product as QueryResult[];
+        return product as RowDataPacket[];
     }
 
     // tìm product trong database bằng name
@@ -91,5 +91,11 @@ export class ProductService {
                                                                             [productId, userId, rating, content]
         )
         return feedback;
+    }
+
+    // xóa feedback khỏi database
+    async removeFeedback(id: string | number) {
+        const [result]: [ResultSetHeader, any] = await poolConnect.query('DELETE FROM feedback WHERE FeedbackID = ?', [id]);
+        return result;
     }
 }

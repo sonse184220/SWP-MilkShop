@@ -254,6 +254,32 @@ var ProductService = exports.ProductService = /*#__PURE__*/function () {
         return _createFeedback.apply(this, arguments);
       }
       return createFeedback;
+    }() // xóa feedback khỏi database
+  }, {
+    key: "removeFeedback",
+    value: function () {
+      var _removeFeedback = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee9(id) {
+        var _yield$poolConnect$qu17, _yield$poolConnect$qu18, result;
+        return _regeneratorRuntime().wrap(function _callee9$(_context9) {
+          while (1) switch (_context9.prev = _context9.next) {
+            case 0:
+              _context9.next = 2;
+              return _dbConnection.poolConnect.query('DELETE FROM feedback WHERE FeedbackID = ?', [id]);
+            case 2:
+              _yield$poolConnect$qu17 = _context9.sent;
+              _yield$poolConnect$qu18 = _slicedToArray(_yield$poolConnect$qu17, 1);
+              result = _yield$poolConnect$qu18[0];
+              return _context9.abrupt("return", result);
+            case 6:
+            case "end":
+              return _context9.stop();
+          }
+        }, _callee9);
+      }));
+      function removeFeedback(_x18) {
+        return _removeFeedback.apply(this, arguments);
+      }
+      return removeFeedback;
     }()
   }]);
 }();
