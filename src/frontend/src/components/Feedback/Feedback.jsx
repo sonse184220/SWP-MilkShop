@@ -26,29 +26,40 @@ const Feedback = ({ feedbacks = [], onAddFeedback, newFeedback, setNewFeedback }
                 <div className="single-tab-content-item">
                     <h2 className="feedback-title">Feedbacks</h2>
                     <ul className="comment">
-                        {feedbacks.map((feedback, index) => (
-                            <li key={index} className="comment-list">
-                                <div className="comment-wrapper">
-                                    <div className="comment-img">
-                                        <img src="assets/images/user/image-1.png" alt="User" />
-                                    </div>
-                                    <div className="comment-content">
-                                        <div className="comment-content-top">
-                                            <div className="comment-content-left">
-                                                <h6 className="comment-name">{feedback.Name}</h6>
-                                                <ul className="review-star">
-                                                    {renderStars(feedback.Rating)}
-                                                </ul>
+                        {feedbacks.length > 0 ? (
+
+                            feedbacks.map((feedback, index) => (
+                                <li key={index} className="comment-list">
+                                    <div className="comment-wrapper">
+                                        <div className="comment-img">
+                                            <img src="assets/images/user/image-1.png" alt="User" />
+                                        </div>
+                                        <div className="comment-content">
+                                            <div className="comment-content-top">
+                                                <div className="comment-content-left">
+                                                    <h6 className="comment-name">{feedback.Name}</h6>
+                                                    <ul className="review-star">
+                                                        {renderStars(feedback.Rating)}
+                                                    </ul>
+                                                </div>
+                                                {(feedback.UserID === JSON.parse(localStorage.getItem('userData')).UserID) && (
+                                                    <div class="comment-content-right">
+                                                        <a href="#"><i className="zmdi zmdi-delete"></i>Delete</a>
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            <div className="para-content">
+                                                <p>{feedback.Content}</p>
                                             </div>
                                         </div>
-
-                                        <div className="para-content">
-                                            <p>{feedback.Content}</p>
-                                        </div>
                                     </div>
-                                </div>
-                            </li>
-                        ))}
+                                </li>
+                            ))
+
+                        ) : (
+                            <div>No feedback available</div>
+                        )}
                     </ul>
                     <div className="review-form">
                         <div className="review-form-text-top">
