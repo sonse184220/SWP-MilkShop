@@ -7,10 +7,22 @@ import './AllProducts.css';
 import Brand from '../Brand/Brand';
 import handleGetAllProduct from '../../services/getAllProductService';
 import GetProductByBrandID from '../../services/getProductByBrandID';
+import { SearchProductByName } from '../../services/searchProductByName';
 
 const AllProducts = () => {
     const [products, setProducts] = useState([]);
     const [CurrentBrand, SetCurrentBrand] = useState(null);
+    const [searchInput, setSearchInput] = useState();
+
+    const handleSearchProductByName = async () => {
+        try {
+            const response = await SearchProductByName(searchInput);
+            console.log("================", response);
+            setProducts(response.data.data)
+        } catch (error) {
+
+        }
+    }
 
     const handleBrandClick = async (BrandID) => {
         // SetCurrentBrand(BrandID);
@@ -47,7 +59,7 @@ const AllProducts = () => {
             <div><Header /></div>
             <img className='image' src="/img/P004.jpg" />
             <div className='brand-product'>
-                <div className='brand-bar'><Brand onBrandClick={handleBrandClick} /></div>
+                <div className='brand-bar'><Brand onBrandClick={handleBrandClick} onSearch={handleSearchProductByName} setSearchInput={setSearchInput} /></div>
 
                 <div className="product-bar">
                     <div className='header'>

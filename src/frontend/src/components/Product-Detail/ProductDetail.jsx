@@ -56,6 +56,9 @@ const ProductDetail = () => {
         }
     ];
 
+    const handleDeleteFeedback = () => {
+
+    }
     const handleAddFeedback = async () => {
         try {
             const response = await AddFeedback(ProductID, newFeedback);

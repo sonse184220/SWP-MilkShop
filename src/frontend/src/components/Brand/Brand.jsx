@@ -3,8 +3,13 @@ import { useEffect, useState } from 'react';
 import './Brand.css';
 import { handleAllBrand } from '../../services/getAllBrand';
 
-function Brand({ onBrandClick }) {
+function Brand({ onBrandClick, onSearch, setSearchInput }) {
     const [brands, setBrands] = useState([]);
+
+    const handleSearchClick = (e) => {
+        e.preventDefault();
+        onSearch();
+    }
 
     const GetAllBrand = async () => {
         try {
@@ -24,12 +29,13 @@ function Brand({ onBrandClick }) {
         <div className='brand-container'>
             <div className="sidebar-single-widget">
                 <div>
-                    <form>
+                    <form onSubmit={handleSearchClick}>
                         <div className="search-container">
                             <input
                                 type='text'
                                 className='search'
                                 placeholder='Search'
+                                onChange={(e) => setSearchInput(e.target.value)}
                             />
                             <button type="submit" className="search-btn">
                                 <i className="zmdi zmdi-search"></i>
