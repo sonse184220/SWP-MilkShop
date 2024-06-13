@@ -17,29 +17,32 @@ CREATE TABLE PRODUCT (
     Quantity INT NOT NULL,
     Content TEXT,
     Status NVARCHAR(20),
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (BrandID) REFERENCES BRAND(BrandID)
 );
 
 CREATE TABLE MEMBER (
     UserID VARCHAR(10) NOT NULL PRIMARY KEY,
-    Password VARCHAR(20),
+    Password VARCHAR(255),
     Name NVARCHAR(30),
     RewardPoints INT NOT NULL,
     Email VARCHAR(50),
     Phone VARCHAR(15) NOT NULL,
-    Address NVARCHAR(100)
+    Address NVARCHAR(100),
+    Verified BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE STAFF (
     StaffID VARCHAR(10) NOT NULL PRIMARY KEY,
-    Password VARCHAR(20),
+    Password VARCHAR(255),
     Name NVARCHAR(30),
     PhoneNumber VARCHAR(15) NOT NULL
 );
 
 CREATE TABLE ADMIN (
     AdminID VARCHAR(10) NOT NULL PRIMARY KEY,
-    Password VARCHAR(20),
+    Password VARCHAR(255),
     Name NVARCHAR(30)
 );
 
@@ -67,6 +70,8 @@ CREATE TABLE BLOG (
     Name NVARCHAR(100),
     CreatedDate DATE,
     Content TEXT,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (StaffID) REFERENCES STAFF(StaffID)
 );
 
@@ -109,84 +114,36 @@ CREATE TABLE `ORDER` (
     FOREIGN KEY (VoucherID) REFERENCES VOUCHER(VoucherID)
 );
 
-INSERT INTO MEMBER (UserID, Password, Name, RewardPoints, Email, Phone, Address) VALUES
-('U001', 'password1', 'John Doe', 100, 'john@email.com', '0987654321', 'Address 1'),
-('U002', 'password2', 'Jane Smith', 50, 'jane@email.com', '0123456789', 'Address 2'),
-('U003', 'password3', 'Bob Johnson', 200, 'bob@email.com', '0987612345', 'Address 3');
+CREATE TABLE TEMP_MEMBER (
+    UserID VARCHAR(10) NOT NULL PRIMARY KEY,
+    Password VARCHAR(255),
+    Name NVARCHAR(30),
+    Email VARCHAR(50),
+    Phone VARCHAR(15),
+    Address NVARCHAR(100),
+    Token VARCHAR(255)
+);
 
-INSERT INTO BRAND (BrandID, Name, Content) VALUES
-('B001', 'Brand A', 'Premium milk brand'),
-('B002', 'Brand B', 'Organic milk products'),
-('B003', 'Brand C', 'Local dairy farm');
+INSERT INTO BRAND (BrandID, Name, Content) VALUES 
+('BR001', 'MamaMilk', 'Nutritional milk for pregnant moms'),
+('BR002', 'KidGrow', 'Milk formula for children growth'),
+('BR003', 'BabyStrong', 'Infant formula with essential vitamins'),
+('BR004', 'NutriMom', 'Organic milk for expecting mothers'),
+('BR005', 'HealthyKids', 'Fortified milk for toddlers');
 
-INSERT INTO PRODUCT (ProductID, BrandID, Name, Price, Expiration, Quantity, Content, Status) VALUES
-('P001', 'B001', 'Whole Milk', 3000, '2024-06-30', 100, 'Fresh whole milk', 'Available'),
-('P002', 'B002', 'Low-Fat Milk', 2500, '2024-07-15', 80, 'Organic low-fat milk', 'Available'),
-('P003', 'B003', 'Strawberry Yogurt', 4000, '2024-05-31', 50, 'Creamy strawberry yogurt', 'Out of Stock'),
-('P004', 'B001', 'Milk A', 200, '2025-12-31', 100, 'Fresh milk A', 'Available'),
-('P005', 'B001', 'Milk B', 220, '2025-12-31', 150, 'Fresh milk B', 'Available'),
-('P006', 'B001', 'Milk C', 210, '2025-12-31', 120, 'Fresh milk C', 'Available'),
-('P007', 'B001', 'Yogurt A', 300, '2025-12-31', 80, 'Fresh yogurt A', 'Available'),
-('P008', 'B001', 'Yogurt B', 320, '2025-12-31', 90, 'Fresh yogurt B', 'Available'),
-('P009', 'B001', 'Cheese A', 500, '2025-12-31', 50, 'Fresh cheese A', 'Available'),
-('P010', 'B001', 'Cheese B', 550, '2025-12-31', 60, 'Fresh cheese B', 'Available'),
-('P011', 'B001', 'Butter A', 400, '2025-12-31', 70, 'Fresh butter A', 'Available'),
-('P012', 'B001', 'Butter B', 420, '2025-12-31', 75, 'Fresh butter B', 'Available'),
-('P013', 'B001', 'Cream A', 350, '2025-12-31', 85, 'Fresh cream A', 'Available'),
-('P014', 'B001', 'Cream B', 370, '2025-12-31', 65, 'Fresh cream B', 'Available'),
-('P015', 'B001', 'Milk D', 230, '2025-12-31', 130, 'Fresh milk D', 'Available'),
-('P016', 'B001', 'Milk E', 240, '2025-12-31', 140, 'Fresh milk E', 'Available'),
-('P017', 'B001', 'Yogurt C', 340, '2025-12-31', 95, 'Fresh yogurt C', 'Available'),
-('P018', 'B001', 'Yogurt D', 360, '2025-12-31', 100, 'Fresh yogurt D', 'Available'),
-('P019', 'B001', 'Cheese C', 600, '2025-12-31', 55, 'Fresh cheese C', 'Available'),
-('P020', 'B001', 'Cheese D', 650, '2025-12-31', 65, 'Fresh cheese D', 'Available'),
-('P021', 'B001', 'Butter C', 450, '2025-12-31', 70, 'Fresh butter C', 'Available'),
-('P022', 'B001', 'Butter D', 470, '2025-12-31', 80, 'Fresh butter D', 'Available'),
-('P023', 'B001', 'Cream C', 380, '2025-12-31', 90, 'Fresh cream C', 'Available'),
-('P024', 'B001', 'Cream D', 400, '2025-12-31', 95, 'Fresh cream D', 'Available'),
-('P025', 'B001', 'Milk F', 250, '2025-12-31', 145, 'Fresh milk F', 'Available'),
-('P026', 'B001', 'Milk G', 260, '2025-12-31', 155, 'Fresh milk G', 'Available'),
-('P027', 'B001', 'Yogurt E', 380, '2025-12-31', 105, 'Fresh yogurt E', 'Available'),
-('P028', 'B001', 'Yogurt F', 400, '2025-12-31', 110, 'Fresh yogurt F', 'Available'),
-('P029', 'B001', 'Cheese E', 700, '2025-12-31', 75, 'Fresh cheese E', 'Available'),
-('P030', 'B001', 'Cheese F', 750, '2025-12-31', 80, 'Fresh cheese F', 'Available');
-
-INSERT INTO ADMIN (AdminID, Password, Name) VALUES
-('A001', 'admin123', 'John Smith');
-
-INSERT INTO STAFF (StaffID, Password, Name, PhoneNumber) VALUES
-('S001', 'staff123', 'Emily Johnson', '0123456789'),
-('S002', 'staff456', 'Michael Brown', '0987654321'),
-('S003', 'staff789', 'Sarah Davis', '0567891234');
-
-INSERT INTO BLOG (BlogID, StaffID, Name, CreatedDate, Content) VALUES 
-('BLOG001', 'S001', 'The Magic of Milk', '2024-05-24', 'Milk has been a staple in diets for centuries, providing essential nutrients like calcium and vitamin D.'),
-('BLOG002', 'S001', 'Exploring Dairy Products', '2024-05-24', 'From creamy cheeses to rich yogurts, dairy products offer a diverse range of flavors and textures.'),
-('BLOG003', 'S001', 'Health Benefits of Milk', '2024-05-24', 'Drinking milk can promote bone health and reduce the risk of osteoporosis.'),
-('BLOG004', 'S001', 'The Art of Cheese Making', '2024-05-24', 'Discover the fascinating process behind crafting delicious cheeses from milk.'),
-('BLOG005', 'S001', 'Yogurt: A Probiotic Powerhouse', '2024-05-24', 'Learn about the gut-boosting benefits of yogurt and its role in digestive health.'),
-('BLOG006', 'S001', 'Cooking with Dairy', '2024-05-24', 'Explore creative recipes featuring dairy ingredients, from creamy pasta sauces to decadent desserts.'),
-('BLOG007', 'S001', 'The History of Milk Production', '2024-05-24', 'Trace the evolution of dairy farming practices and their impact on society.'),
-('BLOG008', 'S001', 'Milk Alternatives: Exploring Options', '2024-05-24', 'Discover plant-based alternatives to traditional dairy products, such as almond milk and soy milk.'),
-('BLOG009', 'S001', 'Caring for Dairy Cows', '2024-05-24', 'Learn about the importance of animal welfare in dairy farming and sustainable practices for raising healthy cows.'),
-('BLOG010', 'S001', 'The Science of Milk Processing', '2024-05-24', 'Explore the intricate processes involved in pasteurizing and homogenizing milk for consumption.'),
-('BLOG011', 'S001', 'Milk in Cultural Traditions', '2024-05-24', 'Discover how milk has been revered and incorporated into various cultural ceremonies and rituals worldwide.'),
-('BLOG012', 'S001', 'The Future of Dairy Technology', '2024-05-24', 'Explore innovative advancements in dairy technology, from robotic milking systems to smart farming.'),
-('BLOG013', 'S001', 'Milk Myths Debunked', '2024-05-24', 'Separate fact from fiction as we debunk common myths surrounding milk consumption and health.'),
-('BLOG014', 'S001', 'Cheese Pairing Guide', '2024-05-24', 'Unlock the secrets to perfect cheese pairings with wine, fruit, and other complementary flavors.'),
-('BLOG015', 'S001', 'Benefits of Organic Dairy', '2024-05-24', 'Discover the advantages of choosing organic dairy products, including improved animal welfare and environmental sustainability.'),
-('BLOG016', 'S001', 'Milk and Weight Management', '2024-05-24', 'Learn how incorporating milk into your diet can support weight loss and healthy weight management.'),
-('BLOG017', 'S001', 'Dairy-Free Dessert Recipes', '2024-05-24', 'Indulge your sweet tooth with these delicious dairy-free dessert recipes, perfect for lactose intolerant individuals or vegans.'),
-('BLOG018', 'S001', 'The Nutritional Value of Dairy', '2024-05-24', 'Explore the essential nutrients found in dairy products and their role in maintaining overall health and well-being.'),
-('BLOG019', 'S001', 'Milk and Bone Health', '2024-05-24', 'Discover how calcium-rich milk can contribute to strong bones and prevent conditions like osteoporosis.'),
-('BLOG020', 'S001', 'Dairy Farming Sustainability', '2024-05-24', 'Learn about efforts to promote sustainable dairy farming practices and reduce the environmental impact of milk production.'),
-('BLOG021', 'S001', 'Milkshake Madness', '2024-05-24', 'Indulge in the creamy goodness of homemade milkshakes with these irresistible recipes.'),
-('BLOG022', 'S001', 'Dairy in Art and Literature', '2024-05-24', 'Explore the depiction of milk and dairy products in paintings, poems, and novels throughout history.'),
-('BLOG023', 'S001', 'The Global Dairy Industry', '2024-05-24', 'Learn about the economic impact and global reach of the dairy industry, from small-scale farms to multinational corporations.'),
-('BLOG024', 'S001', 'Milk: A Versatile Ingredient', '2024-05-24', 'Discover the endless culinary possibilities of milk, from enriching sauces to tenderizing meats.'),
-('BLOG025', 'S001', 'The Dairy-Free Movement', '2024-05-24', 'Explore the growing trend of dairy-free diets and the wide range of alternatives available to consumers today.'),
-('BLOG026', 'S001', 'Milk Production Challenges', '2024-05-24', 'Examine the obstacles facing dairy farmers, including environmental concerns, market fluctuations, and animal welfare issues.'),
-('BLOG027', 'S001', 'The Benefits of Greek Yogurt', '2024-05-24', 'Discover the nutritional advantages of Greek yogurt and its creamy texture, perfect for breakfast or as a healthy snack.'),
-('BLOG028', 'S001', 'Milk and Mental Health', '2024-05-24', 'Learn about the potential link between milk consumption and improved mood, cognitive function, and overall mental well-being.'),
-('BLOG029', 'S001', 'The Role of Milk in Sports Nutrition', '2024-05-24', 'Explore how milk can serve as a natural source of hydration, protein, and electrolytes for athletes and fitness enthusiasts.'),
-('BLOG030', 'S001', 'Dairy-Free Baking Tips', '2024-05-24', 'Master the art of dairy-free baking with these helpful tips and ingredient substitutions for delicious treats without the dairy.');
+INSERT INTO PRODUCT (ProductID, BrandID, Name, Price, Expiration, Quantity, Content, Status) VALUES 
+('P001', 'BR001', 'MamaMilk Original', 25000, '2025-06-30', 100, 'Rich in folic acid and iron', 'Available'),
+('P002', 'BR001', 'MamaMilk Chocolate', 27000, '2025-08-15', 80, 'Rich in calcium and vitamin D', 'Available'),
+('P003', 'BR002', 'KidGrow Stage 1', 20000, '2024-12-01', 50, 'For infants 0-6 months', 'Available'),
+('P004', 'BR002', 'KidGrow Stage 2', 22000, '2025-01-20', 60, 'For infants 6-12 months', 'Available'),
+('P005', 'BR003', 'BabyStrong Premium', 30000, '2024-11-30', 40, 'With DHA and ARA for brain development', 'Available'),
+('P006', 'BR003', 'BabyStrong Soy', 28000, '2025-02-10', 30, 'Lactose-free soy formula', 'Available'),
+('P007', 'BR004', 'NutriMom Organic', 35000, '2025-05-01', 70, 'Certified organic milk for pregnant women', 'Available'),
+('P008', 'BR004', 'NutriMom Vanilla', 37000, '2025-07-18', 90, 'Vanilla flavored organic milk', 'Available'),
+('P009', 'BR005', 'HealthyKids Toddler', 23000, '2024-12-25', 110, 'Fortified with vitamins and minerals for toddlers', 'Available'),
+('P010', 'BR005', 'HealthyKids Junior', 24000, '2025-03-05', 95, 'For children 1-3 years', 'Available'),
+('P011', 'BR002', 'KidGrow Stage 3', 26000, '2025-04-15', 50, 'For toddlers 12-24 months', 'Available'),
+('P012', 'BR003', 'BabyStrong Lactose-Free', 32000, '2025-01-30', 55, 'Lactose-free infant formula', 'Available'),
+('P013', 'BR004', 'NutriMom Strawberry', 38000, '2025-06-20', 65, 'Strawberry flavored organic milk', 'Available'),
+('P014', 'BR001', 'MamaMilk Plus', 29000, '2025-03-12', 45, 'Enhanced with probiotics', 'Available'),
+('P015', 'BR005', 'HealthyKids Advanced', 27000, '2024-12-15', 75, 'Advanced formula with omega-3', 'Available');
