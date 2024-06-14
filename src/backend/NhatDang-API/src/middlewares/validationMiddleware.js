@@ -34,8 +34,8 @@ const checkRegister = [
 const checkLogin = [
     body('identifier')
         .trim()
-        .exists().withMessage('Identifier is required')
-        .notEmpty().withMessage('Identifier cannot be empty'),
+        .exists().withMessage('Email/Phone is required')
+        .notEmpty().withMessage('Email/Phone cannot be empty'),
     body('Password')
         .trim()
         .exists().withMessage('Password is required')
