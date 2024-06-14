@@ -10,6 +10,7 @@ import AllProducts from './components/Product-HomePage/AllProducts.jsx';
 import EditProfile from './components/Member/EditProfile.jsx';
 import ProductDetail from './components/Product-Detail/ProductDetail.jsx';
 import { MemberInfo } from './context/MemberContext.js';
+import { Wishlist } from './components/Wishlist/Wishlist.jsx';
 
 //import file bootstrap và material-design-iconic-font trong index.js
 
@@ -42,6 +43,7 @@ function App() {
           <Route path='/Products' element={<AllProducts />}></Route>
           <Route path='/EditProfile' element={<EditProfile />}></Route>
           <Route path='/ProductDetail/:ProductID' element={<ProductDetail />}></Route>
+          <Route path='/Wishlist' element={<Wishlist />}></Route>
         </Routes>
       </MemberInfo>
     </Router>
