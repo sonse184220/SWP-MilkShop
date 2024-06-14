@@ -1,10 +1,6 @@
-const connection = require('../utils/db');
+import connection from '../utils/db.js';
 
-const getAllBrands = (callback) => {
+export const getAllBrands = (callback) => {
     const query = 'SELECT * FROM BRAND';
     connection.query(query, callback);
-};
-
-module.exports = {
-    getAllBrands
 };

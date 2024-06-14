@@ -1,6 +1,6 @@
-const userController = require('../controllers/userController');
+import * as userController from '../controllers/userController.js';
 
-const getUserInfo = (req, res) => {
+export const getUserInfo = (req, res) => {
     const userId = req.params.userId;
     userController.getUserInfo(userId, (err, results) => {
         if (err) return res.status(500).json({ error: err.message });
@@ -9,7 +9,7 @@ const getUserInfo = (req, res) => {
     });
 };
 
-const updateUserInfo = (req, res) => {
+export const updateUserInfo = (req, res) => {
     const userId = req.params.userId;
     const newUserData = req.body;
     userController.updateUserInfo(userId, newUserData, (err, result) => {
@@ -18,15 +18,9 @@ const updateUserInfo = (req, res) => {
     });
 };
 
-const completeProfile = (req, res) => {
+export const completeProfile = (req, res) => {
     userController.completeProfile(req, (err, result) => {
         if (err) return res.status(500).json({ error: err.message });
         res.status(200).json(result);
     });
-};
-
-module.exports = {
-    getUserInfo,
-    updateUserInfo,
-    completeProfile
 };

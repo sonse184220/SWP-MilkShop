@@ -1,21 +1,16 @@
-const productController = require('../controllers/productController');
+import * as productController from '../controllers/productController.js';
 
-const getAllProducts = (req, res) => {
+export const getAllProducts = (req, res) => {
     productController.getAllProducts((err, results) => {
         if (err) return res.status(500).json({ error: err.message });
         res.status(200).json(results);
     });
 };
 
-const getProductById = (req, res) => {
+export const getProductById = (req, res) => {
     const { id } = req.params;
     productController.getProductById(id, (err, results) => {
         if (err) return res.status(500).json({ error: err.message });
         res.status(200).json(results);
     });
-};
-
-module.exports = {
-    getAllProducts,
-    getProductById
 };

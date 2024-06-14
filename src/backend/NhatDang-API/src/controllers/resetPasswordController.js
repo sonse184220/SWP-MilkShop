@@ -1,10 +1,12 @@
-const connection = require('../utils/db');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const { sendResetPasswordEmail } = require('../services/emailService');
-require('dotenv').config();
+import connection from '../utils/db.js';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { sendResetPasswordEmail } from '../services/emailService.js';
+import dotenv from 'dotenv';
 
-const requestResetPassword = (email, req, callback) => {
+dotenv.config();
+
+export const requestResetPassword = (email, req, callback) => {
     const query = 'SELECT * FROM MEMBER WHERE Email = ?';
     connection.query(query, [email], (err, results) => {
         if (err) return callback(err);
@@ -25,7 +27,7 @@ const requestResetPassword = (email, req, callback) => {
     });
 };
 
-const resetPassword = (token, newPassword, callback) => {
+export const resetPassword = (token, newPassword, callback) => {
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.userId;
@@ -42,9 +44,4 @@ const resetPassword = (token, newPassword, callback) => {
     } catch (err) {
         callback(err);
     }
-};
-
-module.exports = {
-    requestResetPassword,
-    resetPassword
 };

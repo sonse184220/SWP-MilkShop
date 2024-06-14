@@ -1,8 +1,10 @@
-const jwt = require('jsonwebtoken');
-require('dotenv').config();
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 
-const checkAuthenticated = (req, res, next) => {
-    const token = req.headers['authorization'];
+dotenv.config();
+
+export const checkAuthenticated = (req, res, next) => {
+    const token = req.headers['authorization']?.split(' ')[1];
 
     if (!token) {
         return res.status(401).json({ message: 'Access token is missing' });
@@ -16,8 +18,4 @@ const checkAuthenticated = (req, res, next) => {
         req.user = decoded;
         next();
     });
-};
-
-module.exports = {
-    checkAuthenticated
 };

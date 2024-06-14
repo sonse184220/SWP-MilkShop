@@ -1,6 +1,6 @@
-const { body, validationResult, matchedData } = require('express-validator');
+import { body, validationResult, matchedData } from 'express-validator';
 
-const checkRegister = [
+export const checkRegister = [
     body('Password')
         .trim()
         .exists().withMessage('Password is required')
@@ -31,7 +31,7 @@ const checkRegister = [
     }
 ];
 
-const checkLogin = [
+export const checkLogin = [
     body('identifier')
         .trim()
         .exists().withMessage('Identifier is required')
@@ -50,7 +50,7 @@ const checkLogin = [
     }
 ];
 
-const checkResetPasswordRequest = [
+export const checkResetPasswordRequest = [
     body('email')
         .trim()
         .exists().withMessage('Email is required')
@@ -65,7 +65,7 @@ const checkResetPasswordRequest = [
     }
 ];
 
-const checkResetPassword = [
+export const checkResetPassword = [
     body('token')
         .trim()
         .exists().withMessage('Token is required')
@@ -83,10 +83,3 @@ const checkResetPassword = [
         next();
     }
 ];
-
-module.exports = {
-    checkRegister,
-    checkLogin,
-    checkResetPasswordRequest,
-    checkResetPassword
-};

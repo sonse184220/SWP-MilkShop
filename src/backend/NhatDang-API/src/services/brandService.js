@@ -1,12 +1,8 @@
-const brandController = require('../controllers/brandController');
+import * as brandController from '../controllers/brandController.js';
 
-const getAllBrands = (req, res) => {
+export const getAllBrands = (req, res) => {
     brandController.getAllBrands((err, results) => {
         if (err) return res.status(500).json({ error: err.message });
         res.status(200).json(results);
     });
-};
-
-module.exports = {
-    getAllBrands
 };

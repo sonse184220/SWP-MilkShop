@@ -1,11 +1,11 @@
-const connection = require('../utils/db');
+import connection from '../utils/db.js';
 
-const getUserInfo = (userId, callback) => {
+export const getUserInfo = (userId, callback) => {
     const query = 'SELECT UserID, Name, Email, Phone, Address, RewardPoints, Verified FROM MEMBER WHERE UserID = ?';
     connection.query(query, [userId], callback);
 };
 
-const updateUserInfo = (userId, newUserData, callback) => {
+export const updateUserInfo = (userId, newUserData, callback) => {
     getUserInfo(userId, (err, results) => {
         if (err) return callback(err);
         if (results.length === 0) return callback(new Error('User not found'));
@@ -41,7 +41,6 @@ const updateUserInfo = (userId, newUserData, callback) => {
         connection.query(query, values, (err, result) => {
             if (err) return callback(err);
 
-
             getUserInfo(userId, (err, updatedResults) => {
                 if (err) return callback(err);
                 callback(null, { message: 'User updated successfully', user: updatedResults[0] });
@@ -50,22 +49,15 @@ const updateUserInfo = (userId, newUserData, callback) => {
     });
 };
 
-const completeProfile = (req, callback) => {
+export const completeProfile = (req, callback) => {
     const { userId, name, phone, address } = req.body;
     const query = 'UPDATE MEMBER SET Name = ?, Phone = ?, Address = ? WHERE UserID = ?';
     connection.query(query, [name, phone, address, userId], (err, result) => {
         if (err) return callback(err);
-
 
         getUserInfo(userId, (err, updatedResults) => {
             if (err) return callback(err);
             callback(null, { message: 'Profile completed successfully', user: updatedResults[0] });
         });
     });
-};
-
-module.exports = {
-    getUserInfo,
-    updateUserInfo,
-    completeProfile
 };

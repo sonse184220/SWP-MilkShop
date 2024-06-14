@@ -1,8 +1,10 @@
-const express = require('express');
-const passport = require('../controllers/authController').passport;
-const authService = require('../services/authService');
-const { checkRegister, checkLogin } = require('../middlewares/validationMiddleware');
-require('dotenv').config();
+import express from 'express';
+import { passport } from '../controllers/authController.js';
+import * as authService from '../services/authService.js';
+import { checkRegister, checkLogin } from '../middlewares/validationMiddleware.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const router = express.Router();
 
@@ -16,4 +18,4 @@ router.get('/google/callback', passport.authenticate('google', { failureRedirect
     res.redirect(`/complete-profile?userId=${req.user.UserID}`);
 });
 
-module.exports = router;
+export default router;

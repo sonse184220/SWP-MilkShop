@@ -1,10 +1,12 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const connection = require('../utils/db');
-const { sendVerificationEmail } = require('../services/emailService');
-require('dotenv').config();
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import passport from 'passport';
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+import connection from '../utils/db.js';
+import { sendVerificationEmail } from '../services/emailService.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
@@ -80,7 +82,6 @@ const registerUser = (userData, req, callback) => {
 
         bcrypt.hash(Password, 10, (err, hashedPassword) => {
             if (err) return callback(err);
-
 
             const getMaxUserIdQuery = 'SELECT MAX(CAST(SUBSTR(UserID, 2) AS UNSIGNED)) AS maxUserId FROM MEMBER WHERE UserID LIKE "U%"';
             connection.query(getMaxUserIdQuery, (err, results) => {
@@ -173,7 +174,7 @@ const completeProfile = (req, callback) => {
     });
 };
 
-module.exports = {
+export {
     registerUser,
     loginUser,
     verifyEmail,

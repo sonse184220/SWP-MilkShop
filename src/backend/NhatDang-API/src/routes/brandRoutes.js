@@ -1,9 +1,11 @@
-const express = require('express');
-const brandService = require('../services/brandService');
-require('dotenv').config();
+import express from 'express';
+import { getAllBrands } from '../services/brandService.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const router = express.Router();
 
-router.get('/', brandService.getAllBrands);
+router.get('/', getAllBrands);
 
-module.exports = router;
+export default router;

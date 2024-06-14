@@ -1,11 +1,11 @@
-const express = require('express');
-const { checkAuthenticated } = require('../middlewares/authMiddleware');
-const cartService = require('../services/cartService');
-require('dotenv').config();
+import express from 'express';
+import { checkAuthenticated } from '../middlewares/authMiddleware.js';
+import { addToCart, removeFromCart, updateCart, viewCart } from '../services/cartService.js';
 
 const router = express.Router();
 
-router.post('/add', checkAuthenticated, cartService.addToCart);
-router.get('/view', checkAuthenticated, cartService.viewCart);
+router.post('/add', checkAuthenticated, addToCart);
+router.post('/update', checkAuthenticated, updateCart);
+router.get('/view', checkAuthenticated, viewCart);
 
-module.exports = router;
+export default router;

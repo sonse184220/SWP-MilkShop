@@ -1,10 +1,12 @@
-const express = require('express');
-const resetPasswordService = require('../services/resetPassWordService');
-require('dotenv').config();
+import express from 'express';
+import { requestResetPassword, resetPassword } from '../services/resetPassWordService.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const router = express.Router();
 
-router.post('/request-reset-password', resetPasswordService.requestResetPassword);
-router.post('/reset-password', resetPasswordService.resetPassword);
+router.post('/request-reset-password', requestResetPassword);
+router.post('/reset-password', resetPassword);
 
-module.exports = router;
+export default router;

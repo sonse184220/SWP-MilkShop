@@ -1,27 +1,50 @@
-const connection = require('../utils/db');
+import connection from '../utils/db.js';
 
-const addToCart = (data, user, callback) => {
-    const { ProductID, Quantity } = data;
-    const UserID = user ? user.userId : null;
-
-    if (UserID) {
-        const query = 'INSERT INTO CART (UserID, ProductID, CartQuantity) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE CartQuantity = CartQuantity + ?';
-        connection.query(query, [UserID, ProductID, Quantity, Quantity], callback);
-    } else {
-        callback(null, null); // Đây là phần xử lí Guest của FrontEnd
+export const addToCart = (data, user, callback) => {
+    const { ProductID, CartQuantity } = data;
+    if (!CartQuantity || CartQuantity <= 0) {
+        return callback(new Error('Invalid CartQuantity'));
     }
+    const UserID = user.userId;
+
+    const query = 'SELECT * FROM CART WHERE UserID = ? AND ProductID = ?';
+    connection.query(query, [UserID, ProductID], (err, results) => {
+        if (err) return callback(err);
+
+        if (results.length > 0) {
+            const updateQuery = 'UPDATE CART SET CartQuantity = CartQuantity + ? WHERE UserID = ? AND ProductID = ?';
+            connection.query(updateQuery, [CartQuantity, UserID, ProductID], (err, result) => {
+                if (err) return callback(err);
+                callback(null, { message: 'Product quantity updated in cart' });
+            });
+        } else {
+            const insertQuery = 'INSERT INTO CART (UserID, ProductID, CartQuantity) VALUES (?, ?, ?)';
+            connection.query(insertQuery, [UserID, ProductID, CartQuantity], (err, result) => {
+                if (err) return callback(err);
+                callback(null, { message: 'Product added to cart' });
+            });
+        }
+    });
 };
 
-const viewCart = (user, guestId, callback) => {
-    const UserID = user ? user.userId : null;
 
-    const query = UserID ? 'SELECT * FROM CART WHERE UserID = ?' : 'SELECT * FROM CART WHERE GuestID = ?';
-    const id = UserID ? UserID : guestId;
+export const updateCart = (data, user, callback) => {
+    const { ProductID, CartQuantity } = data;
+    const UserID = user.userId;
 
-    connection.query(query, [id], callback);
+    const query = 'UPDATE CART SET CartQuantity = ? WHERE UserID = ? AND ProductID = ?';
+    connection.query(query, [CartQuantity, UserID, ProductID], (err, result) => {
+        if (err) return callback(err);
+        callback(null, { message: 'Cart updated successfully' });
+    });
 };
 
-module.exports = {
-    addToCart,
-    viewCart,
+export const viewCart = (user, callback) => {
+    const UserID = user.userId;
+
+    const query = 'SELECT CART.ProductID, CART.CartQuantity, PRODUCT.Name, PRODUCT.Price FROM CART JOIN PRODUCT ON CART.ProductID = PRODUCT.ProductID WHERE CART.UserID = ?';
+    connection.query(query, [UserID], (err, results) => {
+        if (err) return callback(err);
+        callback(null, results);
+    });
 };

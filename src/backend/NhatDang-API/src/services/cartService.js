@@ -1,24 +1,29 @@
-const cartController = require('../controllers/cartController');
+import * as cartController from '../controllers/cartController.js';
 
-const addToCart = (req, res) => {
-    const user = req.user;
-    cartController.addToCart(req.body, user, (err) => {
+export const addToCart = (req, res) => {
+    cartController.addToCart(req.body, req.user, (err, result) => {
         if (err) return res.status(500).json({ error: err.message });
-        res.status(200).json({ message: 'Product added to cart' });
+        res.status(200).json(result);
     });
 };
 
-const viewCart = (req, res) => {
-    const user = req.user;
-    const guestId = req.session.guestId || null;
-    cartController.viewCart(user, guestId, (err, results) => {
+export const removeFromCart = (req, res) => {
+    cartController.removeFromCart(req.body, req.user, (err, result) => {
         if (err) return res.status(500).json({ error: err.message });
-        res.status(200).json(results);
+        res.status(200).json(result);
     });
 };
 
+export const updateCart = (req, res) => {
+    cartController.updateCart(req.body, req.user, (err, result) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.status(200).json(result);
+    });
+};
 
-module.exports = {
-    addToCart,
-    viewCart,
+export const viewCart = (req, res) => {
+    cartController.viewCart(req.user, (err, result) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.status(200).json(result);
+    });
 };

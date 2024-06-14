@@ -1,11 +1,13 @@
-const express = require('express');
-const userService = require('../services/userService');
-require('dotenv').config();
+import express from 'express';
+import { getUserInfo, updateUserInfo, completeProfile } from '../services/userService.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const router = express.Router();
 
-router.get('/:userId', userService.getUserInfo);
-router.put('/:userId', userService.updateUserInfo);
-router.post('/complete-profile', userService.completeProfile);
+router.get('/:userId', getUserInfo);
+router.put('/:userId', updateUserInfo);
+router.post('/complete-profile', completeProfile);
 
-module.exports = router;
+export default router;

@@ -1,10 +1,12 @@
-const express = require('express');
-const productService = require('../services/productService');
-require('dotenv').config();
+import express from 'express';
+import { getAllProducts, getProductById } from '../services/productService.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const router = express.Router();
 
-router.get('/', productService.getAllProducts);
-router.get('/:id', productService.getProductById);
+router.get('/', getAllProducts);
+router.get('/:id', getProductById);
 
-module.exports = router;
+export default router;

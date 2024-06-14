@@ -1,5 +1,7 @@
-const nodemailer = require('nodemailer');
-require('dotenv').config();
+import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -45,7 +47,30 @@ const sendVerificationEmail = (email, token, userId, phone, req) => {
         });
 };
 
-module.exports = {
+const sendOrderConfirmationEmail = (email, orderId, cartItems, totalPrice, user, contactInfo, callback) => {
+    const itemsDetails = cartItems.map(item => `Product ID: ${item.ProductID}, Quantity: ${item.CartQuantity}, Price: ${item.Price}`).join('\n');
+    const userDetails = user ? `Name: ${user.Name}, Email: ${user.Email}, Phone: ${user.Phone}, Address: ${user.Address}` : `Email: ${contactInfo.Email}, Phone: ${contactInfo.Phone}`;
+
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: 'Order Confirmation',
+        text: `Thank you for your order. Here are the details of your order:\n\nOrder ID: ${orderId}\n${userDetails}\n\nItems:\n${itemsDetails}\n\nTotal Price: ${totalPrice}`
+    };
+
+    return transporter.sendMail(mailOptions)
+        .then(info => {
+            console.log(`Order confirmation email sent: ${info.response}`);
+            callback(null, info);
+        })
+        .catch(error => {
+            console.error(`Error sending order confirmation email: ${error}`);
+            callback(error);
+        });
+};
+
+export {
     sendResetPasswordEmail,
-    sendVerificationEmail
+    sendVerificationEmail,
+    sendOrderConfirmationEmail
 };
