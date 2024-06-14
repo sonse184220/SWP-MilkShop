@@ -1,9 +1,10 @@
 const express = require('express');
-const brandService = require('../services/brandService');
+const resetPasswordService = require('../services/resetPassWordService');
 require('dotenv').config();
 
 const router = express.Router();
 
-router.get('/', brandService.getAllBrands);
+router.post('/request-reset-password', resetPasswordService.requestResetPassword);
+router.post('/reset-password', resetPasswordService.resetPassword);
 
 module.exports = router;
