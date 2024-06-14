@@ -27,6 +27,16 @@ export const addToCart = (data, user, callback) => {
     });
 };
 
+export const removeFromCart = (data, user, callback) => {
+    const { ProductID } = data;
+    const UserID = user.userId;
+
+    const query = 'DELETE FROM CART WHERE UserID = ? AND ProductID = ?';
+    connection.query(query, [UserID, ProductID], (err, result) => {
+        if (err) return callback(err);
+        callback(null, { message: 'Product removed from cart' });
+    });
+};
 
 export const updateCart = (data, user, callback) => {
     const { ProductID, CartQuantity } = data;

@@ -5,6 +5,7 @@ import { addToCart, removeFromCart, updateCart, viewCart } from '../services/car
 const router = express.Router();
 
 router.post('/add', checkAuthenticated, addToCart);
+router.post('/remove', checkAuthenticated, removeFromCart);
 router.post('/update', checkAuthenticated, updateCart);
 router.get('/view', checkAuthenticated, viewCart);
 
