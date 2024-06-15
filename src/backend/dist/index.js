@@ -32,7 +32,8 @@ app.use(_blogRoutes.blogRoutes);
 
 // API liên quan đến wishlist
 app.use(_wishlistRoutes.wishlistRoutes);
-app.use('/auth', _authRoutes.authRoutes);
+
+// app.use('/auth', authRoutes);
 app.use('/product', _productRoutes.productRoutes);
 app.use('/brand', _brandRoutes.brandRoutes);
 
