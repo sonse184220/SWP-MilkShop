@@ -7,6 +7,7 @@ import resetPasswordRoutes from './src/routes/resetPasswordRoutes.js';
 import brandRoutes from './src/routes/brandRoutes.js';
 import cartRoutes from './src/routes/cartRoutes.js';
 import logoutRoutes from './src/routes/logoutRoutes.js';
+import userRoutes from './src/routes/userRoutes.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -28,6 +29,7 @@ app.use('/api/product', productRoutes);
 app.use('/api/reset-password', resetPasswordRoutes);
 app.use('/api/brand', brandRoutes);
 app.use('/api/cart', cartRoutes);
+app.use('/api/user', userRoutes);
 app.use('/api/logout', logoutRoutes);
 
 app.listen(port, () => {
