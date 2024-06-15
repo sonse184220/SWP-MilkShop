@@ -89,6 +89,23 @@ const blogs = [
 const allProducts = blogs.flatMap(blog => blog.products);
 
 const AllBlog = () => {
+  const [blogs, setBlogs] = useState([]);
+  const [error, setError] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    const loadBlogs = async () => {
+      try {
+        const fetchedBlogs = await fetchBlogs();
+        console.log("=========p", fetchedBlogs);
+        setBlogs(fetchedBlogs.data);
+      } catch (err) {
+        setError(err.message);
+        console.error("Error loading blogs:", err);
+      }
+    };
+    loadBlogs();
+  }, []);
   return (
     <>
       <img className="image" src="/img/P004.jpg" alt="Blog Header" />
@@ -100,17 +117,7 @@ const AllBlog = () => {
             <div className='searchBlog'>Search blog: <input type='text' placeholder='Search blog'/>
                 <button>Search</button>
             </div>
-            {blogs.map((blog, index) => (
-              <BlogPost
-                key={index}
-                title={blog.title}
-                author={blog.author}
-                content={blog.content}
-                date={blog.date}
-                image={blog.image}
-                products={blog.products}
-              />
-            ))}
+          <BlogPost blogs={blogs} />
           </div>
           <div className="col-lg-4">
             <h3>Some Blogs</h3>
