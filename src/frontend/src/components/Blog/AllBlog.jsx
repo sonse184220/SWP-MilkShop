@@ -1,11 +1,14 @@
 // AllBlog.jsx
-import React from 'react';
+import React, { useState, useEffect, useRef } from "react";
 import BlogPost from './BlogPost';
 import './AllBlog.css';
 import Footer from "../Footer/Footer";
 import Header from "../Header/Header";
 import BlogList from "./BlogList";
 import ProductList from '../Product/ProductList';
+import { Link } from "react-router-dom";
+import { fetchBlogs } from "../../services/blogService"; // Adjusted the path here
+import { searchBlogs } from "../../services/searchBlog";
 
 const blogs = [
   {
@@ -115,19 +118,25 @@ const AllBlog = () => {
     try {
       const searchedBlogs = await searchBlogs(searchQuery);
       setBlogs(searchedBlogs.data);
+
+      console.log("After that: ", searchedBlogs);
     } catch (err) {
       setError(err.message);
       console.error("Error searching blogs:", err);
     }
   };
+
+  const allProducts = Blogs.flatMap((blog) => blog.products);
   return (
     <>
       <img className="image" src="/img/P004.jpg" alt="Blog Header" />
       <Header />
+      <Link to="/EditProfile">Edit Profile</Link>
       <div className="container">
         <div className="row">
           <div className="col-lg-8">
             <h2>All Blogs</h2>
+            {/* searchBlog */}
             <div className="searchBlog">
               Search blog:
               <input
@@ -137,7 +146,7 @@ const AllBlog = () => {
               />
               <button onClick={handleSearch}>Search</button>
             </div>
-          <BlogPost blogs={blogs} />
+            <BlogPost blogs={blogs} />
           </div>
           <div className="col-lg-4">
             <h3>Some Blogs</h3>
