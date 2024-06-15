@@ -97,15 +97,29 @@ const AllBlog = () => {
     const loadBlogs = async () => {
       try {
         const fetchedBlogs = await fetchBlogs();
-        console.log("=========p", fetchedBlogs);
-        setBlogs(fetchedBlogs.data);
+        if (Array.isArray(fetchedBlogs.data)) {
+          setBlogs(fetchedBlogs.data);
+        } else {
+          throw new Error("Fetched data is not an array");
+        }
       } catch (err) {
         setError(err.message);
+        setBlogs(Blogs);
         console.error("Error loading blogs:", err);
       }
     };
     loadBlogs();
   }, []);
+
+  const handleSearch = async () => {
+    try {
+      const searchedBlogs = await searchBlogs(searchQuery);
+      setBlogs(searchedBlogs.data);
+    } catch (err) {
+      setError(err.message);
+      console.error("Error searching blogs:", err);
+    }
+  };
   return (
     <>
       <img className="image" src="/img/P004.jpg" alt="Blog Header" />
@@ -114,8 +128,14 @@ const AllBlog = () => {
         <div className="row">
           <div className="col-lg-8">
             <h2>All Blogs</h2>
-            <div className='searchBlog'>Search blog: <input type='text' placeholder='Search blog'/>
-                <button>Search</button>
+            <div className="searchBlog">
+              Search blog:
+              <input
+                type="text"
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search blogs"
+              />
+              <button onClick={handleSearch}>Search</button>
             </div>
           <BlogPost blogs={blogs} />
           </div>
