@@ -16,7 +16,6 @@ const Login = ({ onLogin, showLogin }) => {
     const [Password, setPassword] = useState('');
     const [ErrorMessage, setErrorMessage] = useState('');
 
-    //Chuyển state isLogin trong app.js (Route '/')
     //Kiểm tra userid và password
     //Chuyển từ màn hình Login.jsx sang HomePage.jsx (trong folder Member) lúc bấm nút Login(Nếu true)
     //Hiện lỗi(nếu false)

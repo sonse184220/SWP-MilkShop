@@ -8,9 +8,9 @@ import BlogList from "./BlogList";
 import ProductList from '../Product/ProductList';
 import { Link } from "react-router-dom";
 import { fetchBlogs } from "../../services/blogService"; // Adjusted the path here
-import { searchBlogs } from "../../services/searchBlog";
+import { searchBlogs } from "../../services/searchBlogs";
 
-const blogs = [
+const Blogs = [
   {
     title: 'The Benefits of Drinking Milk',
     author: {
@@ -89,7 +89,7 @@ const blogs = [
   // Add more blog post objects here
 ];
 
-const allProducts = blogs.flatMap(blog => blog.products);
+const allProducts = Blogs.flatMap(blog => blog.products);
 
 const AllBlog = () => {
   const [blogs, setBlogs] = useState([]);

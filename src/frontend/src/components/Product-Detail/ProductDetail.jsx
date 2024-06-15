@@ -10,6 +10,7 @@ import Page404 from '../404NotFound/404Page';
 import { useParams } from 'react-router-dom';
 import GetFeedback from '../../services/getFeedback';
 import AddFeedback from '../../services/addNewFeedback';
+import { AddWishList } from '../../services/addWishlist';
 
 
 const ProductDetail = () => {
@@ -22,6 +23,7 @@ const ProductDetail = () => {
         rating: 0,
         content: ''
     });
+    const [inWishlist, setInWishlist] = useState(true);
 
     const products = [
         {
@@ -56,9 +58,19 @@ const ProductDetail = () => {
         }
     ];
 
+    const handleAddWishList = async () => {
+        try {
+            const response = await AddWishList();
+            console.log(response);
+        } catch (error) {
+
+        }
+    }
+
     const handleDeleteFeedback = () => {
 
     }
+
     const handleAddFeedback = async () => {
         try {
             const response = await AddFeedback(ProductID, newFeedback);
@@ -101,6 +113,7 @@ const ProductDetail = () => {
     useEffect(() => {
         handleGetProductByID();
         handleGetFeedback();
+        handleAddWishList();
     }, [])
 
     return (
@@ -142,7 +155,7 @@ const ProductDetail = () => {
                             </div>
 
                             <div className="product-details-meta mb-20">
-                                <a href="wishlist.html" className="icon-space-right"><i className="zmdi zmdi-favorite"></i>Add to wishlist</a>
+                                <a href="wishlist.html" className="icon-space-right"><i className={`zmdi ${inWishlist ? 'zmdi-favorite' : 'zmdi-favorite-outline'}`}></i>{inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}</a>
                                 <a href="compare.html" className="icon-space-right"><i className="zmdi zmdi-refresh"></i>Compare</a>
                             </div>
                         </div>
