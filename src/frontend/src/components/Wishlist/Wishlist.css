@@ -169,3 +169,29 @@
     font-size: 20px;
     color: #212529;
 }
+
+.wishlist-message {
+    display: block;
+    position: fixed;
+    top: 20%;
+    right: 20px;
+    background-color: #FFC0CB;
+    color: #CD5C5C;
+    padding: 16px;
+    border-radius: 5px;
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.wishlist-item-count {
+    background-color: #f8f9fa;
+    color: #495057;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-top: 20px;
+    margin-left: 4%;
+    display: inline-block;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}

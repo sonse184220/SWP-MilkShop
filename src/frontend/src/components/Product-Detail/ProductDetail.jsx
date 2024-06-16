@@ -154,16 +154,6 @@ const ProductDetail = () => {
         }, 3000); // Hide after 3 seconds
     };
 
-    const add = (e) => {
-        e.preventDefault();
-        setInWishlist(true);
-    };
-
-    const remove = (e) => {
-        e.preventDefault();
-        setInWishlist(false);
-    };
-
     useEffect(() => {
         handleGetProductByID();
         handleGetFeedback();
