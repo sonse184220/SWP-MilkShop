@@ -102,6 +102,32 @@ var WishlistService = exports.WishlistService = /*#__PURE__*/function () {
         return _addToWishlist.apply(this, arguments);
       }
       return addToWishlist;
+    }() // xóa 1 product khỏi wishlist của 1 member
+  }, {
+    key: "removeFromWishlist",
+    value: function () {
+      var _removeFromWishlist = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(id, pid) {
+        var _yield$poolConnect$qu7, _yield$poolConnect$qu8, record;
+        return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+          while (1) switch (_context4.prev = _context4.next) {
+            case 0:
+              _context4.next = 2;
+              return _dbConnection.poolConnect.query("DELETE FROM wishlist WHERE ProductID = ? AND UserID = ?", [pid, id]);
+            case 2:
+              _yield$poolConnect$qu7 = _context4.sent;
+              _yield$poolConnect$qu8 = _slicedToArray(_yield$poolConnect$qu7, 1);
+              record = _yield$poolConnect$qu8[0];
+              return _context4.abrupt("return", record);
+            case 6:
+            case "end":
+              return _context4.stop();
+          }
+        }, _callee4);
+      }));
+      function removeFromWishlist(_x6, _x7) {
+        return _removeFromWishlist.apply(this, arguments);
+      }
+      return removeFromWishlist;
     }()
   }]);
 }();

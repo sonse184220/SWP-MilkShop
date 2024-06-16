@@ -60,4 +60,27 @@ router.post("/api/wishlist/:id", _memberValidators.checkMemberId, _productValida
   };
 }());
 
+/** URL: localhost:xxxx/api/wishlist/{...}?productId={...}
+ * Xóa 1 product khỏi wishlist của 1 member thông qua productID và memberID
+ * - {...} là member ID, ID không được phép để trống, phải cung cấp ít nhất 1 ID nếu không sẽ trả về lỗi
+ * - "productId" là id của product, không được phép để trống, phải cung cấp ít nhất 1 ID nếu không sẽ trả về lỗi
+ */
+router["delete"]("/api/wishlist/:id", _memberValidators.checkMemberId, _productValidators.checkProductIdInQuery, /*#__PURE__*/function () {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(req, res) {
+    return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+      while (1) switch (_context3.prev = _context3.next) {
+        case 0:
+          _context3.next = 2;
+          return wishlistController.removeProductFromWishlist(req, res);
+        case 2:
+        case "end":
+          return _context3.stop();
+      }
+    }, _callee3);
+  }));
+  return function (_x5, _x6) {
+    return _ref3.apply(this, arguments);
+  };
+}());
+
 // export router

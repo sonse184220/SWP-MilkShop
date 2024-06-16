@@ -31,4 +31,10 @@ export class WishlistService {
         const [record] = await poolConnect.query("INSERT INTO wishlist (ProductID, UserID) VALUES (?, ?)", [pid, id]);
         return record;
     }
+
+    // xóa 1 product khỏi wishlist của 1 member
+    async removeFromWishlist(id, pid) {
+        const [record] = await poolConnect.query("DELETE FROM wishlist WHERE ProductID = ? AND UserID = ?", [pid, id]);
+        return record;
+    }
 }

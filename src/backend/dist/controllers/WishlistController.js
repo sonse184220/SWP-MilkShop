@@ -132,5 +132,77 @@ var WishlistController = exports.WishlistController = /*#__PURE__*/function () {
       }
       return addProductToWishlist;
     }()
+  }, {
+    key: "removeProductFromWishlist",
+    value: function () {
+      var _removeProductFromWishlist = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(req, res) {
+        var memberId, productId, checkMember, checkProduct, checkExisted, removingProduct;
+        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+          while (1) switch (_context3.prev = _context3.next) {
+            case 0:
+              memberId = req.params.id;
+              productId = req.query.productId;
+              _context3.next = 4;
+              return this.memberService.getMember(memberId);
+            case 4:
+              checkMember = _context3.sent;
+              if (!(checkMember.length === 0)) {
+                _context3.next = 7;
+                break;
+              }
+              return _context3.abrupt("return", res.status(404).send({
+                error: "Member not found!"
+              }));
+            case 7:
+              _context3.next = 9;
+              return this.productService.getProduct(productId);
+            case 9:
+              checkProduct = _context3.sent;
+              if (!(checkProduct.length === 0)) {
+                _context3.next = 12;
+                break;
+              }
+              return _context3.abrupt("return", res.status(404).send({
+                error: "Product not found!"
+              }));
+            case 12:
+              _context3.next = 14;
+              return this.wishlistService.getWishlistRecord(memberId, productId);
+            case 14:
+              checkExisted = _context3.sent;
+              if (!(checkExisted.length === 0)) {
+                _context3.next = 17;
+                break;
+              }
+              return _context3.abrupt("return", res.status(404).send({
+                error: "Product not found in this user's wishlist!"
+              }));
+            case 17:
+              _context3.next = 19;
+              return this.wishlistService.removeFromWishlist(memberId, productId);
+            case 19:
+              removingProduct = _context3.sent;
+              if (!(removingProduct.affectedRows === 0)) {
+                _context3.next = 22;
+                break;
+              }
+              return _context3.abrupt("return", res.status(500).send({
+                error: "Failed to remove product from wishlist!"
+              }));
+            case 22:
+              return _context3.abrupt("return", res.status(200).send({
+                msg: "Product ".concat(productId, " successfully deleted from user ").concat(memberId, "'s wishlist!")
+              }));
+            case 23:
+            case "end":
+              return _context3.stop();
+          }
+        }, _callee3, this);
+      }));
+      function removeProductFromWishlist(_x5, _x6) {
+        return _removeProductFromWishlist.apply(this, arguments);
+      }
+      return removeProductFromWishlist;
+    }()
   }]);
 }();

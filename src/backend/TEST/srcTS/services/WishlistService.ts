@@ -37,4 +37,12 @@ export class WishlistService{
         return record;
     }
 
+    // xóa 1 product khỏi wishlist của 1 member
+    async removeFromWishlist(id: string, pid: string) {
+        const [record]: [ResultSetHeader, any] = await poolConnect.query("DELETE FROM wishlist WHERE ProductID = ? AND UserID = ?",
+                                                                        [pid, id]
+                                                                    );
+        return record;
+    }
+
 }

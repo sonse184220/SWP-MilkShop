@@ -58,7 +58,7 @@ router.post("/api/product/:id/feedbacks", checkProductId, checkFeedbackData, asy
  * - {...} là feedback id
  */
 router.delete("/api/product/feedbacks/:id", checkFeedbackId, async (req, res) => {
-    await productController.deleteFeedback(req, res); 
+    await productController.deleteFeedback(req, res);
     // chờ ông nhật xong login/logout thì cập nhật bảo mật kiểm tra JWT sau
 });
 // export router
