@@ -18,9 +18,6 @@ const app = express(); // khởi chạy express
 app.use(express.json()); // dùng json
 app.use(bodyParser.json());
 
-// Enable CORS for specific origin
-app.use(cors({ origin: 'http://localhost:3000' }));
-
 // API liên quan đến product
 app.use(productRoutes);
 

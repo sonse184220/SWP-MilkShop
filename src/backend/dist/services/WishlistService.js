@@ -60,7 +60,7 @@ var WishlistService = exports.WishlistService = /*#__PURE__*/function () {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
               _context2.next = 2;
-              return _dbConnection.poolConnect.query("SELECT w.*, p.Name as productName, b.Name as brandName\n                                                    FROM wishlist as w \n                                                    JOIN product as p \n                                                    ON w.ProductID = p.ProductID \n                                                    JOIN brand as b\n                                                    ON p.BrandID = b.BrandID\n                                                    WHERE w.UserID = ?", [id]);
+              return _dbConnection.poolConnect.query("SELECT w.*, p.Name, p.Price, p.Status, b.Name as brandName\n                                                    FROM wishlist as w \n                                                    JOIN product as p \n                                                    ON w.ProductID = p.ProductID \n                                                    JOIN brand as b\n                                                    ON p.BrandID = b.BrandID\n                                                    WHERE w.UserID = ?", [id]);
             case 2:
               _yield$poolConnect$qu3 = _context2.sent;
               _yield$poolConnect$qu4 = _slicedToArray(_yield$poolConnect$qu3, 1);

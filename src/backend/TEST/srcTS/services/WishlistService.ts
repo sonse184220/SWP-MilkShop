@@ -18,7 +18,7 @@ export class WishlistService{
 
     // lấy cả danh sách wishlist bằng member ID
     async getWishlistByMemberID(id: string) {
-        const [wishlist]: [RowDataPacket[], any] = await poolConnect.query(`SELECT w.*, p.Name as productName, b.Name as brandName
+        const [wishlist]: [RowDataPacket[], any] = await poolConnect.query(`SELECT w.*, p.Name, p.Price, p.Status, b.Name as brandName
                                                                             FROM wishlist as w 
                                                                             JOIN product as p 
                                                                             ON w.ProductID = p.ProductID 

@@ -19,11 +19,6 @@ var app = (0, _express["default"])(); // khởi chạy express
 app.use(_express["default"].json()); // dùng json
 app.use(_bodyParser["default"].json());
 
-// Enable CORS for specific origin
-app.use((0, _cors["default"])({
-  origin: 'http://localhost:3000'
-}));
-
 // API liên quan đến product
 app.use(_productRoutes.productRoutes);
 
