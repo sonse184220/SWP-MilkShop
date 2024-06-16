@@ -10,7 +10,8 @@ import Page404 from '../404NotFound/404Page';
 import { useParams } from 'react-router-dom';
 import GetFeedback from '../../services/getFeedback';
 import AddFeedback from '../../services/addNewFeedback';
-import { AddWishList } from '../../services/addWishlist';
+import { AddWishlist } from '../../services/addWishlist';
+import { GetWishlist } from '../../services/getAllWishlist';
 
 
 const ProductDetail = () => {
@@ -23,7 +24,7 @@ const ProductDetail = () => {
         rating: 0,
         content: ''
     });
-    const [inWishlist, setInWishlist] = useState(true);
+    const [inWishlist, setInWishlist] = useState(false);
 
     const products = [
         {
@@ -58,23 +59,49 @@ const ProductDetail = () => {
         }
     ];
 
-    const handleAddWishList = async () => {
+    const checkIsWishlistState = () => {
+        const wishlistItems = JSON.parse(localStorage.getItem("wishlist"));
+        const matchItem = wishlistItems.find(product => product.ProductID === ProductID);
+        setInWishlist(!!matchItem);
+    }
+
+    const handleGetWishlist = async () => {
         try {
-            const response = await AddWishList();
-            console.log(response);
+            const response = await GetWishlist(JSON.parse(localStorage.getItem("userData")).UserID);
+            if (response.data) {
+                console.log(response.data);
+                localStorage.setItem("wishlist", JSON.stringify(response.data));
+            }
         } catch (error) {
 
         }
     }
 
-    const handleDeleteFeedback = () => {
+    const handleAddWishList = async (e) => {
+        try {
+            e.preventDefault();
 
+
+            if (!inWishlist) {
+                setInWishlist(prevState => !prevState);
+                const response = await AddWishlist(ProductID);
+                console.log(response);
+                if (response.data && response.data[0].ProductID === ProductID) {
+                    showWishlistMessage();
+                } else {
+                    // If the response is not as expected, revert the state
+                    setInWishlist(prevState => !prevState);
+                }
+            }
+        } catch (error) {
+
+        }
     }
 
     const handleAddFeedback = async () => {
         try {
             const response = await AddFeedback(ProductID, newFeedback);
-            console.log("===========", response);
+            console.log(response);
         } catch (error) {
             console.log(error)
         }
@@ -110,10 +137,29 @@ const ProductDetail = () => {
         }
     };
 
+    const showWishlistMessage = () => {
+        const message = document.getElementById('wishlistMessage');
+        message.style.display = 'block';
+        setTimeout(() => {
+            message.style.display = 'none';
+        }, 3000); // Hide after 3 seconds
+    };
+
+    const add = (e) => {
+        e.preventDefault();
+        setInWishlist(true);
+    };
+
+    const remove = (e) => {
+        e.preventDefault();
+        setInWishlist(false);
+    };
+
     useEffect(() => {
         handleGetProductByID();
         handleGetFeedback();
-        handleAddWishList();
+        handleGetWishlist();
+        checkIsWishlistState();
     }, [])
 
     return (
@@ -121,54 +167,58 @@ const ProductDetail = () => {
             <div><Header /></div>
             <img className='image' src="/img/P004.jpg" />
             {CurrentProduct ? (
-                <div><div className="product-detail">
-                    <div className="detail-img">
-                        <img src={`/img/${CurrentProduct[0].ProductID}.jpg`} />
+                <div>
+                    <div id="wishlistMessage" className="wishlist-message">
+                        {inWishlist ? 'Added to wishlist' : 'Removed from wishlist'}
                     </div>
-                    <div className="product-details-content-area product-details--golden aos-init aos-animate detail-info" data-aos="fade-up" data-aos-delay="200">
-                        <div className="product-details-text">
-                            <h4 className="title">{CurrentProduct[0].Name}</h4>
-                            <div className="price">{CurrentProduct[0].Price}</div>
-                            <p>{CurrentProduct[0].Content}</p>
+                    <div className="product-detail">
+                        <div className="detail-img">
+                            <img src={`/img/${CurrentProduct[0].ProductID}.jpg`} />
                         </div>
-                        <div className="product-details-variable">
-                            <h4 className="title">Available Options</h4>
-
-                            <div className="variable-single-item">
-                                <div className="product-stock"> <span className="product-stock-in"><i className="zmdi zmdi-check-circle"></i></span> {CurrentProduct[0].Quantity} IN STOCK</div>
+                        <div className="product-details-content-area product-details--golden aos-init aos-animate detail-info" data-aos="fade-up" data-aos-delay="200">
+                            <div className="product-details-text">
+                                <h4 className="title">{CurrentProduct[0].Name}</h4>
+                                <div className="price">{CurrentProduct[0].Price}</div>
+                                <p>{CurrentProduct[0].Content}</p>
                             </div>
+                            <div className="product-details-variable">
+                                <h4 className="title">Available Options</h4>
 
-                            <div className="d-flex align-items-center ">
-                                <div className="variable-single-item ">
-                                    <span>Quantity</span>
-                                    <div className="product-variable-quantity">
-                                        <input min="1" max="100" value={quantity} type="number"
-                                            onChange={e => setQuantity(parseInt(e.target.value))}
-                                            onIncrement={handleIncrement}
-                                            onDecrement={handleDecrement} />
+                                <div className="variable-single-item">
+                                    <div className="product-stock"> <span className="product-stock-in"><i className="zmdi zmdi-check-circle"></i></span> {CurrentProduct[0].Quantity} IN STOCK</div>
+                                </div>
+
+                                <div className="d-flex align-items-center ">
+                                    <div className="variable-single-item ">
+                                        <span>Quantity</span>
+                                        <div className="product-variable-quantity">
+                                            <input min="1" max="100" value={quantity} type="number"
+                                                onChange={e => setQuantity(parseInt(e.target.value))}
+                                                onIncrement={handleIncrement}
+                                                onDecrement={handleDecrement} />
+                                        </div>
+                                    </div>
+
+                                    <div className="product-add-to-cart-btn">
+                                        <a href="#" className="btn btn-block btn-lg btn-black-default-hover" data-bs-toggle="modal" data-bs-target="#modalAddcart">+ Add To Cart</a>
                                     </div>
                                 </div>
 
-                                <div className="product-add-to-cart-btn">
-                                    <a href="#" className="btn btn-block btn-lg btn-black-default-hover" data-bs-toggle="modal" data-bs-target="#modalAddcart">+ Add To Cart</a>
+                                <div className="product-details-meta mb-20">
+                                    <a href="" onClick={handleAddWishList} className="icon-space-right"><i className={`zmdi ${inWishlist ? 'zmdi-favorite' : 'zmdi-favorite-outline'}`}></i>{inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}</a>
+                                    <a href="compare.html" className="icon-space-right"><i className="zmdi zmdi-refresh"></i>Compare</a>
                                 </div>
                             </div>
-
-                            <div className="product-details-meta mb-20">
-                                <a href="wishlist.html" className="icon-space-right"><i className={`zmdi ${inWishlist ? 'zmdi-favorite' : 'zmdi-favorite-outline'}`}></i>{inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}</a>
-                                <a href="compare.html" className="icon-space-right"><i className="zmdi zmdi-refresh"></i>Compare</a>
+                            <div className="product-details-catagory mb-2">
+                                <span className="title">CATEGORIES:</span>
+                                <ul>
+                                    <li><a href="#">BAR STOOL</a></li>
+                                    <li><a href="#">KITCHEN UTENSILS</a></li>
+                                    <li><a href="#">TENNIS</a></li>
+                                </ul>
                             </div>
                         </div>
-                        <div className="product-details-catagory mb-2">
-                            <span className="title">CATEGORIES:</span>
-                            <ul>
-                                <li><a href="#">BAR STOOL</a></li>
-                                <li><a href="#">KITCHEN UTENSILS</a></li>
-                                <li><a href="#">TENNIS</a></li>
-                            </ul>
-                        </div>
                     </div>
-                </div>
                     <div className='feedback'>
                         <Feedback
                             feedbacks={feedbacks}
