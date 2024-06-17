@@ -15,8 +15,10 @@ dotenv.config();
 const PORT = process.env.PORT || 3000; // cổng kết nối localhost:xxxx
 
 const app = express(); // khởi chạy express
+
 // Enable CORS for specific origin
 app.use(cors({ origin: 'http://localhost:3000' }));
+
 app.use(express.json()); // dùng json
 app.use(bodyParser.json());
 
@@ -29,7 +31,7 @@ app.use(blogRoutes);
 // API liên quan đến wishlist
 app.use(wishlistRoutes);
 
-// app.use('/auth', authRoutes);
+app.use('/auth', authRoutes);
 app.use('/product', productRoutes);
 app.use('/brand', brandRoutes);
 

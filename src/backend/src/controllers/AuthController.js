@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { poolConnect } from '../utils/dbConnection.js'; // Ensure correct import of the connection object
-import { sendVerificationEmail } from '../services/emailService.js';
+import { sendVerificationEmail } from '../services/EmailService.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
