@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-const sendResetPasswordEmail = (email, token, req) => {
+export const sendResetPasswordEmail = (email, token, req) => {
     const url = `${req.protocol}://${req.get('host')}/api/reset-password?token=${token}`;
     const mailOptions = {
         from: process.env.EMAIL_USER,
@@ -29,7 +29,7 @@ const sendResetPasswordEmail = (email, token, req) => {
         });
 };
 
-const sendVerificationEmail = (email, token, userId, phone, req) => {
+export const sendVerificationEmail = (email, token, userId, phone, req) => {
     const url = `${req.protocol}://${req.get('host')}/api/auth/verify-email?token=${token}`;
     const mailOptions = {
         from: process.env.EMAIL_USER,
@@ -47,15 +47,15 @@ const sendVerificationEmail = (email, token, userId, phone, req) => {
         });
 };
 
-const sendOrderConfirmationEmail = (email, orderId, cartItems, totalPrice, user, contactInfo, callback) => {
+export const sendOrderConfirmationEmail = (email, orderId, cartItems, totalPrice, user, userDetails, callback) => {
     const itemsDetails = cartItems.map(item => `Product ID: ${item.ProductID}, Quantity: ${item.CartQuantity}, Price: ${item.Price}`).join('\n');
-    const userDetails = user ? `Name: ${user.Name}, Email: ${user.Email}, Phone: ${user.Phone}, Address: ${user.Address}` : `Email: ${contactInfo.Email}, Phone: ${contactInfo.Phone}`;
+    const details = `Name: ${userDetails.Name}, Email: ${userDetails.Email}, Phone: ${userDetails.Phone}, Address: ${userDetails.Address}`;
 
     const mailOptions = {
         from: process.env.EMAIL_USER,
         to: email,
         subject: 'Order Confirmation',
-        text: `Thank you for your order. Here are the details of your order:\n\nOrder ID: ${orderId}\n${userDetails}\n\nItems:\n${itemsDetails}\n\nTotal Price: ${totalPrice}`
+        text: `Thank you for your order. Here are the details of your order:\n\nOrder ID: ${orderId}\n${details}\n\nItems:\n${itemsDetails}\n\nTotal Price: ${totalPrice}`
     };
 
     return transporter.sendMail(mailOptions)
@@ -67,10 +67,4 @@ const sendOrderConfirmationEmail = (email, orderId, cartItems, totalPrice, user,
             console.error(`Error sending order confirmation email: ${error}`);
             callback(error);
         });
-};
-
-export {
-    sendResetPasswordEmail,
-    sendVerificationEmail,
-    sendOrderConfirmationEmail
 };

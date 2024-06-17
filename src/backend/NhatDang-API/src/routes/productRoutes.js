@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllProducts, getProductById } from '../services/productService.js';
+import { getAllProducts, getProductById } from '../controllers/productController.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
