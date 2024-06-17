@@ -1,10 +1,6 @@
 import { body, validationResult, matchedData } from 'express-validator';
 
 export const checkRegister = [
-    body('UserID')
-        .trim()
-        .exists().withMessage('UserID is required')
-        .notEmpty().withMessage('UserID cannot be empty'),
     body('Password')
         .trim()
         .exists().withMessage('Password is required')
@@ -36,10 +32,10 @@ export const checkRegister = [
 ];
 
 export const checkLogin = [
-    body('UserID')
+    body('identifier')
         .trim()
-        .exists().withMessage('UserID is required')
-        .notEmpty().withMessage('UserID cannot be empty'),
+        .exists().withMessage('Identifier is required')
+        .notEmpty().withMessage('Identifier cannot be empty'),
     body('Password')
         .trim()
         .exists().withMessage('Password is required')
