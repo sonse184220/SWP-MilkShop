@@ -6,12 +6,13 @@ function Footer() {
       <footer>
         <div className="footer-container">
           <div className="footer-sitename">
-            <h3>Site name</h3>
+            <h3>Milk Shop</h3>
+            <img src='/img/logo.jpg' />
           </div>
           <div className="footer-topics">
 
             <div className="topic-list">
-              <h4>Topic</h4>
+              <h4>Address</h4>
               <ul>
                 <li><a href="#">Page</a></li>
                 <li><a href="#">Page</a></li>

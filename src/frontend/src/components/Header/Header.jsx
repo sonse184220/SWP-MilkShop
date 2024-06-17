@@ -83,7 +83,7 @@ export function Header({ onLogin }) {
                                 <li className="scroll-to-section"><a href="#contact" onClick={showLogin}>Logout</a></li> */}
                                 <li className="user-dropdown" ref={dropdownRef}>
                                     <div className="profile-image" onClick={toggleDropdown}>
-                                        <img src={'default-profile.jpg'} alt="User" />
+                                        <img src="/img/user.png" alt="User" />
                                     </div>
                                     <ul className={`header-dropdown-menu ${isDropdownOpen ? 'show' : ''}`}>
                                         <li><button to="/profile">View Profile</button></li>
