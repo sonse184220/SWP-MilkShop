@@ -5,7 +5,7 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import cors from "cors"; // Import CORS middleware
 
-// import { authRoutes } from './routes/authRoutes.js';
+import { authRoutes } from './routes/authRoutes.js';
 import { brandRoutes } from './routes/brandRoutes.js';
 import { productRoutes } from "./routes/productRoutes.js";
 import { blogRoutes } from "./routes/blogRoutes.js";
@@ -40,7 +40,7 @@ app.use(blogRoutes);
 app.use(wishlistRoutes);
 
 
-// app.use('/api/auth', authRoutes);
+app.use('/api/auth', authRoutes);
 app.use('/api/product', productRoutes);
 // app.use('/api/reset-password', resetPasswordRoutes);
 app.use('/api/brand', brandRoutes);
@@ -50,8 +50,8 @@ app.use('/api/brand', brandRoutes);
 
 
 
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // bắt error bị lọt qua các check
 app.use((err, req, res, next) => {
     console.error(err);
