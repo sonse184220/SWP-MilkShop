@@ -1,10 +1,11 @@
 import express from "express";
+import session from "express-session";
 
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import cors from "cors"; // Import CORS middleware
 
-import { authRoutes } from './routes/authRoutes.js';
+// import { authRoutes } from './routes/authRoutes.js';
 import { brandRoutes } from './routes/brandRoutes.js';
 import { productRoutes } from "./routes/productRoutes.js";
 import { blogRoutes } from "./routes/blogRoutes.js";
@@ -15,6 +16,13 @@ dotenv.config();
 const PORT = process.env.PORT || 3000; // cổng kết nối localhost:xxxx
 
 const app = express(); // khởi chạy express
+
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }
+}));
 
 // Enable CORS for specific origin
 app.use(cors({ origin: 'http://localhost:3000' }));
@@ -31,9 +39,14 @@ app.use(blogRoutes);
 // API liên quan đến wishlist
 app.use(wishlistRoutes);
 
-app.use('/auth', authRoutes);
-app.use('/product', productRoutes);
-app.use('/brand', brandRoutes);
+
+// app.use('/api/auth', authRoutes);
+app.use('/api/product', productRoutes);
+// app.use('/api/reset-password', resetPasswordRoutes);
+app.use('/api/brand', brandRoutes);
+// app.use('/api/cart', cartRoutes);
+// app.use('/api/user', userRoutes);
+// app.use('/api/logout', logoutRoutes);
 
 
 
