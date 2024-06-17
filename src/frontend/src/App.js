@@ -9,7 +9,6 @@ import AllBlog from './components/Blog/AllBlog.jsx';
 import AllProducts from './components/Product-HomePage/AllProducts.jsx';
 import EditProfile from './components/Member/EditProfile.jsx';
 import ProductDetail from './components/Product-Detail/ProductDetail.jsx';
-import { MemberInfo } from './context/MemberContext.js';
 import { Wishlist } from './components/Wishlist/Wishlist.jsx';
 
 //import file bootstrap và material-design-iconic-font trong index.js
@@ -34,18 +33,18 @@ function App() {
 
   return (
     <Router>
-      <MemberInfo>
-        <Routes>
-          <Route path='/' element={<Navigate to={'/login-register'} />} />
-          <Route path='/home' element={<HomePage onLogin={handleLogin} />} />
-          <Route path='/login-register' element={!showLogin ? <Login onLogin={handleLogin} showLogin={handleShowLogin} /> : <Register showLogin={handleShowLogin} />} />
-          <Route path='/Blogs' element={<AllBlog />}></Route>
-          <Route path='/Products' element={<AllProducts />}></Route>
-          <Route path='/EditProfile' element={<EditProfile />}></Route>
-          <Route path='/ProductDetail/:ProductID' element={<ProductDetail />}></Route>
-          <Route path='/Wishlist' element={<Wishlist />}></Route>
-        </Routes>
-      </MemberInfo>
+
+      <Routes>
+        <Route path='/' element={<Navigate to={'/login-register'} />} />
+        <Route path='/home' element={<HomePage onLogin={handleLogin} />} />
+        <Route path='/login-register' element={!showLogin ? <Login onLogin={handleLogin} showLogin={handleShowLogin} /> : <Register showLogin={handleShowLogin} />} />
+        <Route path='/Blogs' element={<AllBlog />}></Route>
+        <Route path='/Products' element={<AllProducts />}></Route>
+        <Route path='/EditProfile' element={<EditProfile />}></Route>
+        <Route path='/ProductDetail/:ProductID' element={<ProductDetail />}></Route>
+        <Route path='/Wishlist' element={<Wishlist />}></Route>
+      </Routes>
+
     </Router>
   );
 }

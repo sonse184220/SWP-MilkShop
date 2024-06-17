@@ -1,19 +1,18 @@
+import { DeleteFeedback } from '../../services/deleteFeedback';
 import './Feedback.css';
+import StarRatings from 'react-star-ratings';
 
 const Feedback = ({ feedbacks = [], onAddFeedback, newFeedback, setNewFeedback }) => {
     const { rating, content } = newFeedback;
-    const renderStars = (rate) => {
-        const stars = [];
-        for (let i = 1; i <= 5; i++) {
-            const className = i <= rate ? 'fill' : 'empty';
-            stars.push(
-                <li key={i} className={className}>
-                    <i className="zmdi zmdi-star"></i>
-                </li>
-            );
+
+    const handleDeleteFeedback = async (e, feedbackid) => {
+        e.preventDefault();
+        try {
+            const response = await DeleteFeedback(feedbackid);
+        } catch (error) {
+
         }
-        return stars;
-    };
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -39,12 +38,19 @@ const Feedback = ({ feedbacks = [], onAddFeedback, newFeedback, setNewFeedback }
                                                 <div className="comment-content-left">
                                                     <h6 className="comment-name">{feedback.Name}</h6>
                                                     <ul className="review-star">
-                                                        {renderStars(feedback.Rating)}
+                                                        <StarRatings
+                                                            rating={feedback.Rating}
+                                                            starRatedColor="gold"
+                                                            numberOfStars={5}
+                                                            starDimension="17px"
+                                                            starSpacing="2px"
+                                                            name='rating'
+                                                        />
                                                     </ul>
                                                 </div>
                                                 {(feedback.UserID === JSON.parse(localStorage.getItem('userData')).UserID) && (
                                                     <div class="comment-content-right">
-                                                        <a href="#"><i className="zmdi zmdi-delete"></i>Delete</a>
+                                                        <a href="#" onClick={(e) => handleDeleteFeedback(e, feedback.FeedbackID)}><i className="zmdi zmdi-delete"></i>Delete</a>
                                                     </div>
                                                 )}
                                             </div>
@@ -72,14 +78,15 @@ const Feedback = ({ feedbacks = [], onAddFeedback, newFeedback, setNewFeedback }
                                 <div className="col-12">
                                     <div className="default-form-box">
                                         <label htmlFor="rating">Rating Star</label>
-                                        <select
-                                            value={rating}
-                                            onChange={(e) => setNewFeedback({ ...newFeedback, rating: parseInt(e.target.value) })}
-                                        >
-                                            {[0, 1, 2, 3, 4, 5].map((value) => (
-                                                <option key={value} value={value}>{value}</option>
-                                            ))}
-                                        </select>
+                                        <StarRatings
+                                            rating={rating}
+                                            starRatedColor="gold"
+                                            changeRating={(newRating) => setNewFeedback({ ...newFeedback, rating: newRating })}
+                                            numberOfStars={5}
+                                            name='rating'
+                                            starDimension="20px"
+                                            starSpacing="2px"
+                                        />
                                     </div>
                                 </div>
                                 <div className="col-12">

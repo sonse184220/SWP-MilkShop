@@ -71,7 +71,7 @@ export function Header({ onLogin }) {
                                 <li><NavLink to={'/Products'} href="meetings.html">Products</NavLink></li>
                                 <li className="scroll-to-section"><NavLink to={'/Blogs'} href="#apply">Blogs</NavLink></li>
                                 <li className="scroll-to-section"><NavLink to={'/Wishlist'}> Wishlist</NavLink></li>
-                                <li className="scroll-to-section"><NavLink href=''> Cart</NavLink></li>
+                                <li className="scroll-to-section"><NavLink to={'/Cart'}> Cart</NavLink></li>
                                 {/* <li className="has-sub">
                                     <a href='#'>Cart</a>
                                     <ul className="sub-menu">
@@ -86,7 +86,7 @@ export function Header({ onLogin }) {
                                         <img src="/img/user.png" alt="User" />
                                     </div>
                                     <ul className={`header-dropdown-menu ${isDropdownOpen ? 'show' : ''}`}>
-                                        <li><button to="/profile">View Profile</button></li>
+                                        <li><button onClick={() => { navigate('/EditProfile') }}>View Profile</button></li>
                                         <li><button onClick={showLogin}>Logout</button></li>
                                     </ul>
                                 </li>

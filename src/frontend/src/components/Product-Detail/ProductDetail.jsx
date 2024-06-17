@@ -1,4 +1,6 @@
 import './ProductDetail.css'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import Footer from "../Footer/Footer";
 import Header from "../Header/Header";
@@ -60,6 +62,8 @@ const ProductDetail = () => {
         }
     ];
 
+    const notify = (string) => toast(string);
+
     const checkIsWishlistState = () => {
         const wishlistItems = JSON.parse(localStorage.getItem("wishlist"));
         const matchItem = wishlistItems.find(product => product.ProductID === ProductID);
@@ -88,7 +92,7 @@ const ProductDetail = () => {
                 const response = await AddWishlist(JSON.parse(localStorage.getItem("userData")).UserID, ProductID);
                 console.log(response);
                 if (response.data && response.data[0].ProductID === ProductID) {
-                    showWishlistMessage();
+                    notify("Added to wishlist");
                 } else {
                     // If the response is not as expected, revert the state
                     setInWishlist(prevState => !prevState);
@@ -98,7 +102,7 @@ const ProductDetail = () => {
                 const response = await RemoveWishlist(JSON.parse(localStorage.getItem("userData")).UserID, ProductID);
                 console.log(response.data.msg);
                 if (response.data.msg)
-                    showWishlistMessage();
+                    notify("Removed from wishlist");
                 else if (response.data.error)
                     setInWishlist(prevState => !prevState);
             }
@@ -159,7 +163,7 @@ const ProductDetail = () => {
         handleGetFeedback();
         handleGetWishlist();
         checkIsWishlistState();
-    })
+    }, [newFeedback])
 
     return (
         <div className='body'>
@@ -167,9 +171,10 @@ const ProductDetail = () => {
             <img className='image' src="/img/P004.jpg" />
             {CurrentProduct ? (
                 <div>
-                    <div id="wishlistMessage" className="wishlist-message">
+                    {/* <div id="wishlistMessage" className="wishlist-message">
                         {inWishlist ? 'Added to wishlist' : 'Removed from wishlist'}
-                    </div>
+                    </div> */}
+                    <ToastContainer style={{ top: '110px' }} />
                     <div className="product-detail">
                         <div className="detail-img">
                             <img src={`/img/${CurrentProduct[0].ProductID}.jpg`} />

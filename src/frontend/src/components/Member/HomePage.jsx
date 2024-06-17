@@ -1,5 +1,3 @@
-import { useContext } from "react"
-import MemberContext from "../../context/MemberContext"
 import BlogList from "../Blog/BlogList"
 import Footer from "../Footer/Footer"
 import Header from "../Header/Header"

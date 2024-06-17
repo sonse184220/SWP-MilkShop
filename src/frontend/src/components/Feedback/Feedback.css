@@ -46,9 +46,14 @@
     margin-bottom: 10px;
 }
 
+.comment-content-left {
+    display: flex;
+}
+
 .comment-name {
     font-weight: bold;
     margin-right: 10px;
+    padding-top: 7px;
 }
 
 .review-star {

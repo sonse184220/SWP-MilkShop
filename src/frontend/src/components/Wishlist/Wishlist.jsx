@@ -10,8 +10,8 @@ export const Wishlist = () => {
     const [wishlistItems, setWishlistItems] = useState([]);
     const [message, setMessage] = useState('');
 
-    const openModal = () => setShowModal(true);
-    const closeModal = () => setShowModal(false);
+    const openModal = (e) => { e.preventDefault(); setShowModal(true); }
+    const closeModal = (e) => { e.preventDefault(); setShowModal(false); }
 
     const handleRemoveWishlist = async (e, pID) => {
         try {
