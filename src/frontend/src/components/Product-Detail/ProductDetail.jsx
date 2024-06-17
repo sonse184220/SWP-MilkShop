@@ -12,6 +12,7 @@ import GetFeedback from '../../services/getFeedback';
 import AddFeedback from '../../services/addNewFeedback';
 import { AddWishlist } from '../../services/addWishlist';
 import { GetWishlist } from '../../services/getAllWishlist';
+import { RemoveWishlist } from '../../services/removeWishlish';
 
 
 const ProductDetail = () => {
@@ -77,14 +78,14 @@ const ProductDetail = () => {
         }
     }
 
-    const handleAddWishList = async (e) => {
+    const handleAddRemoveWishList = async (e) => {
         try {
             e.preventDefault();
 
 
             if (!inWishlist) {
                 setInWishlist(prevState => !prevState);
-                const response = await AddWishlist(ProductID);
+                const response = await AddWishlist(JSON.parse(localStorage.getItem("userData")).UserID, ProductID);
                 console.log(response);
                 if (response.data && response.data[0].ProductID === ProductID) {
                     showWishlistMessage();
@@ -92,6 +93,14 @@ const ProductDetail = () => {
                     // If the response is not as expected, revert the state
                     setInWishlist(prevState => !prevState);
                 }
+            } else {
+                setInWishlist(prevState => !prevState);
+                const response = await RemoveWishlist(JSON.parse(localStorage.getItem("userData")).UserID, ProductID);
+                console.log(response.data.msg);
+                if (response.data.msg)
+                    showWishlistMessage();
+                else if (response.data.error)
+                    setInWishlist(prevState => !prevState);
             }
         } catch (error) {
 
@@ -145,22 +154,12 @@ const ProductDetail = () => {
         }, 3000); // Hide after 3 seconds
     };
 
-    const add = (e) => {
-        e.preventDefault();
-        setInWishlist(true);
-    };
-
-    const remove = (e) => {
-        e.preventDefault();
-        setInWishlist(false);
-    };
-
     useEffect(() => {
         handleGetProductByID();
         handleGetFeedback();
         handleGetWishlist();
         checkIsWishlistState();
-    }, [])
+    })
 
     return (
         <div className='body'>
@@ -205,7 +204,7 @@ const ProductDetail = () => {
                                 </div>
 
                                 <div className="product-details-meta mb-20">
-                                    <a href="" onClick={handleAddWishList} className="icon-space-right"><i className={`zmdi ${inWishlist ? 'zmdi-favorite' : 'zmdi-favorite-outline'}`}></i>{inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}</a>
+                                    <a href="" onClick={handleAddRemoveWishList} className="icon-space-right"><i className={`zmdi ${inWishlist ? 'zmdi-favorite' : 'zmdi-favorite-outline'}`}></i>{inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}</a>
                                     <a href="compare.html" className="icon-space-right"><i className="zmdi zmdi-refresh"></i>Compare</a>
                                 </div>
                             </div>

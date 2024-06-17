@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './Header.css';
 import { NavLink, useNavigate, Link } from "react-router-dom";
 
@@ -8,7 +8,10 @@ import { NavLink, useNavigate, Link } from "react-router-dom";
 export function Header({ onLogin }) {
     const navigate = useNavigate();
 
-    const headerRef = React.createRef();
+    const headerRef = useRef(null);
+    // const headerRef = React.createRef();
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const dropdownRef = useRef(null);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -22,11 +25,20 @@ export function Header({ onLogin }) {
             }
         };
 
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsDropdownOpen(false);
+            }
+        };
+
         window.addEventListener('scroll', handleScroll);
+        document.addEventListener('mousedown', handleClickOutside);
+
         return () => {
             window.removeEventListener('scroll', handleScroll);
+            document.removeEventListener('mousedown', handleClickOutside);
         };
-    });
+    }, []);
 
     //Chuyển sang Route('/login-register') lúc bấm nút logout
     const showLogin = (event) => {
@@ -39,6 +51,10 @@ export function Header({ onLogin }) {
         return location.pathname === match.pathname;
     };
 
+    const toggleDropdown = () => {
+        setIsDropdownOpen(prevState => !prevState);
+    };
+
     return (
         <header ref={headerRef} className="header-area header-sticky">
             <div className="container">
@@ -46,7 +62,7 @@ export function Header({ onLogin }) {
                     <div className="col-12">
                         <nav className="main-nav">
 
-                            <a href="index.html" className="logo">
+                            <a href="" className="logo">
                                 Milk Shop
                             </a>
 
@@ -54,15 +70,26 @@ export function Header({ onLogin }) {
                                 <li className="scroll-to-section"><NavLink to={'/home'} href="#top">Home</NavLink></li>
                                 <li><NavLink to={'/Products'} href="meetings.html">Products</NavLink></li>
                                 <li className="scroll-to-section"><NavLink to={'/Blogs'} href="#apply">Blogs</NavLink></li>
-                                <li className="has-sub">
+                                <li className="scroll-to-section"><NavLink to={'/Wishlist'}> Wishlist</NavLink></li>
+                                <li className="scroll-to-section"><NavLink href=''> Cart</NavLink></li>
+                                {/* <li className="has-sub">
                                     <a href='#'>Cart</a>
                                     <ul className="sub-menu">
                                         <li><a href="meetings.html">Wishlist</a></li>
                                         <li><a href="meeting-details.html">Reward Point</a></li>
                                     </ul>
+                                </li> */}
+                                {/* <li className="scroll-to-section"><a href="#courses">User1</a></li>
+                                <li className="scroll-to-section"><a href="#contact" onClick={showLogin}>Logout</a></li> */}
+                                <li className="user-dropdown" ref={dropdownRef}>
+                                    <div className="profile-image" onClick={toggleDropdown}>
+                                        <img src="/img/user.png" alt="User" />
+                                    </div>
+                                    <ul className={`header-dropdown-menu ${isDropdownOpen ? 'show' : ''}`}>
+                                        <li><button to="/profile">View Profile</button></li>
+                                        <li><button onClick={showLogin}>Logout</button></li>
+                                    </ul>
                                 </li>
-                                <li className="scroll-to-section"><a href="#courses">User1</a></li>
-                                <li className="scroll-to-section"><a href="#contact" onClick={showLogin}>Logout</a></li>
                             </ul>
                             <a className='menu-trigger'>
                                 <span>Menu</span>

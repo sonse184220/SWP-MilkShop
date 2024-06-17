@@ -1,15 +1,70 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './Wishlist.css';
+import Header from '../Header/Header';
+import Footer from '../Footer/Footer';
+import { GetWishlist } from '../../services/getAllWishlist';
+import { RemoveWishlist } from '../../services/removeWishlish';
 
 export const Wishlist = () => {
     const [showModal, setShowModal] = useState(false);
+    const [wishlistItems, setWishlistItems] = useState([]);
+    const [message, setMessage] = useState('');
 
     const openModal = () => setShowModal(true);
     const closeModal = () => setShowModal(false);
 
+    const handleRemoveWishlist = async (e, pID) => {
+        try {
+            e.preventDefault();
+            const response = await RemoveWishlist(JSON.parse(localStorage.getItem("userData")).UserID, pID);
+            if (response.data.msg) {
+                setMessage('Remove success');
+                showWishlistMessage();
+                handleGetWishlist();
+            } else if (response.data.error) {
+                setMessage('Remove fail');
+                showWishlistMessage();
+            }
+        } catch (error) {
+
+        }
+    }
+
+    const showWishlistMessage = () => {
+        const message = document.getElementById('wishlistMessage');
+        message.style.display = 'block';
+        setTimeout(() => {
+            message.style.display = 'none';
+        }, 3000); // Hide after 3 seconds
+    };
+
+    const handleGetWishlist = async () => {
+        try {
+            const response = await GetWishlist(JSON.parse(localStorage.getItem("userData")).UserID);
+            if (response.data) {
+                console.log(response.data);
+                setWishlistItems(response.data);
+            }
+        } catch (error) {
+
+        }
+    }
+
+    useEffect(() => {
+        handleGetWishlist();
+    }, [])
+
     return (
         <>
+            <div><Header /></div>
+            <img className='image' src="/img/P004.jpg" />
+            <div id="wishlistMessage" className="wishlist-message">
+                {message}
+            </div>
             <div className="wishlist-section">
+                <div className="wishlist-item-count">
+                    {wishlistItems.length + ' items in wishlist'}
+                </div>
                 <div className="wishlish-table-wrapper aos-init aos-animate" data-aos="fade-up" data-aos-delay="0">
                     <div className="container">
                         <div className="row">
@@ -28,15 +83,17 @@ export const Wishlist = () => {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td className="product_remove"><a href="#"><i className="fa fa-trash-alt"></i></a></td>
-                                                    <td className="product_thumb"><a href="product-details-default.html"><img src="assets/images/product/default/home-1/default-1.jpg" alt="" /></a></td>
-                                                    <td className="product_name"><a href="product-details-default.html">Handbag fringilla</a></td>
-                                                    <td className="product-price">$65.00</td>
-                                                    <td className="product_stock">In Stock</td>
-                                                    <td className="product_addcart"><a href="#" className="btn btn-md btn-golden" onClick={openModal}>Add To Cart</a></td>
-                                                </tr>
-                                                <tr>
+                                                {wishlistItems.map((item) => (
+                                                    <tr>
+                                                        <td className="product_remove"><a onClick={(e) => handleRemoveWishlist(e, item.ProductID)} href=""><i className="fa fa-trash-alt"></i></a></td>
+                                                        <td className="product_thumb"><a href="product-details-default.html"><img src="assets/images/product/default/home-1/default-1.jpg" alt="" /></a></td>
+                                                        <td className="product_name"><a href="product-details-default.html">{item.Name}</a></td>
+                                                        <td className="product-price">{item.Price}</td>
+                                                        <td className="product_stock">{item.Status}</td>
+                                                        <td className="product_addcart"><a href="#" className="btn btn-md btn-golden" onClick={openModal}>Add To Cart</a></td>
+                                                    </tr>
+                                                ))}
+                                                {/* <tr>
                                                     <td className="product_remove"><a href="#"><i className="fa fa-trash-alt"></i></a></td>
                                                     <td className="product_thumb"><a href="product-details-default.html"><img src="assets/images/product/default/home-1/default-2.jpg" alt="" /></a></td>
                                                     <td className="product_name"><a href="product-details-default.html">Handbags justo</a></td>
@@ -51,7 +108,7 @@ export const Wishlist = () => {
                                                     <td className="product-price">$80.00</td>
                                                     <td className="product_stock">In Stock</td>
                                                     <td className="product_addcart"><a href="#" className="btn btn-md btn-golden" onClick={openModal}>Add To Cart</a></td>
-                                                </tr>
+                                                </tr> */}
                                             </tbody>
                                         </table>
                                     </div>
@@ -104,6 +161,7 @@ export const Wishlist = () => {
                     </div>
                 </div>
             </div>
+            <div><Footer /></div>
         </>
     );
 }

@@ -9,7 +9,8 @@ footer {
 
 .footer-container {
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
+  gap: 20%;
 }
 
 .footer-sitename {
@@ -18,9 +19,14 @@ footer {
   margin-left: 30px;
 }
 
+
+.footer-sitename img {
+  border-radius: 50%;
+}
+
 .footer-topics {
   display: flex;
-  gap: 50px;
+  gap: 130%;
   /* justify-content: space-between; */
   margin-right: 50px;
   width: auto;

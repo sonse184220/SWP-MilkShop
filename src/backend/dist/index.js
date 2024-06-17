@@ -16,13 +16,12 @@ _dotenv["default"].config();
 var PORT = process.env.PORT || 3000; // cổng kết nối localhost:xxxx
 
 var app = (0, _express["default"])(); // khởi chạy express
-app.use(_express["default"].json()); // dùng json
-app.use(_bodyParser["default"].json());
-
 // Enable CORS for specific origin
 app.use((0, _cors["default"])({
   origin: 'http://localhost:3000'
 }));
+app.use(_express["default"].json()); // dùng json
+app.use(_bodyParser["default"].json());
 
 // API liên quan đến product
 app.use(_productRoutes.productRoutes);
@@ -54,8 +53,3 @@ app.use(function (err, req, res, next) {
 app.listen(PORT, function () {
   console.log("Server is running on port ".concat(PORT));
 });
-
-// Enable CORS for specific origin
-app.use((0, _cors["default"])({
-  origin: 'http://localhost:3000'
-}));
