@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { blogDetail } from "../../services/blogDetail"; // Adjust the path as per your structure
+import { blogDetail } from "../../services/blog/blogDetail"; // Adjust the path as per your structure
 import "./BlogDetail.css";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
