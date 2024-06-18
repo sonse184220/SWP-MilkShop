@@ -10,6 +10,8 @@ import { brandRoutes } from './routes/brandRoutes.js';
 import { productRoutes } from "./routes/productRoutes.js";
 import { blogRoutes } from "./routes/blogRoutes.js";
 import { wishlistRoutes } from "./routes/wishlistRoutes.js";
+import { cartRoutes } from './routes/cartRoutes.js';
+import { resetPasswordRoutes } from './routes/resetPasswordRoutes.js';
 
 dotenv.config();
 
@@ -42,11 +44,12 @@ app.use(wishlistRoutes);
 
 app.use('/api/auth', authRoutes);
 app.use('/api/product', productRoutes);
-// app.use('/api/reset-password', resetPasswordRoutes);
+app.use('/api/reset-password', resetPasswordRoutes);
 app.use('/api/brand', brandRoutes);
-// app.use('/api/cart', cartRoutes);
-// app.use('/api/user', userRoutes);
-// app.use('/api/logout', logoutRoutes);
+app.use('/api/cart', cartRoutes);
+
+
+
 
 
 
