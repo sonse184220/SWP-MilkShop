@@ -10,7 +10,7 @@ import AllProducts from './components/Product-HomePage/AllProducts.jsx';
 import EditProfile from './components/Member/EditProfile.jsx';
 import ProductDetail from './components/Product-Detail/ProductDetail.jsx';
 import { Wishlist } from './components/Wishlist/Wishlist.jsx';
-
+import BlogDetail from './components/Blog/BlogDetail';
 //import file bootstrap và material-design-iconic-font trong index.js
 
 function App() {
