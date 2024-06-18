@@ -1,13 +1,12 @@
 import { BlogService } from "../services/BlogService.js";
 
+const blogService = new BlogService();
+
 export class BlogController {
-    constructor() {
-        this.blogService = new BlogService();
-    }
 
     async getBlogById(req, res) {
         const id = req.params.id;
-        const blog = await this.blogService.getBlog(id);
+        const blog = await blogService.getBlog(id);
         if (blog.length === 0) {
             return res.status(404).send({ error: "Blog not found!" });
         }
@@ -15,7 +14,7 @@ export class BlogController {
     };
 
     async getAllBlogs(req, res) {
-        const blogs = await this.blogService.getAllBlogs();
+        const blogs = await blogService.getAllBlogs();
         res.status(200).send(blogs);
     };
 
@@ -38,8 +37,8 @@ export class BlogController {
                 sortBy = "updated DESC";
         }
 
-        const blogs = await this.blogService.searchBlogs(content, limit, sortBy, offset);
-        const total = await this.blogService.getTotalBlogsByContent(content);
+        const blogs = await blogService.searchBlogs(content, limit, sortBy, offset);
+        const total = await blogService.getTotalBlogsByContent(content);
         
         res.status(200).send({
             data: blogs,
