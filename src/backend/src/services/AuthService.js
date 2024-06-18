@@ -3,11 +3,14 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
 import { connection } from '../utils/dbConnection.js';
-import { sendVerificationEmail } from '../services/emailService.js';
+import { EmailService } from './emailService.js';
 
 dotenv.config();
 
 export class AuthService {
+    constructor() {
+        this.emailService = new EmailService();
+    }
 
     registerUser = (userData, req, callback) => {
         const { Password, Name, Email, Phone, Address } = userData;
@@ -37,7 +40,7 @@ export class AuthService {
                     connection.query(query, [hashedPassword, Name, Email, Phone, Address, token], (err, result) => {
                         if (err) return callback(err);
 
-                        sendVerificationEmail(Email, token, result.insertId, Phone, req)
+                        this.emailService.sendVerificationEmail(Email, token, result.insertId, Phone, req)
                             .then(() => {
                                 console.log('Verification email sent to:', Email);
                                 callback(null, { message: 'User registered successfully. Verification email sent.' });
