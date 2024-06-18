@@ -43,7 +43,7 @@ export class AuthService {
                         this.emailService.sendVerificationEmail(Email, token, result.insertId, Phone, req)
                             .then(() => {
                                 console.log('Verification email sent to:', Email);
-                                callback(null, { message: 'User registered successfully. Verification email sent.' });
+                                callback(null, { message: 'User registered successfully. Verification email sent.', token });
                             })
                             .catch(error => {
                                 console.error('Error sending verification email:', error);
