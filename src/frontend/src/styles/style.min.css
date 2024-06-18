@@ -2533,7 +2533,7 @@ progress {
 .form-control {
     display: block;
     width: 100%;
-    min-height: 38.96px;
+    min-height: 30px;
     padding: 6px 12px;
     font-size: .875rem;
     font-weight: 400;

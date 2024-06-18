@@ -33,7 +33,7 @@ const Register = ({ showLogin }) => {
             setSuccessMessage('');
             let userInfo;
             if (isPasswordMatch) {
-                userInfo = { UserID, Password, Name, Email, Phone, Address };
+                userInfo = { Password, Name, Email, Phone, Address };
                 const response = await handleRegisterApi(userInfo);
                 if (response.data) {
                     setSuccessMessage(response.data);
@@ -70,17 +70,17 @@ const Register = ({ showLogin }) => {
         <div className="wrapper" >
             <div className="inner">
                 <div className="image-holder">
-                    <img src="/img/P004.jpg" alt="" />
+                    <img src="/img/P002.jpg" alt="" />
                 </div>
                 <form>
                     <h3>Registration Form</h3>
-                    <div className="form-wrapper">
+                    {/* <div className="form-wrapper">
                         <input
                             type="text"
                             placeholder="UserID"
                             className="form-control"
                             onChange={(e) => setUserID(e.target.value)} />
-                    </div>
+                    </div> */}
                     <div className="form-wrapper" >
                         <input
                             type="password"

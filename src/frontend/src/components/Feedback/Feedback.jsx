@@ -1,21 +1,19 @@
-import { DeleteFeedback } from '../../services/deleteFeedback';
 import './Feedback.css';
+import { toast } from 'react-toastify';
 import StarRatings from 'react-star-ratings';
 
-const Feedback = ({ feedbacks = [], onAddFeedback, newFeedback, setNewFeedback }) => {
+const Feedback = ({ feedbacks = [], onAddFeedback, onDeleteFeedback, newFeedback, setNewFeedback }) => {
     const { rating, content } = newFeedback;
-
-    const handleDeleteFeedback = async (e, feedbackid) => {
-        e.preventDefault();
-        try {
-            const response = await DeleteFeedback(feedbackid);
-        } catch (error) {
-
-        }
-    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        if (rating === 0) {
+            // Display a toast notification if no rating is selected
+            toast.error('Please select a rating between 1 and 5 stars.', {
+                theme: "colored",
+            });
+            return;
+        }
         onAddFeedback();
     };
 
@@ -50,7 +48,7 @@ const Feedback = ({ feedbacks = [], onAddFeedback, newFeedback, setNewFeedback }
                                                 </div>
                                                 {(feedback.UserID === JSON.parse(localStorage.getItem('userData')).UserID) && (
                                                     <div class="comment-content-right">
-                                                        <a href="#" onClick={(e) => handleDeleteFeedback(e, feedback.FeedbackID)}><i className="zmdi zmdi-delete"></i>Delete</a>
+                                                        <a href="#" onClick={(e) => onDeleteFeedback(e, feedback.FeedbackID)}><i className="zmdi zmdi-delete"></i>Delete</a>
                                                     </div>
                                                 )}
                                             </div>

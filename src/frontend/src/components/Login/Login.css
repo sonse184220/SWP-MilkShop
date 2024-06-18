@@ -6,7 +6,7 @@
 
 /* Container for the login form */
 .container-login100 {
-    background-image: url('/public/img/bg-01.jpg');
+    background-image: url('/public/img/loginbg-2.jpg');
     width: 100%;
     min-height: 100vh;
     display: flex;
@@ -14,7 +14,6 @@
     justify-content: center;
     align-items: center;
     padding: 15px;
-    /* background: no-repeat center/cover; */
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
@@ -31,7 +30,7 @@
     height: 100%;
     top: 0;
     left: 0;
-    background-color: rgba(255, 255, 255, .9);
+    background-color: rgba(255, 255, 255, 0.850);
 }
 
 /* Wrapper for the login form */
@@ -40,7 +39,8 @@
     border-radius: 10px;
     overflow: hidden;
     padding: 20px 55px 20px;
-    background: linear-gradient(to bottom, #333, #666);
+    /* background: linear-gradient(to bottom, #333, #666); */
+    background: linear-gradient(to bottom, #ffb5b5, #ff5d9e);
 }
 
 /* Login form */
@@ -52,13 +52,13 @@
 .login100-form-logo {
     font-size: 60px;
     color: #333;
+    background-color: #fff;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 120px;
     height: 120px;
     border-radius: 50%;
-    background-color: #fff;
     margin: 0 auto;
 }
 
@@ -79,7 +79,8 @@
 .input100 {
     font: 18px/1.2 Poppins-Regular;
     /* Increased font size */
-    color: #fff;
+    /* color: #fff; */
+    color: #407088;
     display: block;
     width: 100%;
     height: 45px;
@@ -109,6 +110,7 @@ input {
     top: 0;
     left: 0;
     pointer-events: none;
+    /* background-color: rgba(255, 203, 203, 0.3); */
 }
 
 /* Checkbox container */
@@ -141,6 +143,7 @@ input {
     font: 18px/1.2 Poppins-Medium;
     /* Increased font size */
     color: #4B5320;
+    background: #fff;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -148,15 +151,18 @@ input {
     min-width: 120px;
     height: 50px;
     border-radius: 25px;
-    background: #fff;
     position: relative;
     z-index: 1;
-    transition: all 0.4s;
+    /* transition: all 0.4s; */
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
 .login100-form-btn:hover {
-    background: #aaa;
-    /* Slightly darker gray for hover effect */
+    background: #ffb5b5;
+    color: #fff;
+    transform: translateY(-3px);
+    /* Moves the button up by 3 pixels on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Text center utility class */

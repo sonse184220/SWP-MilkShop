@@ -15,6 +15,7 @@ import AddFeedback from '../../services/addNewFeedback';
 import { AddWishlist } from '../../services/addWishlist';
 import { GetWishlist } from '../../services/getAllWishlist';
 import { RemoveWishlist } from '../../services/removeWishlish';
+import { DeleteFeedback } from '../../services/deleteFeedback';
 
 
 const ProductDetail = () => {
@@ -62,8 +63,6 @@ const ProductDetail = () => {
         }
     ];
 
-    const notify = (string) => toast(string);
-
     const checkIsWishlistState = () => {
         const wishlistItems = JSON.parse(localStorage.getItem("wishlist"));
         const matchItem = wishlistItems.find(product => product.ProductID === ProductID);
@@ -92,29 +91,74 @@ const ProductDetail = () => {
                 const response = await AddWishlist(JSON.parse(localStorage.getItem("userData")).UserID, ProductID);
                 console.log(response);
                 if (response.data && response.data[0].ProductID === ProductID) {
-                    notify("Added to wishlist");
+                    toast.success('Added to wishlist', {
+                        theme: "colored",
+                    });
                 } else {
                     // If the response is not as expected, revert the state
                     setInWishlist(prevState => !prevState);
+                    toast.error('Failed to add to wishlist', {
+                        theme: "colored",
+                    });
                 }
             } else {
                 setInWishlist(prevState => !prevState);
                 const response = await RemoveWishlist(JSON.parse(localStorage.getItem("userData")).UserID, ProductID);
                 console.log(response.data.msg);
                 if (response.data.msg)
-                    notify("Removed from wishlist");
-                else if (response.data.error)
+                    toast.success('Removed from wishlist', {
+                        theme: "colored",
+                    });
+                else if (response.data.error) {
                     setInWishlist(prevState => !prevState);
+                    toast.error('Failed to remove from wishlist', {
+                        theme: "colored",
+                    });
+                }
             }
         } catch (error) {
+            console.log(error);
+        }
+    }
 
+    const handleDeleteFeedback = async (e, feedbackid) => {
+        e.preventDefault();
+        try {
+            const response = await DeleteFeedback(feedbackid);
+            if (response.data.msg) {
+                toast.success('Feedback deleted successfully', {
+                    theme: "colored",
+                });
+            } else if (response.data.error) {
+                toast.error('Failed to delete feedback', {
+                    theme: "colored",
+                });
+            }
+            handleGetFeedback();
+        } catch (error) {
+            console.log(error);
         }
     }
 
     const handleAddFeedback = async () => {
         try {
             const response = await AddFeedback(ProductID, newFeedback);
-            console.log(response);
+            if (!response.data.error) {
+                toast.success('Feedback added successfully', {
+                    theme: "colored",
+                });
+                setNewFeedback({
+                    userId: JSON.parse(localStorage.getItem('userData')).UserID,
+                    rating: 0,
+                    content: ''
+                });
+
+            } else if (response.data.error) {
+                toast.error('Failed to add feedback', {
+                    theme: "colored",
+                });
+            }
+            handleGetFeedback();
         } catch (error) {
             console.log(error)
         }
@@ -227,6 +271,7 @@ const ProductDetail = () => {
                         <Feedback
                             feedbacks={feedbacks}
                             onAddFeedback={handleAddFeedback}
+                            onDeleteFeedback={handleDeleteFeedback}
                             newFeedback={newFeedback}
                             setNewFeedback={setNewFeedback} /></div>
                     <div><ProductList products={products} /></div></div>
