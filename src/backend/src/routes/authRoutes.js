@@ -5,7 +5,6 @@ import dotenv from 'dotenv';
 import { AuthController } from '../controllers/AuthController.js';
 import { checkRegister, checkLogin } from '../middlewares/validationMiddleware.js';
 
-
 dotenv.config();
 
 const router = express.Router();
