@@ -7,15 +7,15 @@ import Header from "../Header/Header";
 import ProductList from '../Product/ProductList';
 import Feedback from '../Feedback/Feedback';
 import { useEffect, useState } from 'react';
-import getProductById from '../../services/getProductByID';
+import getProductById from '../../services/product/getProductByID';
 import Page404 from '../404NotFound/404Page';
 import { useParams } from 'react-router-dom';
-import GetFeedback from '../../services/getFeedback';
-import AddFeedback from '../../services/addNewFeedback';
-import { AddWishlist } from '../../services/addWishlist';
-import { GetWishlist } from '../../services/getAllWishlist';
-import { RemoveWishlist } from '../../services/removeWishlish';
-import { DeleteFeedback } from '../../services/deleteFeedback';
+import GetFeedback from '../../services/feedback/getFeedback';
+import AddFeedback from '../../services/feedback/addNewFeedback';
+import { AddWishlist } from '../../services/wishlist/addWishlist';
+import { GetWishlist } from '../../services/wishlist/getAllWishlist';
+import { RemoveWishlist } from '../../services/wishlist/removeWishlish';
+import { DeleteFeedback } from '../../services/feedback/deleteFeedback';
 
 
 const ProductDetail = () => {

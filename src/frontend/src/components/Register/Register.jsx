@@ -1,7 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from "react-router-dom";
+import { Oval } from 'react-loader-spinner';
+
 import './Register.css'
-import handleRegisterApi from '../../services/registerService';
+import handleRegisterApi from '../../services/register/registerService';
+import { VerifyEmail } from '../../services/register/verifyMail';
 
 //prop showLogin chuyền từ App.js, 
 //dùng để set showLogin state
@@ -17,6 +20,10 @@ const Register = ({ showLogin }) => {
     const [isPasswordMatch, setIsPasswordMatch] = useState(true);
     const [SuccessMessage, setSuccessMessage] = useState('');
     const [ErrorMessage, setErrorMessage] = useState('');
+    const [registertoken, setRegisterToken] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const verifymailRef = useRef(null);
 
     //Chuyển state showLogin trong app.js (Route '/login-register')
     //Chuyển sang màn hình Login.jsx lúc bấm Sign In
@@ -26,28 +33,51 @@ const Register = ({ showLogin }) => {
         showLogin(false);
     };
 
+    const handleVerifyMail = async () => {
+        try {
+            if (registertoken) {
+                const response = await VerifyEmail(registertoken);
+                console.log("=====================", response);
+            } else {
+                console.log("nothing");
+            }
+            console.log("ref is running")
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    useEffect(() => {
+        verifymailRef.current = setInterval(() => {
+            if (registertoken) {
+                handleVerifyMail();
+            }
+        }, 10000);
+        return () => clearInterval(verifymailRef.current);
+    }, []);
+
     const handleRegister = async (event) => {
         event.preventDefault();
         try {
             setErrorMessage('');
             setSuccessMessage('');
+            setIsLoading(true);
+
             let userInfo;
             if (isPasswordMatch) {
                 userInfo = { Password, Name, Email, Phone, Address };
                 const response = await handleRegisterApi(userInfo);
                 if (response.data) {
-                    setSuccessMessage(response.data);
+                    setSuccessMessage(response.data.message);
+                    setRegisterToken(response.data.token);
                 }
                 handleShowLogin();
             }
-            // } else {
-            //     setErrorMessage({ "message": "'Passwords do not match'" })
-            // }
-
         } catch (error) {
             if (error.response && error.response.data) {
                 setErrorMessage(error.response.data)
             }
+        } finally {
+            setIsLoading(false);
         }
     }
 
@@ -62,7 +92,7 @@ const Register = ({ showLogin }) => {
         else
             setIsPasswordMatch(true);
 
-    }, [Password, ConfirmPassword, UserID, Name, Email, Phone, Address]
+    }, [Password, ConfirmPassword, Name, Email, Phone, Address]
     );
 
     //component register
@@ -81,6 +111,14 @@ const Register = ({ showLogin }) => {
                             className="form-control"
                             onChange={(e) => setUserID(e.target.value)} />
                     </div> */}
+                    <div className="form-wrapper" >
+                        <input
+                            type="text"
+                            placeholder="Email Address"
+                            className="form-control"
+                            onChange={(e) => setEmail(e.target.value)} />
+                        <i className="zmdi zmdi-email"></i>
+                    </div >
                     <div className="form-wrapper" >
                         <input
                             type="password"
@@ -108,14 +146,6 @@ const Register = ({ showLogin }) => {
                     <div className="form-wrapper" >
                         <input
                             type="text"
-                            placeholder="Email Address"
-                            className="form-control"
-                            onChange={(e) => setEmail(e.target.value)} />
-                        <i className="zmdi zmdi-email"></i>
-                    </div >
-                    <div className="form-wrapper" >
-                        <input
-                            type="text"
                             placeholder="Phone"
                             className="form-control"
                             onChange={(e) => setPhone(e.target.value)} />
@@ -136,7 +166,7 @@ const Register = ({ showLogin }) => {
                                 <>
                                     {(!isPasswordMatch || ErrorMessage.message) && <p className="error-message">{ErrorMessage.message}</p>}
                                     {ErrorMessage.error && ErrorMessage.error.length > 0 && <p className="error-message">{ErrorMessage.error[0].msg}</p>}
-                                    {SuccessMessage.message && <p className="success-message">{SuccessMessage.message}</p>}
+                                    {SuccessMessage && <p className="success-message">{SuccessMessage}</p>}
                                 </>
                             )
                         }
@@ -145,9 +175,23 @@ const Register = ({ showLogin }) => {
                         <p>Already registered?</p>
                         <a href='#' onClick={handleShowLogin}>Sign In</a>
                     </div>
-                    <button className='registerbt' onClick={handleRegister}>Register
-                        <i className="zmdi zmdi-arrow-right"></i>
-                    </button >
+                    <button className='registerbt' onClick={handleRegister} disabled={isLoading}>
+                        {isLoading ? (
+                            <Oval
+                                height={20}
+                                width={20}
+                                color="#fff"
+                            // ariaLabel="oval-loading"
+                            // wrapperStyle={{}}
+                            // visible={true}
+                            />
+                        ) : (
+                            <>
+                                Register
+                                <i className="zmdi zmdi-arrow-right"></i>
+                            </>
+                        )}
+                    </button>
                 </form >
             </div >
         </div >

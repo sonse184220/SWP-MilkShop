@@ -7,8 +7,8 @@ import Header from "../Header/Header";
 import BlogList from "./BlogList";
 import ProductList from '../Product/ProductList';
 import { Link } from "react-router-dom";
-import { fetchBlogs } from "../../services/blogService"; // Adjusted the path here
-import { searchBlogs } from "../../services/searchBlogs";
+import { fetchBlogs } from "../../services/blog/blogService"; // Adjusted the path here
+import { searchBlogs } from "../../services/blog/searchBlogs";
 
 const Blogs = [
   {

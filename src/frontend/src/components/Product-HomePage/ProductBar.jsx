@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 
 import './ProductBar.css';
-import handleGetAllProduct from '../../services/getAllProductService';
+import handleGetAllProduct from '../../services/product/getAllProductService';
 
 const ProductBar = () => {
     const [currentSlide, setCurrentSlide] = useState(0);

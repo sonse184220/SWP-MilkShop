@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const handleLoginApi = (userInfo) => {
     try {
-        return axios.post('http://localhost:4500/auth/login', userInfo)
+        return axios.post('http://localhost:4500/api/auth/login', userInfo)
     } catch (error) {
         // Handle the error here
         console.error('An error occurred while fetching login results:', error);

@@ -5,9 +5,9 @@ import Footer from "../Footer/Footer"
 import Header from "../Header/Header"
 import './AllProducts.css';
 import Brand from '../Brand/Brand';
-import handleGetAllProduct from '../../services/getAllProductService';
-import GetProductByBrandID from '../../services/getProductByBrandID';
-import { SearchProductByName } from '../../services/searchProductByName';
+import handleGetAllProduct from '../../services/product/getAllProductService';
+import GetProductByBrandID from '../../services/product/getProductByBrandID';
+import { SearchProductByName } from '../../services/product/searchProductByName';
 
 const AllProducts = () => {
     const [products, setProducts] = useState([]);

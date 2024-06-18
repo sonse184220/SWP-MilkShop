@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import './Wishlist.css';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
-import { GetWishlist } from '../../services/getAllWishlist';
-import { RemoveWishlist } from '../../services/removeWishlish';
+import { GetWishlist } from '../../services/wishlist/getAllWishlist';
+import { RemoveWishlist } from '../../services/wishlist/removeWishlish';
 
 export const Wishlist = () => {
     const [showModal, setShowModal] = useState(false);

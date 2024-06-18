@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+
 import "./EditProfile.css";
-import handleEditProfile from "../../services/registerService";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 
 import './Login.css'
-import handleLoginApi from '../../services/loginService';
+import handleLoginApi from '../../services/login/loginService';
 
 
 //prop chuyền từ app.js
@@ -12,7 +12,7 @@ const Login = ({ onLogin, showLogin }) => {
     const navigate = useNavigate();
     // const { updateMemberData } = useContext(MemberContext);
 
-    const [UserID, setUserID] = useState('');
+    const [identifier, setIdentifier] = useState('');
     const [Password, setPassword] = useState('');
     const [ErrorMessage, setErrorMessage] = useState('');
 
@@ -22,7 +22,7 @@ const Login = ({ onLogin, showLogin }) => {
     const handleIsLogin = async (event) => {
         event.preventDefault();
 
-        const userInfo = { UserID, Password };
+        const userInfo = { identifier, Password };
         try {
             const response = await handleLoginApi(userInfo);
             console.log('Response:', response);
@@ -75,9 +75,9 @@ const Login = ({ onLogin, showLogin }) => {
                                 className="input100"
                                 type="text"
                                 name="username"
-                                placeholder="UserID"
-                                value={UserID}
-                                onChange={(e) => setUserID(e.target.value)} />
+                                placeholder="Email/Phone Number"
+                                value={identifier}
+                                onChange={(e) => setIdentifier(e.target.value)} />
                             <span className="focus-input100" data-placeholder=""></span>
                         </div>
                         <div className="wrap-input100 validate-input" data-validate="Enter password">

@@ -114,14 +114,15 @@ CREATE TABLE `ORDER` (
     FOREIGN KEY (VoucherID) REFERENCES VOUCHER(VoucherID)
 );
 
-CREATE TABLE TEMP_MEMBER (
-    UserID VARCHAR(10) NOT NULL PRIMARY KEY,
-    Password VARCHAR(255),
-    Name NVARCHAR(30),
-    Email VARCHAR(50),
-    Phone VARCHAR(15),
-    Address NVARCHAR(100),
-    Token VARCHAR(255)
+CREATE TABLE `temp_member` (
+  `Password` varchar(255) DEFAULT NULL,
+  `Name` varchar(30) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `Email` varchar(50) DEFAULT NULL,
+  `Phone` varchar(15) DEFAULT NULL,
+  `Address` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `Token` varchar(255) DEFAULT NULL,
+  `TempMemberID` int NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`TempMemberID`)
 );
 
 INSERT INTO BRAND (BrandID, Name, Content) VALUES 
@@ -147,3 +148,16 @@ INSERT INTO PRODUCT (ProductID, BrandID, Name, Price, Expiration, Quantity, Cont
 ('P013', 'BR004', 'NutriMom Strawberry', 38000, '2025-06-20', 65, 'Strawberry flavored organic milk', 'Available'),
 ('P014', 'BR001', 'MamaMilk Plus', 29000, '2025-03-12', 45, 'Enhanced with probiotics', 'Available'),
 ('P015', 'BR005', 'HealthyKids Advanced', 27000, '2024-12-15', 75, 'Advanced formula with omega-3', 'Available');
+
+    INSERT INTO STAFF (StaffID, Password, Name, PhoneNumber) VALUES
+('S001', 'staff123', 'Emily Johnson', '0123456789'),
+('S002', 'staff456', 'Michael Brown', '0987654321'),
+('S003', 'staff789', 'Sarah Davis', '0567891234');
+
+INSERT INTO BLOG (BlogID, StaffID, Name, CreatedDate, Content)
+VALUES
+    ('B0001', 'S001', 'Introduction to SQL', '2023-06-01', 'This blog post will cover the basics of SQL and its importance in data management.'),
+    ('B0002', 'S002', 'Advanced SQL Techniques', '2023-06-10', 'In this post, we will explore some advanced SQL techniques like window functions and analytic queries.'),
+    ('B0003', 'S003', 'Database Normalization', '2023-06-15', 'Normalization is a crucial process in database design. This post will explain the different normal forms and their importance.'),
+    ('B0004', 'S001', 'Indexing Strategies', '2023-06-20', 'Proper indexing can significantly improve query performance. Learn how to create and maintain indexes in this post.'),
+    ('B0005', 'S002', 'SQL Security Best Practices', '2023-06-25', 'Ensuring data security is essential. This post will cover best practices for securing your SQL databases.');
