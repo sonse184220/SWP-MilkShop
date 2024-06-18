@@ -116,13 +116,4 @@ export class AuthService {
             callback(err);
         }
     };
-
-    completeProfile = (req, callback) => {
-        const { userId, name, phone, address } = req.body;
-        const query = 'UPDATE MEMBER SET Name = ?, Phone = ?, Address = ? WHERE UserID = ?';
-        connection.query(query, [name, phone, address, userId], (err, result) => {
-            if (err) return callback(err);
-            callback(null, { message: 'Profile completed successfully' });
-        });
-    };
 }

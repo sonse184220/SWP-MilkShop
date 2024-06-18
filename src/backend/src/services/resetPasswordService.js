@@ -7,6 +7,10 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export class ResetPasswordService {
+    constructor() {
+        this.emailService = new EmailService();
+    }
+
     requestResetPassword = (email, req, callback) => {
         const query = 'SELECT * FROM MEMBER WHERE Email = ?';
         connection.query(query, [email], (err, results) => {
@@ -16,10 +20,10 @@ export class ResetPasswordService {
             const user = results[0];
             const token = jwt.sign({ userId: user.UserID }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-            sendResetPasswordEmail(email, token, req)
+            this.emailService.sendResetPasswordEmail(email, token, req)
                 .then(() => {
                     console.log('Reset password email sent to:', email);
-                    callback(null, { message: 'Reset password email sent.' });
+                    callback(null, { message: 'Reset password email sent.', token });
                 })
                 .catch(error => {
                     console.error('Error sending reset password email:', error);
