@@ -12,7 +12,7 @@ import { blogRoutes } from "./routes/blogRoutes.js";
 import { wishlistRoutes } from "./routes/wishlistRoutes.js";
 import { cartRoutes } from './routes/cartRoutes.js';
 import { resetPasswordRoutes } from './routes/resetPasswordRoutes.js';
-
+import { googleRoutes } from './routes/googleRoutes.js'
 dotenv.config();
 
 const PORT = process.env.PORT || 3000; // cổng kết nối localhost:xxxx
@@ -47,6 +47,7 @@ app.use('/api/product', productRoutes);
 app.use('/api/reset-password', resetPasswordRoutes);
 app.use('/api/brand', brandRoutes);
 app.use('/api/cart', cartRoutes);
+app.use('/api/google', googleRoutes);
 
 
 

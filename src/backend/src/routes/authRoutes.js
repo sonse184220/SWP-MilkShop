@@ -15,5 +15,4 @@ router.post('/register', checkRegister, authController.registerUser);
 router.post('/login', checkLogin, authController.loginUser);
 router.get('/verify-email', authController.verifyEmail);
 
-
 export { router as authRoutes };
