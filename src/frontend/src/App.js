@@ -43,6 +43,7 @@ function App() {
         <Route path='/EditProfile' element={<EditProfile />}></Route>
         <Route path='/ProductDetail/:ProductID' element={<ProductDetail />}></Route>
         <Route path='/Wishlist' element={<Wishlist />}></Route>
+        <Route path="/BlogDetail/:BlogID" element={<BlogDetail/>} />
       </Routes>
 
     </Router>
