@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import BlogCard from "./BlogCard";
 import "./BlogList.css";
-import { fetchBlogs } from "../../services/blogService";
+import { fetchBlogs } from "../../services/blog/blogService";
 import { Link } from "react-router-dom";
 const BlogList = ({ columnLayout = false }) => {
   const blogListRef = useRef(null);
