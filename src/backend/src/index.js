@@ -48,7 +48,7 @@ app.use('/api/product', productRoutes);
 app.use('/api/reset-password', resetPasswordRoutes);
 app.use('/api/brand', brandRoutes);
 app.use('/api/cart', cartRoutes);
-app.use('/api/auth/google', googleRoutes);
+app.use('/api/google', googleRoutes);
 app.use('/api/user', userRoutes);
 
 
