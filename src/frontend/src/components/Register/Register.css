@@ -200,3 +200,27 @@
     padding-bottom: 5px;
     padding-right: 25px;
 }
+
+/* Register.css */
+
+/* .registerbtn .google-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #dd4b39;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 16px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .registerbtn .google-btn:hover {
+    background-color: #c23321;
+  }
+  
+  .registerbtn .google-btn i {
+    margin-right: 8px;
+  } */

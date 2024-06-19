@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import { Toaster, toast } from 'react-hot-toast';
 
 import './Login.css'
 import handleLoginApi from '../../services/login/loginService';
+import { LoginWithGoogle } from '../../services/login/loginWithGoogle';
 
 
 //prop chuyền từ app.js
@@ -19,6 +21,18 @@ const Login = ({ onLogin, showLogin }) => {
     //Kiểm tra userid và password
     //Chuyển từ màn hình Login.jsx sang HomePage.jsx (trong folder Member) lúc bấm nút Login(Nếu true)
     //Hiện lỗi(nếu false)
+    const handleLoginWithGoogle = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await LoginWithGoogle();
+            if (response) {
+                console.log(response);
+            }
+        } catch (error) {
+
+        }
+    }
+
     const handleIsLogin = async (event) => {
         event.preventDefault();
 
@@ -43,7 +57,14 @@ const Login = ({ onLogin, showLogin }) => {
                 else if (Array.isArray(error.response.data) && error.response.data.length > 0)
                     errorMessage = error.response.data[0];
 
-                setErrorMessage(errorMessage);
+                // setErrorMessage(errorMessage);
+                toast.error("Email/Phone Number or Password is incorrect. Please input again!", {
+                    style: {
+                        backgroundColor: '#ef4444',
+                        color: '#ffffff',
+                        fontWeight: 'bold',
+                    },
+                });
             } else {
                 setErrorMessage('An error occurred');
             }
@@ -90,14 +111,15 @@ const Login = ({ onLogin, showLogin }) => {
                                 onChange={(e) => setPassword(e.target.value)} />
                             <span className="focus-input100" data-placeholder=""></span>
                         </div>
-                        <div className="error-message-container">
+                        {/* <div className="error-message-container">
                             {ErrorMessage && (
                                 <>
                                     {ErrorMessage.message && <p className="error-message">{ErrorMessage.message}</p>}
                                     {ErrorMessage.error && ErrorMessage.error.length > 0 && <p className="error-message">{ErrorMessage.error[0].msg}</p>}
                                 </>
                             )}
-                        </div>
+                        </div> */}
+                        <Toaster />
                         <div className="contact100-form-checkbox">
                             <input className="input-checkbox100" id="ckb1" type="checkbox" name="remember-me" />
                             <label className="label-checkbox100" htmlFor="ckb1">
@@ -107,6 +129,9 @@ const Login = ({ onLogin, showLogin }) => {
                         <div className="container-login100-form-btn">
                             <button className="login100-form-btn" onClick={handleIsLogin}>
                                 Login
+                            </button>
+                            <button className="login100-form-btn google-btn" onClick={handleLoginWithGoogle}>
+                                <i class="fab fa-google"></i> Sign in with Google
                             </button>
                         </div>
                         <div className='switchregister'>

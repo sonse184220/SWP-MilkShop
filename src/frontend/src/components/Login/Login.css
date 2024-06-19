@@ -39,7 +39,6 @@
     border-radius: 10px;
     overflow: hidden;
     padding: 20px 55px 20px;
-    /* background: linear-gradient(to bottom, #333, #666); */
     background: linear-gradient(to bottom, #ffb5b5, #ff5d9e);
 }
 
@@ -78,8 +77,6 @@
 /* Input field */
 .input100 {
     font: 18px/1.2 Poppins-Regular;
-    /* Increased font size */
-    /* color: #fff; */
     color: #407088;
     display: block;
     width: 100%;
@@ -98,7 +95,6 @@ input {
 .input100::placeholder {
     color: #fff;
     font-size: 18px;
-    /* Increased font size */
 }
 
 /* Input focus effect */
@@ -110,7 +106,6 @@ input {
     top: 0;
     left: 0;
     pointer-events: none;
-    /* background-color: rgba(255, 203, 203, 0.3); */
 }
 
 /* Checkbox container */
@@ -122,7 +117,6 @@ input {
 /* Checkbox label */
 .label-checkbox100 {
     font: 18px/1.2 Poppins-Regular;
-    /* Increased font size */
     color: #fff;
     display: block;
     position: relative;
@@ -134,14 +128,15 @@ input {
 .container-login100-form-btn {
     width: 100%;
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    /* Added gap between buttons */
 }
 
 /* Login button */
 .login100-form-btn {
     font: 18px/1.2 Poppins-Medium;
-    /* Increased font size */
     color: #4B5320;
     background: #fff;
     display: flex;
@@ -153,7 +148,6 @@ input {
     border-radius: 25px;
     position: relative;
     z-index: 1;
-    /* transition: all 0.4s; */
     transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
@@ -161,7 +155,34 @@ input {
     background: #ffb5b5;
     color: #fff;
     transform: translateY(-3px);
-    /* Moves the button up by 3 pixels on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Google sign-in button */
+.google-btn {
+    font: 18px/1.2 Poppins-Medium;
+    /* color: #fff;
+    background: #4285f4; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 20px;
+    min-width: 120px;
+    height: 50px;
+    border-radius: 25px;
+    position: relative;
+    z-index: 1;
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.google-btn i {
+    margin-right: 10px;
+    font-size: 20px;
+}
+
+.google-btn:hover {
+    background: #357ae8;
+    transform: translateY(-3px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -178,7 +199,6 @@ input {
 /* Text styles */
 .txt1 {
     font: 18px/1.5 Poppins-Regular;
-    /* Increased font size */
     color: #e5e5e5;
 }
 

@@ -1,6 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Oval } from 'react-loader-spinner';
+import { Toaster, toast } from 'react-hot-toast';
+// import 'react-hot-toast/dist/bundle.css';
+// import 'react-hot-toast/dist/react-hot-toast.css';
 
 import './Register.css'
 import handleRegisterApi from '../../services/register/registerService';
@@ -46,14 +49,14 @@ const Register = ({ showLogin }) => {
             console.log(error);
         }
     };
-    useEffect(() => {
-        verifymailRef.current = setInterval(() => {
-            if (registertoken) {
-                handleVerifyMail();
-            }
-        }, 10000);
-        return () => clearInterval(verifymailRef.current);
-    }, []);
+    // useEffect(() => {
+    //     verifymailRef.current = setInterval(() => {
+    //         if (registertoken) {
+    //             handleVerifyMail();
+    //         }
+    //     }, 10000);
+    //     return () => clearInterval(verifymailRef.current);
+    // }, []);
 
     const handleRegister = async (event) => {
         event.preventDefault();
@@ -67,14 +70,35 @@ const Register = ({ showLogin }) => {
                 userInfo = { Password, Name, Email, Phone, Address };
                 const response = await handleRegisterApi(userInfo);
                 if (response.data) {
-                    setSuccessMessage(response.data.message);
+                    // setSuccessMessage(response.data.message);
+                    toast.success(response.data.message, {
+                        duration: 15000, // This will make the toast stay until closed
+                        style: {
+                            backgroundColor: '#ffd3b6',
+                            color: '#698474', // Optional: Set the text color to white for better contrast
+                        },
+                    });
                     setRegisterToken(response.data.token);
                 }
                 handleShowLogin();
             }
         } catch (error) {
             if (error.response && error.response.data) {
-                setErrorMessage(error.response.data)
+                console.log(error);
+                // setErrorMessage(error.response.data)
+                let errormsg = 'Register failed. Please try again';
+                if (Array.isArray(error.response.data.error)) {
+                    errormsg = error.response.data.error[0].msg;
+                } else if (error.response.data.message) {
+                    errormsg = error.response.data.message;
+                }
+                toast.error(errormsg, {
+                    style: {
+                        backgroundColor: '#ef4444',
+                        color: '#ffffff',
+                        fontWeight: 'bold',
+                    },
+                });
             }
         } finally {
             setIsLoading(false);
@@ -164,13 +188,14 @@ const Register = ({ showLogin }) => {
                         {(ErrorMessage || SuccessMessage) &&
                             (
                                 <>
-                                    {(!isPasswordMatch || ErrorMessage.message) && <p className="error-message">{ErrorMessage.message}</p>}
-                                    {ErrorMessage.error && ErrorMessage.error.length > 0 && <p className="error-message">{ErrorMessage.error[0].msg}</p>}
+                                    {/* {(!isPasswordMatch || ErrorMessage.message) && <p className="error-message">{ErrorMessage.message}</p>}
+                                    {ErrorMessage.error && ErrorMessage.error.length > 0 && <p className="error-message">{ErrorMessage.error[0].msg}</p>} */}
                                     {SuccessMessage && <p className="success-message">{SuccessMessage}</p>}
                                 </>
                             )
                         }
                     </div>
+                    <Toaster />
                     <div className='form-wrapper switchlogin'>
                         <p>Already registered?</p>
                         <a href='#' onClick={handleShowLogin}>Sign In</a>
@@ -191,6 +216,9 @@ const Register = ({ showLogin }) => {
                                 <i className="zmdi zmdi-arrow-right"></i>
                             </>
                         )}
+                    </button>
+                    <button className="login100-form-btn google-btn">
+                        <i class="fab fa-google"></i> Sign in with Google
                     </button>
                 </form >
             </div >
