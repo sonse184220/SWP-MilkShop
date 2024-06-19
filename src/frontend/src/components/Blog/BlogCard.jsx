@@ -1,27 +1,26 @@
-
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import "./BlogCard.css";
+import { Link } from "react-router-dom";
 
-const BlogCard = ({ title, authorName, authorDescription, authorImage }) => {
+const BlogCard = ({ blogs = [] }) => {
   return (
-    <div className="blog-card">
-      <blockquote>{title}</blockquote>
-      <div className="author">
-        <img src={authorImage} alt={`${authorName}`} className="author-image" />
-        <div className="author-info">
-          <h4>{authorName}</h4>          
-        </div>
-      </div>
-       <p className="author-description">{authorDescription}</p>
-    </div>
+    <>
+      {blogs.map((blog) => (
+        <Link to={`/BlogDetail/${blog.BlogID}`} key={blog.BlogID}>
+          <div className="blog-card">
+            <h2>{blog.Name}</h2>
+            <div className="author-description">
+              {new Date(blog.CreatedDate).toLocaleDateString()}
+            </div>
+          </div>
+        </Link>
+      ))}
+    </>
   );
 };
 
 BlogCard.propTypes = {
-  title: PropTypes.string,
-  authorName: PropTypes.string,
-  authorDescription: PropTypes.string,
-  authorImage: PropTypes.string,
+  blogs: PropTypes.array.isRequired,
 };
 
 export default BlogCard;
