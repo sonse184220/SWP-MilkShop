@@ -7,6 +7,6 @@ dotenv.config();
 const router = express.Router();
 
 router.post('/request-reset-password', resetPasswordController.requestResetPassword);
-router.post('/reset-password', resetPasswordController.resetPassword);
+router.post('/', resetPasswordController.resetPassword);
 
 export { router as resetPasswordRoutes };

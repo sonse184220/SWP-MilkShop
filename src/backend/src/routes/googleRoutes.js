@@ -5,7 +5,7 @@ import { googleController } from '../controllers/googleController.js';
 const router = express.Router();
 
 router.get('/google-login', passport.authenticate('google', { scope: ['profile', 'email'] }));
-router.get('/google/callback', passport.authenticate('google', { failureRedirect: '/' }), googleController.googleAuthCallback);
+router.get('/callback', passport.authenticate('google', { failureRedirect: '/' }), googleController.googleAuthCallback);
 router.post('/complete-profile', googleController.completeProfile);
 
 export { router as googleRoutes };
