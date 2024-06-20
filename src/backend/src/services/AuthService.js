@@ -34,7 +34,7 @@ export class AuthService {
                 bcrypt.hash(Password, 10, (err, hashedPassword) => {
                     if (err) return callback(err);
 
-                    const token = jwt.sign({ email: Email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+                    const token = jwt.sign({ email: Email }, process.env.JWT_SECRET, { expiresIn: '24h' });
                     const query = 'INSERT INTO TEMP_MEMBER (Password, Name, Email, Phone, Address, Token) VALUES (?, ?, ?, ?, ?, ?)';
 
                     connection.query(query, [hashedPassword, Name, Email, Phone, Address, token], (err, result) => {
@@ -75,7 +75,7 @@ export class AuthService {
                     return callback(null, { message: 'Invalid credentials', status: 401 });
                 }
 
-                const token = jwt.sign({ userId: user.UserID }, process.env.JWT_SECRET, { expiresIn: '1h' });
+                const token = jwt.sign({ userId: user.UserID }, process.env.JWT_SECRET, { expiresIn: '24h' });
                 const { Password, ...userWithoutPassword } = user;
                 callback(null, { message: 'Login successful', token, user: userWithoutPassword });
             });
