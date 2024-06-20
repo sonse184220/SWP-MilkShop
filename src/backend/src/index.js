@@ -28,7 +28,7 @@ app.use(session({
 }));
 
 // Enable CORS for specific origin
-app.use(cors({ origin: 'http://localhost:3000' }));
+app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
 app.use(express.json()); // dùng json
 app.use(bodyParser.json());

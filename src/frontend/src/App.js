@@ -11,6 +11,7 @@ import EditProfile from './components/Member/EditProfile.jsx';
 import ProductDetail from './components/Product-Detail/ProductDetail.jsx';
 import { Wishlist } from './components/Wishlist/Wishlist.jsx';
 import BlogDetail from './components/Blog/BlogDetail';
+import { Cart } from './components/Cart/Cart.jsx';
 //import file bootstrap và material-design-iconic-font trong index.js
 
 function App() {
@@ -38,12 +39,14 @@ function App() {
         <Route path='/' element={<Navigate to={'/login-register'} />} />
         <Route path='/home' element={<HomePage onLogin={handleLogin} />} />
         <Route path='/login-register' element={!showLogin ? <Login onLogin={handleLogin} showLogin={handleShowLogin} /> : <Register showLogin={handleShowLogin} />} />
+        <Route path='/login-google' element={<div>Hello Google</div>} />
         <Route path='/Blogs' element={<AllBlog />}></Route>
         <Route path='/Products' element={<AllProducts />}></Route>
         <Route path='/EditProfile' element={<EditProfile />}></Route>
         <Route path='/ProductDetail/:ProductID' element={<ProductDetail />}></Route>
         <Route path='/Wishlist' element={<Wishlist />}></Route>
-        <Route path="/BlogDetail/:BlogID" element={<BlogDetail/>} />
+        <Route path="/BlogDetail/:BlogID" element={<BlogDetail />} />
+        <Route path='/Cart' element={<Cart />} />
       </Routes>
 
     </Router>
