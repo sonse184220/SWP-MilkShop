@@ -217,9 +217,9 @@ const Register = ({ showLogin }) => {
                             </>
                         )}
                     </button>
-                    <button className="login100-form-btn google-btn">
+                    {/* <button className="login100-form-btn google-btn">
                         <i class="fab fa-google"></i> Sign in with Google
-                    </button>
+                    </button> */}
                 </form >
             </div >
         </div >

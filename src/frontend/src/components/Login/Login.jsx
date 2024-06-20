@@ -24,6 +24,7 @@ const Login = ({ onLogin, showLogin }) => {
     const handleLoginWithGoogle = async (e) => {
         e.preventDefault();
         try {
+            LoginWithGoogle();
             const response = await LoginWithGoogle();
             if (response) {
                 console.log(response);
@@ -89,7 +90,7 @@ const Login = ({ onLogin, showLogin }) => {
                             <i className="zmdi zmdi-landscape"></i>
                         </span>
                         <span className="login100-form-title p-b-34 p-t-27">
-                            Log in
+                            Login
                         </span>
                         <div className="wrap-input100 validate-input" data-validate="Enter username">
                             <input
@@ -120,15 +121,16 @@ const Login = ({ onLogin, showLogin }) => {
                             )}
                         </div> */}
                         <Toaster />
-                        <div className="contact100-form-checkbox">
+                        {/* <div className="contact100-form-checkbox">
                             <input className="input-checkbox100" id="ckb1" type="checkbox" name="remember-me" />
                             <label className="label-checkbox100" htmlFor="ckb1">
                                 Remember me
                             </label>
-                        </div>
+                        </div> */}
                         <div className="container-login100-form-btn">
                             <button className="login100-form-btn" onClick={handleIsLogin}>
                                 Login
+                                <i className="zmdi zmdi-arrow-right"></i>
                             </button>
                             <button className="login100-form-btn google-btn" onClick={handleLoginWithGoogle}>
                                 <i class="fab fa-google"></i> Sign in with Google

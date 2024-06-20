@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const LoginWithGoogle = (userInfo) => {
     try {
-        return axios.get('http://localhost:4500/api/auth/google-login')
+        window.location.href = 'http://localhost:4500/api/google/google-login';
     } catch (error) {
         // Handle the error here
         console.error('An error occurred while login with google results:', error);
