@@ -1,0 +1,29 @@
+.app {
+  display: flex;
+  font-family: Arial, sans-serif;
+}
+.content {
+  flex-grow: 1;
+  padding: 20px;
+}
+
+.content-header{
+  display: flex;
+  justify-content: space-between;
+}
+.staff-name {
+  background-color: palevioletred;
+  color: snow;
+  border-radius: 5px;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  float: right;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
