@@ -1,0 +1,46 @@
+.table-container {
+  margin-top: 20px;
+  background-color: snow;
+}
+
+.table-actions {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.table-actions label {
+  margin-right: 10px;
+}
+
+.search-input {
+  padding: 5px;
+  font-size: 14px;
+  margin-right: 10px;
+}
+
+.issues-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.issues-table th, .issues-table td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: left;
+}
+
+.searchProduct {
+  background-color: palevioletred;
+  color: snow;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  border-radius: 10px;
+}
+
+.searchProduct:hover {
+  background-color: white;
+  color: palevioletred;
+}
