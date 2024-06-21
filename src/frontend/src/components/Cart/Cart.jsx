@@ -11,9 +11,27 @@ import { ViewCart } from '../../services/cart/viewCart';
 import Quantity from '../Quantity/Quantity';
 import { AddToCart } from '../../services/cart/addToCart';
 import { UpdateCart } from '../../services/cart/updateCart';
+import { RemoveCart } from '../../services/cart/removeCart';
 
 export const Cart = () => {
     const [CartItems, setCartItems] = useState(null);
+
+    const handleRemoveCart = async (pID) => {
+        try {
+            const MemberToken = 'Bearer ' + localStorage.getItem('token');
+            console.log(MemberToken);
+            const prID = {
+                "ProductID": pID,
+            }
+            const response = await RemoveCart(MemberToken, prID);
+            // console.log(response);
+            if (response.data.message) {
+                handleViewCart();
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     const handleIncrement = async (pID, currentQuantity) => {
         try {
@@ -59,7 +77,7 @@ export const Cart = () => {
             console.log(MemberToken);
             const response = await ViewCart(MemberToken);
             console.log(response);
-            if (response.data) {
+            if (response.data && response.data.length > 0) {
                 setCartItems(response.data);
                 console.log("cart", response.data);
             }
@@ -100,7 +118,7 @@ export const Cart = () => {
                                                         <div className="col-lg-5 col-md-6 mb-4 mb-lg-0">
                                                             <p className='title'><strong>{item.Name}</strong></p>
                                                             {/* <p><strong>{item.Name}</strong></p> */}
-                                                            <button type="button" data-mdb-button-init data-mdb-ripple-init className="btn btn-primary btn-sm me-1 mb-2" data-mdb-tooltip-init title="Remove item">
+                                                            <button type="button" onClick={() => handleRemoveCart(item.ProductID)} data-mdb-button-init data-mdb-ripple-init className="btn btn-primary btn-sm me-1 mb-2" data-mdb-tooltip-init title="Remove item">
                                                                 <i className="fas fa-trash"></i>
                                                             </button>
                                                         </div>

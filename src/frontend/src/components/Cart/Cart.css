@@ -131,79 +131,6 @@
     background-color: #ffca2c;
 }
 
-/* Responsive styles */
-@media (max-width: 992px) {
-
-    .cart .col-lg-3,
-    .cart .col-lg-5,
-    .cart .col-lg-4 {
-        width: 100%;
-        text-align: center;
-        margin-bottom: 15px;
-    }
-
-    .cart .col-lg-4 {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-    }
-
-    .cart .quantity-wrapper {
-        justify-content: center;
-    }
-}
-
-@media (max-width: 768px) {
-    .middle-part {
-        flex-direction: column;
-    }
-
-    .cart,
-    .voucher {
-        width: 100%;
-    }
-}
-
-.col-md-8 {
-    width: 95%;
-}
-
-.title {
-    font-size: 20px;
-}
-
-/* Cart item styles */
-.card-body {
-    padding: 20px;
-}
-
-.row {
-    align-items: center;
-}
-
-.bg-image {
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.bg-image img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-}
-
-.title {
-    font-size: 18px;
-    margin-bottom: 10px;
-}
-
-.btn-sm {
-    padding: 5px 10px;
-    font-size: 14px;
-}
-
 /* Price, Total, and Quantity alignment */
 .price-total-container {
     display: flex;
@@ -232,8 +159,37 @@
     align-items: center;
 }
 
+.cart .title {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.cart .col-md-8 {
+    width: 95%;
+}
+
 /* Responsive styles */
 @media (max-width: 992px) {
+
+    .cart .col-lg-3,
+    .cart .col-lg-5,
+    .cart .col-lg-4 {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    .cart .col-lg-4 {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .cart .quantity-wrapper {
+        justify-content: center;
+    }
+
     .price-total-container {
         flex-direction: column;
         align-items: flex-start;
@@ -250,6 +206,14 @@
 }
 
 @media (max-width: 768px) {
+    .middle-part {
+        flex-direction: column;
+    }
+
+    .cart,
+    .voucher {
+        width: 100%;
+    }
 
     .col-lg-3,
     .col-lg-5,
