@@ -87,7 +87,8 @@ const Login = ({ onLogin, showLogin }) => {
                 <div className="wrap-login100">
                     <form className="login100-form validate-form">
                         <span className="login100-form-logo">
-                            <i className="zmdi zmdi-landscape"></i>
+                            {/* <i className="zmdi zmdi-landscape"></i> */}
+                            <img src="/img/logo.jpg" alt="Milky Way Logo" />
                         </span>
                         <span className="login100-form-title p-b-34 p-t-27">
                             Login

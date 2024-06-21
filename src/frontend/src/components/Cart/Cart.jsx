@@ -1,170 +1,168 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+// import QuantityPicker from 'react-quantity-picker';
+// import { QuantityPicker } from "react-qty-picker";
 
-import './Cart.css'
+import './Cart.css';
 import Footer from "../Footer/Footer";
 import Header from "../Header/Header";
 import { Voucher } from "../Voucher/Voucher";
 import { TotalPrice } from '../TotalPrice/TotalPrice';
+import { ViewCart } from '../../services/cart/viewCart';
+import Quantity from '../Quantity/Quantity';
+import { AddToCart } from '../../services/cart/addToCart';
+import { UpdateCart } from '../../services/cart/updateCart';
 
 export const Cart = () => {
+    const [CartItems, setCartItems] = useState(null);
+
+    const handleIncrement = async (pID, currentQuantity) => {
+        try {
+            const MemberToken = 'Bearer ' + localStorage.getItem('token');
+            console.log(MemberToken);
+            const prInfo = {
+                "ProductID": pID,
+                "CartQuantity": currentQuantity + 1
+            }
+            const response = await UpdateCart(MemberToken, prInfo);
+            console.log(response);
+            if (response.data.message) {
+                handleViewCart();
+                console.log("cart", response.data.message);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const handleDecrement = async (pID, currentQuantity) => {
+        try {
+            const MemberToken = 'Bearer ' + localStorage.getItem('token');
+            console.log(MemberToken);
+            const prInfo = {
+                "ProductID": pID,
+                "CartQuantity": currentQuantity - 1
+            }
+            const response = await UpdateCart(MemberToken, prInfo);
+            console.log(response);
+            if (response.data.message) {
+                handleViewCart();
+                console.log("cart", response.data.message);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const handleViewCart = async () => {
+        try {
+            const MemberToken = 'Bearer ' + localStorage.getItem('token');
+            console.log(MemberToken);
+            const response = await ViewCart(MemberToken);
+            console.log(response);
+            if (response.data) {
+                setCartItems(response.data);
+                console.log("cart", response.data);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        handleViewCart();
+    }, []);
+
     return (
         <>
-            <div><Header /></div>
-            <img className='image' src="/img/P004.jpg" />
+            <Header />
+            <img className='image' src="/img/P004.jpg" alt="Header Image" />
             <div className="middle-part">
-                <div className="cart-container">
-                    <div className="col-md-10">
-                        <div className="card mb-4">
-                            <div className="card-header py-3">
-                                <h5 className="mb-0">Cart - 2 items</h5>
-                            </div>
-                            <div className="card-body">
 
-                                <div className="row">
-                                    <div className="col-lg-3 col-md-12 mb-4 mb-lg-0">
-
-                                        <div className="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
-                                            <img src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Vertical/12a.webp"
-                                                className="w-100" alt="Blue Jeans Jacket" />
-                                            <a href="#!">
-                                                <div className="mask" style={{ backgroundColor: 'rgba(251, 251, 251, 0.2)' }}></div>
-                                            </a>
+                <div className="cart">
+                    <section className="h-100 gradient-custom">
+                        <div className="container py-5">
+                            <div className="row d-flex justify-content-center my-4">
+                                <div className="col-md-8">
+                                    <div className="card mb-4">
+                                        <div className="card-header py-3">
+                                            <h5 className="mb-0">Cart - 2 items</h5>
                                         </div>
+                                        {CartItems ? (
+                                            CartItems.map((item) => (
+                                                <div className="card-body" key={item.ProductID}>
+                                                    <div className="row">
+                                                        <div className="col-lg-3 col-md-12 mb-4 mb-lg-0">
+                                                            <div className="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
+                                                                <img src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Vertical/12a.webp" className="w-100" alt="Blue Jeans Jacket" />
+                                                            </div>
+                                                        </div>
 
-                                    </div>
+                                                        <div className="col-lg-5 col-md-6 mb-4 mb-lg-0">
+                                                            <p className='title'><strong>{item.Name}</strong></p>
+                                                            {/* <p><strong>{item.Name}</strong></p> */}
+                                                            <button type="button" data-mdb-button-init data-mdb-ripple-init className="btn btn-primary btn-sm me-1 mb-2" data-mdb-tooltip-init title="Remove item">
+                                                                <i className="fas fa-trash"></i>
+                                                            </button>
+                                                        </div>
 
-                                    <div className="col-lg-5 col-md-6 mb-4 mb-lg-0">
+                                                        <div className="col-lg-4 col-md-6 mb-4 mb-lg-0">
+                                                            <div className="price">
+                                                                <strong>{item.Price}</strong>
+                                                            </div>
 
-                                        <p><strong>Blue denim shirt</strong></p>
-                                        <p>Color: blue</p>
-                                        <p>Size: M</p>
-                                        <button type="button" data-mdb-button-init data-mdb-ripple-init className="btn btn-primary btn-sm me-1 mb-2" data-mdb-tooltip-init
-                                            title="Remove item">
-                                            <i className="fas fa-trash"></i>
-                                        </button>
-                                        <button type="button" data-mdb-button-init data-mdb-ripple-init className="btn btn-danger btn-sm mb-2" data-mdb-tooltip-init
-                                            title="Move to the wish list">
-                                            <i className="fas fa-heart"></i>
-                                        </button>
+                                                            <div className='quantity'>
+                                                                <Quantity
+                                                                    value={item.CartQuantity}
+                                                                    increment={() => handleIncrement(item.ProductID, item.CartQuantity)}
+                                                                    decrement={() => handleDecrement(item.ProductID, item.CartQuantity)} />
 
-                                    </div>
+                                                            </div>
+                                                            <div className="total-price">
+                                                                <p className="total">Total: <strong>{item.Price}</strong></p>
+                                                            </div>
 
-                                    <div className="col-lg-4 col-md-6 mb-4 mb-lg-0">
+                                                        </div>
+                                                    </div>
 
-                                        <div className="d-flex mb-4" style={{ maxWidth: '300px' }}>
-                                            <button data-mdb-button-init data-mdb-ripple-init className="btn btn-primary px-3 me-2"
-                                                onClick={() => this.parentNode.querySelector('input[type=number]').stepDown()}>
-                                                <i className="fas fa-minus"></i>
-                                            </button>
 
-                                            <div data-mdb-input-init className="form-outline">
-                                                <input id="form1" min="0" name="quantity" defaultValue="1" type="number" className="form-control" />
-                                                <label className="form-label" htmlFor="form1">Quantity</label>
+                                                    <hr className="my-4" />
+
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <div className="empty-cart-section section-fluid">
+                                                <div className="emptycart-wrapper">
+                                                    <div className="container">
+                                                        <div className="row">
+                                                            <div className="emptycart-content text-center">
+                                                                <div className="cart-image">
+                                                                    <img className="img-fluid" src="/img/empty-cart.png" alt="Empty Cart" />
+                                                                </div>
+                                                                <h4 className="title">Your Cart is Empty</h4>
+                                                                <h6 className="sub-title">Sorry... No item Found inside your cart!</h6>
+                                                                <a href="#" className="btn btn-lg btn-golden">Continue Shopping</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
 
-                                            <button data-mdb-button-init data-mdb-ripple-init className="btn btn-primary px-3 ms-2"
-                                                onClick={() => this.parentNode.querySelector('input[type=number]').stepUp()}>
-                                                <i className="fas fa-plus"></i>
-                                            </button>
-                                        </div>
-
-                                        <p className="text-start text-md-center">
-                                            <strong>$17.99</strong>
-                                        </p>
-
-                                    </div>
-                                </div>
-
-                                <hr className="my-4" />
-
-                                <div className="row">
-                                    <div className="col-lg-3 col-md-12 mb-4 mb-lg-0">
-
-                                        <div className="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
-                                            <img src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Vertical/13a.webp"
-                                                className="w-100" alt="Red Hoodie" />
-                                            <a href="#!">
-                                                <div className="mask" style={{ backgroundColor: 'rgba(251, 251, 251, 0.2)' }}></div>
-                                            </a>
-                                        </div>
-
+                                        )}
                                     </div>
 
-                                    <div className="col-lg-5 col-md-6 mb-4 mb-lg-0">
-
-                                        <p><strong>Red hoodie</strong></p>
-                                        <p>Color: red</p>
-                                        <p>Size: M</p>
-
-                                        <button type="button" data-mdb-button-init data-mdb-ripple-init className="btn btn-primary btn-sm me-1 mb-2" data-mdb-tooltip-init
-                                            title="Remove item">
-                                            <i className="fas fa-trash"></i>
-                                        </button>
-                                        <button type="button" data-mdb-button-init data-mdb-ripple-init className="btn btn-danger btn-sm mb-2" data-mdb-tooltip-init
-                                            title="Move to the wish list">
-                                            <i className="fas fa-heart"></i>
-                                        </button>
-
-                                    </div>
-
-                                    <div className="col-lg-4 col-md-6 mb-4 mb-lg-0">
-
-                                        <div className="d-flex mb-4" style={{ maxWidth: '300px' }}>
-                                            <button data-mdb-button-init data-mdb-ripple-init className="btn btn-primary px-3 me-2"
-                                                onClick={() => this.parentNode.querySelector('input[type=number]').stepDown()}>
-                                                <i className="fas fa-minus"></i>
-                                            </button>
-
-                                            <div data-mdb-input-init className="form-outline">
-                                                <input id="form2" min="0" name="quantity" defaultValue="1" type="number" className="form-control" />
-                                                <label className="form-label" htmlFor="form2">Quantity</label>
-                                            </div>
-
-                                            <button data-mdb-button-init data-mdb-ripple-init className="btn btn-primary px-3 ms-2"
-                                                onClick={() => this.parentNode.querySelector('input[type=number]').stepUp()}>
-                                                <i className="fas fa-plus"></i>
-                                            </button>
-                                        </div>
-
-                                        <p className="text-start text-md-center">
-                                            <strong>$17.99</strong>
-                                        </p>
-
-                                    </div>
                                 </div>
 
                             </div>
                         </div>
-                        <div className="card mb-4">
-                            <div className="card-body">
-                                <p><strong>Expected shipping delivery</strong></p>
-                                <p className="mb-0">12.10.2020 - 14.10.2020</p>
-                            </div>
-                        </div>
-                        <div className="card mb-4 mb-lg-0">
-                            <div className="card-body">
-                                <p><strong>We accept</strong></p>
-                                <img className="me-2" width="45px"
-                                    src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/visa.svg"
-                                    alt="Visa" />
-                                <img className="me-2" width="45px"
-                                    src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/amex.svg"
-                                    alt="American Express" />
-                                <img className="me-2" width="45px"
-                                    src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/mastercard.svg"
-                                    alt="Mastercard" />
-                                <img className="me-2" width="45px"
-                                    src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce/includes/gateways/paypal/assets/images/paypal.webp"
-                                    alt="PayPal acceptance mark" />
-                            </div>
-                        </div>
-                    </div>
+                    </section>
+
                 </div>
-                <div className="col-md-4">
+                <div className="voucher">
                     <Voucher />
                 </div>
+
             </div>
-            <div><TotalPrice /></div>
+            <TotalPrice />
             <Footer />
         </>
     );

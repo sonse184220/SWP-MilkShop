@@ -21,6 +21,7 @@ const Register = ({ showLogin }) => {
     const [Phone, setPhone] = useState('');
     const [Address, setAddress] = useState('');
     const [isPasswordMatch, setIsPasswordMatch] = useState(true);
+    const [passwordError, setPasswordError] = useState('');
     const [SuccessMessage, setSuccessMessage] = useState('');
     const [ErrorMessage, setErrorMessage] = useState('');
     const [registertoken, setRegisterToken] = useState(null);
@@ -72,10 +73,10 @@ const Register = ({ showLogin }) => {
                 if (response.data) {
                     // setSuccessMessage(response.data.message);
                     toast.success(response.data.message, {
-                        duration: 15000, // This will make the toast stay until closed
+                        duration: 15000,
                         style: {
                             backgroundColor: '#ffd3b6',
-                            color: '#698474', // Optional: Set the text color to white for better contrast
+                            color: '#698474',
                         },
                     });
                     setRegisterToken(response.data.token);
@@ -111,10 +112,20 @@ const Register = ({ showLogin }) => {
         setSuccessMessage('');
         if (Password !== ConfirmPassword) {
             setIsPasswordMatch(false);
-            setErrorMessage({ "message": "Passwords do not match" })
+            setPasswordError('*Passwords do not match');
+            // setErrorMessage({ "message": "Passwords do not match" })
+            // toast.error("Password do not match", {
+            //     style: {
+            //         backgroundColor: '#ef4444',
+            //         color: '#ffffff',
+            //         fontWeight: 'bold',
+            //     },
+            // });
         }
-        else
+        else {
             setIsPasswordMatch(true);
+            setPasswordError('');
+        }
 
     }, [Password, ConfirmPassword, Name, Email, Phone, Address]
     );
@@ -159,6 +170,7 @@ const Register = ({ showLogin }) => {
                             onChange={(e) => setConfirmPassword(e.target.value)} />
                         <i className="zmdi zmdi-lock"></i>
                     </div >
+                    {passwordError && <p className="error-message">{passwordError}</p>}
                     <div className="form-wrapper" >
                         <input
                             type="text"

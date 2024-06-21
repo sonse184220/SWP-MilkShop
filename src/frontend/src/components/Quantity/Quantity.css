@@ -1,0 +1,58 @@
+.quantity-input {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+    border-radius: 3px;
+    width: fit-content;
+    padding-bottom: 30px;
+}
+
+.quantity-input__modifier,
+.quantity-input__screen {
+    user-select: none;
+    outline: none;
+}
+
+.quantity-input__modifier {
+    padding: 5px;
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
+    background: #f3f3f3;
+    color: #888;
+    border: 1px solid #ddd;
+    text-align: center;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.quantity-input__modifier:hover {
+    background: #e6e6e6;
+    color: #555;
+}
+
+.quantity-input__modifier--left {
+    border-radius: 3px 0 0 3px;
+}
+
+.quantity-input__modifier--right {
+    border-radius: 0 3px 3px 0;
+}
+
+.quantity-input__screen {
+    width: 32px;
+    height: 24px;
+    padding: 2px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-left: none;
+    border-right: none;
+    text-align: center;
+}
+
+.form-label {
+    margin-top: 7px;
+}

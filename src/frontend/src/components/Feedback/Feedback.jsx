@@ -29,7 +29,7 @@ const Feedback = ({ feedbacks = [], onAddFeedback, onDeleteFeedback, newFeedback
                                 <li key={index} className="comment-list">
                                     <div className="comment-wrapper">
                                         <div className="comment-img">
-                                            <img src="assets/images/user/image-1.png" alt="User" />
+                                            <img src="/img/user.png" alt="User" />
                                         </div>
                                         <div className="comment-content">
                                             <div className="comment-content-top">

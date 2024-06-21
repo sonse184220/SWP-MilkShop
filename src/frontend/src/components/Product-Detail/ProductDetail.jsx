@@ -16,6 +16,7 @@ import { AddWishlist } from '../../services/wishlist/addWishlist';
 import { GetWishlist } from '../../services/wishlist/getAllWishlist';
 import { RemoveWishlist } from '../../services/wishlist/removeWishlish';
 import { DeleteFeedback } from '../../services/feedback/deleteFeedback';
+import { AddToCart } from '../../services/cart/addToCart';
 
 
 const ProductDetail = () => {
@@ -62,6 +63,27 @@ const ProductDetail = () => {
             url: 'https://example.com/product5'
         }
     ];
+
+    const handleAddToCart = async (e) => {
+        e.preventDefault();
+        try {
+            const MemberToken = 'Bearer ' + localStorage.getItem('token');
+            console.log(MemberToken);
+            const prInfo = {
+                "ProductID": ProductID,
+                "CartQuantity": quantity
+            }
+            const response = await AddToCart(MemberToken, prInfo);
+            if (response.data.message) {
+                toast.success('Added to cart', {
+                    theme: "colored",
+                });
+            }
+            // console.log('cart============', response)
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     const checkIsWishlistState = () => {
         const wishlistItems = JSON.parse(localStorage.getItem("wishlist"));
@@ -248,7 +270,7 @@ const ProductDetail = () => {
                                     </div>
 
                                     <div className="product-add-to-cart-btn">
-                                        <a href="#" className="btn btn-block btn-lg btn-black-default-hover" data-bs-toggle="modal" data-bs-target="#modalAddcart">+ Add To Cart</a>
+                                        <a href="#" onClick={handleAddToCart} className="btn btn-block btn-lg btn-black-default-hover" data-bs-toggle="modal" data-bs-target="#modalAddcart">+ Add To Cart</a>
                                     </div>
                                 </div>
 
