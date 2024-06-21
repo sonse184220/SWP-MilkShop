@@ -68,39 +68,41 @@ export class EmailService {
     sendOrderConfirmationEmail = (email, orderId, cartItems, totalPrice, user, contactInfo, callback) => {
         const itemsDetails = cartItems.map(item => `
             <tr>
-                <td style="padding: 8px; border: 1px solid #ddd;">${item.ProductID}</td>
-                <td style="padding: 8px; border: 1px solid #ddd;">${item.CartQuantity}</td>
-                <td style="padding: 8px; border: 1px solid #ddd;">${item.Price}</td>
+                <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Arial', sans-serif; color: #444;">${item.ProductID}</td>
+                <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Arial', sans-serif; color: #444;">${item.CartQuantity}</td>
+                <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Arial', sans-serif; color: #444;">${item.Price}</td>
             </tr>`).join('');
 
-        const userDetails = `Name: ${contactInfo.Name}, Email: ${contactInfo.Email}, Phone: ${contactInfo.Phone}, Address: ${contactInfo.Address}`;
+        const userDetails = `
+            <p style="font-size: 16px; color: #007bff; margin: 5px 0; font-family: 'Courier New', Courier, monospace;">Name: ${contactInfo.Name}</p>
+            <p style="font-size: 16px; color: #007bff; margin: 5px 0; font-family: 'Courier New', Courier, monospace;">Email: ${contactInfo.Email}</p>
+            <p style="font-size: 16px; color: #007bff; margin: 5px 0; font-family: 'Courier New', Courier, monospace;">Phone: ${contactInfo.Phone}</p>
+            <p style="font-size: 16px; color: #007bff; margin: 5px 0; font-family: 'Courier New', Courier, monospace;">Address: ${contactInfo.Address}</p>`;
 
         const mailOptions = {
             from: process.env.EMAIL_USER,
             to: email,
             subject: 'Order Confirmation',
             html: `
-                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
-                    <h2 style="text-align: center; color: #333;">Thank You for Your Order!</h2>
-                    <p style="font-size: 16px; color: #333;">Here are the details of your order:</p>
-                    <ul style="font-size: 16px; color: #333;">
-                        <li>Order ID: ${orderId}</li>
-                        <li>${userDetails}</li>
-                    </ul>
-                    <p style="font-size: 16px; color: #333;">Items:</p>
+                <div style="font-family: 'Verdana', sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 2px solid #f8f9fa; border-radius: 10px; background-color: #f1f1f1;">
+                    <h2 style="text-align: center; color: #e67e22; font-family: 'Georgia', serif;">Thank You for Your Order!</h2>
+                    <p style="font-size: 18px; color: #333; font-family: 'Times New Roman', Times, serif;">Here are the details of your order:</p>
+                    <p style="font-size: 18px; color: #333; font-family: 'Times New Roman', Times, serif;">Order ID: <span style="color: #e74c3c;">${orderId}</span></p>
+                    ${userDetails}
+                    <p style="font-size: 18px; color: #333; font-family: 'Times New Roman', Times, serif;">Items:</p>
                     <table style="width: 100%; border-collapse: collapse;">
                         <thead>
-                            <tr>
-                                <th style="padding: 8px; border: 1px solid #ddd;">Product ID</th>
-                                <th style="padding: 8px; border: 1px solid #ddd;">Quantity</th>
-                                <th style="padding: 8px; border: 1px solid #ddd;">Price</th>
+                            <tr style="background-color: #3498db; color: white;">
+                                <th style="padding: 10px; border: 1px solid #ddd; font-family: 'Arial', sans-serif;">Product ID</th>
+                                <th style="padding: 10px; border: 1px solid #ddd; font-family: 'Arial', sans-serif;">Quantity</th>
+                                <th style="padding: 10px; border: 1px solid #ddd; font-family: 'Arial', sans-serif;">Price</th>
                             </tr>
                         </thead>
                         <tbody>
                             ${itemsDetails}
                         </tbody>
                     </table>
-                    <p style="font-size: 16px; color: #333;">Total Price: ${totalPrice}</p>
+                    <p style="font-size: 18px; color: #333; font-family: 'Times New Roman', Times, serif; margin-top: 20px;">Total Price: <span style="color: #27ae60;">${totalPrice}</span></p>
                 </div>
             `
         };
@@ -115,5 +117,6 @@ export class EmailService {
                 callback(error);
             });
     };
+
 
 }
