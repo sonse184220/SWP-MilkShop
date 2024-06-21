@@ -38,7 +38,21 @@ export class EmailService {
             from: process.env.EMAIL_USER,
             to: email,
             subject: 'Verify Your Email',
-            text: `Thank you for registering and joining our milk shop. Please verify your email by clicking the link below:\n\n${url}\n\nYour details:\nUserID: ${userId}\nPhone: ${phone}\nEmail: ${email}`
+            html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+                    <h2 style="text-align: center; color: #333;">Welcome to Milk Shop!</h2>
+                    <p style="font-size: 16px; color: #333;">Thank you for registering. Please verify your email by clicking the button below:</p>
+                    <div style="text-align: center;">
+                        <a href="${url}" style="background-color: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Verify Email</a>
+                    </div>
+                    <p style="font-size: 16px; color: #333;">Your details:</p>
+                    <ul style="font-size: 16px; color: #333;">
+                        <li>UserID: ${userId}</li>
+                        <li>Phone: ${phone}</li>
+                        <li>Email: ${email}</li>
+                    </ul>
+                </div>
+            `
         };
 
         return this.transporter.sendMail(mailOptions)
@@ -50,15 +64,45 @@ export class EmailService {
             });
     };
 
+
     sendOrderConfirmationEmail = (email, orderId, cartItems, totalPrice, user, contactInfo, callback) => {
-        const itemsDetails = cartItems.map(item => `Product ID: ${item.ProductID}, Quantity: ${item.CartQuantity}, Price: ${item.Price}`).join('\n');
-        const userDetails = user ? `Name: ${user.Name}, Email: ${user.Email}, Phone: ${user.Phone}, Address: ${user.Address}` : `Email: ${contactInfo.Email}, Phone: ${contactInfo.Phone}`;
+        const itemsDetails = cartItems.map(item => `
+            <tr>
+                <td style="padding: 8px; border: 1px solid #ddd;">${item.ProductID}</td>
+                <td style="padding: 8px; border: 1px solid #ddd;">${item.CartQuantity}</td>
+                <td style="padding: 8px; border: 1px solid #ddd;">${item.Price}</td>
+            </tr>`).join('');
+
+        const userDetails = `Name: ${contactInfo.Name}, Email: ${contactInfo.Email}, Phone: ${contactInfo.Phone}, Address: ${contactInfo.Address}`;
 
         const mailOptions = {
             from: process.env.EMAIL_USER,
             to: email,
             subject: 'Order Confirmation',
-            text: `Thank you for your order. Here are the details of your order:\n\nOrder ID: ${orderId}\n${userDetails}\n\nItems:\n${itemsDetails}\n\nTotal Price: ${totalPrice}`
+            html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+                    <h2 style="text-align: center; color: #333;">Thank You for Your Order!</h2>
+                    <p style="font-size: 16px; color: #333;">Here are the details of your order:</p>
+                    <ul style="font-size: 16px; color: #333;">
+                        <li>Order ID: ${orderId}</li>
+                        <li>${userDetails}</li>
+                    </ul>
+                    <p style="font-size: 16px; color: #333;">Items:</p>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr>
+                                <th style="padding: 8px; border: 1px solid #ddd;">Product ID</th>
+                                <th style="padding: 8px; border: 1px solid #ddd;">Quantity</th>
+                                <th style="padding: 8px; border: 1px solid #ddd;">Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${itemsDetails}
+                        </tbody>
+                    </table>
+                    <p style="font-size: 16px; color: #333;">Total Price: ${totalPrice}</p>
+                </div>
+            `
         };
 
         return this.transporter.sendMail(mailOptions)
@@ -71,4 +115,5 @@ export class EmailService {
                 callback(error);
             });
     };
+
 }
