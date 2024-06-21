@@ -12,6 +12,7 @@ import ProductDetail from './components/Product-Detail/ProductDetail.jsx';
 import { Wishlist } from './components/Wishlist/Wishlist.jsx';
 import BlogDetail from './components/Blog/BlogDetail';
 import { Cart } from './components/Cart/Cart.jsx';
+import ProductManagement from './components/Staff/ProductManagement.jsx';
 //import file bootstrap và material-design-iconic-font trong index.js
 
 function App() {
@@ -47,6 +48,7 @@ function App() {
         <Route path='/Wishlist' element={<Wishlist />}></Route>
         <Route path="/BlogDetail/:BlogID" element={<BlogDetail />} />
         <Route path='/Cart' element={<Cart />} />
+        <Route path='/ProductManagement' element={<ProductManagement />} />
       </Routes>
 
     </Router>
