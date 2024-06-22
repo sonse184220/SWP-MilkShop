@@ -16,7 +16,7 @@ const EditProfile = ({ showLogin, userId }) => {
   const [isPasswordMatch, setIsPasswordMatch] = useState(true);
   const [SuccessMessage, setSuccessMessage] = useState("");
   const [ErrorMessage, setErrorMessage] = useState("");
-
+  const userId = JSON.parse(localStorage.getItem("userData")).UserID;
   useEffect(() => {
     const fetchUserData = async () => {
       try {
