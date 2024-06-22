@@ -4,9 +4,9 @@ import { putInfo } from "../../services/editprofile/putInfo";
 import "./EditProfile.css";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
-import axios from "axios";
 
-const EditProfile = ({ showLogin, userId }) => {
+
+const EditProfile = () => {
   const [Password, setPassword] = useState("");
   const [ConfirmPassword, setConfirmPassword] = useState("");
   const [Name, setName] = useState("");
