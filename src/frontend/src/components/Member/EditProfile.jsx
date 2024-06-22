@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-
+import { getUser } from "../../services/editprofile/getUser"; // Adjust the import path accordingly
+import { putInfo } from "../../services/editprofile/putInfo";
 import "./EditProfile.css";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
+import axios from "axios";
 
-//prop showLogin chuyền từ App.js,
-//dùng để set showLogin state
-const EditProfile = ({ showLogin }) => {
+const EditProfile = ({ showLogin, userId }) => {
   const [Password, setPassword] = useState("");
   const [ConfirmPassword, setConfirmPassword] = useState("");
   const [Name, setName] = useState("");
@@ -17,37 +17,55 @@ const EditProfile = ({ showLogin }) => {
   const [SuccessMessage, setSuccessMessage] = useState("");
   const [ErrorMessage, setErrorMessage] = useState("");
 
-  const handleEditProfile = async (event) => {
-    event.preventDefault();
-    try {
-      setErrorMessage("");
-      setSuccessMessage("");
-      let userInfo;
-      if (isPasswordMatch) {
-        userInfo = { Name, Password, Email, Phone, Address };
-        const response = await handleEditProfile(userInfo);
-        if (response.data) {
-          setSuccessMessage(response.data);
-        }
-      }
-    } catch (error) {
-      if (error.response && error.response.data) {
-        setErrorMessage(error.response.data);
-      }
-    }
-  };
-
-  //check password và confirmpassword có giống nhau ko
   useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const userData = await getUser(userId);
+        setName(userData.Name);
+        setEmail(userData.Email);
+        setPhone(userData.Phone);
+        setAddress(userData.Address);
+      } catch (error) {
+        setErrorMessage({ message: "Error fetching user data" });
+      }
+    };
+
+    fetchUserData();
+  }, [userId]);
+
+  const handleEditProfile = async (e) => {
+    e.preventDefault();
     setErrorMessage("");
     setSuccessMessage("");
+
     if (Password !== ConfirmPassword) {
       setIsPasswordMatch(false);
       setErrorMessage({ message: "Passwords do not match" });
-    } else setIsPasswordMatch(true);
-  }, [Password, ConfirmPassword, Name, Email, Phone, Address]);
+      return;
+    }
 
-  //component register
+    setIsPasswordMatch(true);
+
+    const updatedUserData = {
+      Name,
+      Email,
+      Phone,
+      Address,
+      ...(Password && { Password }),
+    };
+
+    try {
+      const response = await putInfo(userId, updatedUserData);
+      setSuccessMessage({ message: "Profile updated successfully!" });
+      setName(response.Name);
+      setEmail(response.Email);
+      setPhone(response.Phone);
+      setAddress(response.Address);
+    } catch (error) {
+      setErrorMessage({ message: "Error updating profile" });
+    }
+  };
+
   return (
     <>
       <img className="image" src="/img/P004.jpg" alt="Blog Header" />
@@ -66,7 +84,7 @@ const EditProfile = ({ showLogin }) => {
                   </div>
                 </div>
                 <div className="col-lg-6">
-                  <form>
+                  <form onSubmit={handleEditProfile}>
                     <h3>Edit profile</h3>
                     <div className="form-wrapper">
                       <input
@@ -91,6 +109,7 @@ const EditProfile = ({ showLogin }) => {
                         type="text"
                         placeholder="Name"
                         className="form-control"
+                        value={Name}
                         onChange={(e) => setName(e.target.value)}
                       />
                       <i className="zmdi zmdi-account"></i>
@@ -100,6 +119,7 @@ const EditProfile = ({ showLogin }) => {
                         type="text"
                         placeholder="Email Address"
                         className="form-control"
+                        value={Email}
                         onChange={(e) => setEmail(e.target.value)}
                       />
                       <i className="zmdi zmdi-email"></i>
@@ -109,6 +129,7 @@ const EditProfile = ({ showLogin }) => {
                         type="text"
                         placeholder="Phone"
                         className="form-control"
+                        value={Phone}
                         onChange={(e) => setPhone(e.target.value)}
                       />
                       <i className="zmdi zmdi-phone"></i>
@@ -118,11 +139,11 @@ const EditProfile = ({ showLogin }) => {
                         type="text"
                         placeholder="Address"
                         className="form-control"
+                        value={Address}
                         onChange={(e) => setAddress(e.target.value)}
                       />
                       <i className="zmdi zmdi-home"></i>
                     </div>
-
                     <div>
                       {(ErrorMessage || SuccessMessage) && (
                         <>
@@ -145,7 +166,7 @@ const EditProfile = ({ showLogin }) => {
                         </>
                       )}
                     </div>
-                    <button onClick={handleEditProfile}>
+                    <button type="submit">
                       Edit profile
                       <i className="zmdi zmdi-arrow-right"></i>
                     </button>
