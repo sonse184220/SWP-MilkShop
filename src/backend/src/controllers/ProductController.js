@@ -107,6 +107,10 @@ export class ProductController {
         const rating = req.body.rating;
         const content = req.body.content;
 
+        if (req.userRole !== "member" || req.user.userId !== userId) {
+            return res.status(401).send({ msg: "Unauthorized!" }); 
+        }
+
         const product = await productService.getProduct(productId);
         if (product.length === 0) {
             return res.status(404).send({ error: "Product not found!" });
@@ -127,6 +131,9 @@ export class ProductController {
         const checkExist = await productService.getFeedback(feedbackId);
         if (checkExist.length === 0) {
             return res.status(404).send({ error: "Feedback not found!" });
+        }
+        if (req.user.userId !== checkExist[0].UserID && req.userRole !== "admin" && req.userRole !== "staff") {
+            return res.status(401).send({ msg: "Unauthorized!" });
         }
 
         const deletedFeedback = await productService.removeFeedback(feedbackId);

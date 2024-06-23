@@ -1,4 +1,6 @@
 import express, { Request, Response, NextFunction } from "express";
+import dotenv from "dotenv";
+dotenv.config();
 
 import { productRoutes } from "./routes/productRoutes.js";
 import { blogRoutes } from "./routes/blogRoutes.js";
@@ -18,7 +20,10 @@ app.use(blogRoutes);
 // API liên quan đến wishlist
 app.use(wishlistRoutes);
 
-
+console.log(process.env.DB_HOST);
+console.log(process.env.DB_USER);
+console.log(process.env.DB_PASSWORD);
+console.log(process.env.DB_NAME);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // bắt error bị lọt qua các check

@@ -1,23 +1,23 @@
 import { Request, Response } from 'express';
 import { WishlistService } from '../services/WishlistService.js';
 import { ProductService } from '../services/ProductService.js';
-import { MemberService } from '../services/MemberService.js';
+import { UserService } from '../services/userService.js';
 
 export class WishlistController{
     private wishlistService: WishlistService;
     private productService: ProductService;
-    private memberService: MemberService;
+    private userService: UserService;
 
     constructor() {
         this.wishlistService = new WishlistService();
         this.productService = new ProductService();
-        this.memberService = new MemberService();
+        this.userService = new UserService();
     }
 
     async getWishlist(req: Request, res: Response) {
         const memberId = req.params.id;
 
-        const checkMember = await this.memberService.getMember(memberId);
+        const checkMember = await this.userService.checkUserExisted(memberId);
         if (checkMember.length === 0) {
             return res.status(404).send({error: "Member not found!"});
         }
@@ -30,7 +30,7 @@ export class WishlistController{
         const memberId = req.params.id;
         const productId = req.query.productId as string;
 
-        const checkMember = await this.memberService.getMember(memberId);
+        const checkMember = await this.userService.checkUserExisted(memberId);
         if (checkMember.length === 0) {
             return res.status(404).send({error: "Member not found!"});
         }
@@ -58,7 +58,7 @@ export class WishlistController{
         const memberId = req.params.id;
         const productId = req.query.productId as string;
 
-        const checkMember = await this.memberService.getMember(memberId);
+        const checkMember = await this.userService.checkUserExisted(memberId);
         if (checkMember.length === 0) {
             return res.status(404).send({error: "Member not found!"});
         }

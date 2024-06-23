@@ -2,6 +2,7 @@ import { Router } from "express";
 
 import { checkProductSearch, checkProductId, checkProductSearchBrand, checkFeedbackData, checkFeedbackId } from "../middlewares/productValidators.js";
 import { ProductController } from "../controllers/ProductController.js";
+import { getAuthRole, checkAuthenticated } from "../middlewares/authMiddleware.js";
 
 const router = Router();
 const productController = new ProductController();
@@ -62,7 +63,7 @@ router.get("/api/product/:id/feedbacks", checkProductId, async (req, res) => {
  *   }
  * - cả 3 dòng đều không được để trống và rating chỉ có thể là từ 1 -> 5
  */
-router.post("/api/product/:id/feedbacks", checkProductId, checkFeedbackData, async (req, res) => {
+router.post("/api/product/:id/feedbacks", checkAuthenticated, getAuthRole, checkProductId, checkFeedbackData, async (req, res) => {
     await productController.createFeedback(req, res);
 });
 
@@ -70,10 +71,8 @@ router.post("/api/product/:id/feedbacks", checkProductId, checkFeedbackData, asy
  * xóa 1 feedback dựa vào feedbackId
  * - {...} là feedback id
  */
-router.delete("/api/product/feedbacks/:id", checkFeedbackId, async (req, res) => {
+router.delete("/api/product/feedbacks/:id", checkAuthenticated, getAuthRole, checkFeedbackId, async (req, res) => {
     await productController.deleteFeedback(req, res); 
-
-    // chờ ông nhật xong login/logout thì cập nhật bảo mật kiểm tra JWT sau
 });
 
 
