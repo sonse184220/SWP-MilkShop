@@ -1,8 +1,8 @@
-import axios from "axios";
+import axios from "../axios";
 
 export const RemoveCart = (token, prID) => {
     try {
-        return axios.post("http://localhost:4500/api/cart/remove", prID,
+        return axios.post("/api/cart/remove", prID,
             {
                 headers: {
                     'Authorization': token,
