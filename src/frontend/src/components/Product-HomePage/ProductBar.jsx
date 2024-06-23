@@ -70,7 +70,7 @@ const ProductBar = () => {
                         <img src={`/img/${product.ProductID}.jpg`} alt={product.Name} />
                         <h3>{product.Name}</h3>
                         <p>{product.Content}</p>
-                        <p>{product.Price}</p>
+                        <p>{product.Price.toLocaleString()} VND</p>
                     </Link>
                 ))}
             </div>

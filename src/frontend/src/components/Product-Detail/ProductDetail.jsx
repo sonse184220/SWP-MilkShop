@@ -248,7 +248,7 @@ const ProductDetail = () => {
                         <div className="product-details-content-area product-details--golden aos-init aos-animate detail-info" data-aos="fade-up" data-aos-delay="200">
                             <div className="product-details-text">
                                 <h4 className="title">{CurrentProduct[0].Name}</h4>
-                                <div className="price">{CurrentProduct[0].Price}</div>
+                                <div className="price">{CurrentProduct[0].Price.toLocaleString()} VND</div>
                                 <p>{CurrentProduct[0].Content}</p>
                             </div>
                             <div className="product-details-variable">

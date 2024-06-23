@@ -125,7 +125,7 @@ export const Cart = () => {
 
                                                         <div className="col-lg-4 col-md-6 mb-4 mb-lg-0">
                                                             <div className="price">
-                                                                <strong>{item.Price}</strong>
+                                                                <strong>{item.Price.toLocaleString()}đ</strong>
                                                             </div>
 
                                                             <div className='quantity'>
@@ -136,7 +136,7 @@ export const Cart = () => {
 
                                                             </div>
                                                             <div className="total-price">
-                                                                <p className="total">Total: <strong>{item.Price}</strong></p>
+                                                                <p className="total">Total: <strong>{item.Price.toLocaleString()} VND</strong></p>
                                                             </div>
 
                                                         </div>
@@ -180,7 +180,7 @@ export const Cart = () => {
                 </div>
 
             </div>
-            <TotalPrice />
+            <TotalPrice CartItems={CartItems} />
             <Footer />
         </>
     );

@@ -1,42 +1,98 @@
 import { useEffect, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import './Wishlist.css';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import { GetWishlist } from '../../services/wishlist/getAllWishlist';
 import { RemoveWishlist } from '../../services/wishlist/removeWishlish';
+import { AddToCart } from '../../services/cart/addToCart';
+import { ViewCart } from '../../services/cart/viewCart';
 
 export const Wishlist = () => {
     const [showModal, setShowModal] = useState(false);
     const [wishlistItems, setWishlistItems] = useState([]);
-    const [message, setMessage] = useState('');
+    const [CartItems, setCartItems] = useState([]);
+    const [lastPrToCart, setLastPrToCart] = useState('');
 
     const openModal = (e) => { e.preventDefault(); setShowModal(true); }
     const closeModal = (e) => { e.preventDefault(); setShowModal(false); }
+
+    const calculateTotalPrice = () => {
+        return CartItems.reduce((total, item) => {
+            return total + (item.Price * item.CartQuantity);
+        }, 0);
+    };
+
+    const handleViewCart = async () => {
+        try {
+            const MemberToken = 'Bearer ' + localStorage.getItem('token');
+            console.log(MemberToken);
+            const response = await ViewCart(MemberToken);
+            console.log(response);
+            if (response.data && response.data.length > 0) {
+                setCartItems(response.data);
+                console.log("cart", response.data);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const handleAddToCart = async (e, pID) => {
+        e.preventDefault();
+        try {
+            const MemberToken = 'Bearer ' + localStorage.getItem('token');
+            console.log(MemberToken);
+            const prInfo = {
+                "ProductID": pID,
+                "CartQuantity": 1
+            }
+            const response = await AddToCart(MemberToken, prInfo);
+            if (response.data.message) {
+                // toast.success('Added to cart', {
+                //     theme: "colored",
+                // });
+                handleViewCart();
+                setLastPrToCart(pID);
+                openModal(e);
+            }
+            // console.log('cart============', response)
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     const handleRemoveWishlist = async (e, pID) => {
         try {
             e.preventDefault();
             const response = await RemoveWishlist(JSON.parse(localStorage.getItem("userData")).UserID, pID);
             if (response.data.msg) {
-                setMessage('Remove success');
-                showWishlistMessage();
+                // setMessage('Remove success');
+                // showWishlistMessage();
+                toast.success('Removed from wishlist', {
+                    theme: "colored",
+                });
                 handleGetWishlist();
             } else if (response.data.error) {
-                setMessage('Remove fail');
-                showWishlistMessage();
+                toast.error('Failed to remove', {
+                    theme: "colored",
+                });
+                // showWishlistMessage();
             }
         } catch (error) {
 
         }
     }
 
-    const showWishlistMessage = () => {
-        const message = document.getElementById('wishlistMessage');
-        message.style.display = 'block';
-        setTimeout(() => {
-            message.style.display = 'none';
-        }, 3000); // Hide after 3 seconds
-    };
+    // const showWishlistMessage = () => {
+    //     const message = document.getElementById('wishlistMessage');
+    //     message.style.display = 'block';
+    //     setTimeout(() => {
+    //         message.style.display = 'none';
+    //     }, 3000); // Hide after 3 seconds
+    // };
 
     const handleGetWishlist = async () => {
         try {
@@ -58,9 +114,10 @@ export const Wishlist = () => {
         <>
             <div><Header /></div>
             <img className='image' src="/img/P004.jpg" />
-            <div id="wishlistMessage" className="wishlist-message">
+            {/* <div id="wishlistMessage" className="wishlist-message">
                 {message}
-            </div>
+            </div> */}
+            <ToastContainer style={{ top: '110px' }} />
             <div className="wishlist-section">
                 <div className="wishlist-item-count">
                     {wishlistItems.length + ' items in wishlist'}
@@ -86,11 +143,11 @@ export const Wishlist = () => {
                                                 {wishlistItems.map((item) => (
                                                     <tr>
                                                         <td className="product_remove"><a onClick={(e) => handleRemoveWishlist(e, item.ProductID)} href=""><i className="fa fa-trash-alt"></i></a></td>
-                                                        <td className="product_thumb"><a href="product-details-default.html"><img src="assets/images/product/default/home-1/default-1.jpg" alt="" /></a></td>
+                                                        <td className="product_thumb"><a href="product-details-default.html"><img src={`/img/${item.ProductID}.jpg`} alt="" /></a></td>
                                                         <td className="product_name"><a href="product-details-default.html">{item.Name}</a></td>
-                                                        <td className="product-price">{item.Price}</td>
+                                                        <td className="product-price">{item.Price.toLocaleString()} VND</td>
                                                         <td className="product_stock">{item.Status}</td>
-                                                        <td className="product_addcart"><a href="#" className="btn btn-md btn-golden" onClick={openModal}>Add To Cart</a></td>
+                                                        <td className="product_addcart"><a href="#" className="btn btn-md btn-golden" onClick={(e) => handleAddToCart(e, item.ProductID)}>Add To Cart</a></td>
                                                     </tr>
                                                 ))}
                                                 {/* <tr>
@@ -136,7 +193,7 @@ export const Wishlist = () => {
                                         <div className="row">
                                             <div className="col-md-4">
                                                 <div className="modal-add-cart-product-img">
-                                                    <img className="img-fluid" src="assets/images/product/default/home-1/default-1.jpg" alt="no img found" />
+                                                    <img className="img-fluid" src={`/img/${lastPrToCart}.jpg`} alt="no img found" />
                                                 </div>
                                             </div>
                                             <div className="col-md-8">
@@ -150,8 +207,8 @@ export const Wishlist = () => {
                                     </div>
                                     <div className="col-md-5 modal-border">
                                         <ul className="modal-add-cart-product-shipping-info">
-                                            <li><strong><i className="icon-shopping-cart"></i> There Are 5 Items In Your Cart.</strong></li>
-                                            <li><strong>TOTAL PRICE: </strong> <span>$187.00</span></li>
+                                            <li><strong><i className="icon-shopping-cart"></i> There Are {CartItems.length} Items In Your Cart.</strong></li>
+                                            <li><strong>TOTAL PRICE: </strong> <span>{calculateTotalPrice().toLocaleString()} VND</span></li>
                                             <li className="modal-continue-button"><a href="#" data-bs-dismiss="modal" onClick={closeModal}>CONTINUE SHOPPING</a></li>
                                         </ul>
                                     </div>

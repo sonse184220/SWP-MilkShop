@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Toaster, toast } from 'react-hot-toast';
+import { Oval } from 'react-loader-spinner';
 
 import './Login.css'
 import handleLoginApi from '../../services/login/loginService';
@@ -16,6 +17,7 @@ const Login = ({ onLogin, showLogin }) => {
 
     const [identifier, setIdentifier] = useState('');
     const [Password, setPassword] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const [ErrorMessage, setErrorMessage] = useState('');
 
     //Kiểm tra userid và password
@@ -36,6 +38,7 @@ const Login = ({ onLogin, showLogin }) => {
 
     const handleIsLogin = async (event) => {
         event.preventDefault();
+        setIsLoading(true);
 
         const userInfo = { identifier, Password };
         try {
@@ -70,6 +73,8 @@ const Login = ({ onLogin, showLogin }) => {
                 setErrorMessage('An error occurred');
             }
             console.log(error);
+        } finally {
+            setIsLoading(false);
         }
     }
 
@@ -129,9 +134,19 @@ const Login = ({ onLogin, showLogin }) => {
                             </label>
                         </div> */}
                         <div className="container-login100-form-btn">
-                            <button className="login100-form-btn" onClick={handleIsLogin}>
-                                Login
-                                <i className="zmdi zmdi-arrow-right"></i>
+                            <button className="login100-form-btn" onClick={handleIsLogin} disabled={isLoading}>
+                                {isLoading ? (
+                                    <Oval
+                                        height={20}
+                                        width={20}
+                                        color="#fff"
+                                    />
+                                ) : (
+                                    <>
+                                        Login
+                                        <i className="zmdi zmdi-arrow-right"></i>
+                                    </>
+                                )}
                             </button>
                             <button className="login100-form-btn google-btn" onClick={handleLoginWithGoogle}>
                                 <i class="fab fa-google"></i> Sign in with Google

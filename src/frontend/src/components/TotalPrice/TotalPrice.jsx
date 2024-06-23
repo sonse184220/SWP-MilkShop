@@ -1,6 +1,12 @@
 import React from 'react';
 
-export const TotalPrice = () => {
+export const TotalPrice = ({ CartItems }) => {
+
+    const calculateTotalPrice = () => {
+        return CartItems.reduce((total, item) => {
+            return total + (item.Price * item.CartQuantity);
+        }, 0);
+    };
     return (
         <section className="h-100 gradient-custom">
             <div className="container py-5">
@@ -16,7 +22,7 @@ export const TotalPrice = () => {
                                     <li
                                         className="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
                                         Products
-                                        <span>$53.98</span>
+                                        <span>{calculateTotalPrice().toLocaleString()} VND</span>
                                     </li>
                                     <li className="list-group-item d-flex justify-content-between align-items-center px-0">
                                         Shipping
@@ -30,7 +36,7 @@ export const TotalPrice = () => {
                                                 <p className="mb-0">(including VAT)</p>
                                             </strong>
                                         </div>
-                                        <span><strong>$53.98</strong></span>
+                                        <span><strong>{calculateTotalPrice().toLocaleString()} VND</strong></span>
                                     </li>
                                 </ul>
 
