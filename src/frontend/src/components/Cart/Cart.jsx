@@ -80,6 +80,8 @@ export const Cart = () => {
             if (response.data && response.data.length > 0) {
                 setCartItems(response.data);
                 console.log("cart", response.data);
+            } else {
+                setCartItems(null);
             }
         } catch (error) {
             console.log(error);

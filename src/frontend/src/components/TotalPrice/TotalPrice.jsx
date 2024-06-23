@@ -3,9 +3,13 @@ import React from 'react';
 export const TotalPrice = ({ CartItems }) => {
 
     const calculateTotalPrice = () => {
-        return CartItems.reduce((total, item) => {
-            return total + (item.Price * item.CartQuantity);
-        }, 0);
+        if (CartItems != null) {
+            return CartItems.reduce((total, item) => {
+                return total + (item.Price * item.CartQuantity);
+            }, 0);
+        } else {
+            return 0;
+        }
     };
     return (
         <section className="h-100 gradient-custom">

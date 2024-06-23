@@ -1,8 +1,8 @@
-import axios from "axios";
+import axios from "../axios";
 
 export const UpdateCart = (token, prInfo) => {
     try {
-        return axios.post("http://localhost:4500/api/cart/update", prInfo,
+        return axios.post("/api/cart/update", prInfo,
             {
                 headers: {
                     'Authorization': token,

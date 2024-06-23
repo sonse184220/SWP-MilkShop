@@ -1,8 +1,8 @@
-import axios from "axios";
+import axios from "../axios";
 
 export const ViewCart = (token) => {
     try {
-        return axios.get("http://localhost:4500/api/cart/view",
+        return axios.get("/api/cart/view",
             {
                 headers: {
                     'Authorization': token,
