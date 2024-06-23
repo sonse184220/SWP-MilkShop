@@ -1,0 +1,68 @@
+.user-info-form-wrapper {
+    background-color: white;
+    margin: auto;
+    margin-top: -90px;
+    margin-left: 280px;
+    width: 380px;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid lightgray;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.user-info-form-header {
+    background-color: #638D99;
+    border-radius: 10px 10px 0px 0px;
+    border: lightgray solid 1px;
+}
+
+.user-info-form-title {
+    color: #D9F6FF;
+}
+
+.user-info-form-subtitle {
+    color: #997654;
+    font-weight: bold;
+}
+
+.user-info-form-icon {
+    color: #997654;
+}
+
+.user-info-form-button i {
+    color: white;
+}
+
+.user-info-form-divider {
+    border-color: #E6C9AC;
+}
+
+.user-info-form-button {
+    background-color: #638D99;
+}
+
+.user-info-form-select {
+    display: inline;
+}
+
+.form-group {
+    gap: 10px;
+}
+
+.form-group label {
+    width: 40%;
+}
+
+.form-group input {
+    width: 60%;
+}
+
+.rewardpoint input,
+.rewardpoint select {
+    height: 35px;
+}
+
+.promptorder {
+    font-size: 12px;
+    font-style: italic;
+}

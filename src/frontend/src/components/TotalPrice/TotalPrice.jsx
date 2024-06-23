@@ -1,5 +1,7 @@
 import React from 'react';
 
+import './TotalPrice.css'
+
 export const TotalPrice = ({ CartItems }) => {
 
     const calculateTotalPrice = () => {

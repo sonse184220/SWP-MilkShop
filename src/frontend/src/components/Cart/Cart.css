@@ -2,23 +2,23 @@
 .middle-part {
     display: flex;
     max-width: 1200px;
-    margin: 40px auto;
+    /* margin: 40px auto; */
     padding: 20px;
     gap: 35px;
 }
 
 .cart {
     width: 60%;
+    height: 580px;
 }
 
 .voucher {
     width: 35%;
     padding: 20px;
+    height: 440px;
 }
 
-/* Cart styles */
 .cart .container {
-    padding: 0;
     width: 100%;
 }
 
@@ -32,6 +32,7 @@
     background-color: #f8f9fa;
     border-bottom: 1px solid #e0e0e0;
     padding: 15px 20px;
+
 }
 
 .cart .card-header h5 {
@@ -104,7 +105,7 @@
 }
 
 .cart-image img {
-    max-width: 150px;
+    max-width: 255px;
     margin-bottom: 20px;
 }
 
@@ -118,18 +119,18 @@
     margin-bottom: 20px;
 }
 
-.btn-golden {
+/* .btn-golden {
     background-color: #ffc107;
     color: #333;
     border: none;
     padding: 10px 20px;
     font-weight: bold;
     transition: background-color 0.3s ease;
-}
+} */
 
-.btn-golden:hover {
+/* .btn-golden:hover {
     background-color: #ffca2c;
-}
+} */
 
 /* Price, Total, and Quantity alignment */
 .price-total-container {
@@ -232,4 +233,25 @@
         align-items: flex-start;
         margin-bottom: 0;
     }
+}
+
+.middle2 {
+    display: flex;
+}
+
+.totalpricebox {
+    width: 40%;
+}
+
+.totalpricebox .col-md-4 {
+    width: 60%;
+}
+
+.infoform {
+    width: 55%;
+}
+
+.cart-list {
+    overflow-y: auto;
+    height: 500px;
 }
