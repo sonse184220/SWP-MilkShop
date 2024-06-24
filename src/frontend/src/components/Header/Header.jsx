@@ -43,6 +43,7 @@ export function Header({ onLogin }) {
     //Chuyển sang Route('/login-register') lúc bấm nút logout
     const showLogin = (event) => {
         event.preventDefault();
+        localStorage.clear();
         navigate('/login-register')
 
     }

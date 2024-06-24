@@ -2,15 +2,15 @@ import React from 'react';
 
 import './UserInfoForm.css';
 
-export const UserInfoForm = ({ UserInfo, setUserInfo }) => {
-    const name = UserInfo?.Name || '';
-    const email = UserInfo?.Email || '';
-    const phone = UserInfo?.Phone || '';
-    const address = UserInfo?.Address || '';
-    const rewardPoints = UserInfo?.RewardPoints || 0;
+export const UserInfoForm = ({ userFormData, setUserFormData }) => {
+    const name = userFormData?.Name || '';
+    const email = userFormData?.Email || '';
+    const phone = userFormData?.Phone || '';
+    const address = userFormData?.Address || '';
+    // const rewardPoints = UserInfo?.RewardPoints || 0;
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setUserInfo(prevState => ({
+        setUserFormData(prevState => ({
             ...prevState,
             [name]: value
         }));

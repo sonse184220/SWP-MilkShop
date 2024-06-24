@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 // import QuantityPicker from 'react-quantity-picker';
 // import { QuantityPicker } from "react-qty-picker";
+import Modal from 'react-modal';
 
 import './Cart.css';
 import Footer from "../Footer/Footer";
@@ -14,6 +15,7 @@ import { UpdateCart } from '../../services/cart/updateCart';
 import { RemoveCart } from '../../services/cart/removeCart';
 import { UserInfoForm } from '../UserInfoForm/UserInfoForm';
 import { getUser } from '../../services/editprofile/getUser';
+import { MemberOrder } from '../../services/order/memberOrder';
 
 export const Cart = () => {
     const [CartItems, setCartItems] = useState([]);
@@ -25,12 +27,42 @@ export const Cart = () => {
         Address: '',
         RewardPoints: ''
     });
+    const [isOpen, setIsOpen] = useState(false);
+
+    const handleMemberOrderAction = async () => {
+        try {
+            const MemberToken = 'Bearer ' + localStorage.getItem('token');
+            const OrderInfo = {
+                "PaymentMethod": "COD",
+                "VoucherID": "V001",
+                "useRewardPoints": false,
+                "Name": userFormData.Name,
+                "Email": userFormData.Email,
+                "Phone": userFormData.Phone,
+                "Address": userFormData.Address
+            }
+            const response = await MemberOrder(MemberToken, OrderInfo);
+            if (response.data.orderId) {
+                console.log("order success==========", response.data.message);
+                handleViewCart();
+            }
+        } catch (error) {
+
+        }
+    }
 
     const handleGetUserInfo = () => {
         try {
             const user = JSON.parse(localStorage.getItem("userData"));
             if (user) {
-                setUserInfo(user);
+                // setUserInfo(user);
+                setUserFormData({
+                    Name: user.Name,
+                    Email: user.Email,
+                    Phone: user.Phone,
+                    Address: user.Address,
+                    RewardPoints: user.RewardPoints
+                })
             }
         } catch (error) {
 
@@ -101,6 +133,8 @@ export const Cart = () => {
             if (response.data && response.data.length > 0) {
                 setCartItems(response.data);
                 console.log("cart", response.data);
+            } else {
+                setCartItems([]);
             }
         } catch (error) {
             console.log(error);
@@ -117,6 +151,12 @@ export const Cart = () => {
             <Header />
             <img className='image' src="/img/P004.jpg" alt="Header Image" />
             <div className="middle-part">
+                <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
+                    <h2>Confirm Order</h2>
+                    <p>Are you sure you want to place this order?</p>
+                    <button onClick={() => {/* handle confirmation */ }}>Confirm</button>
+                    <button onClick={() => setIsOpen(false)}>Cancel</button>
+                </Modal>
 
                 <div className="cart">
                     <section className="h-100 gradient-custom">
@@ -205,8 +245,13 @@ export const Cart = () => {
 
             </div>
             <div className='middle2'>
-                <div className='totalpricebox'><TotalPrice CartItems={CartItems} /></div>
-                <div className='infoform'><UserInfoForm UserInfo={UserInfo} userFormData={userFormData} setUserFormData={setUserFormData} /></div>
+                <div className='totalpricebox'><TotalPrice
+                    CartItems={CartItems}
+                    handleMemberOrderAction={handleMemberOrderAction}
+                    isOpen={isOpen}
+                    setIsOpen={setIsOpen} />
+                </div>
+                <div className='infoform'><UserInfoForm userFormData={userFormData} setUserFormData={setUserFormData} /></div>
             </div>
             <Footer />
         </>

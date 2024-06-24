@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
+
 
 import './TotalPrice.css'
 
-export const TotalPrice = ({ CartItems }) => {
+export const TotalPrice = ({ CartItems, handleMemberOrderAction, isOpen, setIsOpen }) => {
+
 
     const calculateTotalPrice = () => {
         if (CartItems != null) {
@@ -45,10 +47,11 @@ export const TotalPrice = ({ CartItems }) => {
                                         <span><strong>{calculateTotalPrice().toLocaleString()} VND</strong></span>
                                     </li>
                                 </ul>
-
-                                <button type="button" data-mdb-button-init data-mdb-ripple-init className="btn btn-primary btn-lg btn-block">
+                                {/* onClick={handleMemberOrderAction} */}
+                                <button onClick={() => setIsOpen(true)} type="button" data-mdb-button-init data-mdb-ripple-init className="btn btn-primary btn-lg btn-block">
                                     Go to checkout
                                 </button>
+
                             </div>
                         </div>
                     </div>
