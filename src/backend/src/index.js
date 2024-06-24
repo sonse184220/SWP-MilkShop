@@ -16,6 +16,8 @@ import { googleRoutes } from './routes/googleRoutes.js';
 import { userRoutes } from './routes/userRoutes.js';
 import { orderRoutes } from './routes/orderRoutes.js';
 import { preorderRoutes } from "./routes/preorderRoutes.js";
+import { voucherRoutes } from './routes/voucherRoutes.js';
+
 dotenv.config();
 
 const PORT = process.env.PORT || 3000; // cổng kết nối localhost:xxxx
@@ -56,6 +58,7 @@ app.use('/api/cart', cartRoutes);
 app.use('/api/google', googleRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/order', orderRoutes);
+app.use('/api/vouchers', voucherRoutes);
 
 
 
