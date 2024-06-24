@@ -11,14 +11,14 @@ export class ResetPasswordService {
         this.emailService = new EmailService();
     }
 
-    requestResetPassword = (email, req, callback) => {
+    requestResetPassword = (email, newPassword, req, callback) => {
         const query = 'SELECT * FROM MEMBER WHERE Email = ?';
         connection.query(query, [email], (err, results) => {
             if (err) return callback(err);
             if (results.length === 0) return callback(null, { message: 'Email not found', status: 404 });
 
             const user = results[0];
-            const token = jwt.sign({ userId: user.UserID }, process.env.JWT_SECRET, { expiresIn: '1h' });
+            const token = jwt.sign({ userId: user.UserID, newPassword }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
             this.emailService.sendResetPasswordEmail(email, token, req)
                 .then(() => {
@@ -32,10 +32,11 @@ export class ResetPasswordService {
         });
     };
 
-    resetPassword = (token, newPassword, callback) => {
+    resetPassword = (token, callback) => {
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             const userId = decoded.userId;
+            const newPassword = decoded.newPassword;
 
             bcrypt.hash(newPassword, 10, (err, hashedPassword) => {
                 if (err) return callback(err);

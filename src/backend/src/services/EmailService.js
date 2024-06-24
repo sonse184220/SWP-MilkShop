@@ -20,7 +20,15 @@ export class EmailService {
             from: process.env.EMAIL_USER,
             to: email,
             subject: 'Reset Password',
-            text: `You requested to reset your password. Click the link below to reset your password:\n\n${url}`
+            html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+                    <h2 style="text-align: center; color: #333;">Reset Your Password</h2>
+                    <p style="font-size: 16px; color: #333;">You requested to reset your password. Click the button below to confirm the password reset:</p>
+                    <div style="text-align: center;">
+                        <a href="${url}" style="background-color: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Confirm Password Reset</a>
+                    </div>
+                </div>
+            `
         };
 
         return this.transporter.sendMail(mailOptions)
