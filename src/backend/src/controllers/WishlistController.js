@@ -61,7 +61,7 @@ export class WishlistController {
             return res.status(404).send({ error: "Member not found!" });
         }
 
-        if (req.user.userId !== userId && req.userRole !== "admin" && req.userRole !== "staff") {
+        if (req.user.userId !== userId && req.userRole !== "admin") {
             return res.status(401).send({ msg: "Unauthorized!" });
         }
 

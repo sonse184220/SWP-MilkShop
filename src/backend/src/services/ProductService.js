@@ -77,6 +77,27 @@ export class ProductService {
                                                     WHERE ProductID = ?`, [id]);
         return feedbacks;
     }
+
+    // check xem người dùng đã từng mua sản phẩm này chưa? kể cả order và pre-order
+    async checkHasUserPurchasedProduct(userId, productId) {
+        const [result] = await poolConnect.query(`SELECT 
+                                                EXISTS (
+                                                    SELECT 1
+                                                    FROM \`order\` AS o
+                                                    JOIN order_details AS od ON o.OrderID = od.OrderID
+                                                    WHERE o.UserID = ? AND o.Status = 'Done' AND od.ProductID = ?
+                                                    LIMIT 1
+                                                ) 
+                                                OR 
+                                                EXISTS (
+                                                    SELECT 1
+                                                    FROM pre_order
+                                                    WHERE UserID = ? AND Status = 'Done'AND ProductID = ?
+                                                    LIMIT 1
+                                                ) AS result;`,
+                                                [userId, productId, userId, productId]);
+        return result;
+    }
     
     // tạo feedback và lưu xuống database
     async createFeedback(productId, userId, rating, content) {

@@ -15,6 +15,7 @@ import { resetPasswordRoutes } from './routes/resetPasswordRoutes.js';
 import { googleRoutes } from './routes/googleRoutes.js';
 import { userRoutes } from './routes/userRoutes.js';
 import { orderRoutes } from './routes/orderRoutes.js';
+import { preorderRoutes } from "./routes/preorderRoutes.js";
 dotenv.config();
 
 const PORT = process.env.PORT || 3000; // cổng kết nối localhost:xxxx
@@ -42,6 +43,9 @@ app.use(blogRoutes);
 
 // API liên quan đến wishlist
 app.use(wishlistRoutes);
+
+// API liên quan đến pre-order
+app.use(preorderRoutes);
 
 
 app.use('/api/auth', authRoutes);

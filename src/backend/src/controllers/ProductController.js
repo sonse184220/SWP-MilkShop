@@ -116,6 +116,11 @@ export class ProductController {
             return res.status(404).send({ error: "Product not found!" });
         }
 
+        const hasPurchasedProduct = await productService.checkHasUserPurchasedProduct(userId, productId);
+        if (!hasPurchasedProduct[0].result) {
+            return res.status(403).send({ msg: "You haven't purchased this product" });
+        }
+
         const creatingFeedback = await productService.createFeedback(productId, userId, rating, content);
         if (creatingFeedback.affectedRows === 0) {
             return res.status(500).send({ error: "Feedback failed to create!" });

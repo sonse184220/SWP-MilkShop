@@ -65,6 +65,8 @@ router.get("/api/product/:id/feedbacks", checkProductId, async (req, res) => {
  */
 router.post("/api/product/:id/feedbacks", checkAuthenticated, getAuthRole, checkProductId, checkFeedbackData, async (req, res) => {
     await productController.createFeedback(req, res);
+
+    // chưa xong, còn chờ xong order với pre order để đảm bảo chỉ được viết feedback khi đã mua hàng
 });
 
 /** URL: localhost:xxxx/api/product/feedbacks/{...}

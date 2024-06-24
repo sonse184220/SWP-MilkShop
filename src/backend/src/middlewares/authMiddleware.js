@@ -40,5 +40,6 @@ export function getAuthRole(req, res, next) {
         return next();
     }
 
-    return res.status(401).send({ msg: "Unauthorized!" });
+    req.userRole = "guest";
+    return next();
 }
