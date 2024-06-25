@@ -6,7 +6,7 @@ import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 
 
-const EditProfile = () => {
+const EditProfile = ({ isMember }) => {
   const [Password, setPassword] = useState("");
   const [ConfirmPassword, setConfirmPassword] = useState("");
   const [Name, setName] = useState("");
@@ -69,7 +69,7 @@ const EditProfile = () => {
   return (
     <>
       <img className="image" src="/img/P004.jpg" alt="Blog Header" />
-      <Header />
+      <Header isMember={isMember} />
       <div className="editProfile">
         <div className="wrapper">
           <div className="inner">

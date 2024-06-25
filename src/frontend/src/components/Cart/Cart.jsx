@@ -17,7 +17,7 @@ import { UserInfoForm } from '../UserInfoForm/UserInfoForm';
 import { getUser } from '../../services/editprofile/getUser';
 import { MemberOrder } from '../../services/order/memberOrder';
 
-export const Cart = () => {
+export const Cart = ({ isMember }) => {
     const [CartItems, setCartItems] = useState([]);
     const [UserInfo, setUserInfo] = useState();
     const [userFormData, setUserFormData] = useState({
@@ -148,7 +148,7 @@ export const Cart = () => {
 
     return (
         <>
-            <Header />
+            <Header isMember={isMember} />
             <img className='image' src="/img/P004.jpg" alt="Header Image" />
             <div className="middle-part">
                 <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>

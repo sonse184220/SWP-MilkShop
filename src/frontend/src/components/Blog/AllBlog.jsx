@@ -91,7 +91,7 @@ const Blogs = [
 
 const allProducts = Blogs.flatMap(blog => blog.products);
 
-const AllBlog = () => {
+const AllBlog = ({ isMember }) => {
   const [blogs, setBlogs] = useState([]);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -130,7 +130,7 @@ const AllBlog = () => {
   return (
     <>
       <img className="image" src="/img/P004.jpg" alt="Blog Header" />
-      <Header />
+      <Header isMember={isMember} />
 
 
       <div className="container">

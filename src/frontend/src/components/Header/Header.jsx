@@ -70,7 +70,7 @@ export function Header({ onLogin, isMember }) {
 
                             <ul className="nav">
                                 <li className="scroll-to-section"><NavLink to={'/Customer/home'} href="#top">Home</NavLink></li>
-                                <li><NavLink to={'/Customer/Products'} href="meetings.html">Products</NavLink></li>
+                                <li><NavLink to={'/Customer/Products'} href="">Products</NavLink></li>
                                 <li className="scroll-to-section"><NavLink to={'/Customer/Blogs'} href="#apply">Blogs</NavLink></li>
                                 {/* <li className="scroll-to-section"><NavLink to={'/Customer/Wishlist'}> Wishlist</NavLink></li>
                                 <li className="scroll-to-section"><NavLink to={'/Customer/Cart'}> Cart</NavLink></li> */}
@@ -100,7 +100,7 @@ export function Header({ onLogin, isMember }) {
                                             <img src="/img/user.png" alt="User" />
                                         </div>
                                         <ul className={`header-dropdown-menu ${isDropdownOpen ? 'show' : ''}`}>
-                                            <li><button onClick={() => { navigate('/EditProfile') }}>View Profile</button></li>
+                                            <li><button onClick={() => { navigate('/Customer/EditProfile') }}>View Profile</button></li>
                                             <li><button onClick={showLogin}>Logout</button></li>
                                         </ul>
                                     </li>

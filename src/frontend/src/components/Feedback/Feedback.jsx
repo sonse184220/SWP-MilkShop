@@ -2,7 +2,7 @@ import './Feedback.css';
 import { toast } from 'react-toastify';
 import StarRatings from 'react-star-ratings';
 
-const Feedback = ({ feedbacks = [], onAddFeedback, onDeleteFeedback, newFeedback, setNewFeedback, userinfo }) => {
+const Feedback = ({ feedbacks = [], onAddFeedback, onDeleteFeedback, newFeedback, setNewFeedback, userId, isMember }) => {
     const { rating, content } = newFeedback;
 
     const handleSubmit = (e) => {
@@ -46,7 +46,7 @@ const Feedback = ({ feedbacks = [], onAddFeedback, onDeleteFeedback, newFeedback
                                                         />
                                                     </ul>
                                                 </div>
-                                                {(feedback.UserID === userinfo) && (
+                                                {(feedback.UserID === userId) && (
                                                     <div class="comment-content-right">
                                                         <a href="#" onClick={(e) => onDeleteFeedback(e, feedback.FeedbackID)}><i className="zmdi zmdi-delete"></i>Delete</a>
                                                     </div>
@@ -65,46 +65,48 @@ const Feedback = ({ feedbacks = [], onAddFeedback, onDeleteFeedback, newFeedback
                             <div>No feedback available</div>
                         )}
                     </ul>
-                    <div className="review-form">
-                        <div className="review-form-text-top">
-                            <h5>ADD A REVIEW</h5>
-                            {/* <p>Your email address will not be published. Required fields are marked *</p> */}
-                        </div>
-
-                        <form action="#" method="post" onSubmit={handleSubmit}>
-                            <div className="row">
-                                <div className="col-12">
-                                    <div className="default-form-box">
-                                        <label htmlFor="rating">Rating Star</label>
-                                        <StarRatings
-                                            rating={rating}
-                                            starRatedColor="gold"
-                                            changeRating={(newRating) => setNewFeedback({ ...newFeedback, rating: newRating })}
-                                            numberOfStars={5}
-                                            name='rating'
-                                            starDimension="20px"
-                                            starSpacing="2px"
-                                        />
-                                    </div>
-                                </div>
-                                <div className="col-12">
-                                    <div className="default-form-box">
-                                        <label htmlFor="comment-review-text">Your review</label>
-                                        <textarea
-                                            id="comment-review-text"
-                                            value={content}
-                                            onChange={(e) => setNewFeedback({ ...newFeedback, content: e.target.value })}
-                                            placeholder="Write a review"
-                                            required
-                                        ></textarea>
-                                    </div>
-                                </div>
-                                <div className="col-12">
-                                    <button className="btn btn-md btn-black-default-hover" type="submit">Submit</button>
-                                </div>
+                    {isMember && (
+                        <div className="review-form">
+                            <div className="review-form-text-top">
+                                <h5>ADD A REVIEW</h5>
+                                {/* <p>Your email address will not be published. Required fields are marked *</p> */}
                             </div>
-                        </form>
-                    </div>
+
+                            <form action="#" method="post" onSubmit={handleSubmit}>
+                                <div className="row">
+                                    <div className="col-12">
+                                        <div className="default-form-box">
+                                            <label htmlFor="rating">Rating Star</label>
+                                            <StarRatings
+                                                rating={rating}
+                                                starRatedColor="gold"
+                                                changeRating={(newRating) => setNewFeedback({ ...newFeedback, rating: newRating })}
+                                                numberOfStars={5}
+                                                name='rating'
+                                                starDimension="20px"
+                                                starSpacing="2px"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-12">
+                                        <div className="default-form-box">
+                                            <label htmlFor="comment-review-text">Your review</label>
+                                            <textarea
+                                                id="comment-review-text"
+                                                value={content}
+                                                onChange={(e) => setNewFeedback({ ...newFeedback, content: e.target.value })}
+                                                placeholder="Write a review"
+                                                required
+                                            ></textarea>
+                                        </div>
+                                    </div>
+                                    <div className="col-12">
+                                        <button className="btn btn-md btn-black-default-hover" type="submit">Submit</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    )}
                 </div>
             </div>
         </>
