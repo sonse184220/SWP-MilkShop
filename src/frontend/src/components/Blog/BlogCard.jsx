@@ -8,8 +8,8 @@ const BlogCard = ({ blogs = [] }) => {
       {blogs.map((blog) => (
         <Link to={`/BlogDetail/${blog.BlogID}`} key={blog.BlogID}>
           <div className="blog-card">
-            <h2>{blog.Name}</h2>
-            <div className="author-description">
+            <div className="blog-name">{blog.Name}</div>
+            <div className="createdDate">
               {new Date(blog.CreatedDate).toLocaleDateString()}
             </div>
           </div>
