@@ -55,6 +55,22 @@ export const checkResetPasswordRequest = [
         .trim()
         .exists().withMessage('Email is required')
         .isEmail().withMessage('Email is invalid'),
+    body('newPassword')
+        .trim()
+        .exists().withMessage('New password is required')
+        .notEmpty().withMessage('New password cannot be empty')
+        .isLength({ min: 6 }).withMessage('New password must be at least 6 characters long'),
+    body('confirmPassword')
+        .trim()
+        .exists().withMessage('Confirm password is required')
+        .notEmpty().withMessage('Confirm password cannot be empty')
+        .isLength({ min: 6 }).withMessage('Confirm password must be at least 6 characters long')
+        .custom((value, { req }) => {
+            if (value !== req.body.newPassword) {
+                throw new Error('Passwords do not match');
+            }
+            return true;
+        }),
     (req, res, next) => {
         const result = validationResult(req);
         if (!result.isEmpty()) {
@@ -73,7 +89,19 @@ export const checkResetPassword = [
     body('newPassword')
         .trim()
         .exists().withMessage('New password is required')
+        .notEmpty().withMessage('New password cannot be empty')
         .isLength({ min: 6 }).withMessage('New password must be at least 6 characters long'),
+    body('confirmPassword')
+        .trim()
+        .exists().withMessage('Confirm password is required')
+        .notEmpty().withMessage('Confirm password cannot be empty')
+        .isLength({ min: 6 }).withMessage('Confirm password must be at least 6 characters long')
+        .custom((value, { req }) => {
+            if (value !== req.body.newPassword) {
+                throw new Error('Passwords do not match');
+            }
+            return true;
+        }),
     (req, res, next) => {
         const result = validationResult(req);
         if (!result.isEmpty()) {

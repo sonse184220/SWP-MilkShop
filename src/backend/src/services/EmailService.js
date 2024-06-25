@@ -72,11 +72,11 @@ export class EmailService {
             });
     };
 
-
-    sendOrderConfirmationEmail = (email, orderId, cartItems, totalPrice, user, contactInfo, callback) => {
+    sendOrderConfirmationEmail = (email, orderId, cartItems, initialTotalPrice, totalPrice, vouchers, contactInfo, callback) => {
         const itemsDetails = cartItems.map(item => `
             <tr>
                 <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Arial', sans-serif; color: #444;">${item.ProductID}</td>
+                <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Arial', sans-serif; color: #444;">${item.ProductName}</td>
                 <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Arial', sans-serif; color: #444;">${item.CartQuantity}</td>
                 <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Arial', sans-serif; color: #444;">${item.Price}</td>
             </tr>`).join('');
@@ -86,6 +86,13 @@ export class EmailService {
             <p style="font-size: 16px; color: #007bff; margin: 5px 0; font-family: 'Courier New', Courier, monospace;">Email: ${contactInfo.Email}</p>
             <p style="font-size: 16px; color: #007bff; margin: 5px 0; font-family: 'Courier New', Courier, monospace;">Phone: ${contactInfo.Phone}</p>
             <p style="font-size: 16px; color: #007bff; margin: 5px 0; font-family: 'Courier New', Courier, monospace;">Address: ${contactInfo.Address}</p>`;
+
+        const voucherDetails = vouchers.map(voucher => `
+            <tr>
+                <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Arial', sans-serif; color: #444;">${voucher.VoucherID}</td>
+                <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Arial', sans-serif; color: #444;">${voucher.Discount}</td>
+                <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Arial', sans-serif; color: #444;">${voucher.Content}</td>
+            </tr>`).join('');
 
         const mailOptions = {
             from: process.env.EMAIL_USER,
@@ -102,6 +109,7 @@ export class EmailService {
                         <thead>
                             <tr style="background-color: #3498db; color: white;">
                                 <th style="padding: 10px; border: 1px solid #ddd; font-family: 'Arial', sans-serif;">Product ID</th>
+                                <th style="padding: 10px; border: 1px solid #ddd; font-family: 'Arial', sans-serif;">Product Name</th>
                                 <th style="padding: 10px; border: 1px solid #ddd; font-family: 'Arial', sans-serif;">Quantity</th>
                                 <th style="padding: 10px; border: 1px solid #ddd; font-family: 'Arial', sans-serif;">Price</th>
                             </tr>
@@ -110,7 +118,21 @@ export class EmailService {
                             ${itemsDetails}
                         </tbody>
                     </table>
-                    <p style="font-size: 18px; color: #333; font-family: 'Times New Roman', Times, serif; margin-top: 20px;">Total Price: <span style="color: #27ae60;">${totalPrice}</span></p>
+                    <p style="font-size: 18px; color: #333; font-family: 'Times New Roman', Times, serif; margin-top: 20px;">Initial Total Price: <span style="color: #27ae60;">${initialTotalPrice}</span></p>
+                    <p style="font-size: 18px; color: #333; font-family: 'Times New Roman', Times, serif; margin-top: 20px;">Total Price after Discounts: <span style="color: #27ae60;">${totalPrice}</span></p>
+                    <p style="font-size: 18px; color: #333; font-family: 'Times New Roman', Times, serif;">Vouchers Used:</p>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background-color: #3498db; color: white;">
+                                <th style="padding: 10px; border: 1px solid #ddd; font-family: 'Arial', sans-serif;">Voucher ID</th>
+                                <th style="padding: 10px; border: 1px solid #ddd; font-family: 'Arial', sans-serif;">Discount</th>
+                                <th style="padding: 10px; border: 1px solid #ddd; font-family: 'Arial', sans-serif;">Content</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${voucherDetails}
+                        </tbody>
+                    </table>
                 </div>
             `
         };
@@ -125,6 +147,4 @@ export class EmailService {
                 callback(error);
             });
     };
-
-
 }
