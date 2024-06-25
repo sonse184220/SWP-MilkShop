@@ -4,7 +4,10 @@ import { poolConnect, connection } from "../utils/dbConnection.js";
 export class ProductService {
     // Lấy thông tin của 1 product bằng ID
     async getProduct(id) {
-        const [product] = await poolConnect.query('SELECT * FROM product WHERE ProductID = ?', [id]);
+        const [product] = await poolConnect.query(`SELECT p.*, b.Name AS BrandName
+                                                FROM product AS p 
+                                                JOIN brand AS b ON p.BrandID = b.BrandID
+                                                WHERE ProductID = ?`, [id]);
         return product;
     }
 
@@ -16,7 +19,10 @@ export class ProductService {
         const offset = soffset;
 
         // const [products] = await poolConnect.query('SELECT * FROM product WHERE Name LIKE ?', [search]);
-        const [products] = await poolConnect.query(`SELECT * FROM PRODUCT WHERE Name LIKE ? ORDER BY ${sortBy} LIMIT ? OFFSET ?`, [search, limit, offset]);
+        const [products] = await poolConnect.query(`SELECT p.*, b.Name AS BrandName
+                                                    FROM PRODUCT AS p
+                                                    JOIN brand AS b ON p.BrandID = b.BrandID
+                                                    WHERE p.Name LIKE ? ORDER BY ${sortBy} LIMIT ? OFFSET ?`, [search, limit, offset]);
         return products;
     }
 
@@ -36,9 +42,10 @@ export class ProductService {
         const sortBy = ssortBy;
         const offset = soffset;
 
-        const [products] = await poolConnect.query(`SELECT * 
-                                                    FROM PRODUCT 
-                                                    WHERE BrandID = ? ORDER BY ${sortBy} LIMIT ? OFFSET ?`, [id, limit, offset]);
+        const [products] = await poolConnect.query(`SELECT p.*, b.Name AS BrandName 
+                                                    FROM PRODUCT AS p
+                                                    JOIN brand AS b ON p.BrandID = b.BrandID
+                                                    WHERE p.BrandID = ? ORDER BY ${sortBy} LIMIT ? OFFSET ?`, [id, limit, offset]);
         return products;
     }
 
