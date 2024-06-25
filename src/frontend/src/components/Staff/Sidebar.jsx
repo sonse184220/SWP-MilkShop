@@ -4,19 +4,23 @@ import "./Sidebar.css";
 function Sidebar() {
   return (
     <div className="sidebar">
-      <div className="sidebar-1">
-        <h1>Staff</h1>
-        <div className="settings">
-          <button className="home-button">
-            <FaHome /> Home
-          </button>
-          <button className="browse-button">
-            <FaSearch /> Browse
-          </button>
+      <h1>Staff</h1>
+      <div className="sidebar-content">
+        <div>
+          <a href="#">Order</a>
         </div>
-      </div>
-      <div className="sidebar-2">
-        <button className="create-voucher">Create Voucher</button>
+        <div>
+          <a href="#">Product</a>
+        </div>
+        <div>
+          <a href="#">Blog</a>
+        </div>
+        <div>
+          <a href="#">Voucher</a>
+        </div>
+        <div>
+          <a href="#">Report</a>
+        </div>
       </div>
     </div>
   );
