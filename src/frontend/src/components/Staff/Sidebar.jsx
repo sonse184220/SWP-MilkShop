@@ -7,13 +7,13 @@ function Sidebar() {
       <h1>Staff</h1>
       <div className="sidebar-content">
         <div>
-          <a href="#">Order</a>
+          <a href="/Staff/OrderManagement">Order</a>
         </div>
         <div>
-          <a href="#">Product</a>
+          <a href="/Staff/ProductManagement">Product</a>
         </div>
         <div>
-          <a href="#">Blog</a>
+          <a href="/Staff/BlogManagement">Blog</a>
         </div>
         <div>
           <a href="#">Voucher</a>
