@@ -19,18 +19,7 @@ import { DeleteFeedback } from '../../services/feedback/deleteFeedback';
 import { AddToCart } from '../../services/cart/addToCart';
 
 
-const ProductDetail = () => {
-    const { ProductID } = useParams();
-    const [quantity, setQuantity] = useState(1);
-    const [CurrentProduct, setCurrentProduct] = useState(null);
-    const [feedbacks, setFeedbacks] = useState([])
-    const [newFeedback, setNewFeedback] = useState({
-        userId: JSON.parse(localStorage.getItem('userData')).UserID,
-        rating: 0,
-        content: ''
-    });
-    const [inWishlist, setInWishlist] = useState(false);
-
+const ProductDetail = ({ isMember }) => {
     const products = [
         {
             name: 'Product 1',
@@ -64,6 +53,22 @@ const ProductDetail = () => {
         }
     ];
 
+    const { ProductID } = useParams();
+    const [quantity, setQuantity] = useState(1);
+    const [CurrentProduct, setCurrentProduct] = useState(null);
+
+    const userinfo = localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')) : "Guest";
+
+    const [feedbacks, setFeedbacks] = useState([])
+    const [newFeedback, setNewFeedback] = useState({
+        userId: userinfo,
+        rating: 0,
+        content: ''
+    });
+    const [inWishlist, setInWishlist] = useState(false);
+
+
+
     const handleAddToCart = async (e) => {
         e.preventDefault();
         try {
@@ -87,13 +92,14 @@ const ProductDetail = () => {
 
     const checkIsWishlistState = () => {
         const wishlistItems = JSON.parse(localStorage.getItem("wishlist"));
-        const matchItem = wishlistItems.find(product => product.ProductID === ProductID);
+        const matchItem = wishlistItems ? wishlistItems.find(product => product.ProductID === ProductID) : false;
         setInWishlist(!!matchItem);
     }
 
     const handleGetWishlist = async () => {
+        if (!isMember) return;
         try {
-            const response = await GetWishlist(JSON.parse(localStorage.getItem("userData")).UserID);
+            const response = await GetWishlist(userinfo);
             if (response.data) {
                 console.log(response.data);
                 localStorage.setItem("wishlist", JSON.stringify(response.data));
@@ -104,13 +110,14 @@ const ProductDetail = () => {
     }
 
     const handleAddRemoveWishList = async (e) => {
+        if (!isMember) return;
         try {
             e.preventDefault();
 
 
             if (!inWishlist) {
                 setInWishlist(prevState => !prevState);
-                const response = await AddWishlist(JSON.parse(localStorage.getItem("userData")).UserID, ProductID);
+                const response = await AddWishlist(userinfo, ProductID);
                 console.log(response);
                 if (response.data && response.data[0].ProductID === ProductID) {
                     toast.success('Added to wishlist', {
@@ -125,7 +132,7 @@ const ProductDetail = () => {
                 }
             } else {
                 setInWishlist(prevState => !prevState);
-                const response = await RemoveWishlist(JSON.parse(localStorage.getItem("userData")).UserID, ProductID);
+                const response = await RemoveWishlist(userinfo, ProductID);
                 console.log(response.data.msg);
                 if (response.data.msg)
                     toast.success('Removed from wishlist', {
@@ -144,6 +151,7 @@ const ProductDetail = () => {
     }
 
     const handleDeleteFeedback = async (e, feedbackid) => {
+        if (!isMember) return;
         e.preventDefault();
         try {
             const response = await DeleteFeedback(feedbackid);
@@ -163,6 +171,7 @@ const ProductDetail = () => {
     }
 
     const handleAddFeedback = async () => {
+        if (!isMember) return;
         try {
             const response = await AddFeedback(ProductID, newFeedback);
             if (!response.data.error) {
@@ -170,7 +179,7 @@ const ProductDetail = () => {
                     theme: "colored",
                 });
                 setNewFeedback({
-                    userId: JSON.parse(localStorage.getItem('userData')).UserID,
+                    userId: userinfo,
                     rating: 0,
                     content: ''
                 });
@@ -206,23 +215,16 @@ const ProductDetail = () => {
         }
     }
 
-    const handleIncrement = (step = 1) => {
-        setQuantity(prevQuantity => prevQuantity + step);
+    const handleIncrement = () => {
+        setQuantity(prevQuantity => prevQuantity + 1);
     };
 
-    const handleDecrement = (step = 1) => {
+    const handleDecrement = () => {
         if (quantity > 1) {
-            setQuantity(prevQuantity => prevQuantity - step);
+            setQuantity(prevQuantity => prevQuantity - 1);
         }
     };
 
-    const showWishlistMessage = () => {
-        const message = document.getElementById('wishlistMessage');
-        message.style.display = 'block';
-        setTimeout(() => {
-            message.style.display = 'none';
-        }, 3000); // Hide after 3 seconds
-    };
 
     useEffect(() => {
         handleGetProductByID();
@@ -237,9 +239,6 @@ const ProductDetail = () => {
             <img className='image' src="/img/P004.jpg" />
             {CurrentProduct ? (
                 <div>
-                    {/* <div id="wishlistMessage" className="wishlist-message">
-                        {inWishlist ? 'Added to wishlist' : 'Removed from wishlist'}
-                    </div> */}
                     <ToastContainer style={{ top: '110px' }} />
                     <div className="product-detail">
                         <div className="detail-img">
@@ -295,7 +294,8 @@ const ProductDetail = () => {
                             onAddFeedback={handleAddFeedback}
                             onDeleteFeedback={handleDeleteFeedback}
                             newFeedback={newFeedback}
-                            setNewFeedback={setNewFeedback} /></div>
+                            setNewFeedback={setNewFeedback}
+                            userinfo={userinfo} /></div>
                     <div><ProductList products={products} /></div></div>
             ) : (
                 <div><Page404 /></div>

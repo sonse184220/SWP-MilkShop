@@ -77,7 +77,7 @@ const BlogList = ({ columnLayout = false }) => {
     >
       <div className="blog-list-content">
         <h2>Suggested blogs</h2>
-        <Link to="/Blogs">All Blog</Link>
+        <Link to="/Customer/Blogs">All Blog</Link>
       </div>
       <div className="blog-list-wrapper">
         <button className="scroll-button left" onClick={scrollLeft}>

@@ -67,7 +67,7 @@ const AllProducts = () => {
                     </div>
                     <div className="product-container">
                         {products.map((product) => (
-                            <Link to={`/ProductDetail/${product.ProductID}`} key={product.ProductID} className="product-preview">
+                            <Link to={`/Customer/ProductDetail/${product.ProductID}`} key={product.ProductID} className="product-preview">
                                 <img src={`/img/${product.ProductID}.jpg`} alt={product.Name} />
                                 <h3>{product.Name}</h3>
                                 <p>{product.Content}</p>

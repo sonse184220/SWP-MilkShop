@@ -2,7 +2,7 @@ import './Feedback.css';
 import { toast } from 'react-toastify';
 import StarRatings from 'react-star-ratings';
 
-const Feedback = ({ feedbacks = [], onAddFeedback, onDeleteFeedback, newFeedback, setNewFeedback }) => {
+const Feedback = ({ feedbacks = [], onAddFeedback, onDeleteFeedback, newFeedback, setNewFeedback, userinfo }) => {
     const { rating, content } = newFeedback;
 
     const handleSubmit = (e) => {
@@ -46,7 +46,7 @@ const Feedback = ({ feedbacks = [], onAddFeedback, onDeleteFeedback, newFeedback
                                                         />
                                                     </ul>
                                                 </div>
-                                                {(feedback.UserID === JSON.parse(localStorage.getItem('userData')).UserID) && (
+                                                {(feedback.UserID === userinfo) && (
                                                     <div class="comment-content-right">
                                                         <a href="#" onClick={(e) => onDeleteFeedback(e, feedback.FeedbackID)}><i className="zmdi zmdi-delete"></i>Delete</a>
                                                     </div>

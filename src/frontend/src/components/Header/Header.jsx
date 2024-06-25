@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './Header.css';
 import { NavLink, useNavigate, Link } from "react-router-dom";
+import { FaSignInAlt } from "react-icons/fa";
 
 
 //prop onLogin chuyền từ app.js -> HomePage.jsx -> Header.jsx
 //dùng để set state isLogin
-export function Header({ onLogin }) {
+export function Header({ onLogin, isMember }) {
     const navigate = useNavigate();
 
     const headerRef = useRef(null);
@@ -44,7 +45,7 @@ export function Header({ onLogin }) {
     const showLogin = (event) => {
         event.preventDefault();
         localStorage.clear();
-        navigate('/login-register')
+        navigate('/Customer/login-register')
 
     }
 
@@ -68,11 +69,13 @@ export function Header({ onLogin }) {
                             </a>
 
                             <ul className="nav">
-                                <li className="scroll-to-section"><NavLink to={'/home'} href="#top">Home</NavLink></li>
-                                <li><NavLink to={'/Products'} href="meetings.html">Products</NavLink></li>
-                                <li className="scroll-to-section"><NavLink to={'/Blogs'} href="#apply">Blogs</NavLink></li>
-                                <li className="scroll-to-section"><NavLink to={'/Wishlist'}> Wishlist</NavLink></li>
-                                <li className="scroll-to-section"><NavLink to={'/Cart'}> Cart</NavLink></li>
+                                <li className="scroll-to-section"><NavLink to={'/Customer/home'} href="#top">Home</NavLink></li>
+                                <li><NavLink to={'/Customer/Products'} href="meetings.html">Products</NavLink></li>
+                                <li className="scroll-to-section"><NavLink to={'/Customer/Blogs'} href="#apply">Blogs</NavLink></li>
+                                {/* <li className="scroll-to-section"><NavLink to={'/Customer/Wishlist'}> Wishlist</NavLink></li>
+                                <li className="scroll-to-section"><NavLink to={'/Customer/Cart'}> Cart</NavLink></li> */}
+                                {isMember && (<><li className="scroll-to-section"><NavLink to={'/Customer/Wishlist'}> Wishlist</NavLink></li>
+                                    <li className="scroll-to-section"><NavLink to={'/Customer/Cart'}> Cart</NavLink></li></>)}
                                 {/* <li className="has-sub">
                                     <a href='#'>Cart</a>
                                     <ul className="sub-menu">
@@ -82,15 +85,28 @@ export function Header({ onLogin }) {
                                 </li> */}
                                 {/* <li className="scroll-to-section"><a href="#courses">User1</a></li>
                                 <li className="scroll-to-section"><a href="#contact" onClick={showLogin}>Logout</a></li> */}
-                                <li className="user-dropdown" ref={dropdownRef}>
+                                {/* <li className="user-dropdown" ref={dropdownRef}>
                                     <div className="profile-image" onClick={toggleDropdown}>
                                         <img src="/img/user.png" alt="User" />
                                     </div>
                                     <ul className={`header-dropdown-menu ${isDropdownOpen ? 'show' : ''}`}>
-                                        <li><button onClick={() => { navigate('/EditProfile') }}>View Profile</button></li>
+                                        <li><button onClick={() => { navigate('/Customer/EditProfile') }}>View Profile</button></li>
                                         <li><button onClick={showLogin}>Logout</button></li>
                                     </ul>
-                                </li>
+                                </li> */}
+                                {isMember ? (
+                                    <li className="user-dropdown" ref={dropdownRef}>
+                                        <div className="profile-image" onClick={toggleDropdown}>
+                                            <img src="/img/user.png" alt="User" />
+                                        </div>
+                                        <ul className={`header-dropdown-menu ${isDropdownOpen ? 'show' : ''}`}>
+                                            <li><button onClick={() => { navigate('/EditProfile') }}>View Profile</button></li>
+                                            <li><button onClick={showLogin}>Logout</button></li>
+                                        </ul>
+                                    </li>
+                                ) : (
+                                    <li className="scroll-to-section"><NavLink to={'/Customer/login-register'}>Login/Register <FaSignInAlt style={{ marginBottom: '4px' }} /></NavLink></li>
+                                )}
                             </ul>
                             <a className='menu-trigger'>
                                 <span>Menu</span>

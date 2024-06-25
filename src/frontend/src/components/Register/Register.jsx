@@ -33,7 +33,7 @@ const Register = ({ showLogin }) => {
     //Chuyển sang màn hình Login.jsx lúc bấm Sign In
     const handleShowLogin = (event) => {
         event.preventDefault();
-        navigate('/login-register');
+        navigate('/Customer/login-register');
         showLogin(false);
     };
 

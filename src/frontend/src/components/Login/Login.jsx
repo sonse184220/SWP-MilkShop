@@ -48,7 +48,7 @@ const Login = ({ onLogin, showLogin }) => {
                 setErrorMessage('');
                 localStorage.setItem('userData', JSON.stringify(response.data.user));
                 localStorage.setItem('token', response.data.token);
-                navigate('/home');
+                navigate('/Customer/home');
                 onLogin(true);
             } else {
                 setErrorMessage('Something went wrong');
@@ -82,7 +82,7 @@ const Login = ({ onLogin, showLogin }) => {
     //Chuyển sang màn hình Register.jsx lúc bấm 'Create an account'
     const handleShowLogin = (event) => {
         event.preventDefault();
-        navigate('/login-register');
+        navigate('/Customer/login-register');
         showLogin(true);
     };
 

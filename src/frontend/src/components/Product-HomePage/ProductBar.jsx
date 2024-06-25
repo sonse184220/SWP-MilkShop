@@ -60,13 +60,13 @@ const ProductBar = () => {
         <div className="product-bar">
             <div className='header'>
                 <h2 className='title'>Products</h2>
-                <Link to={"/Products"} className="view-all">
+                <Link to={"/Customer/Products"} className="view-all">
                     View all
                 </Link>
             </div>
             <div className="product-container" >
                 {productSlide.map((product) => (
-                    <Link to={`/ProductDetail/${product.ProductID}`} key={product.ProductID} className="product-preview">
+                    <Link to={`/Customer/ProductDetail/${product.ProductID}`} key={product.ProductID} className="product-preview">
                         <img src={`/img/${product.ProductID}.jpg`} alt={product.Name} />
                         <h3>{product.Name}</h3>
                         <p>{product.Content}</p>

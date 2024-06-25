@@ -6,7 +6,7 @@ const BlogCard = ({ blogs = [] }) => {
   return (
     <>
       {blogs.map((blog) => (
-        <Link to={`/BlogDetail/${blog.BlogID}`} key={blog.BlogID}>
+        <Link to={`/Customer/BlogDetail/${blog.BlogID}`} key={blog.BlogID}>
           <div className="blog-card">
             <h2>{blog.Name}</h2>
             <div className="author-description">

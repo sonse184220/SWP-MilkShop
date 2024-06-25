@@ -131,7 +131,7 @@ const AllBlog = () => {
     <>
       <img className="image" src="/img/P004.jpg" alt="Blog Header" />
       <Header />
-      <Link to="/EditProfile">Edit Profile</Link>
+      <Link to="/Customer/EditProfile">Edit Profile</Link>
       <div className="container">
         <div className="row">
           <div className="col-lg-8">
