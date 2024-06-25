@@ -7,10 +7,22 @@
   width: 250px;
   height: 250px;
   display: flex;
+  transition: transform 0.3s, background-color 0.3s, border-color 0.3s;
 }
 
-.author-description {
+.blog-card:hover {
+  transform: scale(1.05);
+  background-color: hsl(328, 83%, 77%);
+  color: snow;
+}
+
+.createdDate {
   margin-top: 20px;
   display: flex;
   align-items: flex-end;
+}
+
+.blog-name{
+  font-size: 18px;
+  font-weight: bold;
 }
