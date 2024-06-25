@@ -7,7 +7,6 @@
   padding: 20px;
 }
 
-
 h1{
   margin-left: 20px;
 }
@@ -24,6 +23,7 @@ h1{
   padding: 10px;
   cursor: pointer;
   float: right;
+  text-decoration: underline;
 }
 
 header {
