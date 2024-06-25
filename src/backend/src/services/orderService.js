@@ -7,40 +7,41 @@ export class OrderService {
     }
 
     placeOrder = (data, user, guestId, callback) => {
-        const { PaymentMethod, VoucherID, useRewardPoints, Name, Email, Phone, Address } = data;
+        const { PaymentMethod, VoucherIDs, useRewardPoints, Name, Email, Phone, Address } = data;
         const UserID = user ? user.userId : null;
         const GuestID = guestId ? guestId : null;
 
-        const getCartQuery = 'SELECT CART.ProductID, CART.CartQuantity, PRODUCT.Price FROM CART JOIN PRODUCT ON CART.ProductID = PRODUCT.ProductID WHERE CART.UserID = ? OR CART.GuestID = ?';
+        const getCartQuery = 'SELECT CART.ProductID, CART.CartQuantity, PRODUCT.Price, PRODUCT.Name AS ProductName FROM CART JOIN PRODUCT ON CART.ProductID = PRODUCT.ProductID WHERE CART.UserID = ? OR CART.GuestID = ?';
         connection.query(getCartQuery, [UserID, GuestID], (err, cartItems) => {
             if (err) return callback(err);
 
             if (cartItems.length === 0) return callback(new Error('Cart is empty'));
 
-            let totalPrice = 0;
+            let initialTotalPrice = 0;
             cartItems.forEach(item => {
-                totalPrice += item.CartQuantity * item.Price;
+                initialTotalPrice += item.CartQuantity * item.Price;
             });
 
-            if (VoucherID) {
-                const voucherQuery = 'SELECT Discount FROM VOUCHER WHERE VoucherID = ?';
-                connection.query(voucherQuery, [VoucherID], (err, results) => {
+            if (VoucherIDs && VoucherIDs.length > 0) {
+                const voucherQuery = 'SELECT VoucherID, Discount FROM VOUCHER WHERE VoucherID IN (?)';
+                connection.query(voucherQuery, [VoucherIDs], (err, voucherResults) => {
                     if (err) return callback(err);
 
-                    if (results.length > 0) {
-                        const discount = parseFloat(results[0].Discount) / 100;
+                    let totalPrice = initialTotalPrice;
+                    voucherResults.forEach(voucher => {
+                        const discount = parseFloat(voucher.Discount) / 100;
                         totalPrice -= totalPrice * discount;
-                    }
+                    });
 
-                    this.processOrder(UserID, GuestID, cartItems, totalPrice, PaymentMethod, Name, Email, Phone, Address, useRewardPoints, user, callback);
+                    this.processOrder(UserID, GuestID, cartItems, totalPrice, initialTotalPrice, PaymentMethod, Name, Email, Phone, Address, useRewardPoints, user, voucherResults, callback);
                 });
             } else {
-                this.processOrder(UserID, GuestID, cartItems, totalPrice, PaymentMethod, Name, Email, Phone, Address, useRewardPoints, user, callback);
+                this.processOrder(UserID, GuestID, cartItems, initialTotalPrice, initialTotalPrice, PaymentMethod, Name, Email, Phone, Address, useRewardPoints, user, [], callback);
             }
         });
     };
 
-    processOrder = (UserID, GuestID, cartItems, totalPrice, PaymentMethod, Name, Email, Phone, Address, useRewardPoints, user, callback) => {
+    processOrder = (UserID, GuestID, cartItems, totalPrice, initialTotalPrice, PaymentMethod, Name, Email, Phone, Address, useRewardPoints, user, vouchers, callback) => {
         if (useRewardPoints && UserID) {
             const rewardQuery = 'SELECT RewardPoints FROM MEMBER WHERE UserID = ?';
             connection.query(rewardQuery, [UserID], (err, results) => {
@@ -56,18 +57,18 @@ export class OrderService {
                     connection.query(updatePointsQuery, [remainingPoints, UserID], (err, result) => {
                         if (err) return callback(err);
 
-                        this.finalizeOrder(UserID, GuestID, cartItems, totalPrice, pointsToUse, PaymentMethod, Name, Email, Phone, Address, user, callback);
+                        this.finalizeOrder(UserID, GuestID, cartItems, totalPrice, pointsToUse, PaymentMethod, Name, Email, Phone, Address, user, vouchers, initialTotalPrice, callback);
                     });
                 } else {
-                    this.finalizeOrder(UserID, GuestID, cartItems, totalPrice, 0, PaymentMethod, Name, Email, Phone, Address, user, callback);
+                    this.finalizeOrder(UserID, GuestID, cartItems, totalPrice, 0, PaymentMethod, Name, Email, Phone, Address, user, vouchers, initialTotalPrice, callback);
                 }
             });
         } else {
-            this.finalizeOrder(UserID, GuestID, cartItems, totalPrice, 0, PaymentMethod, Name, Email, Phone, Address, user, callback);
+            this.finalizeOrder(UserID, GuestID, cartItems, totalPrice, 0, PaymentMethod, Name, Email, Phone, Address, user, vouchers, initialTotalPrice, callback);
         }
     };
 
-    finalizeOrder = (UserID, GuestID, cartItems, totalPrice, usedPoints, PaymentMethod, Name, Email, Phone, Address, user, callback) => {
+    finalizeOrder = (UserID, GuestID, cartItems, totalPrice, usedPoints, PaymentMethod, Name, Email, Phone, Address, user, vouchers, initialTotalPrice, callback) => {
         const insertOrderQuery = 'INSERT INTO `ORDER` (UserID, GuestID, TotalPrice, PaymentMethod, Name, Email, Phone, Address) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
         const values = [UserID, GuestID, totalPrice, PaymentMethod, Name, Email, Phone, Address];
 
@@ -91,13 +92,13 @@ export class OrderService {
                         const updateRewardPointsQuery = 'UPDATE MEMBER SET RewardPoints = RewardPoints + ? WHERE UserID = ?';
                         connection.query(updateRewardPointsQuery, [rewardPoints, UserID], (err, result) => {
                             if (err) return callback(err);
-                            this.emailService.sendOrderConfirmationEmail(Email, orderId, cartItems, totalPrice, user, { Name, Email, Phone, Address }, (err, result) => {
+                            this.emailService.sendOrderConfirmationEmail(Email, orderId, cartItems, initialTotalPrice, totalPrice, vouchers, { Name, Email, Phone, Address }, (err, result) => {
                                 if (err) return callback(err);
                                 callback(null, { message: 'Order placed successfully', orderId, rewardPoints, cartItems, totalPrice });
                             });
                         });
                     } else {
-                        this.emailService.sendOrderConfirmationEmail(Email, orderId, cartItems, totalPrice, null, { Name, Email, Phone, Address }, (err, result) => {
+                        this.emailService.sendOrderConfirmationEmail(Email, orderId, cartItems, initialTotalPrice, totalPrice, vouchers, { Name, Email, Phone, Address }, (err, result) => {
                             if (err) return callback(err);
                             callback(null, { message: 'Order placed successfully', orderId, cartItems, totalPrice });
                         });
