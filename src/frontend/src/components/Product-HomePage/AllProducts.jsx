@@ -9,7 +9,7 @@ import handleGetAllProduct from '../../services/product/getAllProductService';
 import GetProductByBrandID from '../../services/product/getProductByBrandID';
 import { SearchProductByName } from '../../services/product/searchProductByName';
 
-const AllProducts = () => {
+const AllProducts = ({ isMember }) => {
     const [products, setProducts] = useState([]);
     const [CurrentBrand, SetCurrentBrand] = useState(null);
     const [searchInput, setSearchInput] = useState();
@@ -56,7 +56,7 @@ const AllProducts = () => {
 
     return (
         <div className="body">
-            <div><Header /></div>
+            <div><Header isMember={isMember} /></div>
             <img className='image' src="/img/P004.jpg" />
             <div className='brand-product'>
                 <div className='brand-bar'><Brand onBrandClick={handleBrandClick} onSearch={handleSearchProductByName} setSearchInput={setSearchInput} /></div>

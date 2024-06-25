@@ -57,11 +57,11 @@ const ProductDetail = ({ isMember }) => {
     const [quantity, setQuantity] = useState(1);
     const [CurrentProduct, setCurrentProduct] = useState(null);
 
-    const userinfo = localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')) : "Guest";
+    const userId = localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')) : "Guest";
 
     const [feedbacks, setFeedbacks] = useState([])
     const [newFeedback, setNewFeedback] = useState({
-        userId: userinfo,
+        userId: userId,
         rating: 0,
         content: ''
     });
@@ -91,6 +91,7 @@ const ProductDetail = ({ isMember }) => {
     }
 
     const checkIsWishlistState = () => {
+        if (!isMember) return;
         const wishlistItems = JSON.parse(localStorage.getItem("wishlist"));
         const matchItem = wishlistItems ? wishlistItems.find(product => product.ProductID === ProductID) : false;
         setInWishlist(!!matchItem);
@@ -99,7 +100,7 @@ const ProductDetail = ({ isMember }) => {
     const handleGetWishlist = async () => {
         if (!isMember) return;
         try {
-            const response = await GetWishlist(userinfo);
+            const response = await GetWishlist(userId);
             if (response.data) {
                 console.log(response.data);
                 localStorage.setItem("wishlist", JSON.stringify(response.data));
@@ -117,7 +118,7 @@ const ProductDetail = ({ isMember }) => {
 
             if (!inWishlist) {
                 setInWishlist(prevState => !prevState);
-                const response = await AddWishlist(userinfo, ProductID);
+                const response = await AddWishlist(userId, ProductID);
                 console.log(response);
                 if (response.data && response.data[0].ProductID === ProductID) {
                     toast.success('Added to wishlist', {
@@ -132,7 +133,7 @@ const ProductDetail = ({ isMember }) => {
                 }
             } else {
                 setInWishlist(prevState => !prevState);
-                const response = await RemoveWishlist(userinfo, ProductID);
+                const response = await RemoveWishlist(userId, ProductID);
                 console.log(response.data.msg);
                 if (response.data.msg)
                     toast.success('Removed from wishlist', {
@@ -179,7 +180,7 @@ const ProductDetail = ({ isMember }) => {
                     theme: "colored",
                 });
                 setNewFeedback({
-                    userId: userinfo,
+                    userId: userId,
                     rating: 0,
                     content: ''
                 });
@@ -235,7 +236,7 @@ const ProductDetail = ({ isMember }) => {
 
     return (
         <div className='body'>
-            <div><Header /></div>
+            <div><Header isMember={isMember} /></div>
             <img className='image' src="/img/P004.jpg" />
             {CurrentProduct ? (
                 <div>
@@ -273,17 +274,20 @@ const ProductDetail = ({ isMember }) => {
                                     </div>
                                 </div>
 
-                                <div className="product-details-meta mb-20">
-                                    <a href="" onClick={handleAddRemoveWishList} className="icon-space-right"><i className={`zmdi ${inWishlist ? 'zmdi-favorite' : 'zmdi-favorite-outline'}`}></i>{inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}</a>
-                                    <a href="compare.html" className="icon-space-right"><i className="zmdi zmdi-refresh"></i>Compare</a>
-                                </div>
+                                {isMember && (
+                                    <div className="product-details-meta mb-20" style={{ display: 'flex' }}>
+                                        <a href="" onClick={handleAddRemoveWishList} className="icon-space-right"><i className={`zmdi ${inWishlist ? 'zmdi-favorite' : 'zmdi-favorite-outline'}`}></i>{inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}</a>
+                                        {/* <a href="compare.html" className="icon-space-right"><i className="zmdi zmdi-refresh"></i>Compare</a> */}
+                                        <p className='wislist-prompt'>(Mark as your favorite product)</p>
+                                    </div>
+                                )}
                             </div>
                             <div className="product-details-catagory mb-2">
-                                <span className="title">CATEGORIES:</span>
+                                <span className="title">CATEGORY:</span>
                                 <ul>
                                     <li><a href="#">BAR STOOL</a></li>
-                                    <li><a href="#">KITCHEN UTENSILS</a></li>
-                                    <li><a href="#">TENNIS</a></li>
+                                    {/* <li><a href="#">KITCHEN UTENSILS</a></li>
+                                    <li><a href="#"></a></li> */}
                                 </ul>
                             </div>
                         </div>
@@ -295,7 +299,8 @@ const ProductDetail = ({ isMember }) => {
                             onDeleteFeedback={handleDeleteFeedback}
                             newFeedback={newFeedback}
                             setNewFeedback={setNewFeedback}
-                            userinfo={userinfo} /></div>
+                            userId={userId}
+                            isMember={isMember} /></div>
                     <div><ProductList products={products} /></div></div>
             ) : (
                 <div><Page404 /></div>

@@ -7,7 +7,7 @@ import Footer from "../Footer/Footer";
 import ProductList from "../Product/ProductList";
 import BlogList from "./BlogList";
 
-const BlogDetail = () => {
+const BlogDetail = ({ isMember }) => {
   const { BlogID } = useParams(); // Get the BlogID parameter from the URL
   const [blog, setBlog] = useState(null);
   const [error, setError] = useState(null);
@@ -31,7 +31,7 @@ const BlogDetail = () => {
   return (
     <>
       <img className="image" src="/img/P004.jpg" alt="Blog Header" />
-      <Header />
+      <Header isMember={isMember} />
       <div className="container">
         <div className="row">
           <div className="col-lg-8">

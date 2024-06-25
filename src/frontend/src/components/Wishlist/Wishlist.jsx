@@ -10,7 +10,7 @@ import { RemoveWishlist } from '../../services/wishlist/removeWishlish';
 import { AddToCart } from '../../services/cart/addToCart';
 import { ViewCart } from '../../services/cart/viewCart';
 
-export const Wishlist = () => {
+export const Wishlist = ({ isMember }) => {
     const [showModal, setShowModal] = useState(false);
     const [wishlistItems, setWishlistItems] = useState([]);
     const [CartItems, setCartItems] = useState([]);
@@ -112,7 +112,7 @@ export const Wishlist = () => {
 
     return (
         <>
-            <div><Header /></div>
+            <div><Header isMember={isMember} /></div>
             <img className='image' src="/img/P004.jpg" />
             {/* <div id="wishlistMessage" className="wishlist-message">
                 {message}

@@ -42,9 +42,9 @@ export function CustomerRoutes({ isMember }) {
             <Route path='Products' element={<AllProducts isMember={isMember} />}></Route>
             <Route path='EditProfile' element={<EditProfile isMember={isMember} />}></Route>
             <Route path='ProductDetail/:ProductID' element={<ProductDetail isMember={isMember} />}></Route>
-            <Route path='Wishlist' element={<Wishlist />}></Route>
+            <Route path='Wishlist' element={<Wishlist isMember={isMember} />}></Route>
             <Route path="BlogDetail/:BlogID" element={<BlogDetail isMember={isMember} />} />
-            <Route path='Cart' element={<Cart />} />
+            <Route path='Cart' element={<Cart isMember={isMember} />} />
             <Route path='ProductManagement' element={<ProductManagement />} />
         </Routes>
 
