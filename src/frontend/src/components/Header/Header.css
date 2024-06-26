@@ -45,7 +45,7 @@ li {
 .header-area .main-nav .logo {
   font-family: 'Poppins', sans-serif;
   line-height: 100px;
-  color: #fff;
+  color: #27296d;
   font-size: 28px;
   font-weight: 700;
   text-transform: uppercase;
@@ -80,7 +80,7 @@ li {
   font-weight: 500;
   font-size: 14px;
   text-transform: uppercase;
-  color: #fff;
+  color: #27296d;
   transition: all 0.3s ease 0s;
   height: 40px;
   line-height: 40px;

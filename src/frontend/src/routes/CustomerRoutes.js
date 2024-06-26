@@ -13,6 +13,7 @@ import { Wishlist } from '../components/Wishlist/Wishlist.jsx';
 import BlogDetail from '../components/Blog/BlogDetail.jsx';
 import { Cart } from '../components/Cart/Cart.jsx';
 import ProductManagement from '../components/Staff/ProductManagement.jsx';
+import { GuestCart } from '../components/Guest/GuestCart.jsx';
 
 export function CustomerRoutes({ isMember }) {
     //state isLogin để chuyển giữa Login.jsx và Homepage.jsx (Route '/')
@@ -45,6 +46,7 @@ export function CustomerRoutes({ isMember }) {
             <Route path='Wishlist' element={<Wishlist isMember={isMember} />}></Route>
             <Route path="BlogDetail/:BlogID" element={<BlogDetail isMember={isMember} />} />
             <Route path='Cart' element={<Cart isMember={isMember} />} />
+            <Route path='GuestCart' element={<GuestCart />} />
             <Route path='ProductManagement' element={<ProductManagement />} />
         </Routes>
 

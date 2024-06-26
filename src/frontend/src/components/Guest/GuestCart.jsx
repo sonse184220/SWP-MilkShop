@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
-// import QuantityPicker from 'react-quantity-picker';
-// import { QuantityPicker } from "react-qty-picker";
 import Modal from 'react-modal';
 
-import './Cart.css';
+import '../Cart/Cart.css';
 import Footer from "../Footer/Footer";
 import Header from "../Header/Header";
 import { Voucher } from "../Voucher/Voucher";
@@ -14,10 +12,9 @@ import { AddToCart } from '../../services/cart/addToCart';
 import { UpdateCart } from '../../services/cart/updateCart';
 import { RemoveCart } from '../../services/cart/removeCart';
 import { UserInfoForm } from '../UserInfoForm/UserInfoForm';
-import { getUser } from '../../services/editprofile/getUser';
 import { MemberOrder } from '../../services/order/memberOrder';
 
-export const Cart = ({ isMember }) => {
+export const GuestCart = ({ isMember }) => {
     const [CartItems, setCartItems] = useState([]);
     const [UserInfo, setUserInfo] = useState();
     const [userFormData, setUserFormData] = useState({
@@ -149,7 +146,7 @@ export const Cart = ({ isMember }) => {
     return (
         <>
             <Header isMember={isMember} />
-            <img className='image' src="/img/milkbuying.jpeg" alt="Header Image" />
+            <img className='image' src="/img/P004.jpg" alt="Header Image" />
             <div className="middle-part">
                 <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
                     <h2>Confirm Order</h2>

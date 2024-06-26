@@ -72,14 +72,42 @@ const ProductDetail = ({ isMember }) => {
     const handleAddToCart = async (e) => {
         e.preventDefault();
         try {
-            const MemberToken = 'Bearer ' + localStorage.getItem('token');
-            console.log(MemberToken);
-            const prInfo = {
-                "ProductID": ProductID,
-                "CartQuantity": quantity
-            }
-            const response = await AddToCart(MemberToken, prInfo);
-            if (response.data.message) {
+            if (isMember) {
+                const MemberToken = 'Bearer ' + localStorage.getItem('token');
+                console.log(MemberToken);
+                const prInfo = {
+                    "ProductID": ProductID,
+                    "CartQuantity": quantity
+                }
+                const response = await AddToCart(MemberToken, prInfo);
+                if (response.data.message) {
+                    toast.success('Added to cart', {
+                        theme: "colored",
+                    });
+                }
+            } else {
+                // Handle localStorage cart for non-members
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+                // Check if the product is already in the cart
+                const existingProductIndex = cart.findIndex(item => item.ProductID === ProductID);
+
+                if (existingProductIndex !== -1) {
+                    // If the product exists, update the quantity
+                    cart[existingProductIndex].CartQuantity += quantity;
+                } else {
+                    // If the product doesn't exist, add it to the cart
+                    cart.push({
+                        ProductID: CurrentProduct[0].ProductID,
+                        Name: CurrentProduct[0].Name,
+                        Price: CurrentProduct[0].Price,
+                        CartQuantity: quantity,
+                    });
+                }
+
+                // Save the updated cart back to localStorage
+                localStorage.setItem('cart', JSON.stringify(cart));
+
                 toast.success('Added to cart', {
                     theme: "colored",
                 });
@@ -87,6 +115,9 @@ const ProductDetail = ({ isMember }) => {
             // console.log('cart============', response)
         } catch (error) {
             console.log(error);
+            toast.error('Failed to add to cart', {
+                theme: "colored",
+            });
         }
     }
 
@@ -237,7 +268,7 @@ const ProductDetail = ({ isMember }) => {
     return (
         <div className='body'>
             <div><Header isMember={isMember} /></div>
-            <img className='image' src="/img/P004.jpg" />
+            <img className='image' src="/img/milkbuying.jpeg" />
             {CurrentProduct ? (
                 <div>
                     <ToastContainer style={{ top: '110px' }} />

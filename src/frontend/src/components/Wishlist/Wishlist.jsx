@@ -113,7 +113,7 @@ export const Wishlist = ({ isMember }) => {
     return (
         <>
             <div><Header isMember={isMember} /></div>
-            <img className='image' src="/img/P004.jpg" />
+            <img className='image' src="/img/milkbuying.jpeg" />
             {/* <div id="wishlistMessage" className="wishlist-message">
                 {message}
             </div> */}

@@ -32,7 +32,7 @@ const HomePage = ({ onLogin, isMember }) => {
     return (
         <div className="body">
             <div><Header onLogin={onLogin} isMember={isMember} /></div>
-            <img className='image' src="/img/P004.jpg" />
+            <img className='image' src="/img/milkbuying.jpeg" />
             <div className="welcome">Welcome {userName}</div>
             <div><ProductBar /></div>
             <div><BlogList /></div>

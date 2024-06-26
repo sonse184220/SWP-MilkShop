@@ -75,7 +75,8 @@ export function Header({ onLogin, isMember }) {
                                 {/* <li className="scroll-to-section"><NavLink to={'/Customer/Wishlist'}> Wishlist</NavLink></li>
                                 <li className="scroll-to-section"><NavLink to={'/Customer/Cart'}> Cart</NavLink></li> */}
                                 {isMember && (<><li className="scroll-to-section"><NavLink to={'/Customer/Wishlist'}> Wishlist</NavLink></li>
-                                    <li className="scroll-to-section"><NavLink to={'/Customer/Cart'}> Cart</NavLink></li></>)}
+                                </>)}
+                                <li className="scroll-to-section"><NavLink to={isMember ? '/Customer/Cart' : '/Customer/GuestCart'}> Cart</NavLink></li>
                                 {/* <li className="has-sub">
                                     <a href='#'>Cart</a>
                                     <ul className="sub-menu">
