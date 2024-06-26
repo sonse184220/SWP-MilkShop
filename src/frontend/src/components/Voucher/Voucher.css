@@ -1,3 +1,13 @@
-.applybtn {
-    margin-top: 7px;
+.voucher .applybtn {
+    margin-top: 10px;
+}
+
+.voucher .row {
+    margin-bottom: 5px;
+}
+
+.voucher .card-body {
+    height: 380px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
