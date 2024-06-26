@@ -5,11 +5,11 @@ import Footer from "../Footer/Footer"
 import Header from "../Header/Header"
 import './AllProducts.css';
 import Brand from '../Brand/Brand';
-import handleGetAllProduct from '../../services/getAllProductService';
-import GetProductByBrandID from '../../services/getProductByBrandID';
-import { SearchProductByName } from '../../services/searchProductByName';
+import handleGetAllProduct from '../../services/product/getAllProductService';
+import GetProductByBrandID from '../../services/product/getProductByBrandID';
+import { SearchProductByName } from '../../services/product/searchProductByName';
 
-const AllProducts = () => {
+const AllProducts = ({ isMember }) => {
     const [products, setProducts] = useState([]);
     const [CurrentBrand, SetCurrentBrand] = useState(null);
     const [searchInput, setSearchInput] = useState();
@@ -56,8 +56,8 @@ const AllProducts = () => {
 
     return (
         <div className="body">
-            <div><Header /></div>
-            <img className='image' src="/img/P004.jpg" />
+            <div><Header isMember={isMember} /></div>
+            <img className='image' src="/img/milkbuying.jpeg" />
             <div className='brand-product'>
                 <div className='brand-bar'><Brand onBrandClick={handleBrandClick} onSearch={handleSearchProductByName} setSearchInput={setSearchInput} /></div>
 
@@ -67,11 +67,11 @@ const AllProducts = () => {
                     </div>
                     <div className="product-container">
                         {products.map((product) => (
-                            <Link to={`/ProductDetail/${product.ProductID}`} key={product.ProductID} className="product-preview">
+                            <Link to={`/Customer/ProductDetail/${product.ProductID}`} key={product.ProductID} className="product-preview">
                                 <img src={`/img/${product.ProductID}.jpg`} alt={product.Name} />
                                 <h3>{product.Name}</h3>
                                 <p>{product.Content}</p>
-                                <p>{product.Price}</p>
+                                <p>{product.Price.toLocaleString()} VND</p>
                             </Link>
                         ))}
                     </div>

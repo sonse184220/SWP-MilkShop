@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import './Brand.css';
-import { handleAllBrand } from '../../services/getAllBrand';
+import { handleAllBrand } from '../../services/brand/getAllBrand';
 
 function Brand({ onBrandClick, onSearch, setSearchInput }) {
     const [brands, setBrands] = useState([]);

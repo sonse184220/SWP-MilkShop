@@ -709,7 +709,7 @@ progress {
 
 .row>* {
     flex-shrink: 0;
-    width: 100%;
+    /* width: 100%; */
     max-width: 100%;
     padding-right: calc(var(--bs-gutter-x)/ 2);
     padding-left: calc(var(--bs-gutter-x)/ 2);
@@ -1300,7 +1300,6 @@ progress {
 
     .col-md-4 {
         flex: 0 0 auto;
-        width: 33.3333333333%
     }
 
     .col-md-5 {
@@ -2533,7 +2532,7 @@ progress {
 .form-control {
     display: block;
     width: 100%;
-    min-height: 38.96px;
+    min-height: 30px;
     padding: 6px 12px;
     font-size: .875rem;
     font-weight: 400;
@@ -17741,7 +17740,7 @@ a.ui-button:active {
 .comment-img {
     margin-right: 30px;
     margin-bottom: 20px;
-    border-radius: 5px
+    /* border-radius: 5px */
 }
 
 .comment-img img {
@@ -19205,7 +19204,7 @@ table {
 }
 
 .emptycart-content .title {
-    font-size: 32px;
+    font-size: 20px;
     font-weight: 700;
     text-transform: uppercase;
     margin-top: 40px;
@@ -19222,12 +19221,12 @@ table {
 
 @media (min-width:992px) {
     .emptycart-content .sub-title {
-        font-size: 26px
+        font-size: 20px
     }
 }
 
 .emptycart-content .btn {
-    margin-top: 40px
+    margin-top: 25px
 }
 
 .header-top-bg--black {

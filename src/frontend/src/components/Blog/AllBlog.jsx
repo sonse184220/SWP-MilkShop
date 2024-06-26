@@ -97,7 +97,7 @@ const Blogs = [
   // Add more blog post objects here
 ];
 
-const AllBlog = () => {
+const AllBlog = ({ isMember }) => {
   const [blogs, setBlogs] = useState([]);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -126,11 +126,15 @@ const AllBlog = () => {
       setBlogs(searchedBlogs.data);
 
       console.log("After that: ", searchedBlogs);
+
+      console.log("After that: ", searchedBlogs);
     } catch (err) {
       setError(err.message);
       console.error("Error searching blogs:", err);
     }
   };
+
+  const allProducts = Blogs.flatMap((blog) => blog.products);
 
   const allProducts = Blogs.flatMap((blog) => blog.products);
   return (
@@ -143,6 +147,7 @@ const AllBlog = () => {
           <div className="col-lg-8">
             <h2>All Blogs</h2>
             {/* searchBlog */}
+            {/* searchBlog */}
             <div className="searchBlog">
               Search blog:
               <input
@@ -152,6 +157,7 @@ const AllBlog = () => {
               />
               <button onClick={handleSearch}>Search</button>
             </div>
+            <BlogPost blogs={blogs} />
             <BlogPost blogs={blogs} />
           </div>
           <div className="col-lg-4">

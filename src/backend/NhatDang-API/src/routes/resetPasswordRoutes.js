@@ -1,5 +1,5 @@
 import express from 'express';
-import { requestResetPassword, resetPassword } from '../services/resetPassWordService.js';
+import { requestResetPassword, resetPassword } from '../controllers/resetPasswordController.js';
 import dotenv from 'dotenv';
 
 dotenv.config();

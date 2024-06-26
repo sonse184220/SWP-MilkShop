@@ -1,0 +1,75 @@
+.table-container {
+  margin-top: 20px;
+  background-color: snow;
+  padding: 20px;
+  margin-left: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.table-actions {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.table-actions label {
+  margin-right: 10px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  color: palevioletred;
+}
+
+.search-input {
+  padding: 5px;
+  font-size: 14px;
+  margin-right: 10px;
+  border: 1px solid palevioletred;
+  border-radius: 5px;
+  outline: none;
+  transition: border-color 0.3s;
+  width: 50%;
+}
+
+.search-input:focus {
+  border-color: #d9534f;
+}
+
+.issues-table {
+ width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed; /* Ensure the table layout is stable */
+}
+
+.issues-table th, .issues-table td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: left;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
+
+.issues-table th {
+  background-color: palevioletred;
+  color: white;
+}
+
+.issues-table tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+.searchProduct {
+  background-color: palevioletred;
+  color: snow;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  border-radius: 5px;
+}
+
+.searchProduct:hover {
+  background-color: white;
+  color: palevioletred;
+  border: 1px solid palevioletred;
+}

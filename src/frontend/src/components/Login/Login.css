@@ -6,7 +6,7 @@
 
 /* Container for the login form */
 .container-login100 {
-    background-image: url('/public/img/bg-01.jpg');
+    background-image: url('/public/img/loginbackground.jpg');
     width: 100%;
     min-height: 100vh;
     display: flex;
@@ -14,7 +14,6 @@
     justify-content: center;
     align-items: center;
     padding: 15px;
-    /* background: no-repeat center/cover; */
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
@@ -31,7 +30,7 @@
     height: 100%;
     top: 0;
     left: 0;
-    background-color: rgba(255, 255, 255, .9);
+    background-color: rgba(255, 255, 255, 0.600);
 }
 
 /* Wrapper for the login form */
@@ -40,7 +39,12 @@
     border-radius: 10px;
     overflow: hidden;
     padding: 20px 55px 20px;
-    background: linear-gradient(to bottom, #333, #666);
+    /* background: linear-gradient(to bottom, #ffb5b5, #ff5d9e); */
+    /* background-color: #ffb5b5; */
+    /*#ebd5d5*/
+    background: linear-gradient(to bottom, #ffcece, #ffc1c8);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    border: 1px solid #ddd;
 }
 
 /* Login form */
@@ -48,18 +52,35 @@
     width: 100%;
 }
 
-/* Login form logo */
-.login100-form-logo {
+/* .login100-form-logo {
     font-size: 60px;
     color: #333;
+    background-color: #fff;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 120px;
     height: 120px;
     border-radius: 50%;
-    background-color: #fff;
     margin: 0 auto;
+} */
+
+.login100-form-logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto;
+    overflow: hidden;
+    border-radius: 50%;
+    background-color: #fff;
+}
+
+.login100-form-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
 /* Input validation */
@@ -78,13 +99,13 @@
 /* Input field */
 .input100 {
     font: 18px/1.2 Poppins-Regular;
-    /* Increased font size */
-    color: #fff;
+    /* color: #407088; */
     display: block;
     width: 100%;
     height: 45px;
-    background: transparent;
+    background: #fff;
     padding: 0 5px 0 38px;
+    border-radius: 10px;
 }
 
 /* Remove default input styles */
@@ -94,11 +115,9 @@ input {
 }
 
 /* Input placeholder styles */
-.input100::placeholder {
-    color: #fff;
+/* .input100::placeholder {
     font-size: 18px;
-    /* Increased font size */
-}
+} */
 
 /* Input focus effect */
 .focus-input100 {
@@ -120,8 +139,7 @@ input {
 /* Checkbox label */
 .label-checkbox100 {
     font: 18px/1.2 Poppins-Regular;
-    /* Increased font size */
-    color: #fff;
+    color: #240747;
     display: block;
     position: relative;
     padding-left: 26px;
@@ -132,15 +150,18 @@ input {
 .container-login100-form-btn {
     width: 100%;
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    /* Added gap between buttons */
 }
 
 /* Login button */
 .login100-form-btn {
+    gap: 10px;
     font: 18px/1.2 Poppins-Medium;
-    /* Increased font size */
-    color: #4B5320;
+    color: #333;
+    background: #f5e1da;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -148,15 +169,44 @@ input {
     min-width: 120px;
     height: 50px;
     border-radius: 25px;
-    background: #fff;
     position: relative;
     z-index: 1;
-    transition: all 0.4s;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
 .login100-form-btn:hover {
-    background: #aaa;
-    /* Slightly darker gray for hover effect */
+    background: #ffb5b5;
+    color: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Google sign-in button */
+.google-btn {
+    font: 18px/1.2 Poppins-Medium;
+    /* color: #fff;
+    background: #4285f4; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 20px;
+    min-width: 120px;
+    height: 50px;
+    border-radius: 25px;
+    position: relative;
+    z-index: 1;
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.google-btn i {
+    margin-right: 10px;
+    font-size: 20px;
+}
+
+.google-btn:hover {
+    background: #357ae8;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Text center utility class */
@@ -172,8 +222,7 @@ input {
 /* Text styles */
 .txt1 {
     font: 18px/1.5 Poppins-Regular;
-    /* Increased font size */
-    color: #e5e5e5;
+    color: #f67280;
 }
 
 /* Remove default button styles */
@@ -186,7 +235,7 @@ button {
 /* Login form title */
 .login100-form-title {
     font: 30px/1.2 Poppins-Medium;
-    color: #fff;
+    color: #333;
     text-align: center;
     text-transform: uppercase;
     display: block;
@@ -215,7 +264,7 @@ input[type="radio"] {
 
 .switchregister p {
     font: 18px/1.2 Poppins-Regular;
-    color: #fff;
+    color: #777;
     margin-right: 10px;
     width: 50%;
     text-align: right;
@@ -223,7 +272,7 @@ input[type="radio"] {
 
 .switchregister a {
     font: 18px/1.2 Poppins-Regular;
-    color: #ffc107;
+    color: #ff6f3c;
     text-decoration: none;
     padding-bottom: 2px;
     transition: color 0.3s ease;

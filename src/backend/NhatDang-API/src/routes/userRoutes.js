@@ -1,5 +1,5 @@
 import express from 'express';
-import { getUserInfo, updateUserInfo, completeProfile } from '../services/userService.js';
+import { getUserInfo, updateUserInfo, completeProfile } from '../controllers/userController.js';
 import dotenv from 'dotenv';
 
 dotenv.config();

@@ -1,18 +1,48 @@
 .wrapper {
-    min-height: 100vh;
+    /* min-height: 100vh;
     background-size: cover;
     background-repeat: no-repeat;
     display: flex;
+    align-items: center; */
+    background-image: url('/public/img/loginbackground.jpg');
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     align-items: center;
-    background-image: url('/public/img/P004.jpg');
+    padding: 15px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    position: relative;
+    z-index: 1;
+}
+
+.wrapper::before {
+    content: "";
+    display: block;
+    position: absolute;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(255, 255, 255, 0.600);
 }
 
 .inner {
     padding: 20px;
     background: #fff;
     max-width: 850px;
+    max-height: 610px;
     margin: auto;
     display: flex;
+    /* background: linear-gradient(to bottom, #ffb5b5, #ff5d9e); */
+    background: linear-gradient(to bottom, #ffcece, #ffc1c8);
+    border-radius: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    border: 1px solid #ddd;
 }
 
 .inner .image-holder {
@@ -20,8 +50,11 @@
 }
 
 .inner .image-holder img {
+    margin-top: 25px;
+    margin-left: 20px;
+    border-radius: 20px;
     max-width: 100%;
-    height: 100%;
+    height: 95%;
 }
 
 .inner form {
@@ -100,10 +133,17 @@
     transform: perspective(1px) translateZ(0);
     -webkit-transition-duration: 0.3s;
     transition-duration: 0.3s;
+    border-radius: 20px;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
 .inner button:hover {
-    background-color: #4B5320;
+    /* background-color: #4B5320; */
+    background: #ffb5b5;
+    color: #fff;
+    transform: translateY(-3px);
+    /* Moves the button up by 3 pixels on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .inner button i {
@@ -117,21 +157,25 @@
     font-size: 15px;
     text-align: center;
     height: 20px;
+    gap: 5px;
 }
 
 .switchlogin p {
     width: 60%;
     text-align: right;
+    color: #777;
 }
 
 .switchlogin a {
     width: 40%;
     text-align: left;
-    color: #5072A7;
+    /* color: #5072A7; */
+    color: #ff6f3c;
 }
 
 .switchlogin a:hover {
-    color: #4B5320;
+    /* color: #4B5320; */
+    color: #ffeb3b;
 }
 
 .zmdi-account,
@@ -143,13 +187,24 @@
     padding-right: 5px;
 }
 
-.error-message {
+/* .error-message {
     color: red;
     font-size: 16px;
     font-weight: 500;
     text-align: center;
     padding-bottom: 5px;
     padding-right: 25px;
+} */
+.error-message {
+    color: #dc3545;
+    font-size: 12px;
+    font-weight: 400;
+    text-align: left;
+    padding-top: 4px;
+    padding-left: 10px;
+    margin-bottom: 8px;
+    font-style: italic;
+    margin-top: -25px;
 }
 
 .success-message {
@@ -160,3 +215,27 @@
     padding-bottom: 5px;
     padding-right: 25px;
 }
+
+/* Register.css */
+
+/* .registerbtn .google-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #dd4b39;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 16px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .registerbtn .google-btn:hover {
+    background-color: #c23321;
+  }
+  
+  .registerbtn .google-btn i {
+    margin-right: 8px;
+  } */

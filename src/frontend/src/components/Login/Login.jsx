@@ -1,9 +1,12 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import { Toaster, toast } from 'react-hot-toast';
+import { Oval } from 'react-loader-spinner';
 
 import './Login.css'
-import handleLoginApi from '../../services/loginService';
-import MemberContext from '../../context/MemberContext';
+import handleLoginApi from '../../services/login/loginService';
+import { LoginWithGoogle } from '../../services/login/loginWithGoogle';
+
 
 //prop chuyền từ app.js
 //onLogin dùng để set state isLogin
@@ -12,18 +15,32 @@ const Login = ({ onLogin, showLogin }) => {
     const navigate = useNavigate();
     // const { updateMemberData } = useContext(MemberContext);
 
-    const [UserID, setUserID] = useState('');
+    const [identifier, setIdentifier] = useState('');
     const [Password, setPassword] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const [ErrorMessage, setErrorMessage] = useState('');
 
-    //Chuyển state isLogin trong app.js (Route '/')
     //Kiểm tra userid và password
     //Chuyển từ màn hình Login.jsx sang HomePage.jsx (trong folder Member) lúc bấm nút Login(Nếu true)
     //Hiện lỗi(nếu false)
+    const handleLoginWithGoogle = async (e) => {
+        e.preventDefault();
+        try {
+            LoginWithGoogle();
+            const response = await LoginWithGoogle();
+            if (response) {
+                console.log(response);
+            }
+        } catch (error) {
+
+        }
+    }
+
     const handleIsLogin = async (event) => {
         event.preventDefault();
+        setIsLoading(true);
 
-        const userInfo = { UserID, Password };
+        const userInfo = { identifier, Password };
         try {
             const response = await handleLoginApi(userInfo);
             console.log('Response:', response);
@@ -31,7 +48,7 @@ const Login = ({ onLogin, showLogin }) => {
                 setErrorMessage('');
                 localStorage.setItem('userData', JSON.stringify(response.data.user));
                 localStorage.setItem('token', response.data.token);
-                navigate('/home');
+                navigate('/Customer/home');
                 onLogin(true);
             } else {
                 setErrorMessage('Something went wrong');
@@ -44,11 +61,20 @@ const Login = ({ onLogin, showLogin }) => {
                 else if (Array.isArray(error.response.data) && error.response.data.length > 0)
                     errorMessage = error.response.data[0];
 
-                setErrorMessage(errorMessage);
+                // setErrorMessage(errorMessage);
+                toast.error("Email/Phone Number or Password is incorrect. Please input again!", {
+                    style: {
+                        backgroundColor: '#ef4444',
+                        color: '#ffffff',
+                        fontWeight: 'bold',
+                    },
+                });
             } else {
                 setErrorMessage('An error occurred');
             }
             console.log(error);
+        } finally {
+            setIsLoading(false);
         }
     }
 
@@ -56,7 +82,7 @@ const Login = ({ onLogin, showLogin }) => {
     //Chuyển sang màn hình Register.jsx lúc bấm 'Create an account'
     const handleShowLogin = (event) => {
         event.preventDefault();
-        navigate('/login-register');
+        navigate('/Customer/login-register');
         showLogin(true);
     };
 
@@ -66,19 +92,20 @@ const Login = ({ onLogin, showLogin }) => {
                 <div className="wrap-login100">
                     <form className="login100-form validate-form">
                         <span className="login100-form-logo">
-                            <i className="zmdi zmdi-landscape"></i>
+                            {/* <i className="zmdi zmdi-landscape"></i> */}
+                            <img src="/img/logo.jpg" alt="Milky Way Logo" />
                         </span>
                         <span className="login100-form-title p-b-34 p-t-27">
-                            Log in
+                            Login
                         </span>
                         <div className="wrap-input100 validate-input" data-validate="Enter username">
                             <input
                                 className="input100"
                                 type="text"
                                 name="username"
-                                placeholder="UserID"
-                                value={UserID}
-                                onChange={(e) => setUserID(e.target.value)} />
+                                placeholder="Email/Phone Number"
+                                value={identifier}
+                                onChange={(e) => setIdentifier(e.target.value)} />
                             <span className="focus-input100" data-placeholder=""></span>
                         </div>
                         <div className="wrap-input100 validate-input" data-validate="Enter password">
@@ -91,23 +118,38 @@ const Login = ({ onLogin, showLogin }) => {
                                 onChange={(e) => setPassword(e.target.value)} />
                             <span className="focus-input100" data-placeholder=""></span>
                         </div>
-                        <div className="error-message-container">
+                        {/* <div className="error-message-container">
                             {ErrorMessage && (
                                 <>
                                     {ErrorMessage.message && <p className="error-message">{ErrorMessage.message}</p>}
                                     {ErrorMessage.error && ErrorMessage.error.length > 0 && <p className="error-message">{ErrorMessage.error[0].msg}</p>}
                                 </>
                             )}
-                        </div>
-                        <div className="contact100-form-checkbox">
+                        </div> */}
+                        <Toaster />
+                        {/* <div className="contact100-form-checkbox">
                             <input className="input-checkbox100" id="ckb1" type="checkbox" name="remember-me" />
                             <label className="label-checkbox100" htmlFor="ckb1">
                                 Remember me
                             </label>
-                        </div>
+                        </div> */}
                         <div className="container-login100-form-btn">
-                            <button className="login100-form-btn" onClick={handleIsLogin}>
-                                Login
+                            <button className="login100-form-btn" onClick={handleIsLogin} disabled={isLoading}>
+                                {isLoading ? (
+                                    <Oval
+                                        height={20}
+                                        width={20}
+                                        color="#fff"
+                                    />
+                                ) : (
+                                    <>
+                                        Login
+                                        <i className="zmdi zmdi-arrow-right"></i>
+                                    </>
+                                )}
+                            </button>
+                            <button className="login100-form-btn google-btn" onClick={handleLoginWithGoogle}>
+                                <i class="fab fa-google"></i> Sign in with Google
                             </button>
                         </div>
                         <div className='switchregister'>

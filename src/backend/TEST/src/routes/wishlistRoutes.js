@@ -20,5 +20,14 @@ router.post("/api/wishlist/:id", checkMemberId, checkProductIdInQuery, async (re
     await wishlistController.addProductToWishlist(req, res);
     // chờ ông nhật xong login/logout thì cập nhật bảo mật kiểm tra JWT sau
 });
+/** URL: localhost:xxxx/api/wishlist/{...}?productId={...}
+ * Xóa 1 product khỏi wishlist của 1 member thông qua productID và memberID
+ * - {...} là member ID, ID không được phép để trống, phải cung cấp ít nhất 1 ID nếu không sẽ trả về lỗi
+ * - "productId" là id của product, không được phép để trống, phải cung cấp ít nhất 1 ID nếu không sẽ trả về lỗi
+ */
+router.delete("/api/wishlist/:id", checkMemberId, checkProductIdInQuery, async (req, res) => {
+    await wishlistController.removeProductFromWishlist(req, res);
+    // chờ ông nhật xong login/logout thì cập nhật bảo mật kiểm tra JWT sau
+});
 // export router
 export { router as wishlistRoutes };

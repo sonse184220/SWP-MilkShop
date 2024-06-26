@@ -1,11 +1,16 @@
-import connection from '../utils/db.js';
+import * as productService from '../services/productService.js';
 
-export const getAllProducts = (callback) => {
-    const query = 'SELECT * FROM PRODUCT';
-    connection.query(query, callback);
+export const getAllProducts = (req, res) => {
+    productService.getAllProducts((err, results) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.status(200).json(results);
+    });
 };
 
-export const getProductById = (productId, callback) => {
-    const query = 'SELECT * FROM PRODUCT WHERE ProductID = ?';
-    connection.query(query, [productId], callback);
+export const getProductById = (req, res) => {
+    const { id } = req.params;
+    productService.getProductById(id, (err, results) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.status(200).json(results);
+    });
 };

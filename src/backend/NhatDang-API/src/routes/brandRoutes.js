@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllBrands } from '../services/brandService.js';
+import { getAllBrands } from '../controllers/brandController.js';
 import dotenv from 'dotenv';
 
 dotenv.config();

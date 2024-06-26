@@ -1,8 +1,6 @@
-import * as brandController from '../controllers/brandController.js';
+import connection from '../utils/db.js';
 
-export const getAllBrands = (req, res) => {
-    brandController.getAllBrands((err, results) => {
-        if (err) return res.status(500).json({ error: err.message });
-        res.status(200).json(results);
-    });
+export const getAllBrands = (callback) => {
+    const query = 'SELECT * FROM BRAND';
+    connection.query(query, callback);
 };

@@ -1,8 +1,9 @@
-import { AuthController } from '../controllers/AuthController.js';
-
 import express from 'express';
-import { checkRegister, checkLogin } from '../middlewares/validationMiddleware.js';
+import passport from 'passport';
 import dotenv from 'dotenv';
+
+import { AuthController } from '../controllers/AuthController.js';
+import { checkRegister, checkLogin } from '../middlewares/validationMiddleware.js';
 
 dotenv.config();
 

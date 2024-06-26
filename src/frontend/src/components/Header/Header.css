@@ -43,8 +43,9 @@ li {
 }
 
 .header-area .main-nav .logo {
+  font-family: 'Poppins', sans-serif;
   line-height: 100px;
-  color: #fff;
+  color: #27296d;
   font-size: 28px;
   font-weight: 700;
   text-transform: uppercase;
@@ -79,7 +80,7 @@ li {
   font-weight: 500;
   font-size: 14px;
   text-transform: uppercase;
-  color: #fff;
+  color: #27296d;
   transition: all 0.3s ease 0s;
   height: 40px;
   line-height: 40px;
@@ -190,9 +191,85 @@ li {
   z-index: 999;
 }
 
-/* nav {
+.user-dropdown {
+  position: relative;
+}
+
+.profile-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.profile-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.header-dropdown-menu {
+  position: absolute;
+  top: 130%;
+  right: 0;
+  background-color: #f7f7f7;
+  min-width: 180px;
+  box-shadow: 0 2px 28px 0 rgba(0, 0, 0, 0.06);
+  border-radius: 6px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 100;
+  font-family: 'Poppins', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.header-dropdown-menu::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  right: 20px;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid #f7f7f7;
+}
+
+.user-dropdown:hover .header-dropdown-menu,
+.header-dropdown-menu.show {
+  opacity: 1;
+  visibility: visible;
+  top: 100%;
+}
+
+.header-dropdown-menu li {
+  display: block;
   margin: 0;
   padding: 0;
-  border: 0;
-  outline: 0;
-} */
+}
+
+.header-dropdown-menu li:last-child {
+  border-bottom: none;
+}
+
+.header-dropdown-menu button {
+  display: block;
+  padding: 12px 20px;
+  color: #2a2a2a;
+  font-size: 15px;
+  font-weight: 400;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+
+.header-dropdown-menu button:hover {
+  color: #f5a425;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.3s ease;
+}

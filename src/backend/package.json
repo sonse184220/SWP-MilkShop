@@ -1,12 +1,13 @@
 {
   "name": "swp-milkshop",
   "version": "1.0.0",
+  "type": "module",
   "description": "Project Cửa hàng sữa Mẹ & Bé",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --watch src --ext js --exec \"npm run build && node dist/index.js\"",
+    "start": "nodemon --watch src --ext js --exec node ./src/index.js",
+    "server": "node ./src/index.js",
     "ts": "nodemon --watch TEST --ext js --exec node ./TEST/src/index.js",
-    "build": "babel src --out-dir dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -16,21 +17,21 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
+    "dateformat": "^5.0.3",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-session": "^1.18.0",
     "express-validator": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.9.7",
-    "nodemailer": "^6.9.13"
+    "nodemailer": "^6.9.13",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.24.6",
-    "@babel/core": "^7.24.6",
-    "@babel/node": "^7.24.6",
-    "@babel/preset-env": "^7.24.6",
     "@types/express": "^4.17.21",
     "@types/express-session": "^1.18.0",
+    "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20.12.12",
     "nodemon": "^3.1.0",
     "ts-node": "^10.9.2",
