@@ -16,10 +16,10 @@ function Sidebar() {
           <a href="/Staff/BlogManagement">Blog</a>
         </div>
         <div>
-          <a href="#">Voucher</a>
+          <a href="/Staff/VoucherManagement">Voucher</a>
         </div>
         <div>
-          <a href="#">Report</a>
+          <a href="/Staff/ReportManagement">Report</a>
         </div>
       </div>
     </div>

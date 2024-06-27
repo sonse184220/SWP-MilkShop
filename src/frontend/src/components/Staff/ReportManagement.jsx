@@ -1,50 +1,47 @@
 import React, { useState } from "react";
-import "./BlogManagement.css"; // Import CSS file
+import "./ReportManagement.css"; // Import CSS file
 import Sidebar from "./Sidebar";
 
-const BlogManagement = () => {
-  const [blogs, setBlogs] = useState([
+const ReportManagement = () => {
+  const [reports, setReports] = useState([
     {
-      BlogID: 1,
-      BlogName: "First Blog",
+      ReportID: 1,
+      ReportName: "First Report",
       CreatedDate: "2024-01-01",
-      Content: "This is the content of the first blog.",
+      Content: "This is the content of the first report.",
       created: "2024-01-01",
       updated: "2024-01-02",
     },
     {
-      BlogID: 2,
-      BlogName: "Second Blog",
+      ReportID: 2,
+      ReportName: "Second Report",
       CreatedDate: "2024-02-01",
-      Content: "This is the content of the second blog.",
+      Content: "This is the content of the second report.",
       created: "2024-02-01",
       updated: "2024-02-02",
     },
   ]);
 
   return (
-    <div className="blog-management-container">
+    <div className="report-management">
       <Sidebar />
-      <div className="content">
-        <div className="content-header">
-          <h1>Blog Management</h1>
-          <header>
-            <button className="staff-name">Staff Name</button>
-          </header>
+      <div className="report-management__content">
+        <div className="report-management__header">
+          <h1>Report Management</h1>
+          <button className="staff-name">Staff Name</button>
         </div>
 
         <div className="table-container">
           <div className="table-actions">
-            <label>Search Blog:</label>
+            <label>Search Report:</label>
             <input type="text" placeholder="Search" className="search-input" />
             <button className="searchProduct">Search</button>
-            <button className="addOrder">Add Blog</button>
           </div>
           <table className="issues-table">
             <thead>
               <tr>
-                <th>BlogID</th>
-                <th>BlogName</th>
+                <th>ReportID</th>
+                <th>ReportName</th>
                 <th>CreatedDate</th>
                 <th>Content</th>
                 <th>Created</th>
@@ -54,14 +51,14 @@ const BlogManagement = () => {
               </tr>
             </thead>
             <tbody>
-              {blogs.map((blog) => (
-                <tr key={blog.BlogID}>
-                  <td>{blog.BlogID}</td>
-                  <td>{blog.BlogName}</td>
-                  <td>{blog.CreatedDate}</td>
-                  <td>{blog.Content}</td>
-                  <td>{blog.created}</td>
-                  <td>{blog.updated}</td>
+              {reports.map((report) => (
+                <tr key={report.ReportID}>
+                  <td>{report.ReportID}</td>
+                  <td>{report.ReportName}</td>
+                  <td>{report.CreatedDate}</td>
+                  <td>{report.Content}</td>
+                  <td>{report.created}</td>
+                  <td>{report.updated}</td>
                   <td className="deleteDiv">
                     <div className="delete">
                       <button className="delete-button">
@@ -86,4 +83,4 @@ const BlogManagement = () => {
   );
 };
 
-export default BlogManagement;
+export default ReportManagement;

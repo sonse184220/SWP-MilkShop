@@ -1,57 +1,111 @@
-
-
 .order-management-container {
-    display: flex;
-    height: 100vh;
-    font-family: Arial, sans-serif;
-  }
-  
-  .sidebar {
-    width: 250px;
-    background-color: #f4f4f4;
-  }
-  
-  .content {
-    flex: 1;
-    padding: 20px;
-  }
-  
-  .content-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .content-header h1 {
-    margin: 0;
-  }
-  
-  .staff-name {
-    background-color: palevioletred;
-    color: snow;
-    border-radius: 5px;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-    float: right;
-  }
-  
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-  }
-  
-  table, th, td {
-    border: 1px solid #ddd;
-  }
-  
-  th, td {
-    padding: 8px;
-    text-align: left;
-  }
-  
-  th {
-    background-color: #f4f4f4;
-  }
-  
+  display: flex;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #f4f4f4;
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+}
+
+.content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.content-header h1 {
+  margin: 0;
+}
+
+.staff-name {
+  background-color: palevioletred;
+  color: snow;
+  border-radius: 5px;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  float: right;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+table, th, td {
+  border: 1px solid #ddd;
+}
+
+th, td {
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #f4f4f4;
+}
+
+.delete-button {
+  border: 1px solid;
+  width: 50%;
+  background-color: white; /* Initial background color */
+  color: black; /* Initial text color */
+  transition: background-color 0.3s, color 0.3s; /* Smooth transition */
+}
+
+.delete-button:hover {
+  background-color: palevioletred !important;
+  color: white !important;
+}
+
+.delete-button a {
+  color: inherit; /* Inherit the color from the parent */
+  text-decoration: none; /* Remove underline */
+}
+
+.delete-button:hover a {
+  color: white !important; /* Ensure the text color changes on hover */
+}
+
+
+.delete {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.searchOrder, .addOrder {
+  background-color: palevioletred;
+  color: snow;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  border-radius: 5px;
+}
+
+.searchOrder:hover {
+  background-color: white;
+  color: palevioletred;
+  border: 1px solid palevioletred;
+}
+
+.addOrder:hover {
+  background-color: white;
+  color: palevioletred;
+  border: 1px solid palevioletred;
+}
+
+.addOrder {
+  display: flex;
+  justify-content: flex-end;
+  margin-left: 225px;
+}

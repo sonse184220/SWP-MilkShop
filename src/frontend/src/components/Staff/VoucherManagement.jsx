@@ -1,67 +1,72 @@
-import React, { useState } from "react";
-import "./BlogManagement.css"; // Import CSS file
-import Sidebar from "./Sidebar";
+// src/OrderManagement.js
 
-const BlogManagement = () => {
-  const [blogs, setBlogs] = useState([
+import React, { useState } from "react";
+import Sidebar from "./Sidebar";
+import "./VoucherManagement.css";
+
+const VoucherManagement = () => {
+  const [vouchers, setVouchers] = useState([
     {
-      BlogID: 1,
-      BlogName: "First Blog",
-      CreatedDate: "2024-01-01",
-      Content: "This is the content of the first blog.",
-      created: "2024-01-01",
-      updated: "2024-01-02",
+      VoucherID: 1,
+      Discount: "10%",
+      Quantity: 100,
+      Expiration: "2023-12-31",
+      Content: "10% off on all products",
     },
     {
-      BlogID: 2,
-      BlogName: "Second Blog",
-      CreatedDate: "2024-02-01",
-      Content: "This is the content of the second blog.",
-      created: "2024-02-01",
-      updated: "2024-02-02",
+      VoucherID: 2,
+      Discount: "20%",
+      Quantity: 50,
+      Expiration: "2024-01-15",
+      Content: "20% off on orders over $50",
+    },
+    {
+      VoucherID: 3,
+      Discount: "15%",
+      Quantity: 200,
+      Expiration: "2024-06-30",
+      Content: "15% off on selected items",
     },
   ]);
 
   return (
-    <div className="blog-management-container">
+    <div className="order-management-container">
       <Sidebar />
       <div className="content">
         <div className="content-header">
-          <h1>Blog Management</h1>
+          <h1>Voucher Management</h1>
           <header>
             <button className="staff-name">Staff Name</button>
           </header>
         </div>
-
         <div className="table-container">
           <div className="table-actions">
-            <label>Search Blog:</label>
+            <label>Search Voucher:</label>
             <input type="text" placeholder="Search" className="search-input" />
             <button className="searchProduct">Search</button>
-            <button className="addOrder">Add Blog</button>
+            <button className="addOrder">Add Voucher</button>
           </div>
+
           <table className="issues-table">
             <thead>
               <tr>
-                <th>BlogID</th>
-                <th>BlogName</th>
-                <th>CreatedDate</th>
+                <th>VoucherID</th>
+                <th>Discount</th>
+                <th>Quantity</th>
+                <th>Expiration</th>
                 <th>Content</th>
-                <th>Created</th>
-                <th>Updated</th>
                 <th></th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
-              {blogs.map((blog) => (
-                <tr key={blog.BlogID}>
-                  <td>{blog.BlogID}</td>
-                  <td>{blog.BlogName}</td>
-                  <td>{blog.CreatedDate}</td>
-                  <td>{blog.Content}</td>
-                  <td>{blog.created}</td>
-                  <td>{blog.updated}</td>
+              {vouchers.map((voucher) => (
+                <tr key={voucher.VoucherID}>
+                  <td>{voucher.VoucherID}</td>
+                  <td>{voucher.Discount}</td>
+                  <td>{voucher.Quantity}</td>
+                  <td>{voucher.Expiration}</td>
+                  <td>{voucher.Content}</td>
                   <td className="deleteDiv">
                     <div className="delete">
                       <button className="delete-button">
@@ -86,4 +91,4 @@ const BlogManagement = () => {
   );
 };
 
-export default BlogManagement;
+export default VoucherManagement;

@@ -1,7 +1,7 @@
-
 import React, { useState } from "react";
 import Sidebar from "./Sidebar";
 import "./OrderManagement.css";
+
 const OrderManagement = () => {
   const [orders, setOrders] = useState([
     {
@@ -41,7 +41,8 @@ const OrderManagement = () => {
           <div className="table-actions">
             <label>Search Order:</label>
             <input type="text" placeholder="Search" className="search-input" />
-            <button className="searchProduct">Search</button>
+            <button className="searchOrder">Search</button>
+            <button className="addOrder">Add Order</button>
           </div>
 
           <table className="issues-table">
@@ -52,6 +53,8 @@ const OrderManagement = () => {
                 <th>ProductID</th>
                 <th>Quantity</th>
                 <th>Price</th>
+                <th></th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -62,6 +65,20 @@ const OrderManagement = () => {
                   <td>{order.ProductID}</td>
                   <td>{order.Quantity}</td>
                   <td>{order.Price}</td>
+                  <td className="deleteDiv">
+                    <div className="delete">
+                      <button className="delete-button">
+                        <a href="#">Delete</a>
+                      </button>
+                    </div>
+                  </td>
+                  <td className="deleteDiv">
+                    <div className="delete">
+                      <button className="delete-button">
+                        <a href="#">Update</a>
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>

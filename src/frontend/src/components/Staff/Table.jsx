@@ -83,6 +83,7 @@ function Table() {
         <label>Search Product:</label>
         <input type="text" placeholder="Search" className="search-input" />
         <button className="searchProduct">Search</button>
+        <button className="addOrder">Add Product</button>
       </div>
       <table className="issues-table">
         <thead>
@@ -93,6 +94,8 @@ function Table() {
             <th>Date</th>
             <th>UserID</th>
             <th>Voucher</th>
+            <th></th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -103,7 +106,21 @@ function Table() {
               <td>{item.quantity}</td>
               <td>{item.date}</td>
               <td>{item.userId}</td>
-              <td>{item.voucher}</td>
+              <td>{item.voucher}</td>{" "}
+              <td className="deleteDiv">
+                <div className="delete">
+                  <button className="delete-button">
+                    <a href="#">Delete</a>
+                  </button>
+                </div>
+              </td>
+              <td className="deleteDiv">
+                <div className="delete">
+                  <button className="delete-button">
+                    <a href="#">Update</a>
+                  </button>
+                </div>
+              </td>
             </tr>
           ))}
         </tbody>
