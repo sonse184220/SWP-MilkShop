@@ -7,7 +7,7 @@ export class OrderService {
     }
 
     async getAllOrderHistory(limit, sortBy, offset) {
-        const [orders] = await poolConnect.query(`SELECT * FROM \`order\` ORDER BY ${sortBy} LIMIT ? OFFSET ?`, [limit, offset])
+        const [orders] = await poolConnect.query(`SELECT * FROM \`order\` ORDER BY ${sortBy} LIMIT ? OFFSET ?`, [limit, offset]);
         return orders;
     }
 
@@ -21,8 +21,9 @@ export class OrderService {
         const [order] = await poolConnect.query(`SELECT * FROM \`order\` WHERE OrderID = ?`, [id]);
         return order;
     }
+
     async getOrderDetail(id) {
-        const [orderDetail] = await poolConnect.query(`SELECT * FROM order_details WHERE OrderID = ?`, [id])
+        const [orderDetail] = await poolConnect.query(`SELECT * FROM order_details WHERE OrderID = ?`, [id]);
         return orderDetail;
     }
 
@@ -31,6 +32,7 @@ export class OrderService {
         const count = total[0].count;
         return count;
     }
+
     async getTotalUserOrderNumber(userId) {
         const [total] = await poolConnect.query(`SELECT COUNT(*) as count FROM \`order\` WHERE UserID =?`, [userId]);
         const count = total[0].count;
@@ -42,11 +44,17 @@ export class OrderService {
         const UserID = user ? user.userId : null;
         const GuestID = guestId ? guestId : null;
 
-        const getCartQuery = 'SELECT CART.ProductID, CART.CartQuantity, PRODUCT.Name as ProductName, PRODUCT.Price FROM CART JOIN PRODUCT ON CART.ProductID = PRODUCT.ProductID WHERE CART.UserID = ? OR CART.GuestID = ?';
+        const getCartQuery = 'SELECT CART.ProductID, CART.CartQuantity, PRODUCT.Name as ProductName, PRODUCT.Price, PRODUCT.Quantity as AvailableQuantity FROM CART JOIN PRODUCT ON CART.ProductID = PRODUCT.ProductID WHERE CART.UserID = ? OR CART.GuestID = ?';
         connection.query(getCartQuery, [UserID, GuestID], (err, cartItems) => {
             if (err) return callback(err);
 
             if (cartItems.length === 0) return callback(new Error('Cart is empty'));
+
+            for (let item of cartItems) {
+                if (item.CartQuantity > item.AvailableQuantity) {
+                    return callback(new Error(`Product ${item.ProductName} does not have enough stock. Available quantity: ${item.AvailableQuantity}, Requested quantity: ${item.CartQuantity}`));
+                }
+            }
 
             let initialTotalPrice = 0;
             cartItems.forEach(item => {
@@ -122,27 +130,41 @@ export class OrderService {
 
                     const rewardPoints = Math.floor(totalPrice * 0.02);
 
-                    if (UserID) {
-                        const updateRewardPointsQuery = 'UPDATE MEMBER SET RewardPoints = RewardPoints + ? WHERE UserID = ?';
-                        connection.query(updateRewardPointsQuery, [rewardPoints, UserID], (err, result) => {
-                            if (err) return callback(err);
-                            this.getVoucherDetails(VoucherIDs, (err, vouchers) => {
-                                if (err) return callback(err);
-                                this.emailService.sendOrderConfirmationEmail(Email, orderId, cartItems, initialTotalPrice, totalPrice, vouchers, { Name, Email, Phone, Address }, (err, result) => {
+                    const updateProductQuantityPromises = cartItems.map(item => {
+                        return new Promise((resolve, reject) => {
+                            const updateProductQuantityQuery = 'UPDATE PRODUCT SET Quantity = Quantity - ? WHERE ProductID = ?';
+                            connection.query(updateProductQuantityQuery, [item.CartQuantity, item.ProductID], (err, result) => {
+                                if (err) return reject(err);
+                                resolve();
+                            });
+                        });
+                    });
+
+                    Promise.all(updateProductQuantityPromises)
+                        .then(() => {
+                            if (UserID) {
+                                const updateRewardPointsQuery = 'UPDATE MEMBER SET RewardPoints = RewardPoints + ? WHERE UserID = ?';
+                                connection.query(updateRewardPointsQuery, [rewardPoints, UserID], (err, result) => {
                                     if (err) return callback(err);
-                                    callback(null, { message: 'Order placed successfully', orderId, rewardPoints, cartItems, totalPrice });
+                                    this.getVoucherDetails(VoucherIDs, (err, vouchers) => {
+                                        if (err) return callback(err);
+                                        this.emailService.sendOrderConfirmationEmail(Email, orderId, cartItems, initialTotalPrice, totalPrice, vouchers, { Name, Email, Phone, Address }, (err, result) => {
+                                            if (err) return callback(err);
+                                            callback(null, { message: 'Order placed successfully', orderId, rewardPoints, cartItems, totalPrice });
+                                        });
+                                    });
                                 });
-                            });
-                        });
-                    } else {
-                        this.getVoucherDetails(VoucherIDs, (err, vouchers) => {
-                            if (err) return callback(err);
-                            this.emailService.sendOrderConfirmationEmail(Email, orderId, cartItems, initialTotalPrice, totalPrice, vouchers, { Name, Email, Phone, Address }, (err, result) => {
-                                if (err) return callback(err);
-                                callback(null, { message: 'Order placed successfully', orderId, cartItems, totalPrice });
-                            });
-                        });
-                    }
+                            } else {
+                                this.getVoucherDetails(VoucherIDs, (err, vouchers) => {
+                                    if (err) return callback(err);
+                                    this.emailService.sendOrderConfirmationEmail(Email, orderId, cartItems, initialTotalPrice, totalPrice, vouchers, { Name, Email, Phone, Address }, (err, result) => {
+                                        if (err) return callback(err);
+                                        callback(null, { message: 'Order placed successfully', orderId, cartItems, totalPrice });
+                                    });
+                                });
+                            }
+                        })
+                        .catch(err => callback(err));
                 });
             });
         });
