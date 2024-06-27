@@ -134,8 +134,6 @@ const AllBlog = ({ isMember }) => {
     }
   };
 
-  const allProducts = Blogs.flatMap((blog) => blog.products);
-
   // const allProducts = Blogs.flatMap((blog) => blog.products);
   return (
     <>

@@ -1,9 +1,20 @@
 import { EmailService } from './EmailService.js';
-import { connection } from '../utils/dbConnection.js';
+import { connection, poolConnect } from '../utils/dbConnection.js';
 
 export class OrderService {
     constructor() {
         this.emailService = new EmailService();
+    }
+
+    async getAllOrder(limit, sortBy, offset) {
+        const [orders] = await poolConnect.query(`SELECT * FROM \`order\` ORDER BY ${sortBy} LIMIT ? OFFSET ?`, [limit, offset])
+        return orders;
+    }
+
+    async getTotalOrderNumber() {
+        const [total] = await poolConnect.query(`SELECT COUNT(*) as count FROM \`order\``);
+        const count = total[0].count;
+        return count;
     }
 
     placeOrder = (data, user, guestId, callback) => {

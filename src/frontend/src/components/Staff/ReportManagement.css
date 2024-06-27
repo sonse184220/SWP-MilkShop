@@ -1,0 +1,84 @@
+.report-management {
+    display: flex;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+  }
+  
+  .report-management__content {
+    flex: 1;
+    padding: 20px;
+  }
+  
+  .report-management__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .report-management__header h1 {
+    margin: 0;
+  }
+  
+  .report-management__staff-name {
+    background-color: palevioletred;
+    color: snow;
+    border-radius: 5px;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .report-management__table-container {
+    margin-top: 20px;
+  }
+  
+  .report-management__actions {
+    display: flex;
+    align-items: center;
+  }
+  
+  .report-management__search-input {
+    margin-left: 10px;
+  }
+  
+  .report-management__search-button {
+    margin-left: 10px;
+  }
+  
+  .report-management__table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .report-management__table,
+  .report-management__table th,
+  .report-management__table td {
+    border: 1px solid #ddd;
+  }
+  
+  .report-management__table th,
+  .report-management__table td {
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .report-management__table th {
+    background-color: #f4f4f4;
+  }
+  
+  .report-management__delete-cell {
+    text-align: center;
+  }
+  
+  .report-management__delete-button {
+    border: 1px solid;
+    width: 50%;
+    background-color: white;
+    cursor: pointer;
+  }
+  
+  .report-management__delete-header {
+    /* Additional styling if needed */
+  }
+  

@@ -41,10 +41,10 @@ export class BlogController {
         const total = await blogService.getTotalBlogsByContent(content);
         
         res.status(200).send({
-            data: blogs,
             total: total,
             page: page,
             totalPages: Math.ceil(total / limit),
+            data: blogs,
         });
     };
 

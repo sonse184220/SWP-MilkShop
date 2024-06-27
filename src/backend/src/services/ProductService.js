@@ -12,11 +12,8 @@ export class ProductService {
     }
 
     // tìm product trong database bằng name
-    async searchProducts(sname, slimit, ssortBy, soffset) {
-        const search = `%${sname}%`;
-        const limit = slimit;
-        const sortBy = ssortBy;
-        const offset = soffset;
+    async searchProducts(name, limit, sortBy, offset) {
+        const search = `%${name}%`;
 
         // const [products] = await poolConnect.query('SELECT * FROM product WHERE Name LIKE ?', [search]);
         const [products] = await poolConnect.query(`SELECT p.*, b.Name AS BrandName
@@ -36,12 +33,7 @@ export class ProductService {
     } 
 
     // tìm product trong database bằng brand id
-    async searchProductsByBrand(sid, slimit, ssortBy, soffset) {
-        const id = sid;
-        const limit = slimit;
-        const sortBy = ssortBy;
-        const offset = soffset;
-
+    async searchProductsByBrand(id, limit, sortBy, offset) {
         const [products] = await poolConnect.query(`SELECT p.*, b.Name AS BrandName 
                                                     FROM PRODUCT AS p
                                                     JOIN brand AS b ON p.BrandID = b.BrandID

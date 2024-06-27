@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
 import { connection } from '../utils/dbConnection.js';
-import { EmailService } from './emailService.js';
+import { EmailService } from './EmailService.js';
 
 dotenv.config();
 
