@@ -1,15 +1,17 @@
 import express from 'express';
 import { OrderController } from '../controllers/orderController.js';
 import { checkAuthenticated, getAuthRole } from '../middlewares/authMiddleware.js';
-import { checkGetOrderHistoryQuery, checkOrderId } from '../middlewares/orderValidators.js';
+import { checkOrderId } from '../middlewares/orderValidators.js';
+import { checkPaginationQuery } from '../middlewares/utilsMiddleware.js';
 
 const router = express.Router();
 const orderController = new OrderController();
 
 /** /api/order/history?limit={...}&page={...}&sort={...}
- * Lấy toàn bộ lịch sử mua hàng order
+ * Lấy toàn bộ lịch sử mua hàng order trong database
+ * - "sort" là cách sắp xếp. Nếu không cung cấp, "sort" mặc định là newest. "sort" bao gồm [newest, oldest, highest, lowest]
  */
-router.get("/history", checkAuthenticated, getAuthRole, checkGetOrderHistoryQuery, async (req, res) => {
+router.get("/history", checkAuthenticated, getAuthRole, checkPaginationQuery, async (req, res) => {
     await orderController.getOrderHistory(req, res)
 })
 

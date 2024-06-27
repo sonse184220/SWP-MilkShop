@@ -6,11 +6,11 @@ import { BlogController } from "../controllers/BlogController.js";
 const router = Router();
 const blogController = new BlogController();
 
-/** URL: localhost:xxxx/api/blogs/id/{...}
+/** URL: localhost:xxxx/api/blog/{...}
  * Lấy thông tin 1 blog bằng ID
  * - ID không được phép để trống, phải cung cấp ít nhất 1 ID nếu không sẽ trả về lỗi
  */
-router.get("/api/blogs/id/:id", checkBlogId, async (req, res) => {
+router.get("/api/blog/:id", checkBlogId, async (req, res) => {
     await blogController.getBlogById(req, res);
 });
 

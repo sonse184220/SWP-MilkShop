@@ -6,8 +6,14 @@ export class OrderService {
         this.emailService = new EmailService();
     }
 
-    async getAllOrder(limit, sortBy, offset) {
+    async getAllOrderHistory(limit, sortBy, offset) {
         const [orders] = await poolConnect.query(`SELECT * FROM \`order\` ORDER BY ${sortBy} LIMIT ? OFFSET ?`, [limit, offset])
+        return orders;
+    }
+
+    async getUserOrderHistory(userId, limit, sortBy, offset) {
+        const [orders] = await poolConnect.query(`SELECT * FROM \`order\` WHERE UserID = ? 
+                                                ORDER BY ${sortBy} LIMIT ? OFFSET ?`, [userId, limit, offset]);
         return orders;
     }
 
@@ -22,6 +28,11 @@ export class OrderService {
 
     async getTotalOrderNumber() {
         const [total] = await poolConnect.query(`SELECT COUNT(*) as count FROM \`order\``);
+        const count = total[0].count;
+        return count;
+    }
+    async getTotalUserOrderNumber(userId) {
+        const [total] = await poolConnect.query(`SELECT COUNT(*) as count FROM \`order\` WHERE UserID =?`, [userId]);
         const count = total[0].count;
         return count;
     }
