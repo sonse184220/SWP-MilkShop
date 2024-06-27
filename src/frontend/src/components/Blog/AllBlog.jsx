@@ -7,8 +7,8 @@ import Header from "../Header/Header";
 import BlogList from "./BlogList";
 import ProductList from "../Product/ProductList";
 import { Link } from "react-router-dom";
-import { fetchBlogs } from "../../services/blogService"; // Adjusted the path here
-import { searchBlogs } from "../../services/searchBlog";
+import { fetchBlogs } from "../../services/blog/blogService"; // Adjusted the path here
+import { searchBlogs } from "../../services/blog/searchBlogs";
 
 // Static blogs data for fallback
 const Blogs = [
@@ -136,7 +136,7 @@ const AllBlog = ({ isMember }) => {
 
   const allProducts = Blogs.flatMap((blog) => blog.products);
 
-  const allProducts = Blogs.flatMap((blog) => blog.products);
+  // const allProducts = Blogs.flatMap((blog) => blog.products);
   return (
     <>
       <img className="image" src="/img/P004.jpg" alt="Blog Header" />
