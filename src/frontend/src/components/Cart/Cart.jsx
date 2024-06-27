@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from 'react';
-// import QuantityPicker from 'react-quantity-picker';
-// import { QuantityPicker } from "react-qty-picker";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Modal from 'react-modal';
+// import { CheckCircle } from 'lucide-react';
+// import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+// import { Alert, AlertTitle, AlertDescription } from '../../ui/alert';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { Alert, AlertTitle } from '@mui/material';
 
 import './Cart.css';
 import Footer from "../Footer/Footer";
@@ -16,6 +21,7 @@ import { RemoveCart } from '../../services/cart/removeCart';
 import { UserInfoForm } from '../UserInfoForm/UserInfoForm';
 import { getUser } from '../../services/editprofile/getUser';
 import { MemberOrder } from '../../services/order/memberOrder';
+import { GetAllVouchers } from '../../services/voucher/GetAllVouchers';
 
 export const Cart = ({ isMember }) => {
     const [CartItems, setCartItems] = useState([]);
@@ -27,7 +33,21 @@ export const Cart = ({ isMember }) => {
         Address: '',
         RewardPoints: ''
     });
+    const [vouchers, setVouchers] = useState([]);
+    const [AppliedVoucher, setAppliedVoucher] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
+    const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(true);
+
+    const handleGetVouchers = async () => {
+        try {
+            const MemberToken = 'Bearer ' + localStorage.getItem('token');
+            const response = await GetAllVouchers(MemberToken);
+            if (Array.isArray(response.data))
+                setVouchers(response.data);
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     const handleMemberOrderAction = async () => {
         try {
@@ -45,9 +65,17 @@ export const Cart = ({ isMember }) => {
             if (response.data.orderId) {
                 console.log("order success==========", response.data.message);
                 handleViewCart();
+                setIsOpen(false);
             }
         } catch (error) {
-
+            if (error) {
+                if (error.response.data.error) {
+                    toast.error(error.response.data.error, {
+                        theme: "colored",
+                    });
+                    setIsOpen(false);
+                }
+            }
         }
     }
 
@@ -144,19 +172,63 @@ export const Cart = ({ isMember }) => {
     useEffect(() => {
         handleViewCart();
         handleGetUserInfo();
+        handleGetVouchers();
     }, []);
 
     return (
         <>
             <Header isMember={isMember} />
             <img className='image' src="/img/milkbuying.jpeg" alt="Header Image" />
+            <Modal
+                isOpen={isOpen}
+                onRequestClose={() => setIsOpen(false)}
+                className="custom-modal"
+                overlayClassName="custom-overlay"
+            >
+                <h2>Confirm Order</h2>
+                <p>Are you sure you want to place this order?</p>
+                <div className="modal-actions">
+                    <button onClick={handleMemberOrderAction} className="btn-confirm">Confirm</button>
+                    <button onClick={() => setIsOpen(false)} className="btn-cancel">Cancel</button>
+                </div>
+            </Modal>
+
+            {/* <Modal
+                isOpen={isSuccessModalOpen}
+                onRequestClose={() => setIsSuccessModalOpen(false)}
+                className="custom-modal success-modal"
+                overlayClassName="custom-overlay"
+            >
+                <Alert variant="default">
+                    <CheckCircle className="h-6 w-6 text-green-500" />
+                    <AlertTitle>Success!</AlertTitle>
+                    <AlertDescription>
+                        Your order has been placed successfully.
+                    </AlertDescription>
+                </Alert>
+                <button onClick={() => setIsSuccessModalOpen(false)} className="btn-close mt-4">
+                    Close
+                </button>
+            </Modal> */}
+
+            <Modal
+                isOpen={isSuccessModalOpen}
+                onRequestClose={() => setIsSuccessModalOpen(false)}
+                className="custom-modal success-modal"
+                overlayClassName="custom-overlay"
+            >
+                <Alert severity="success" icon={<CheckCircleIcon />}>
+                    <AlertTitle>Success!</AlertTitle>
+                    Your order has been placed successfully.
+                </Alert>
+                <button onClick={() => setIsSuccessModalOpen(false)} className="btn-close">
+                    Close
+                </button>
+            </Modal>
             <div className="middle-part">
-                <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
-                    <h2>Confirm Order</h2>
-                    <p>Are you sure you want to place this order?</p>
-                    <button onClick={() => {/* handle confirmation */ }}>Confirm</button>
-                    <button onClick={() => setIsOpen(false)}>Cancel</button>
-                </Modal>
+
+
+                <ToastContainer style={{ top: '110px' }} />
 
                 <div className="cart">
                     <section className="h-100 gradient-custom">
@@ -240,7 +312,7 @@ export const Cart = ({ isMember }) => {
 
                 </div>
                 <div className="voucher">
-                    <Voucher />
+                    <Voucher vouchers={vouchers} AppliedVoucher={AppliedVoucher} setAppliedVoucher={setAppliedVoucher} />
                 </div>
 
             </div>
