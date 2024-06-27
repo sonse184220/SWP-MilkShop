@@ -11,6 +11,15 @@ export class OrderService {
         return orders;
     }
 
+    async getOrder(id) {
+        const [order] = await poolConnect.query(`SELECT * FROM \`order\` WHERE OrderID = ?`, [id]);
+        return order;
+    }
+    async getOrderDetail(id) {
+        const [orderDetail] = await poolConnect.query(`SELECT * FROM order_details WHERE OrderID = ?`, [id])
+        return orderDetail;
+    }
+
     async getTotalOrderNumber() {
         const [total] = await poolConnect.query(`SELECT COUNT(*) as count FROM \`order\``);
         const count = total[0].count;

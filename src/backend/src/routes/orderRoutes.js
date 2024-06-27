@@ -1,7 +1,7 @@
 import express from 'express';
 import { OrderController } from '../controllers/orderController.js';
 import { checkAuthenticated, getAuthRole } from '../middlewares/authMiddleware.js';
-import { checkGetOrderHistoryQuery } from '../middlewares/orderValidators.js';
+import { checkGetOrderHistoryQuery, checkOrderId } from '../middlewares/orderValidators.js';
 
 const router = express.Router();
 const orderController = new OrderController();
@@ -11,6 +11,13 @@ const orderController = new OrderController();
  */
 router.get("/history", checkAuthenticated, getAuthRole, checkGetOrderHistoryQuery, async (req, res) => {
     await orderController.getOrderHistory(req, res)
+})
+
+/** /api/order/{..id của order..}
+ * Lấy thông tin chi tiết một order
+ */
+router.get("/:id", checkAuthenticated, getAuthRole, checkOrderId, async (req, res) => {
+    await orderController.getOrderById(req, res)
 })
 
 router.post('/place-order', checkAuthenticated, orderController.placeOrder);

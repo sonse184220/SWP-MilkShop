@@ -4,6 +4,26 @@ const orderService = new OrderService();
 
 export class OrderController {
 
+    async getOrderById(req, res) {
+        const orderId = req.params.id;
+
+        const order = await orderService.getOrder(orderId);
+        if (order.length === 0) {
+            return res.status(404).send({ error: "Order not found!" });
+        }
+
+        if (req.user.userId !== order[0].UserID && req.userRole !== "admin" && req.userRole !== "staff") {
+            return res.status(401).send({ msg: "Unauthorized!" });
+        }
+
+        const orderDetail = await orderService.getOrderDetail(orderId);
+
+        return res.status(200).send({
+            order: order[0],
+            detail: orderDetail,
+        })
+    }
+
     async getOrderHistory(req, res) {
         if (req.userRole !== "admin" && req.userRole !== "staff") {
             return res.status(401).send({ msg: "Unauthorized! Only staff or admin can view all order history" });
