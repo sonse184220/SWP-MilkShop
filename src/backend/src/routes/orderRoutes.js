@@ -1,5 +1,5 @@
 import express from 'express';
-import { OrderController } from '../controllers/orderController.js';
+import { OrderController } from '../controllers/OrderController.js';
 import { checkAuthenticated, getAuthRole } from '../middlewares/authMiddleware.js';
 import { checkOrderId } from '../middlewares/orderValidators.js';
 import { checkPaginationQuery } from '../middlewares/utilsMiddleware.js';
