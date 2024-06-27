@@ -7,12 +7,22 @@ export const UserInfoForm = ({ userFormData, setUserFormData }) => {
     const email = userFormData?.Email || '';
     const phone = userFormData?.Phone || '';
     const address = userFormData?.Address || '';
-    // const rewardPoints = UserInfo?.RewardPoints || 0;
+    const rewardPoints = userFormData?.RewardPoints || 0;
+    // const UseRewardPoints = userFormData?.useRewardPoints || false;
+    const useRewardPoints = userFormData?.useRewardPoints || false;
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setUserFormData(prevState => ({
             ...prevState,
             [name]: value
+        }));
+    };
+
+    const handleRewardPointsChange = (e) => {
+        const usePoints = e.target.value === 'yes';
+        setUserFormData(prevState => ({
+            ...prevState,
+            useRewardPoints: usePoints
         }));
     };
 
@@ -61,17 +71,23 @@ export const UserInfoForm = ({ userFormData, setUserFormData }) => {
                             id='rewardPoints'
                             className='form-control mr-2'
                             placeholder='Available reward points'
+                            value={rewardPoints}
                             readOnly
                         />
-                        <select className='form-control' id='useRewardPoints'>
-                            <option value=''>Apply all points</option>
-                            <option value='yes'>Don't apply</option>
+                        <select
+                            className='form-control'
+                            id='useRewardPoints'
+                            value={useRewardPoints ? 'yes' : 'no'}
+                            onChange={handleRewardPointsChange}
+                        >
+                            <option value='yes'>Apply all points</option>
+                            <option value='no'>Don't apply</option>
                         </select>
                     </div>
                 </div>
-                <button className='btn btn-primary mt-4 user-info-form-button' type='submit'>
+                {/* <button className='btn btn-primary mt-4 user-info-form-button' type='submit'>
                     <i className="fas fa-lock mr-2 user-info-form-icon"></i>Submit Payment
-                </button>
+                </button> */}
             </form>
         </div>
     );

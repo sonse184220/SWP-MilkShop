@@ -125,11 +125,13 @@ export const GuestCart = ({ isMember }) => {
         try {
             const MemberToken = 'Bearer ' + localStorage.getItem('token');
             console.log(MemberToken);
-            const response = await ViewCart(MemberToken);
-            console.log(response);
-            if (response.data && response.data.length > 0) {
-                setCartItems(response.data);
-                console.log("cart", response.data);
+            // const response = await ViewCart(MemberToken);
+            // console.log(response);
+            // const cartitems = localStorage.getItem('cart')
+            const cartitems = JSON.parse(localStorage.getItem('cart') || '[]');
+            if (Array.isArray(cartitems) && cartitems.length > 0) {
+                setCartItems(cartitems);
+                console.log("cart");
             } else {
                 setCartItems([]);
             }
@@ -236,17 +238,18 @@ export const GuestCart = ({ isMember }) => {
                     </section>
 
                 </div>
-                <div className="voucher">
+                {/* <div className="voucher">
                     <Voucher />
-                </div>
+                </div> */}
 
             </div>
             <div className='middle2'>
                 <div className='totalpricebox'><TotalPrice
-                    CartItems={CartItems}
-                    handleMemberOrderAction={handleMemberOrderAction}
-                    isOpen={isOpen}
-                    setIsOpen={setIsOpen} />
+                // CartItems={CartItems}
+                // handleMemberOrderAction={handleMemberOrderAction}
+                // isOpen={isOpen}
+                // setIsOpen={setIsOpen} 
+                />
                 </div>
                 <div className='infoform'><UserInfoForm userFormData={userFormData} setUserFormData={setUserFormData} /></div>
             </div>

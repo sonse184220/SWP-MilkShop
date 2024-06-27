@@ -5,7 +5,7 @@ export const AddToCart = (token, prInfo) => {
         return axios.post("/api/cart/add", prInfo,
             {
                 headers: {
-                    'Authorization': token,
+                    'authorization': token,
                     'Content-Type': 'application/json'
                 }
             }

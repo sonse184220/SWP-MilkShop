@@ -31,12 +31,13 @@ export const Cart = ({ isMember }) => {
         Email: '',
         Phone: '',
         Address: '',
-        RewardPoints: ''
+        RewardPoints: '',
+        useRewardPoints: false
     });
     const [vouchers, setVouchers] = useState([]);
     const [AppliedVoucher, setAppliedVoucher] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
-    const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(true);
+    const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
     const handleGetVouchers = async () => {
         try {
@@ -54,8 +55,8 @@ export const Cart = ({ isMember }) => {
             const MemberToken = 'Bearer ' + localStorage.getItem('token');
             const OrderInfo = {
                 "PaymentMethod": "COD",
-                "VoucherID": "V001",
-                "useRewardPoints": false,
+                "VoucherID": AppliedVoucher ? AppliedVoucher : [],
+                "useRewardPoints": userFormData.useRewardPoints,
                 "Name": userFormData.Name,
                 "Email": userFormData.Email,
                 "Phone": userFormData.Phone,
@@ -66,6 +67,7 @@ export const Cart = ({ isMember }) => {
                 console.log("order success==========", response.data.message);
                 handleViewCart();
                 setIsOpen(false);
+                setIsSuccessModalOpen(true);
             }
         } catch (error) {
             if (error) {
@@ -89,7 +91,8 @@ export const Cart = ({ isMember }) => {
                     Email: user.Email,
                     Phone: user.Phone,
                     Address: user.Address,
-                    RewardPoints: user.RewardPoints
+                    RewardPoints: user.RewardPoints,
+                    useRewardPoints: false
                 })
             }
         } catch (error) {
@@ -321,7 +324,9 @@ export const Cart = ({ isMember }) => {
                     CartItems={CartItems}
                     handleMemberOrderAction={handleMemberOrderAction}
                     isOpen={isOpen}
-                    setIsOpen={setIsOpen} />
+                    setIsOpen={setIsOpen}
+                    AppliedVoucher={AppliedVoucher}
+                />
                 </div>
                 <div className='infoform'><UserInfoForm userFormData={userFormData} setUserFormData={setUserFormData} /></div>
             </div>

@@ -35,14 +35,14 @@ export function CustomerRoutes({ isMember }) {
     return (
         <Routes>
             {/* <Route path='/' element={<Navigate to={'/login-register'} />} /> */}
-            <Route index element={<Navigate to="login-register" />} />
+            <Route index element={<Navigate to="home" />} />
             <Route path='home' element={<HomePage onLogin={handleLogin} isMember={isMember} />} />
             <Route path='login-register' element={!showLogin ? <Login onLogin={handleLogin} showLogin={handleShowLogin} /> : <Register showLogin={handleShowLogin} />} />
             <Route path='login-google' element={<div>Hello Google</div>} />
             <Route path='Blogs' element={<AllBlog isMember={isMember} />}></Route>
             <Route path='Products' element={<AllProducts isMember={isMember} />}></Route>
             <Route path='EditProfile' element={<EditProfile isMember={isMember} />}></Route>
-            <Route path='ProductDetail/:ProductID' element={<ProductDetail isMember={isMember} />}></Route>
+            <Route path='ProductDetail/:ProductID' element={<ProductDetail key={Date.now()} isMember={isMember} />}></Route>
             <Route path='Wishlist' element={<Wishlist isMember={isMember} />}></Route>
             <Route path="BlogDetail/:BlogID" element={<BlogDetail isMember={isMember} />} />
             <Route path='Cart' element={<Cart isMember={isMember} />} />
