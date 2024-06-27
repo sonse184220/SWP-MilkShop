@@ -57,7 +57,8 @@ const ProductDetail = ({ isMember }) => {
     const [quantity, setQuantity] = useState(1);
     const [CurrentProduct, setCurrentProduct] = useState(null);
 
-    const userId = localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')) : "Guest";
+    const userId = localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')).UserID : "Guest";
+    const MemberToken = 'Bearer ' + localStorage.getItem('token');
 
     const [feedbacks, setFeedbacks] = useState([])
     const [newFeedback, setNewFeedback] = useState({
@@ -84,6 +85,7 @@ const ProductDetail = ({ isMember }) => {
                     toast.success('Added to cart', {
                         theme: "colored",
                     });
+                    console.log('adddddddddddddddd')
                 }
             } else {
                 // Handle localStorage cart for non-members
@@ -121,10 +123,12 @@ const ProductDetail = ({ isMember }) => {
         }
     }
 
-    const checkIsWishlistState = () => {
+    const checkIsWishlistState = async () => {
         if (!isMember) return;
+        await handleGetWishlist();
         const wishlistItems = JSON.parse(localStorage.getItem("wishlist"));
         const matchItem = wishlistItems ? wishlistItems.find(product => product.ProductID === ProductID) : false;
+        console.log("statussssssss", matchItem)
         setInWishlist(!!matchItem);
     }
 
@@ -146,15 +150,17 @@ const ProductDetail = ({ isMember }) => {
         try {
             e.preventDefault();
 
-
+            const MemberToken = 'Bearer ' + localStorage.getItem('token');
+            console.log("token======", MemberToken)
             if (!inWishlist) {
                 setInWishlist(prevState => !prevState);
-                const response = await AddWishlist(userId, ProductID);
+                const response = await AddWishlist(MemberToken, userId, ProductID);
                 console.log(response);
                 if (response.data && response.data[0].ProductID === ProductID) {
                     toast.success('Added to wishlist', {
                         theme: "colored",
                     });
+                    checkIsWishlistState();
                 } else {
                     // If the response is not as expected, revert the state
                     setInWishlist(prevState => !prevState);
@@ -164,12 +170,14 @@ const ProductDetail = ({ isMember }) => {
                 }
             } else {
                 setInWishlist(prevState => !prevState);
-                const response = await RemoveWishlist(userId, ProductID);
+                const response = await RemoveWishlist(MemberToken, userId, ProductID);
                 console.log(response.data.msg);
-                if (response.data.msg)
+                if (response.data.msg) {
                     toast.success('Removed from wishlist', {
                         theme: "colored",
                     });
+                    checkIsWishlistState();
+                }
                 else if (response.data.error) {
                     setInWishlist(prevState => !prevState);
                     toast.error('Failed to remove from wishlist', {
@@ -186,7 +194,8 @@ const ProductDetail = ({ isMember }) => {
         if (!isMember) return;
         e.preventDefault();
         try {
-            const response = await DeleteFeedback(feedbackid);
+            const MemberToken = 'Bearer ' + localStorage.getItem('token');
+            const response = await DeleteFeedback(feedbackid, MemberToken);
             if (response.data.msg) {
                 toast.success('Feedback deleted successfully', {
                     theme: "colored",
@@ -263,7 +272,7 @@ const ProductDetail = ({ isMember }) => {
         handleGetFeedback();
         handleGetWishlist();
         checkIsWishlistState();
-    }, [newFeedback])
+    }, [])
 
     return (
         <div className='body'>
@@ -331,7 +340,8 @@ const ProductDetail = ({ isMember }) => {
                             newFeedback={newFeedback}
                             setNewFeedback={setNewFeedback}
                             userId={userId}
-                            isMember={isMember} /></div>
+                            isMember={isMember}
+                        /></div>
                     <div><ProductList products={products} /></div></div>
             ) : (
                 <div><Page404 /></div>
