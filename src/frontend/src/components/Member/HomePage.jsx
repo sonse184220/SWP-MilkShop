@@ -33,7 +33,7 @@ const HomePage = ({ onLogin, isMember }) => {
         <div className="body">
             <div><Header onLogin={onLogin} isMember={isMember} /></div>
             <img className='image' src="/img/milkbuying.jpeg" />
-            <div className="welcome">Welcome {userName}</div>
+            {/* <div className="welcome">Welcome {userName}</div> */}
             <div><ProductBar /></div>
             <div><BlogList /></div>
             <div><Footer /></div>

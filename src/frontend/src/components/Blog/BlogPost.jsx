@@ -10,7 +10,8 @@ const BlogPost = ({ blogs = [] }) => {
             <h2>{blog.Name}</h2>
           </div>
           <div className="blog-post-content">
-            <img src={`/img/${blog.BlogID}.png`} alt={blog.Name} />
+            {/* <img src={`/img/${blog.BlogID}.png`} alt={blog.Name} /> */}
+            <img src="https://via.placeholder.com/800x600" />
             <p>{blog.Content}</p>
           </div>
         </div>

@@ -214,7 +214,8 @@ const ProductDetail = ({ isMember }) => {
     const handleAddFeedback = async () => {
         if (!isMember) return;
         try {
-            const response = await AddFeedback(ProductID, newFeedback);
+            const MemberToken = 'Bearer ' + localStorage.getItem('token');
+            const response = await AddFeedback(MemberToken, ProductID, newFeedback);
             if (!response.data.error) {
                 toast.success('Feedback added successfully', {
                     theme: "colored",
@@ -233,6 +234,11 @@ const ProductDetail = ({ isMember }) => {
             handleGetFeedback();
         } catch (error) {
             console.log(error)
+            if (error.response.data.msg) {
+                toast.error(error.response.data.msg, {
+                    theme: "colored",
+                });
+            }
         }
     }
 
@@ -325,7 +331,7 @@ const ProductDetail = ({ isMember }) => {
                             <div className="product-details-catagory mb-2">
                                 <span className="title">CATEGORY:</span>
                                 <ul>
-                                    <li><a href="#">BAR STOOL</a></li>
+                                    <li><a href="#">{CurrentProduct[0].BrandName}</a></li>
                                     {/* <li><a href="#">KITCHEN UTENSILS</a></li>
                                     <li><a href="#"></a></li> */}
                                 </ul>
