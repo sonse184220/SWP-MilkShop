@@ -23,14 +23,30 @@ export async function checkPreorderData(req, res, next) {
     .isInt({ min: 1, allow_leading_zeroes: false }).withMessage("Quantity must be an integer and more than 0!")
     .run(req);
 
-    await body("totalPrice")
+    await body("paymentMethod")
     .optional()
     .trim()
     .escape()
-    .exists().withMessage("TotalPrice is required!")
-    .notEmpty().withMessage("TotalPrice can not be blank!")
+    .exists().withMessage("Payment is required!")
+    .notEmpty().withMessage("Payment can not be blank!")
     .run(req);
 
+    await body("phone")
+    .optional()
+    .trim()
+    .escape()
+    .exists().withMessage("Phone is required!")
+    .notEmpty().withMessage("Phone can not be blank!")
+    .isNumeric().withMessage("Phone number must contain only numbers!")
+    .run(req);
+
+    await body("address")
+    .optional()
+    .trim()
+    .escape()
+    .exists().withMessage("Address is required!")
+    .notEmpty().withMessage("Address can not be blank!")
+    .run(req);
 
     const result = validationResult(req);
     if (!result.isEmpty()) {

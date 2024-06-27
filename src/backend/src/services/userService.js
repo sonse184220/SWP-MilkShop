@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import { connection } from '../utils/dbConnection.js';
+import { connection, poolConnect } from '../utils/dbConnection.js';
 
 export class UserService {
     getUserInfo = (userId, callback) => {
