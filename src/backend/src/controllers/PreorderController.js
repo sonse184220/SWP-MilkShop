@@ -9,4 +9,12 @@ export class PreorderController {
 
     }
 
+    async placePreorder(req, res) {
+        if (req.user.userId !== req.body.userId) {
+            return res.status(401).send({ msg: "Unauthorized" });
+        }
+
+        
+    }
+
 }

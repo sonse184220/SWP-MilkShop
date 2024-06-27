@@ -102,8 +102,8 @@ function AppContent() {
   };
 
   const checkIsMember = () => {
-    const userData = localStorage.getItem('userData');
-    const token = localStorage.getItem('token');
+    const userData = sessionStorage.getItem('userData');
+    const token = sessionStorage.getItem('token');
     if (userData && token) {
       setIsMember(true);
       console.log("true");
