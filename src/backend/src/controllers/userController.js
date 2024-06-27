@@ -21,4 +21,13 @@ export class UserController {
         });
     };
 
+    changePassword = (req, res) => {
+        const userId = req.user.userId;
+        const { oldPassword, newPassword } = req.body;
+
+        userService.changePassword(userId, oldPassword, newPassword, (err, result) => {
+            if (err) return res.status(500).json({ error: err.message });
+            res.status(200).json(result);
+        });
+    };
 }

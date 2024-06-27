@@ -11,6 +11,16 @@ export class ProductService {
         return product;
     }
 
+    async getBlogProductList(blogId) {
+        const [products] = await poolConnect.query(`SELECT b.Name AS BrandName, p.* 
+                                                    FROM blog_products AS bp 
+                                                    JOIN product AS p ON bp.ProductID = p.ProductID
+                                                    JOIN brand AS b ON p.BrandID = b.BrandID
+                                                    WHERE BlogID = ?`, 
+                                                    [blogId]);
+        return products;
+    }
+
     // tìm product trong database bằng name
     async searchProducts(name, limit, sortBy, offset) {
         const search = `%${name}%`;

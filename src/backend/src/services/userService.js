@@ -1,4 +1,5 @@
-import { connection, poolConnect } from '../utils/dbConnection.js';
+import bcrypt from 'bcryptjs';
+import { connection } from '../utils/dbConnection.js';
 
 export class UserService {
     getUserInfo = (userId, callback) => {
@@ -55,4 +56,27 @@ export class UserService {
         });
     };
 
+    changePassword = (userId, oldPassword, newPassword, callback) => {
+        const query = 'SELECT Password FROM MEMBER WHERE UserID = ?';
+        connection.query(query, [userId], (err, results) => {
+            if (err) return callback(err);
+            if (results.length === 0) return callback(new Error('User not found'));
+
+            const storedPassword = results[0].Password;
+            bcrypt.compare(oldPassword, storedPassword, (err, isMatch) => {
+                if (err) return callback(err);
+                if (!isMatch) return callback(new Error('Old password is incorrect'));
+
+                bcrypt.hash(newPassword, 10, (err, hashedPassword) => {
+                    if (err) return callback(err);
+
+                    const updateQuery = 'UPDATE MEMBER SET Password = ? WHERE UserID = ?';
+                    connection.query(updateQuery, [hashedPassword, userId], (err, result) => {
+                        if (err) return callback(err);
+                        callback(null, { message: 'Password changed successfully' });
+                    });
+                });
+            });
+        });
+    };
 }

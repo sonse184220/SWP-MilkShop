@@ -111,3 +111,34 @@ export const checkResetPassword = [
         next();
     }
 ];
+
+export const checkChangePassword = [
+    body('oldPassword')
+        .trim()
+        .exists().withMessage('Old password is required')
+        .notEmpty().withMessage('Old password cannot be empty'),
+    body('newPassword')
+        .trim()
+        .exists().withMessage('New password is required')
+        .notEmpty().withMessage('New password cannot be empty')
+        .isLength({ min: 6 }).withMessage('New password must be at least 6 characters long'),
+    body('confirmPassword')
+        .trim()
+        .exists().withMessage('Confirm password is required')
+        .notEmpty().withMessage('Confirm password cannot be empty')
+        .isLength({ min: 6 }).withMessage('Confirm password must be at least 6 characters long')
+        .custom((value, { req }) => {
+            if (value !== req.body.newPassword) {
+                throw new Error('Passwords do not match');
+            }
+            return true;
+        }),
+    (req, res, next) => {
+        const result = validationResult(req);
+        if (!result.isEmpty()) {
+            return res.status(400).send({ error: result.array() });
+        }
+        Object.assign(req.body, matchedData(req));
+        next();
+    }
+];

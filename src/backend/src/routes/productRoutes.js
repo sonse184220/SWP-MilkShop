@@ -3,6 +3,7 @@ import { Router } from "express";
 import { checkProductSearch, checkProductId, checkProductSearchBrand, checkFeedbackData, checkFeedbackId } from "../middlewares/productValidators.js";
 import { ProductController } from "../controllers/ProductController.js";
 import { getAuthRole, checkAuthenticated } from "../middlewares/authMiddleware.js";
+import { checkPaginationQuery } from "../middlewares/utilsMiddleware.js";
 
 const router = Router();
 const productController = new ProductController();
@@ -27,7 +28,7 @@ router.get("/api/product/:id", checkProductId, async (req, res) => {
  * - "page" là số trang. Nếu không cung cấp, "page" mặc định là 1
  * - "sort" là cách sắp xếp. Nếu không cung cấp, "sort" mặc định là newest. "sort" bao gồm [newest, oldest, highest, lowest]
  */
-router.get("/api/products/search", checkProductSearch, async (req, res) => {
+router.get("/api/products/search", checkProductSearch, checkPaginationQuery, async (req, res) => {
     await productController.searchProducts(req, res);
 });
 
@@ -38,7 +39,7 @@ router.get("/api/products/search", checkProductSearch, async (req, res) => {
  * - "page" là số trang. Nếu không cung cấp, "page" mặc định là 1
  * - "sort" là cách sắp xếp. Nếu không cung cấp, "sort" mặc định là newest. "sort" bao gồm [newest, oldest, highest, lowest]
  */
-router.get("/api/products/search/brand", checkProductSearchBrand, async (req, res) => {
+router.get("/api/products/search/brand", checkProductSearchBrand, checkPaginationQuery, async (req, res) => {
     await productController.searchProductsByBrandId(req, res);
 });
 
