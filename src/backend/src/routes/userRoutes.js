@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import { checkAuthenticated, getAuthRole } from '../middlewares/authMiddleware.js';
 import { checkMemberId } from '../middlewares/userValidators.js';
 import { checkPaginationQuery } from '../middlewares/utilsMiddleware.js';
+import { checkChangePassword } from '../middlewares/validationMiddleware.js';
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ const orderController = new OrderController();
 
 router.get('/:userId', userController.getUserInfo);
 router.put('/:userId', userController.updateUserInfo);
+router.post('/change-password', checkAuthenticated, checkChangePassword, userController.changePassword);
 
 /** /api/user/{..userId..}/order-history?limit={...}&page={...}&sort={...}
  * Lấy toàn bộ lịch sử mua hàng order của 1 user
