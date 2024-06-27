@@ -46,9 +46,9 @@ const Login = ({ onLogin, showLogin }) => {
             console.log('Response:', response);
             if (response.data) {
                 setErrorMessage('');
-                localStorage.setItem('userData', JSON.stringify(response.data.user));
-                localStorage.setItem('token', response.data.token);
-                navigate('/Customer/home');
+                sessionStorage.setItem('userData', JSON.stringify(response.data.user));
+                sessionStorage.setItem('token', response.data.token);
+                navigate('/Customer/home', { state: { showLoginSuccess: true } });
                 onLogin(true);
             } else {
                 setErrorMessage('Something went wrong');

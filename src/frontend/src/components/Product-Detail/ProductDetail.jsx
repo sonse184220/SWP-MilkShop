@@ -57,7 +57,7 @@ const ProductDetail = ({ isMember }) => {
     const [quantity, setQuantity] = useState(1);
     const [CurrentProduct, setCurrentProduct] = useState(null);
 
-    const userId = localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')).UserID : "Guest";
+    const userId = sessionStorage.getItem('userData') ? JSON.parse(sessionStorage.getItem('userData')).UserID : "Guest";
     const MemberToken = 'Bearer ' + localStorage.getItem('token');
 
     const [feedbacks, setFeedbacks] = useState([])
@@ -74,7 +74,7 @@ const ProductDetail = ({ isMember }) => {
         e.preventDefault();
         try {
             if (isMember) {
-                const MemberToken = 'Bearer ' + localStorage.getItem('token');
+                const MemberToken = 'Bearer ' + sessionStorage.getItem('token');
                 console.log(MemberToken);
                 const prInfo = {
                     "ProductID": ProductID,
@@ -150,7 +150,7 @@ const ProductDetail = ({ isMember }) => {
         try {
             e.preventDefault();
 
-            const MemberToken = 'Bearer ' + localStorage.getItem('token');
+            const MemberToken = 'Bearer ' + sessionStorage.getItem('token');
             console.log("token======", MemberToken)
             if (!inWishlist) {
                 setInWishlist(prevState => !prevState);
@@ -194,7 +194,7 @@ const ProductDetail = ({ isMember }) => {
         if (!isMember) return;
         e.preventDefault();
         try {
-            const MemberToken = 'Bearer ' + localStorage.getItem('token');
+            const MemberToken = 'Bearer ' + sessionStorage.getItem('token');
             const response = await DeleteFeedback(feedbackid, MemberToken);
             if (response.data.msg) {
                 toast.success('Feedback deleted successfully', {
@@ -214,7 +214,7 @@ const ProductDetail = ({ isMember }) => {
     const handleAddFeedback = async () => {
         if (!isMember) return;
         try {
-            const MemberToken = 'Bearer ' + localStorage.getItem('token');
+            const MemberToken = 'Bearer ' + sessionStorage.getItem('token');
             const response = await AddFeedback(MemberToken, ProductID, newFeedback);
             if (!response.data.error) {
                 toast.success('Feedback added successfully', {
