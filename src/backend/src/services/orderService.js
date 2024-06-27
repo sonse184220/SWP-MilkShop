@@ -120,7 +120,7 @@ export class OrderService {
                 connection.query(clearCartQuery, [UserID, GuestID], (err, result) => {
                     if (err) return callback(err);
 
-                    const rewardPoints = Math.floor(totalPrice * 0.05);
+                    const rewardPoints = Math.floor(totalPrice * 0.02);
 
                     if (UserID) {
                         const updateRewardPointsQuery = 'UPDATE MEMBER SET RewardPoints = RewardPoints + ? WHERE UserID = ?';
