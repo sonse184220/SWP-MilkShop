@@ -1,9 +1,10 @@
+import sharp from 'sharp';
 import bcrypt from 'bcryptjs';
 import { connection } from '../utils/dbConnection.js';
 
 export class UserService {
     getUserInfo = (userId, callback) => {
-        const query = 'SELECT UserID, Name, Email, Phone, Address, RewardPoints, Verified FROM MEMBER WHERE UserID = ?';
+        const query = 'SELECT UserID, Name, Email, Phone, Address, RewardPoints, Verified, ProfilePicture FROM MEMBER WHERE UserID = ?';
         connection.query(query, [userId], callback);
     };
 
@@ -13,7 +14,7 @@ export class UserService {
     }
 
     updateUserInfo = (userId, newUserData, callback) => {
-        this.getUserInfo(userId, (err, results) => {
+        this.getUserInfo(userId, async (err, results) => {
             if (err) return callback(err);
             if (results.length === 0) return callback(new Error('User not found'));
 
@@ -36,6 +37,17 @@ export class UserService {
             if (newUserData.Address && newUserData.Address.trim() !== currentUserData.Address) {
                 fieldsToUpdate.push('Address = ?');
                 values.push(newUserData.Address.trim());
+            }
+            if (newUserData.ProfilePicture) {
+                try {
+                    const resizedImageBuffer = await sharp(newUserData.ProfilePicture)
+                        .resize(480, 320)
+                        .toBuffer();
+                    fieldsToUpdate.push('ProfilePicture = ?');
+                    values.push(resizedImageBuffer);
+                } catch (err) {
+                    return callback(err);
+                }
             }
 
             if (fieldsToUpdate.length === 0) {

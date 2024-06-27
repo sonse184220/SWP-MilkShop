@@ -14,9 +14,15 @@ export class UserController {
 
     updateUserInfo = (req, res) => {
         const userId = req.params.userId;
-        const newUserData = req.body;
+        const newUserData = {
+            ...req.body,
+            ProfilePicture: req.file ? req.file.buffer : null,
+        };
+
         userService.updateUserInfo(userId, newUserData, (err, result) => {
-            if (err) return res.status(500).json({ error: err.message });
+            if (err) {
+                return res.status(500).json({ error: err.message });
+            }
             res.status(200).json(result);
         });
     };
