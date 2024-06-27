@@ -1,7 +1,7 @@
 import { connection } from '../utils/dbConnection.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { EmailService } from './emailService.js';
+import { EmailService } from './EmailService.js';
 import dotenv from 'dotenv';
 
 dotenv.config();

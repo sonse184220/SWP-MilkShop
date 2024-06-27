@@ -43,10 +43,10 @@ export class ProductController {
         const total = await productService.getTotalProductsByName(name);
         
         return res.status(200).send({
-            data: products,
             total: total,
             page: page,
             totalPages: Math.ceil(total / limit),
+            data: products,
         });
     };
 
@@ -79,10 +79,10 @@ export class ProductController {
         const total = await productService.getTotalProductsByBrand(id);
         
         return res.status(200).send({
-            data: products,
             total: total,
             page: page,
             totalPages: Math.ceil(total / limit),
+            data: products,
         });
     };
 

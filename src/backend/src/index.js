@@ -51,7 +51,6 @@ app.use(preorderRoutes);
 
 
 app.use('/api/auth', authRoutes);
-app.use('/api/product', productRoutes);
 app.use('/api/reset-password', resetPasswordRoutes);
 app.use('/api/brand', brandRoutes);
 app.use('/api/cart', cartRoutes);

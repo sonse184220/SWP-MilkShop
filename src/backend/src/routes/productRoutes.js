@@ -10,7 +10,7 @@ const productController = new ProductController();
 /**
  * 
  */
-router.get('/', productController.getAllProducts);
+router.get('/api/products', productController.getAllProducts);
 
 /** URL: localhost:xxxx/api/product/{...}
  * Lấy thông tin 1 product bằng ID
