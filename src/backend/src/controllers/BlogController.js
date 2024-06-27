@@ -1,6 +1,8 @@
 import { BlogService } from "../services/BlogService.js";
+import { ProductService } from "../services/ProductService.js";
 
 const blogService = new BlogService();
+const productService = new ProductService();
 
 export class BlogController {
 
@@ -10,7 +12,13 @@ export class BlogController {
         if (blog.length === 0) {
             return res.status(404).send({ error: "Blog not found!" });
         }
-        res.status(200).send(blog);
+
+        const blogProducts = await productService.getBlogProductList(id);
+
+        res.status(200).send({
+            blog: blog[0],
+            blogProducts: blogProducts,
+        });
     };
 
     async getAllBlogs(req, res) {
