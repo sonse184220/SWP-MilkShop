@@ -142,3 +142,15 @@ export const checkChangePassword = [
         next();
     }
 ];
+
+export const checkImageUpload = (req, res, next) => {
+    if (!req.file) {
+        return next();
+    }
+
+    if (!req.file.mimetype.startsWith('image/')) {
+        return res.status(400).send({ error: 'Invalid file type. Only image files are allowed.' });
+    }
+
+    next();
+};
