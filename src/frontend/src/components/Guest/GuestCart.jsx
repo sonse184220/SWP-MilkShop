@@ -26,6 +26,24 @@ export const GuestCart = ({ isMember }) => {
     });
     const [isOpen, setIsOpen] = useState(false);
 
+    // const OrderInfo = {
+    //     "PaymentMethod": "COD",
+    //     "Name": userFormData.Name,
+    //     "Email": userFormData.Email,
+    //     "Phone": userFormData.Phone,
+    //     "Address": userFormData.Address,
+    //     "Orders": [
+    //         {
+    //             "ProductID":"p001",
+    //             "Quantiy":3
+    //         },
+    //         {
+    //             "ProductID":"p002",
+    //             "Quantiy":5
+    //         }
+    //     ]
+    // }
+
     const handleMemberOrderAction = async () => {
         try {
             const MemberToken = 'Bearer ' + localStorage.getItem('token');
