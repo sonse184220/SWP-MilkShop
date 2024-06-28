@@ -12,8 +12,7 @@ export class OrderService {
     }
 
     async getUserOrderHistory(userId, limit, sortBy, offset) {
-        const [orders] = await poolConnect.query(`SELECT * FROM \`order\` WHERE UserID = ? 
-            ORDER BY ${sortBy} LIMIT ? OFFSET ?`, [userId, limit, offset]);
+        const [orders] = await poolConnect.query(`SELECT * FROM \`order\` WHERE UserID = ? ORDER BY ${sortBy} LIMIT ? OFFSET ?`, [userId, limit, offset]);
         return orders;
     }
 
@@ -40,50 +39,86 @@ export class OrderService {
     }
 
     placeOrder = (data, user, guestId, callback) => {
-        const { PaymentMethod, VoucherIDs, useRewardPoints, Name, Email, Phone, Address } = data;
+        const { PaymentMethod, VoucherIDs, useRewardPoints, Name, Email, Phone, Address, cart } = data;
         const UserID = user && user.userId !== 'guest' ? user.userId : null;
         const GuestID = user && user.userId === 'guest' ? guestId : null;
 
-        const getCartQuery = 'SELECT CART.ProductID, CART.CartQuantity, PRODUCT.Name as ProductName, PRODUCT.Price, PRODUCT.Quantity as AvailableQuantity FROM CART JOIN PRODUCT ON CART.ProductID = PRODUCT.ProductID WHERE CART.UserID = ? OR CART.GuestID = ?';
-        connection.query(getCartQuery, [UserID, GuestID], (err, cartItems) => {
-            if (err) return callback(err);
+        if (UserID) {
+            const getCartQuery = 'SELECT CART.ProductID, CART.CartQuantity, PRODUCT.Name as ProductName, PRODUCT.Price, PRODUCT.Quantity as AvailableQuantity FROM CART JOIN PRODUCT ON CART.ProductID = PRODUCT.ProductID WHERE CART.UserID = ?';
+            connection.query(getCartQuery, [UserID], (err, cartItems) => {
+                if (err) return callback(err);
 
-            if (cartItems.length === 0) return callback(new Error('Cart is empty'));
+                if (cartItems.length === 0) return callback(new Error('Cart is empty'));
 
-            for (let item of cartItems) {
-                if (item.CartQuantity > item.AvailableQuantity) {
-                    return callback(new Error(`Product ${item.ProductName} does not have enough stock. Available quantity: ${item.AvailableQuantity}, Requested quantity: ${item.CartQuantity}`));
+                const outOfStockItems = cartItems.filter(item => item.CartQuantity > item.AvailableQuantity);
+                if (outOfStockItems.length > 0) {
+                    const outOfStockMessages = outOfStockItems.map(item => `Product ${item.ProductName} does not have enough stock. Available quantity: ${item.AvailableQuantity}, Requested quantity: ${item.CartQuantity}`);
+                    return callback(new Error(outOfStockMessages.join('; ')));
                 }
-            }
 
-            let initialTotalPrice = 0;
-            cartItems.forEach(item => {
-                initialTotalPrice += item.CartQuantity * item.Price;
+                this.calculateTotalPriceAndProcessOrder(cartItems, UserID, null, PaymentMethod, VoucherIDs, useRewardPoints, Name, Email, Phone, Address, callback);
             });
+        } else {
+            const productIds = cart.map(item => item.ProductID);
+            const getProductQuery = 'SELECT ProductID, Name, Price, Quantity FROM PRODUCT WHERE ProductID IN (?)';
 
-            if (VoucherIDs && VoucherIDs.length > 0) {
-                const voucherQuery = 'SELECT * FROM VOUCHER WHERE VoucherID IN (?) AND Expiration > NOW() AND VoucherQuantity > 0';
-                connection.query(voucherQuery, [VoucherIDs], (err, vouchers) => {
-                    if (err) return callback(err);
+            connection.query(getProductQuery, [productIds], (err, products) => {
+                if (err) return callback(err);
 
-                    let totalDiscount = 0;
-                    vouchers.forEach(voucher => {
-                        totalDiscount += parseFloat(voucher.Discount) / 100 * initialTotalPrice;
-                        const updateVoucherQuantity = 'UPDATE VOUCHER SET VoucherQuantity = VoucherQuantity - 1 WHERE VoucherID = ?';
-                        connection.query(updateVoucherQuantity, [voucher.VoucherID]);
-                    });
-
-                    const totalPrice = initialTotalPrice - totalDiscount;
-                    this.processOrder(UserID, GuestID, cartItems, totalPrice, initialTotalPrice, PaymentMethod, Name, Email, Phone, Address, useRewardPoints, user, VoucherIDs, callback);
+                const outOfStockMessages = [];
+                const validatedCartItems = cart.map(cartItem => {
+                    const product = products.find(p => p.ProductID === cartItem.ProductID);
+                    if (!product) {
+                        outOfStockMessages.push(`Product ID ${cartItem.ProductID} not found`);
+                    } else if (cartItem.Quantity > product.Quantity) {
+                        outOfStockMessages.push(`Product ${product.Name} does not have enough stock. Available quantity: ${product.Quantity}, Requested quantity: ${cartItem.Quantity}`);
+                    }
+                    return {
+                        ProductID: cartItem.ProductID,
+                        CartQuantity: cartItem.Quantity,
+                        ProductName: product ? product.Name : '',
+                        Price: product ? product.Price : 0,
+                        AvailableQuantity: product ? product.Quantity : 0
+                    };
                 });
-            } else {
-                const totalPrice = initialTotalPrice;
-                this.processOrder(UserID, GuestID, cartItems, totalPrice, initialTotalPrice, PaymentMethod, Name, Email, Phone, Address, useRewardPoints, user, [], callback);
-            }
-        });
+
+                if (outOfStockMessages.length > 0) {
+                    return callback(new Error(outOfStockMessages.join('; ')));
+                }
+
+                this.calculateTotalPriceAndProcessOrder(validatedCartItems, null, GuestID, PaymentMethod, VoucherIDs, useRewardPoints, Name, Email, Phone, Address, callback);
+            });
+        }
     };
 
-    processOrder = (UserID, GuestID, cartItems, totalPrice, initialTotalPrice, PaymentMethod, Name, Email, Phone, Address, useRewardPoints, user, VoucherIDs, callback) => {
+    calculateTotalPriceAndProcessOrder = (cartItems, UserID, GuestID, PaymentMethod, VoucherIDs, useRewardPoints, Name, Email, Phone, Address, callback) => {
+        let initialTotalPrice = 0;
+        cartItems.forEach(item => {
+            initialTotalPrice += item.CartQuantity * item.Price;
+        });
+
+        if (VoucherIDs && VoucherIDs.length > 0) {
+            const voucherQuery = 'SELECT * FROM VOUCHER WHERE VoucherID IN (?) AND Expiration > NOW() AND VoucherQuantity > 0';
+            connection.query(voucherQuery, [VoucherIDs], (err, vouchers) => {
+                if (err) return callback(err);
+
+                let totalDiscount = 0;
+                vouchers.forEach(voucher => {
+                    totalDiscount += parseFloat(voucher.Discount) / 100 * initialTotalPrice;
+                    const updateVoucherQuantity = 'UPDATE VOUCHER SET VoucherQuantity = VoucherQuantity - 1 WHERE VoucherID = ?';
+                    connection.query(updateVoucherQuantity, [voucher.VoucherID]);
+                });
+
+                const totalPrice = initialTotalPrice - totalDiscount;
+                this.processOrder(UserID, GuestID, cartItems, totalPrice, initialTotalPrice, PaymentMethod, Name, Email, Phone, Address, useRewardPoints, VoucherIDs, callback);
+            });
+        } else {
+            const totalPrice = initialTotalPrice;
+            this.processOrder(UserID, GuestID, cartItems, totalPrice, initialTotalPrice, PaymentMethod, Name, Email, Phone, Address, useRewardPoints, [], callback);
+        }
+    };
+
+    processOrder = (UserID, GuestID, cartItems, totalPrice, initialTotalPrice, PaymentMethod, Name, Email, Phone, Address, useRewardPoints, VoucherIDs, callback) => {
         if (useRewardPoints && UserID) {
             const rewardQuery = 'SELECT RewardPoints FROM MEMBER WHERE UserID = ?';
             connection.query(rewardQuery, [UserID], (err, results) => {
@@ -99,18 +134,18 @@ export class OrderService {
                     connection.query(updatePointsQuery, [remainingPoints, UserID], (err, result) => {
                         if (err) return callback(err);
 
-                        this.finalizeOrder(UserID, GuestID, cartItems, totalPrice, initialTotalPrice, pointsToUse, PaymentMethod, Name, Email, Phone, Address, user, VoucherIDs, callback);
+                        this.finalizeOrder(UserID, GuestID, cartItems, totalPrice, initialTotalPrice, pointsToUse, PaymentMethod, Name, Email, Phone, Address, VoucherIDs, callback);
                     });
                 } else {
-                    this.finalizeOrder(UserID, GuestID, cartItems, totalPrice, initialTotalPrice, 0, PaymentMethod, Name, Email, Phone, Address, user, VoucherIDs, callback);
+                    this.finalizeOrder(UserID, GuestID, cartItems, totalPrice, initialTotalPrice, 0, PaymentMethod, Name, Email, Phone, Address, VoucherIDs, callback);
                 }
             });
         } else {
-            this.finalizeOrder(UserID, GuestID, cartItems, totalPrice, initialTotalPrice, 0, PaymentMethod, Name, Email, Phone, Address, user, VoucherIDs, callback);
+            this.finalizeOrder(UserID, GuestID, cartItems, totalPrice, initialTotalPrice, 0, PaymentMethod, Name, Email, Phone, Address, VoucherIDs, callback);
         }
     };
 
-    finalizeOrder = (UserID, GuestID, cartItems, totalPrice, initialTotalPrice, usedPoints, PaymentMethod, Name, Email, Phone, Address, user, VoucherIDs, callback) => {
+    finalizeOrder = (UserID, GuestID, cartItems, totalPrice, initialTotalPrice, usedPoints, PaymentMethod, Name, Email, Phone, Address, VoucherIDs, callback) => {
         const insertOrderQuery = 'INSERT INTO `ORDER` (UserID, GuestID, TotalPrice, PaymentMethod, Name, Email, Phone, Address) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
         const values = [UserID, GuestID, totalPrice, PaymentMethod, Name, Email, Phone, Address];
 
