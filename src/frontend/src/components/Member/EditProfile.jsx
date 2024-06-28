@@ -13,10 +13,11 @@ const EditProfile = ({ isMember }) => {
   const [Email, setEmail] = useState("");
   const [Phone, setPhone] = useState("");
   const [Address, setAddress] = useState("");
+  const [avt, setAvt] = useState();
   const [isPasswordMatch, setIsPasswordMatch] = useState(true);
   const [SuccessMessage, setSuccessMessage] = useState("");
   const [ErrorMessage, setErrorMessage] = useState("");
-  const userId = JSON.parse(localStorage.getItem("userData")).UserID;
+  const userId = JSON.parse(sessionStorage.getItem("userData")).UserID;
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -25,6 +26,7 @@ const EditProfile = ({ isMember }) => {
         setEmail(userData.Email);
         setPhone(userData.Phone);
         setAddress(userData.Address);
+        setAvt(btoa(String.fromCharCode.apply(null, userData.ProfilePicture.data)))
       } catch (error) {
         setErrorMessage({ message: "Error fetching user data" });
       }
@@ -77,7 +79,7 @@ const EditProfile = ({ isMember }) => {
               <div className="row">
                 <div className="col-lg-6 image-holder">
                   <div className="image-holder-content">
-                    <img src="https://via.placeholder.com/40" alt="" />
+                    <img src={`data:image/jpeg;base64,${avt}`} alt="" />
                     <div className="importButton">
                       <button>Import image</button>
                     </div>
