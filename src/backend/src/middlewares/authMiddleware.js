@@ -3,11 +3,12 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-
 export const checkAuthenticated = (req, res, next) => {
     const authHeader = req.headers.authorization;
+
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(401).json({ message: 'No token provided' });
+        req.user = { userId: 'guest' };
+        return next();
     }
 
     const token = authHeader.split(' ')[1];

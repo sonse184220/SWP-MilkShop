@@ -13,7 +13,7 @@ export class OrderService {
 
     async getUserOrderHistory(userId, limit, sortBy, offset) {
         const [orders] = await poolConnect.query(`SELECT * FROM \`order\` WHERE UserID = ? 
-                                                ORDER BY ${sortBy} LIMIT ? OFFSET ?`, [userId, limit, offset]);
+            ORDER BY ${sortBy} LIMIT ? OFFSET ?`, [userId, limit, offset]);
         return orders;
     }
 
@@ -41,8 +41,8 @@ export class OrderService {
 
     placeOrder = (data, user, guestId, callback) => {
         const { PaymentMethod, VoucherIDs, useRewardPoints, Name, Email, Phone, Address } = data;
-        const UserID = user ? user.userId : null;
-        const GuestID = guestId ? guestId : null;
+        const UserID = user && user.userId !== 'guest' ? user.userId : null;
+        const GuestID = user && user.userId === 'guest' ? guestId : null;
 
         const getCartQuery = 'SELECT CART.ProductID, CART.CartQuantity, PRODUCT.Name as ProductName, PRODUCT.Price, PRODUCT.Quantity as AvailableQuantity FROM CART JOIN PRODUCT ON CART.ProductID = PRODUCT.ProductID WHERE CART.UserID = ? OR CART.GuestID = ?';
         connection.query(getCartQuery, [UserID, GuestID], (err, cartItems) => {

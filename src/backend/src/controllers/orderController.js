@@ -3,7 +3,6 @@ import { OrderService } from '../services/orderService.js';
 const orderService = new OrderService();
 
 export class OrderController {
-
     async getOrderById(req, res) {
         const orderId = req.params.id;
 
@@ -21,7 +20,7 @@ export class OrderController {
         return res.status(200).send({
             order: order[0],
             detail: orderDetail,
-        })
+        });
     }
 
     async getOrderHistory(req, res) {
@@ -60,8 +59,8 @@ export class OrderController {
             page: page,
             totalPages: Math.ceil(total / limit),
             data: orders,
-        })
-    };
+        });
+    }
 
     async getUserOrderHistory(req, res) {
         if (req.user.userId !== req.params.id && req.userRole !== "admin" && req.userRole !== "staff") {
@@ -100,7 +99,7 @@ export class OrderController {
             page: page,
             totalPages: Math.ceil(total / limit),
             data: orders,
-        })
+        });
     }
 
     placeOrder = (req, res) => {
@@ -109,6 +108,5 @@ export class OrderController {
             if (err) return res.status(500).json({ error: err.message });
             res.status(200).json(result);
         });
-    };
-
+    }
 }
