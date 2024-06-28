@@ -50,10 +50,10 @@ export class OrderService {
 
                 if (cartItems.length === 0) return callback(new Error('Cart is empty'));
 
-                for (let item of cartItems) {
-                    if (item.CartQuantity > item.AvailableQuantity) {
-                        return callback(new Error(`Product ${item.ProductName} does not have enough stock. Available quantity: ${item.AvailableQuantity}, Requested quantity: ${item.CartQuantity}`));
-                    }
+                const outOfStockItems = cartItems.filter(item => item.CartQuantity > item.AvailableQuantity);
+                if (outOfStockItems.length > 0) {
+                    const outOfStockMessages = outOfStockItems.map(item => `Product ${item.ProductName} does not have enough stock. Available quantity: ${item.AvailableQuantity}, Requested quantity: ${item.CartQuantity}`);
+                    return callback(new Error(outOfStockMessages.join('; ')));
                 }
 
                 this.calculateTotalPriceAndProcessOrder(cartItems, UserID, null, PaymentMethod, VoucherIDs, useRewardPoints, Name, Email, Phone, Address, callback);
@@ -65,26 +65,28 @@ export class OrderService {
             connection.query(getProductQuery, [productIds], (err, products) => {
                 if (err) return callback(err);
 
-                try {
-                    const validatedCartItems = cart.map(cartItem => {
-                        const product = products.find(p => p.ProductID === cartItem.ProductID);
-                        if (!product) throw new Error(`Product ID ${cartItem.ProductID} not found`);
-                        if (cartItem.Quantity > product.Quantity) {
-                            throw new Error(`Product ${product.Name} does not have enough stock. Available quantity: ${product.Quantity}, Requested quantity: ${cartItem.Quantity}`);
-                        }
-                        return {
-                            ProductID: cartItem.ProductID,
-                            CartQuantity: cartItem.Quantity,
-                            ProductName: product.Name,
-                            Price: product.Price,
-                            AvailableQuantity: product.Quantity
-                        };
-                    });
+                const outOfStockMessages = [];
+                const validatedCartItems = cart.map(cartItem => {
+                    const product = products.find(p => p.ProductID === cartItem.ProductID);
+                    if (!product) {
+                        outOfStockMessages.push(`Product ID ${cartItem.ProductID} not found`);
+                    } else if (cartItem.Quantity > product.Quantity) {
+                        outOfStockMessages.push(`Product ${product.Name} does not have enough stock. Available quantity: ${product.Quantity}, Requested quantity: ${cartItem.Quantity}`);
+                    }
+                    return {
+                        ProductID: cartItem.ProductID,
+                        CartQuantity: cartItem.Quantity,
+                        ProductName: product ? product.Name : '',
+                        Price: product ? product.Price : 0,
+                        AvailableQuantity: product ? product.Quantity : 0
+                    };
+                });
 
-                    this.calculateTotalPriceAndProcessOrder(validatedCartItems, null, GuestID, PaymentMethod, VoucherIDs, useRewardPoints, Name, Email, Phone, Address, callback);
-                } catch (error) {
-                    return callback(error);
+                if (outOfStockMessages.length > 0) {
+                    return callback(new Error(outOfStockMessages.join('; ')));
                 }
+
+                this.calculateTotalPriceAndProcessOrder(validatedCartItems, null, GuestID, PaymentMethod, VoucherIDs, useRewardPoints, Name, Email, Phone, Address, callback);
             });
         }
     };
