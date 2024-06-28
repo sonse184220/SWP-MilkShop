@@ -3,8 +3,9 @@
 import React, { useState } from "react";
 import Sidebar from "./Sidebar";
 import "./VoucherManagement.css";
-
+import Modal from "react-modal";
 const VoucherManagement = () => {
+  const [isOpen, setIsOpen] = useState(false);
   const [vouchers, setVouchers] = useState([
     {
       VoucherID: 1,
@@ -77,7 +78,9 @@ const VoucherManagement = () => {
                   <td className="deleteDiv">
                     <div className="delete">
                       <button className="delete-button">
-                        <a href="#">Update</a>
+                        <a href="#" onClick={() => setIsOpen(true)}>
+                          Update
+                        </a>
                       </button>
                     </div>
                   </td>
@@ -85,6 +88,35 @@ const VoucherManagement = () => {
               ))}
             </tbody>
           </table>
+          <Modal
+            isOpen={isOpen}
+            onRequestClose={() => setIsOpen(false)}
+            className="custom-modal-voucher"
+            overlayClassName="custom-overlay-voucher"
+          >
+            <h2>Update Voucher</h2>
+            <label htmlFor="">Voucher Discount: </label>
+            <input placeholder="Enter new voucher name" /> <br />
+            <label htmlFor="">Voucher Quantity: </label>{" "}
+            <input placeholder="Enter new voucher quantity" /> <br />
+            <label htmlFor="">Voucher Content: </label>{" "}
+            <input placeholder="Enter new voucher content" /> <br />
+            <br />
+            <div className="modal-actions-voucher">
+              <button
+                onClick={"handleMemberOrderAction"}
+                className="btn-confirm-voucher"
+              >
+                Confirm
+              </button>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="btn-cancel-voucher"
+              >
+                Cancel
+              </button>
+            </div>
+          </Modal>
         </div>
       </div>
     </div>

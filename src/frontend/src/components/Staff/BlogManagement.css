@@ -51,3 +51,85 @@
 .issues-table th {
   background-color: palevioletred;
 }
+
+.custom-modal-blog {
+  position: relative;
+  width: 500px;
+  max-width: 90%;
+  margin: 50px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.custom-overlay-blog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.custom-modal-blog h2 {
+  margin-top: 0;
+  font-size: 30px;
+  color: #333;
+  justify-content: center;
+  display: flex;
+}
+
+.custom-modal-blog label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+  color: #333;
+}
+
+.custom-modal-blog input {
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.modal-actions-blog {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.btn-confirm-blog,
+.btn-cancel-blog {
+  padding: 10px 20px;
+  margin-left: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.btn-confirm-blog {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-confirm-blog:hover {
+  background-color: #218838;
+}
+
+.btn-cancel-blog {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-cancel-blog:hover {
+  background-color: #c82333;
+}

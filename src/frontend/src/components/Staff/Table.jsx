@@ -1,6 +1,7 @@
 import React from "react";
 import "./Table.css";
-
+import { useState } from "react";
+import Modal from "react-modal";
 const data = [
   {
     productId: "P01",
@@ -77,6 +78,7 @@ const data = [
 ];
 
 function Table() {
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <div className="table-container">
       <div className="table-actions">
@@ -117,7 +119,9 @@ function Table() {
               <td className="deleteDiv">
                 <div className="delete">
                   <button className="delete-button">
-                    <a href="#">Update</a>
+                    <a href="#" onClick={() => setIsOpen(true)}>
+                      Update
+                    </a>
                   </button>
                 </div>
               </td>
@@ -125,6 +129,37 @@ function Table() {
           ))}
         </tbody>
       </table>
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={() => setIsOpen(false)}
+        className="custom-modal-product"
+        overlayClassName="custom-overlay-product"
+      >
+        <h2>Update Product</h2>
+        <label htmlFor="">Product name: </label>
+        <input placeholder="Enter new product name" /> <br />
+        <label htmlFor="">Product quantity: </label>{" "}
+        <input placeholder="Enter new product quantity" /> <br />
+        <label htmlFor="">Product date: </label>{" "}
+        <input placeholder="Enter new product date" /> <br />
+        <label htmlFor="">Product voucher: </label>{" "}
+        <input placeholder="Enter new product voucher" />
+        <br />
+        <div className="modal-actions-product">
+          <button
+            onClick={"handleMemberOrderAction"}
+            className="btn-confirm-product"
+          >
+            Confirm
+          </button>
+          <button
+            onClick={() => setIsOpen(false)}
+            className="btn-cancel-product"
+          >
+            Cancel
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 }

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import Sidebar from "./Sidebar";
 import "./OrderManagement.css";
-
 const OrderManagement = () => {
+  const [isOpen, setIsOpen] = useState(false);
   const [orders, setOrders] = useState([
     {
       OrderDetailID: 1,
@@ -44,7 +44,6 @@ const OrderManagement = () => {
             <button className="searchOrder">Search</button>
             <button className="addOrder">Add Order</button>
           </div>
-
           <table className="issues-table">
             <thead>
               <tr>
@@ -65,18 +64,22 @@ const OrderManagement = () => {
                   <td>{order.ProductID}</td>
                   <td>{order.Quantity}</td>
                   <td>{order.Price}</td>
-                  <td className="deleteDiv">
-                    <div className="delete">
-                      <button className="delete-button">
-                        <a href="#">Delete</a>
-                      </button>
+                  <td>
+                    <div className="select1">
+                      <select id="statusDropdown">
+                        <option value="Waiting">Waiting</option>
+                        <option value="Cancelled">Cancelled</option>
+                        <option value="Shipping">Shipping</option>
+                        <option value="Done">Done</option>
+                      </select>
                     </div>
                   </td>
-                  <td className="deleteDiv">
-                    <div className="delete">
-                      <button className="delete-button">
-                        <a href="#">Update</a>
-                      </button>
+                  <td>
+                    <div className="select1">
+                      <select id="statusDropdown">
+                        <option value="Pending">Pending</option>
+                        <option value="Done">Done</option>
+                      </select>
                     </div>
                   </td>
                 </tr>

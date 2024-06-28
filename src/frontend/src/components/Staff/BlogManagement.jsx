@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import "./BlogManagement.css"; // Import CSS file
 import Sidebar from "./Sidebar";
-
+import Modal from "react-modal";
 const BlogManagement = () => {
+  const [isOpen, setIsOpen] = useState(false);
   const [blogs, setBlogs] = useState([
     {
       BlogID: 1,
@@ -72,7 +73,9 @@ const BlogManagement = () => {
                   <td className="deleteDiv">
                     <div className="delete">
                       <button className="delete-button">
-                        <a href="#">Update</a>
+                        <a href="#" onClick={() => setIsOpen(true)}>
+                          Update
+                        </a>
                       </button>
                     </div>
                   </td>
@@ -80,6 +83,33 @@ const BlogManagement = () => {
               ))}
             </tbody>
           </table>
+          <Modal
+            isOpen={isOpen}
+            onRequestClose={() => setIsOpen(false)}
+            className="custom-modal-blog"
+            overlayClassName="custom-overlay-blog"
+          >
+            <h2>Update Blog</h2>
+            <label htmlFor="">Blog name: </label>
+            <input placeholder="Enter new blog name" /> <br />
+            <label htmlFor="">Blog content: </label>{" "}
+            <input placeholder="Enter new blog content" /> <br />
+            <br />
+            <div className="modal-actions-blog">
+              <button
+                onClick={"handleMemberOrderAction"}
+                className="btn-confirm-blog"
+              >
+                Confirm
+              </button>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="btn-cancel-blog"
+              >
+                Cancel
+              </button>
+            </div>
+          </Modal>
         </div>
       </div>
     </div>

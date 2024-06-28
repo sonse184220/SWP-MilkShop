@@ -59,18 +59,22 @@ const ReportManagement = () => {
                   <td>{report.Content}</td>
                   <td>{report.created}</td>
                   <td>{report.updated}</td>
-                  <td className="deleteDiv">
-                    <div className="delete">
-                      <button className="delete-button">
-                        <a href="#">Delete</a>
-                      </button>
+                  <td>
+                    <div className="select1">
+                      <select id="statusDropdown">
+                        <option value="Waiting">Waiting</option>
+                        <option value="Cancelled">Cancelled</option>
+                        <option value="Shipping">Shipping</option>
+                        <option value="Done">Done</option>
+                      </select>
                     </div>
                   </td>
-                  <td className="deleteDiv">
-                    <div className="delete">
-                      <button className="delete-button">
-                        <a href="#">Update</a>
-                      </button>
+                  <td>
+                    <div className="select1">
+                      <select id="statusDropdown">
+                        <option value="Pending">Pending</option>
+                        <option value="Done">Done</option>
+                      </select>
                     </div>
                   </td>
                 </tr>

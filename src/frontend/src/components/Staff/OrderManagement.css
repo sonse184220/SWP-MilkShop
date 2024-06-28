@@ -109,3 +109,27 @@ th {
   justify-content: flex-end;
   margin-left: 225px;
 }
+
+.select1 {
+  display: flex;
+  justify-content: center;
+}
+
+#statusDropdown {
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  background-color: #f8f8f8;
+  font-size: 16px;
+  color: #333;
+}
+
+#statusDropdown option:hover {
+  background-color: #ff7f9c;
+  color: white;
+}
+
+#statusDropdown option:checked {
+  color: white;
+  background-color: #ff7f9c;
+}
