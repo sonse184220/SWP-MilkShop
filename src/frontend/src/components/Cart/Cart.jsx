@@ -39,9 +39,11 @@ export const Cart = ({ isMember }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
+    const MemberToken = 'Bearer ' + sessionStorage.getItem('token');
+
     const handleGetVouchers = async () => {
         try {
-            const MemberToken = 'Bearer ' + localStorage.getItem('token');
+            // const MemberToken = 'Bearer ' + localStorage.getItem('token');
             const response = await GetAllVouchers(MemberToken);
             if (Array.isArray(response.data))
                 setVouchers(response.data);
@@ -52,10 +54,10 @@ export const Cart = ({ isMember }) => {
 
     const handleMemberOrderAction = async () => {
         try {
-            const MemberToken = 'Bearer ' + localStorage.getItem('token');
+            // const MemberToken = 'Bearer ' + localStorage.getItem('token');
             const OrderInfo = {
                 "PaymentMethod": "COD",
-                "VoucherID": AppliedVoucher ? AppliedVoucher : [],
+                "VoucherIDs": AppliedVoucher ? [AppliedVoucher] : [],
                 "useRewardPoints": userFormData.useRewardPoints,
                 "Name": userFormData.Name,
                 "Email": userFormData.Email,
@@ -66,8 +68,12 @@ export const Cart = ({ isMember }) => {
             if (response.data.orderId) {
                 console.log("order success==========", response.data.message);
                 handleViewCart();
+                setAppliedVoucher(null);
+                handleGetVouchers();
+                handleGetUserInfo();
                 setIsOpen(false);
                 setIsSuccessModalOpen(true);
+
             }
         } catch (error) {
             if (error) {
@@ -83,7 +89,7 @@ export const Cart = ({ isMember }) => {
 
     const handleGetUserInfo = () => {
         try {
-            const user = JSON.parse(localStorage.getItem("userData"));
+            const user = JSON.parse(sessionStorage.getItem("userData"));
             if (user) {
                 // setUserInfo(user);
                 setUserFormData({
@@ -102,7 +108,7 @@ export const Cart = ({ isMember }) => {
 
     const handleRemoveCart = async (pID) => {
         try {
-            const MemberToken = 'Bearer ' + localStorage.getItem('token');
+            // const MemberToken = 'Bearer ' + localStorage.getItem('token');
             console.log(MemberToken);
             const prID = {
                 "ProductID": pID,
@@ -111,6 +117,9 @@ export const Cart = ({ isMember }) => {
             // console.log(response);
             if (response.data.message) {
                 handleViewCart();
+                toast.success("Product removed from cart", {
+                    theme: "colored",
+                });
             }
         } catch (error) {
             console.log(error);
@@ -119,7 +128,7 @@ export const Cart = ({ isMember }) => {
 
     const handleIncrement = async (pID, currentQuantity) => {
         try {
-            const MemberToken = 'Bearer ' + localStorage.getItem('token');
+            // const MemberToken = 'Bearer ' + localStorage.getItem('token');
             console.log(MemberToken);
             const prInfo = {
                 "ProductID": pID,
@@ -138,7 +147,7 @@ export const Cart = ({ isMember }) => {
 
     const handleDecrement = async (pID, currentQuantity) => {
         try {
-            const MemberToken = 'Bearer ' + localStorage.getItem('token');
+            // const MemberToken = 'Bearer ' + localStorage.getItem('token');
             console.log(MemberToken);
             const prInfo = {
                 "ProductID": pID,
@@ -157,7 +166,7 @@ export const Cart = ({ isMember }) => {
 
     const handleViewCart = async () => {
         try {
-            const MemberToken = 'Bearer ' + localStorage.getItem('token');
+            // const MemberToken = 'Bearer ' + localStorage.getItem('token');
             console.log(MemberToken);
             const response = await ViewCart(MemberToken);
             console.log(response);
@@ -328,7 +337,7 @@ export const Cart = ({ isMember }) => {
                     AppliedVoucher={AppliedVoucher}
                 />
                 </div>
-                <div className='infoform'><UserInfoForm userFormData={userFormData} setUserFormData={setUserFormData} /></div>
+                <div className='infoform'><UserInfoForm userFormData={userFormData} setUserFormData={setUserFormData} isMember={isMember} /></div>
             </div>
             <Footer />
         </>

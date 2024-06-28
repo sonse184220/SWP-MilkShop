@@ -89,7 +89,7 @@ const ProductDetail = ({ isMember }) => {
                 }
             } else {
                 // Handle localStorage cart for non-members
-                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
 
                 // Check if the product is already in the cart
                 const existingProductIndex = cart.findIndex(item => item.ProductID === ProductID);
@@ -108,7 +108,7 @@ const ProductDetail = ({ isMember }) => {
                 }
 
                 // Save the updated cart back to localStorage
-                localStorage.setItem('cart', JSON.stringify(cart));
+                sessionStorage.setItem('cart', JSON.stringify(cart));
 
                 toast.success('Added to cart', {
                     theme: "colored",

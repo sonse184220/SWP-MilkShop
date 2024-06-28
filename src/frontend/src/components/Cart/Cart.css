@@ -301,6 +301,36 @@
     color: white;
 }
 
+/*smooth*/
+.custom-overlay {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.custom-overlay.ReactModal__Overlay--after-open {
+    opacity: 1;
+}
+
+.custom-overlay.ReactModal__Overlay--before-close {
+    opacity: 0;
+}
+
+.custom-modal {
+    transform: scale(0.8);
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+}
+
+.custom-modal.ReactModal__Content--after-open {
+    /* transform: scale(1); */
+    opacity: 1;
+}
+
+.custom-modal.ReactModal__Content--before-close {
+    transform: scale(0.8);
+    opacity: 0;
+}
+
 /*success*/
 /* Modal styling */
 .custom-modal {
@@ -359,4 +389,10 @@
 
 .alert .MuiSvgIcon-root {
     margin-right: 10px;
+}
+
+.middle2 .user-info-form-wrapper {
+    margin: auto;
+    margin-top: -90px;
+    margin-left: 280px;
 }

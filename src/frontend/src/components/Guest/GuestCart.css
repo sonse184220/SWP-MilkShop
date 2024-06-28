@@ -1,0 +1,58 @@
+.GuestMiddle {
+    display: flex;
+    /* flex-direction: column; */
+}
+
+.GuestCart {
+    width: 65%;
+}
+
+.GuestCartInfo {
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+}
+
+.GuestMiddle .col-md-8 {
+    width: 90%;
+}
+
+.Guest-form-info {
+    padding-top: 65px;
+}
+
+.Guest-total-box .card {
+    width: 200%;
+    margin-left: -105px;
+    margin-top: -35px;
+}
+
+.GuestCart .card {
+    border: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.GuestCart .cart-list {
+    overflow-y: auto;
+    overflow-x: hidden;
+    /* height: 500px; */
+}
+
+.GuestCart .row {
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.GuestCart .col-lg-5 p {
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.GuestCart .price {
+    padding-left: 90px;
+}
+
+.GuestCart .total-price {
+    padding-left: 65px;
+}
