@@ -50,7 +50,7 @@ export const UserInfoForm = ({ userFormData, setUserFormData, isMember }) => {
                         onChange={handleInputChange} />
 
                 </div>
-                {name.length === 0 && <p className="info-error-message">*Please input email</p>}
+                {email.length === 0 && <p className="info-error-message">*Please input email</p>}
                 <div className='form-group mb-1'>
                     <label className='mb-1'>Phone</label>
                     <input className='form-control mb-1' type='text' id='street1' placeholder='Phone Number'
@@ -58,7 +58,7 @@ export const UserInfoForm = ({ userFormData, setUserFormData, isMember }) => {
                         value={phone}
                         onChange={handleInputChange} />
                 </div>
-                {name.length === 0 && <p className="info-error-message">*Please input phone number</p>}
+                {phone.length === 0 && <p className="info-error-message">*Please input phone number</p>}
 
                 <div className='form-group mb-1'>
                     <label className='mb-1' htmlFor='city'>Address</label>
@@ -67,7 +67,7 @@ export const UserInfoForm = ({ userFormData, setUserFormData, isMember }) => {
                         value={address}
                         onChange={handleInputChange} />
                 </div>
-                {name.length === 0 && <p className="info-error-message">*Please input address</p>}
+                {address.length === 0 && <p className="info-error-message">*Please input address</p>}
                 {isMember && (
                     <div className='form-group mb-1 rewardpoint'>
                         <label className='mb-1' htmlFor='rewardPoints'>Reward Points</label>

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { Alert, AlertTitle } from '@mui/material';
 
 import './GuestCart.css';
 import Footer from "../Footer/Footer";
@@ -15,6 +17,7 @@ import { UpdateCart } from '../../services/cart/updateCart';
 import { RemoveCart } from '../../services/cart/removeCart';
 import { UserInfoForm } from '../UserInfoForm/UserInfoForm';
 import { MemberOrder } from '../../services/order/memberOrder';
+import { GuestOrder } from '../../services/order/guestOrder';
 
 export const GuestCart = ({ isMember }) => {
     const [CartItems, setCartItems] = useState([]);
@@ -27,6 +30,8 @@ export const GuestCart = ({ isMember }) => {
         // RewardPoints: ''
     });
     const [isOpen, setIsOpen] = useState(false);
+    const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+
 
     // const OrderInfo = {
     //     "PaymentMethod": "COD",
@@ -48,6 +53,16 @@ export const GuestCart = ({ isMember }) => {
 
     const handleGuestOrderAction = async () => {
         try {
+            if (userFormData.Name.length === 0 ||
+                userFormData.Email.length === 0 ||
+                userFormData.Phone.length === 0 ||
+                userFormData.Address.length === 0) {
+                toast.error("Please input all order info fields", {
+                    theme: "colored",
+                });
+                setIsOpen(false);
+                return;
+            }
             const MemberToken = 'Bearer ' + localStorage.getItem('token');
             handleViewCart();
             const cart = CartItems.map(item => ({
@@ -57,7 +72,7 @@ export const GuestCart = ({ isMember }) => {
             console.log(cart);
             const OrderInfo = {
                 "PaymentMethod": "COD",
-                "VoucherID": "V001",
+                "VoucherID": [],
                 "useRewardPoints": false,
                 "Name": userFormData.Name,
                 "Email": userFormData.Email,
@@ -65,10 +80,12 @@ export const GuestCart = ({ isMember }) => {
                 "Address": userFormData.Address,
                 "cart": cart
             }
-            const response = await MemberOrder(MemberToken, OrderInfo);
+            const response = await GuestOrder(OrderInfo);
             if (response.data.orderId) {
                 console.log("order success==========", response.data.message);
                 handleViewCart();
+                setIsOpen(false);
+                setIsSuccessModalOpen(true);
             }
         } catch (error) {
 
@@ -249,6 +266,21 @@ export const GuestCart = ({ isMember }) => {
                         <button onClick={handleGuestOrderAction} className="btn-confirm">Confirm</button>
                         <button onClick={() => setIsOpen(false)} className="btn-cancel">Cancel</button>
                     </div>
+                </Modal>
+
+                <Modal
+                    isOpen={isSuccessModalOpen}
+                    onRequestClose={() => setIsSuccessModalOpen(false)}
+                    className="custom-modal success-modal"
+                    overlayClassName="custom-overlay"
+                >
+                    <Alert severity="success" icon={<CheckCircleIcon />}>
+                        <AlertTitle>Success!</AlertTitle>
+                        Your order has been placed successfully.
+                    </Alert>
+                    <button onClick={() => setIsSuccessModalOpen(false)} className="btn-close">
+                        Close
+                    </button>
                 </Modal>
 
                 <ToastContainer style={{ top: '110px' }} />
