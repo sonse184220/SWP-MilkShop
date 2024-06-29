@@ -10,7 +10,42 @@ const userService = new UserService();
 export class PreorderController {
 
     async getPreorderHistory(req, res) {
+        if (req.userRole !== "admin" && req.userRole !== "staff") {
+            return res.status(401).send({ msg: "Unauthorized! Only staff or admin can view all order history" });
+        }
 
+        const limit = parseInt(req.query.limit);
+        const page = parseInt(req.query.page);
+        const sort = req.query.sort;
+        const offset = (page - 1) * limit;
+
+        let sortBy;
+        switch (sort) {
+            case "newest":
+                sortBy = "updated DESC";
+                break;
+            case "oldest":
+                sortBy = "updated ASC";
+                break;
+            case "lowest":
+                sortBy = "TotalPrice ASC";
+                break;
+            case "highest":
+                sortBy = "TotalPrice DESC";
+                break;
+            default:
+                sortBy = "updated DESC";
+        }
+
+        const preorders = await preorderService.getAllPreorderHistory(limit, sortBy, offset);
+        const total = await preorderService.getTotalPreorderNumber();
+
+        return res.status(200).send({
+            total: total,
+            page: page,
+            totalPages: Math.ceil(total / limit),
+            data: preorders,
+        });
     }
 
     async placePreorder(req, res) {
