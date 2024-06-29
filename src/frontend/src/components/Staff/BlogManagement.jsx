@@ -2,15 +2,10 @@ import React, { useState } from "react";
 import "./BlogManagement.css"; // Import CSS file
 import Sidebar from "./Sidebar";
 import Modal from "react-modal";
-<<<<<<< Updated upstream
-const BlogManagement = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isAddOpen, setIsAddOpen] = useState(false);
-=======
 
 const BlogManagement = () => {
   const [isOpen, setIsOpen] = useState(false);
->>>>>>> Stashed changes
+  const [isAddOpen, setIsAddOpen] = useState(false);
   const [blogs, setBlogs] = useState([
     {
       BlogID: 1,
@@ -117,8 +112,6 @@ const BlogManagement = () => {
               </button>
             </div>
           </Modal>
-<<<<<<< Updated upstream
-
           <Modal
             isOpen={isAddOpen}
             onRequestClose={() => setIsAddOpen(false)}
@@ -156,8 +149,6 @@ const BlogManagement = () => {
               </button>
             </div>
           </Modal>
-=======
->>>>>>> Stashed changes
         </div>
       </div>
     </div>
