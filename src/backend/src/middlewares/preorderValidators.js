@@ -24,15 +24,28 @@ export async function checkPreorderData(req, res, next) {
     .run(req);
 
     await body("paymentMethod")
-    .optional()
     .trim()
     .escape()
     .exists().withMessage("Payment is required!")
     .notEmpty().withMessage("Payment can not be blank!")
     .run(req);
 
+    await body("name")
+    .trim()
+    .escape()
+    .exists().withMessage("Name is required!")
+    .notEmpty().withMessage("Name can not be blank!")
+    .run(req);
+
+    await body("email")
+    .trim()
+    .escape()
+    .exists().withMessage("Email is required!")
+    .notEmpty().withMessage("Email can not be blank!")
+    .isEmail().withMessage("Invalid email!")
+    .run(req);
+
     await body("phone")
-    .optional()
     .trim()
     .escape()
     .exists().withMessage("Phone is required!")
@@ -41,7 +54,6 @@ export async function checkPreorderData(req, res, next) {
     .run(req);
 
     await body("address")
-    .optional()
     .trim()
     .escape()
     .exists().withMessage("Address is required!")
