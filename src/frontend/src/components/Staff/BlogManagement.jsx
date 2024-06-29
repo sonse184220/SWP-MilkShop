@@ -4,6 +4,7 @@ import Sidebar from "./Sidebar";
 import Modal from "react-modal";
 const BlogManagement = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isAddOpen, setIsAddOpen] = useState(false);
   const [blogs, setBlogs] = useState([
     {
       BlogID: 1,
@@ -39,7 +40,9 @@ const BlogManagement = () => {
             <label>Search Blog:</label>
             <input type="text" placeholder="Search" className="search-input" />
             <button className="searchProduct">Search</button>
-            <button className="addOrder">Add Blog</button>
+            <button className="addOrder" onClick={() => setIsAddOpen(true)}>
+              Add Blog
+            </button>
           </div>
           <table className="issues-table">
             <thead>
@@ -105,6 +108,44 @@ const BlogManagement = () => {
               <button
                 onClick={() => setIsOpen(false)}
                 className="btn-cancel-blog"
+              >
+                Cancel
+              </button>
+            </div>
+          </Modal>
+
+          <Modal
+            isOpen={isAddOpen}
+            onRequestClose={() => setIsAddOpen(false)}
+            className="custom-modal-product"
+            overlayClassName="custom-overlay-product"
+          >
+            <h2>Add Product</h2>
+            <label>Product ID: </label>
+            <input name="productName" placeholder="Enter product id" />
+            <br />
+            <label>Product name: </label>
+            <input name="productName" placeholder="Enter product name" />
+            <br />
+            <label>Product quantity: </label>
+            <input name="quantity" placeholder="Enter product quantity" />
+            <br />
+            <label>Product date: </label>
+            <input name="date" placeholder="Enter product date" type="date" />
+            <br />
+            <label>Product voucher: </label>
+            <input name="voucher" placeholder="Enter product voucher" />
+            <br />
+            <div className="modal-actions-product">
+              <button
+                onClick={"handleAddProduct"}
+                className="btn-confirm-product"
+              >
+                Confirm
+              </button>
+              <button
+                onClick={() => setIsAddOpen(false)}
+                className="btn-cancel-product"
               >
                 Cancel
               </button>

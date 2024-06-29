@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import Sidebar from "./Sidebar";
 import "./OrderManagement.css";
+import Modal from "react-modal";
+
 const OrderManagement = () => {
+  const [isAddOpen, setIsAddOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [orders, setOrders] = useState([
     {
@@ -42,7 +45,9 @@ const OrderManagement = () => {
             <label>Search Order:</label>
             <input type="text" placeholder="Search" className="search-input" />
             <button className="searchOrder">Search</button>
-            <button className="addOrder">Add Order</button>
+            <button className="addOrder" onClick={() => setIsAddOpen(true)}>
+              Add Order
+            </button>
           </div>
           <table className="issues-table">
             <thead>
@@ -86,6 +91,43 @@ const OrderManagement = () => {
               ))}
             </tbody>
           </table>
+          <Modal
+            isOpen={isAddOpen}
+            onRequestClose={() => setIsAddOpen(false)}
+            className="custom-modal-product"
+            overlayClassName="custom-overlay-product"
+          >
+            <h2>Add Product</h2>
+            <label>Product ID: </label>
+            <input name="productName" placeholder="Enter product id" />
+            <br />
+            <label>Product name: </label>
+            <input name="productName" placeholder="Enter product name" />
+            <br />
+            <label>Product quantity: </label>
+            <input name="quantity" placeholder="Enter product quantity" />
+            <br />
+            <label>Product date: </label>
+            <input name="date" placeholder="Enter product date" type="date" />
+            <br />
+            <label>Product voucher: </label>
+            <input name="voucher" placeholder="Enter product voucher" />
+            <br />
+            <div className="modal-actions-product">
+              <button
+                onClick={"handleAddProduct"}
+                className="btn-confirm-product"
+              >
+                Confirm
+              </button>
+              <button
+                onClick={() => setIsAddOpen(false)}
+                className="btn-cancel-product"
+              >
+                Cancel
+              </button>
+            </div>
+          </Modal>
         </div>
       </div>
     </div>

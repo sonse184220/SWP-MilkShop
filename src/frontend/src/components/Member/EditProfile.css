@@ -25,15 +25,15 @@
 }
 
 .editProfile .inner .image-holder img {
-    width: 200px;
-    height: 200px;
+    width: 150px;
+    height: 150px;
     border-radius: 50%;
-    margin-top: 20px;
+    margin-top: 5px;
     margin-left: 5px
 }
 
 .editProfile .image-holder-content {
-    margin-top: 70px;
+    margin-top: 50px;
 }
 
 .editProfile .inner form {
@@ -170,4 +170,9 @@
     justify-content: center;
     align-items: center;
     margin-top: 20px;
+}
+
+.changePassword{
+    display: flex;
+    justify-content: center;
 }

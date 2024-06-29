@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
-import { getUser } from "../../services/editprofile/getUser"; // Adjust the import path accordingly
+import { getUser } from "../../services/editprofile/getUser";
 import { putInfo } from "../../services/editprofile/putInfo";
 import "./EditProfile.css";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
-
+import Modal from "react-modal";
+import { changePassword } from "../../services/changepassword/changePassword";
 
 const EditProfile = ({ isMember }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const [Password, setPassword] = useState("");
   const [ConfirmPassword, setConfirmPassword] = useState("");
   const [Name, setName] = useState("");
@@ -16,7 +18,12 @@ const EditProfile = ({ isMember }) => {
   const [isPasswordMatch, setIsPasswordMatch] = useState(true);
   const [SuccessMessage, setSuccessMessage] = useState("");
   const [ErrorMessage, setErrorMessage] = useState("");
+  const [OldPassword, setOldPassword] = useState("");
+  const [NewPassword, setNewPassword] = useState("");
+  const [ConfirmNewPassword, setConfirmNewPassword] = useState("");
+  const MemberToken = "Bearer " + sessionStorage.getItem("token");
   const userId = JSON.parse(sessionStorage.getItem("userData")).UserID;
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -66,6 +73,45 @@ const EditProfile = ({ isMember }) => {
     }
   };
 
+  const handleChangePassword = async () => {
+    setErrorMessage("");
+    setSuccessMessage("");
+
+    if (NewPassword !== ConfirmNewPassword) {
+      setErrorMessage({ message: "New passwords do not match" });
+      return;
+    }
+
+    if (!OldPassword || !NewPassword || !ConfirmNewPassword) {
+      setErrorMessage({ message: "All fields are required" });
+      return;
+    }
+
+    try {
+      const data = {
+        oldPassword: OldPassword,
+        newPassword: NewPassword,
+        confirmPassword: ConfirmNewPassword,
+      };
+      console.log("Changing password with data:", data);
+      const changePassW = await changePassword(MemberToken, data);
+      setIsOpen(false);
+      setSuccessMessage({ message: "Password changed successfully!" });
+    } catch (error) {
+      if (error.response && error.response.data && error.response.data.error) {
+        if (Array.isArray(error.response.data.error)) {
+          setErrorMessage({
+            message: error.response.data.error.map((err) => err.msg).join(", "),
+          });
+        } else {
+          setErrorMessage({ message: error.response.data.error });
+        }
+      } else {
+        setErrorMessage({ message: "Error changing password" });
+      }
+    }
+  };
+
   return (
     <>
       <img className="image" src="/img/milkbuying.jpeg" alt="Blog Header" />
@@ -77,7 +123,7 @@ const EditProfile = ({ isMember }) => {
               <div className="row">
                 <div className="col-lg-6 image-holder">
                   <div className="image-holder-content">
-                    <img src="https://via.placeholder.com/40" alt="" />
+                    <img src="https://via.placeholder.com/30" alt="" />
                     <div className="importButton">
                       <button>Import image</button>
                     </div>
@@ -86,24 +132,6 @@ const EditProfile = ({ isMember }) => {
                 <div className="col-lg-6">
                   <form onSubmit={handleEditProfile}>
                     <h3>Edit profile</h3>
-                    <div className="form-wrapper">
-                      <input
-                        type="password"
-                        placeholder="Password"
-                        className="form-control"
-                        onChange={(e) => setPassword(e.target.value)}
-                      />
-                      <i className="zmdi zmdi-lock"></i>
-                    </div>
-                    <div className="form-wrapper">
-                      <input
-                        type="password"
-                        placeholder="Confirm Password"
-                        className="form-control"
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                      />
-                      <i className="zmdi zmdi-lock"></i>
-                    </div>
                     <div className="form-wrapper">
                       <input
                         type="text"
@@ -170,6 +198,9 @@ const EditProfile = ({ isMember }) => {
                       Edit profile
                       <i className="zmdi zmdi-arrow-right"></i>
                     </button>
+                    <div className="changePassword">
+                      <a onClick={() => setIsOpen(true)}>Change password?</a>
+                    </div>
                   </form>
                 </div>
               </div>
@@ -177,6 +208,52 @@ const EditProfile = ({ isMember }) => {
           </div>
         </div>
       </div>
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={() => setIsOpen(false)}
+        className="custom-modal-blog"
+        overlayClassName="custom-overlay-blog"
+      >
+        <h2>Change password</h2>
+        <label htmlFor="old-password">Old password: </label>
+        <input
+          type="password"
+          id="old-password"
+          placeholder="Enter old password"
+          value={OldPassword}
+          onChange={(e) => setOldPassword(e.target.value)}
+        />{" "}
+        <br />
+        <label htmlFor="new-password">New password: </label>
+        <input
+          type="password"
+          id="new-password"
+          placeholder="Enter new password"
+          value={NewPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+        />{" "}
+        <br />
+        <label htmlFor="confirm-new-password">
+          Confirm new password:{" "}
+        </label>{" "}
+        <input
+          type="password"
+          id="confirm-new-password"
+          placeholder="Confirm new password"
+          value={ConfirmNewPassword}
+          onChange={(e) => setConfirmNewPassword(e.target.value)}
+        />{" "}
+        <br />
+        <br />
+        <div className="modal-actions-blog">
+          <button className="btn-confirm-blog" onClick={handleChangePassword}>
+            Confirm
+          </button>
+          <button onClick={() => setIsOpen(false)} className="btn-cancel-blog">
+            Cancel
+          </button>
+        </div>
+      </Modal>
       <Footer />
     </>
   );
