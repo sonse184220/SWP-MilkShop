@@ -123,13 +123,20 @@
 }
 
 .modal-actions-product {
+<<<<<<< Updated upstream
 display: flex;
 justify-content: flex-end;
 margin-top: 20px;
+=======
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+>>>>>>> Stashed changes
 }
 
 .btn-confirm-product,
 .btn-cancel-product {
+<<<<<<< Updated upstream
 padding: 10px 20px;
 margin-left: 10px;
 border: none;
@@ -155,3 +162,31 @@ color: white;
 .btn-cancel-product:hover {
 background-color: #c82333;
 }
+=======
+  padding: 10px 20px;
+  margin-left: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.btn-confirm-product {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-confirm-product:hover {
+  background-color: #218838;
+}
+
+.btn-cancel-product {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-cancel-product:hover {
+  background-color: #c82333;
+}
+
+>>>>>>> Stashed changes

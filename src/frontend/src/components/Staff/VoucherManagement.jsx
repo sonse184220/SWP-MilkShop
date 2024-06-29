@@ -4,9 +4,15 @@ import React, { useState } from "react";
 import Sidebar from "./Sidebar";
 import "./VoucherManagement.css";
 import Modal from "react-modal";
+<<<<<<< Updated upstream
 const VoucherManagement = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isAddOpen, setIsAddOpen] = useState(false);
+=======
+
+const VoucherManagement = () => {
+  const [isOpen, setIsOpen] = useState(false);
+>>>>>>> Stashed changes
   const [vouchers, setVouchers] = useState([
     {
       VoucherID: 1,
@@ -120,6 +126,7 @@ const VoucherManagement = () => {
               </button>
             </div>
           </Modal>
+<<<<<<< Updated upstream
           <Modal
             isOpen={isAddOpen}
             onRequestClose={() => setIsAddOpen(false)}
@@ -157,6 +164,8 @@ const VoucherManagement = () => {
               </button>
             </div>
           </Modal>
+=======
+>>>>>>> Stashed changes
         </div>
       </div>
     </div>
