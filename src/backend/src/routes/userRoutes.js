@@ -1,6 +1,7 @@
 import express from 'express';
 import { UserController } from '../controllers/userController.js';
 import { OrderController } from '../controllers/OrderController.js';
+import { PreorderController } from '../controllers/PreorderController.js';
 import dotenv from 'dotenv';
 import { checkAuthenticated, getAuthRole } from '../middlewares/authMiddleware.js';
 import { checkMemberId } from '../middlewares/userValidators.js';
@@ -15,6 +16,7 @@ const upload = multer();
 
 const userController = new UserController();
 const orderController = new OrderController();
+const preorderController = new PreorderController();
 
 router.get('/:userId', userController.getUserInfo);
 router.put('/:userId', upload.single('profilePicture'), checkImageUpload, userController.updateUserInfo);
@@ -33,7 +35,7 @@ router.get("/:id/order-history", checkAuthenticated, getAuthRole, checkMemberId,
  * - "sort" là cách sắp xếp. Nếu không cung cấp, "sort" mặc định là newest. "sort" bao gồm [newest, oldest, highest, lowest]
  */
 router.get("/:id/preorder-history", checkAuthenticated, getAuthRole, checkMemberId, checkPaginationQuery, async (req, res) => {
-    // await userController.
+    await preorderController.getUserPreorderHistory(req, res)
 })
 
 export { router as userRoutes };

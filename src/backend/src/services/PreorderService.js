@@ -27,8 +27,23 @@ export class PreorderService {
         return preorders;
     }
 
+    async getUserPreorderHistory(userId, limit, sortBy, offset) {
+        const [preorders] = await poolConnect.query(`SELECT po.*, p.Name as productName, p.Price as productPrice, p.brandId, b.Name as brandName
+                                                    FROM pre_order AS po
+                                                    JOIN product AS p ON po.ProductID = p.ProductID
+                                                    JOIN brand AS b ON p.BrandID = b.BrandID
+                                                    WHERE UserID = ? ORDER BY ${sortBy} LIMIT ? OFFSET ?`, [userId, limit, offset]);
+        return preorders;
+    }
+
     async getTotalPreorderNumber() {
         const [total] = await poolConnect.query(`SELECT COUNT(*) as count FROM pre_order`);
+        const count = total[0].count;
+        return count;
+    }
+
+    async getTotalUserPreorderNumber(userId) {
+        const [total] = await poolConnect.query(`SELECT COUNT(*) as count FROM pre_order WHERE UserID = ?`, [userId]);
         const count = total[0].count;
         return count;
     }
