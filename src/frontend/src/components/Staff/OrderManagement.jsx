@@ -1,14 +1,11 @@
 import React, { useState } from "react";
 import Sidebar from "./Sidebar";
 import "./OrderManagement.css";
-<<<<<<< Updated upstream
+
 import Modal from "react-modal";
 
 const OrderManagement = () => {
   const [isAddOpen, setIsAddOpen] = useState(false);
-=======
-const OrderManagement = () => {
->>>>>>> Stashed changes
   const [isOpen, setIsOpen] = useState(false);
   const [orders, setOrders] = useState([
     {
@@ -49,12 +46,9 @@ const OrderManagement = () => {
             <label>Search Order:</label>
             <input type="text" placeholder="Search" className="search-input" />
             <button className="searchOrder">Search</button>
-<<<<<<< Updated upstream
             <button className="addOrder" onClick={() => setIsAddOpen(true)}>
               Add Order
             </button>
-=======
->>>>>>> Stashed changes
           </div>
           <table className="issues-table">
             <thead>

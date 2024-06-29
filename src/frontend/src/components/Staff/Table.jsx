@@ -2,10 +2,7 @@ import React from "react";
 import "./Table.css";
 import { useState } from "react";
 import Modal from "react-modal";
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
 const data = [
   {
     productId: "P01",
@@ -83,10 +80,9 @@ const data = [
 
 function Table() {
   const [isOpen, setIsOpen] = useState(false);
-<<<<<<< Updated upstream
+
   const [isAddOpen, setIsAddOpen] = useState(false);
-=======
->>>>>>> Stashed changes
+
   return (
     <div className="table-container">
       <div className="table-actions">
@@ -170,7 +166,6 @@ function Table() {
           </button>
         </div>
       </Modal>
-<<<<<<< Updated upstream
 
       <Modal
         isOpen={isAddOpen}
@@ -206,8 +201,6 @@ function Table() {
           </button>
         </div>
       </Modal>
-=======
->>>>>>> Stashed changes
     </div>
   );
 }

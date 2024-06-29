@@ -1,14 +1,14 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation } from "react-router-dom";
 // import { toast, Toaster } from 'react-hot-toast';
 
-import BlogList from "../Blog/BlogList"
-import Footer from "../Footer/Footer"
-import Header from "../Header/Header"
-import ProductBar from "../Product-HomePage/ProductBar"
-import './HomePage.css'
-import { useEffect } from 'react';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import BlogList from "../Blog/BlogList";
+import Footer from "../Footer/Footer";
+import Header from "../Header/Header";
+import ProductBar from "../Product-HomePage/ProductBar";
+import "./HomePage.css";
+import { useEffect } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 //prop onLogin chuyền từ app.js -> HomePage.jsx -> Header.jsx
 //dùng để set state isLogin
@@ -22,16 +22,16 @@ const HomePage = ({ onLogin, isMember }) => {
   const location = useLocation();
 
   useEffect(() => {
-    console.log('Location changed:', location);
-    console.log('Location state:', location.state);
+    console.log("Location changed:", location);
+    console.log("Location state:", location.state);
     if (location.state && location.state.showLoginSuccess) {
-      console.log('Showing login success toast');
+      console.log("Showing login success toast");
       toast.success("Login successful!", {
         duration: 3000,
-        position: 'top-right',
+        position: "top-right",
       });
-      console.log("sssssssss")
-      window.history.replaceState({}, document.title)
+      console.log("sssssssss");
+      window.history.replaceState({}, document.title);
     }
   }, [location]);
 
@@ -53,15 +53,23 @@ const HomePage = ({ onLogin, isMember }) => {
 
   return (
     <div className="body">
-      <ToastContainer style={{ top: '110px' }} />
-      <div><Header onLogin={onLogin} isMember={isMember} /></div>
-      <img className='image' src="/img/milkbuying.jpeg" />
+      <ToastContainer style={{ top: "110px" }} />
+      <div>
+        <Header onLogin={onLogin} isMember={isMember} />
+      </div>
+      <img className="image" src="/img/milkbuying.jpeg" />
       {/* <div className="welcome">Welcome {userName}</div> */}
-      <div><ProductBar /></div>
-      <div><BlogList /></div>
-      <div><Footer /></div>
+      <div>
+        <ProductBar />
+      </div>
+      <div>
+        <BlogList />
+      </div>
+      <div>
+        <Footer />
+      </div>
     </div>
-  )
-}
+  );
+};
 
 export default HomePage;
