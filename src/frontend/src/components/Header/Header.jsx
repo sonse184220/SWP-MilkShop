@@ -44,9 +44,9 @@ export function Header({ onLogin, isMember }) {
     //Chuyển sang Route('/login-register') lúc bấm nút logout
     const showLogin = (event) => {
         event.preventDefault();
-        localStorage.clear();
-        navigate('/Customer/login-register')
-
+        sessionStorage.clear();
+        navigate('/Customer/home')
+        window.location.reload();
     }
 
     const isActive = (match, location) => {

@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { Alert, AlertTitle } from '@mui/material';
 
-import '../Cart/Cart.css';
+import './GuestCart.css';
 import Footer from "../Footer/Footer";
 import Header from "../Header/Header";
 import { Voucher } from "../Voucher/Voucher";
@@ -13,6 +17,7 @@ import { UpdateCart } from '../../services/cart/updateCart';
 import { RemoveCart } from '../../services/cart/removeCart';
 import { UserInfoForm } from '../UserInfoForm/UserInfoForm';
 import { MemberOrder } from '../../services/order/memberOrder';
+import { GuestOrder } from '../../services/order/guestOrder';
 
 export const GuestCart = ({ isMember }) => {
     const [CartItems, setCartItems] = useState([]);
@@ -22,9 +27,11 @@ export const GuestCart = ({ isMember }) => {
         Email: '',
         Phone: '',
         Address: '',
-        RewardPoints: ''
+        // RewardPoints: ''
     });
     const [isOpen, setIsOpen] = useState(false);
+    const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+
 
     // const OrderInfo = {
     //     "PaymentMethod": "COD",
@@ -44,22 +51,41 @@ export const GuestCart = ({ isMember }) => {
     //     ]
     // }
 
-    const handleMemberOrderAction = async () => {
+    const handleGuestOrderAction = async () => {
         try {
+            if (userFormData.Name.length === 0 ||
+                userFormData.Email.length === 0 ||
+                userFormData.Phone.length === 0 ||
+                userFormData.Address.length === 0) {
+                toast.error("Please input all order info fields", {
+                    theme: "colored",
+                });
+                setIsOpen(false);
+                return;
+            }
             const MemberToken = 'Bearer ' + localStorage.getItem('token');
+            handleViewCart();
+            const cart = CartItems.map(item => ({
+                ProductID: item.ProductID,
+                Quantity: item.CartQuantity
+            }));
+            console.log(cart);
             const OrderInfo = {
                 "PaymentMethod": "COD",
-                "VoucherID": "V001",
+                "VoucherID": [],
                 "useRewardPoints": false,
                 "Name": userFormData.Name,
                 "Email": userFormData.Email,
                 "Phone": userFormData.Phone,
-                "Address": userFormData.Address
+                "Address": userFormData.Address,
+                "cart": cart
             }
-            const response = await MemberOrder(MemberToken, OrderInfo);
+            const response = await GuestOrder(OrderInfo);
             if (response.data.orderId) {
                 console.log("order success==========", response.data.message);
                 handleViewCart();
+                setIsOpen(false);
+                setIsSuccessModalOpen(true);
             }
         } catch (error) {
 
@@ -84,60 +110,113 @@ export const GuestCart = ({ isMember }) => {
         }
     }
 
-    const handleRemoveCart = async (pID) => {
+    const handleRemoveCart = (productId) => {
         try {
-            const MemberToken = 'Bearer ' + localStorage.getItem('token');
-            console.log(MemberToken);
-            const prID = {
-                "ProductID": pID,
-            }
-            const response = await RemoveCart(MemberToken, prID);
-            // console.log(response);
-            if (response.data.message) {
+            let cart = JSON.parse(sessionStorage.getItem('cart') || '[]');
+            const productIndex = cart.findIndex(item => item.ProductID === productId);
+            if (productIndex !== -1) {
+                cart.splice(productIndex, 1);
+                sessionStorage.setItem('cart', JSON.stringify(cart));
                 handleViewCart();
+                toast.success("Product removed from cart", {
+                    theme: "colored",
+                });
+            } else {
+                toast.error("Product not found in cart cart", {
+                    theme: "colored",
+                });
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
-    }
+    };
 
-    const handleIncrement = async (pID, currentQuantity) => {
-        try {
-            const MemberToken = 'Bearer ' + localStorage.getItem('token');
-            console.log(MemberToken);
-            const prInfo = {
-                "ProductID": pID,
-                "CartQuantity": currentQuantity + 1
-            }
-            const response = await UpdateCart(MemberToken, prInfo);
-            console.log(response);
-            if (response.data.message) {
-                handleViewCart();
-                console.log("cart", response.data.message);
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    }
+    // const handleRemoveCart = async (pID) => {
+    //     try {
+    //         const MemberToken = 'Bearer ' + localStorage.getItem('token');
+    //         console.log(MemberToken);
+    //         const prID = {
+    //             "ProductID": pID,
+    //         }
+    //         const response = await RemoveCart(MemberToken, prID);
+    //         // console.log(response);
+    //         if (response.data.message) {
+    //             handleViewCart();
+    //         }
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // }
 
-    const handleDecrement = async (pID, currentQuantity) => {
-        try {
-            const MemberToken = 'Bearer ' + localStorage.getItem('token');
-            console.log(MemberToken);
-            const prInfo = {
-                "ProductID": pID,
-                "CartQuantity": currentQuantity - 1
-            }
-            const response = await UpdateCart(MemberToken, prInfo);
-            console.log(response);
-            if (response.data.message) {
-                handleViewCart();
-                console.log("cart", response.data.message);
-            }
-        } catch (error) {
-            console.log(error);
+    const handleIncrement = (productId) => {
+        let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
+        const existingProductIndex = cart.findIndex(item => item.ProductID === productId);
+
+        if (existingProductIndex !== -1) {
+            // If the product exists, increment the quantity
+            cart[existingProductIndex].CartQuantity += 1;
+            sessionStorage.setItem('cart', JSON.stringify(cart));
+            // You might want to update state here if you're using React state to render the cart
+            // setCartItems    }
+            handleViewCart();
         }
-    }
+    };
+
+    // const handleIncrement = async (pID, currentQuantity) => {
+    //     try {
+    //         const MemberToken = 'Bearer ' + localStorage.getItem('token');
+    //         console.log(MemberToken);
+    //         const prInfo = {
+    //             "ProductID": pID,
+    //             "CartQuantity": currentQuantity + 1
+    //         }
+    //         const response = await UpdateCart(MemberToken, prInfo);
+    //         console.log(response);
+    //         if (response.data.message) {
+    //             handleViewCart();
+    //             console.log("cart", response.data.message);
+    //         }
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // }
+
+    const handleDecrement = (productId) => {
+        let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
+        const existingProductIndex = cart.findIndex(item => item.ProductID === productId);
+
+        if (existingProductIndex !== -1) {
+            // If the product exists and quantity is greater than 1, decrement the quantity
+            if (cart[existingProductIndex].CartQuantity > 1) {
+                cart[existingProductIndex].CartQuantity -= 1;
+            } else {
+                // If quantity is 1, remove the item from the cart
+                cart.splice(existingProductIndex, 1);
+            }
+            sessionStorage.setItem('cart', JSON.stringify(cart));       // You might want to update state here if you're using React state to render the cart
+            // setCartItems(cart);
+            handleViewCart();
+        }
+    };
+
+    // const handleDecrement = async (pID, currentQuantity) => {
+    //     try {
+    //         const MemberToken = 'Bearer ' + localStorage.getItem('token');
+    //         console.log(MemberToken);
+    //         const prInfo = {
+    //             "ProductID": pID,
+    //             "CartQuantity": currentQuantity - 1
+    //         }
+    //         const response = await UpdateCart(MemberToken, prInfo);
+    //         console.log(response);
+    //         if (response.data.message) {
+    //             handleViewCart();
+    //             console.log("cart", response.data.message);
+    //         }
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // }
 
     const handleViewCart = async () => {
         try {
@@ -146,7 +225,7 @@ export const GuestCart = ({ isMember }) => {
             // const response = await ViewCart(MemberToken);
             // console.log(response);
             // const cartitems = localStorage.getItem('cart')
-            const cartitems = JSON.parse(localStorage.getItem('cart') || '[]');
+            const cartitems = JSON.parse(sessionStorage.getItem('cart') || '[]');
             if (Array.isArray(cartitems) && cartitems.length > 0) {
                 setCartItems(cartitems);
                 console.log("cart");
@@ -167,15 +246,47 @@ export const GuestCart = ({ isMember }) => {
         <>
             <Header isMember={isMember} />
             <img className='image' src="/img/P004.jpg" alt="Header Image" />
-            <div className="middle-part">
-                <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
+            <div className="GuestMiddle">
+                {/* <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
                     <h2>Confirm Order</h2>
                     <p>Are you sure you want to place this order?</p>
-                    <button onClick={() => {/* handle confirmation */ }}>Confirm</button>
+                    <button onClick={() => {handle confirmation }}>Confirm</button>
                     <button onClick={() => setIsOpen(false)}>Cancel</button>
+                </Modal> */}
+
+                <Modal
+                    isOpen={isOpen}
+                    onRequestClose={() => setIsOpen(false)}
+                    className="custom-modal"
+                    overlayClassName="custom-overlay"
+                >
+                    <h2>Confirm Order</h2>
+                    <p>Are you sure you want to place this order?</p>
+                    <div className="modal-actions">
+                        <button onClick={handleGuestOrderAction} className="btn-confirm">Confirm</button>
+                        <button onClick={() => setIsOpen(false)} className="btn-cancel">Cancel</button>
+                    </div>
                 </Modal>
 
-                <div className="cart">
+                <Modal
+                    isOpen={isSuccessModalOpen}
+                    onRequestClose={() => setIsSuccessModalOpen(false)}
+                    className="custom-modal success-modal"
+                    overlayClassName="custom-overlay"
+                >
+                    <Alert severity="success" icon={<CheckCircleIcon />}>
+                        <AlertTitle>Success!</AlertTitle>
+                        Your order has been placed successfully.
+                    </Alert>
+                    <button onClick={() => setIsSuccessModalOpen(false)} className="btn-close">
+                        Close
+                    </button>
+                </Modal>
+
+                <ToastContainer style={{ top: '110px' }} />
+
+
+                <div className="GuestCart">
                     <section className="h-100 gradient-custom">
                         <div className="container py-5">
                             <div className="row d-flex justify-content-center my-4">
@@ -211,8 +322,8 @@ export const GuestCart = ({ isMember }) => {
                                                                 <div className='quantity'>
                                                                     <Quantity
                                                                         value={item.CartQuantity}
-                                                                        increment={() => handleIncrement(item.ProductID, item.CartQuantity)}
-                                                                        decrement={() => handleDecrement(item.ProductID, item.CartQuantity)} />
+                                                                        increment={() => handleIncrement(item.ProductID)}
+                                                                        decrement={() => handleDecrement(item.ProductID)} />
 
                                                                 </div>
                                                                 <div className="total-price">
@@ -259,18 +370,20 @@ export const GuestCart = ({ isMember }) => {
                 {/* <div className="voucher">
                     <Voucher />
                 </div> */}
+                <div className='GuestCartInfo'>
+                    <div className='Guest-form-info'><UserInfoForm userFormData={userFormData} setUserFormData={setUserFormData} isMember={isMember} /></div>
+                    <div className='Guest-total-box'><TotalPrice
+                        // CartItems={CartItems}
+                        // handleMemberOrderAction={handleMemberOrderAction}
+                        isOpen={isOpen}
+                        setIsOpen={setIsOpen}
+                    />
+                    </div>
+
+                </div>
 
             </div>
-            <div className='middle2'>
-                <div className='totalpricebox'><TotalPrice
-                // CartItems={CartItems}
-                // handleMemberOrderAction={handleMemberOrderAction}
-                // isOpen={isOpen}
-                // setIsOpen={setIsOpen} 
-                />
-                </div>
-                <div className='infoform'><UserInfoForm userFormData={userFormData} setUserFormData={setUserFormData} /></div>
-            </div>
+
             <Footer />
         </>
     );
