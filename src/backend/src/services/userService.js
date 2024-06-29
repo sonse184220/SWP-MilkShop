@@ -91,4 +91,9 @@ export class UserService {
             });
         });
     };
+
+    async updateUserRewardPoints(userId, amount) {
+        const [user] = await poolConnect.query(`UPDATE member SET RewardPoints = RewardPoints + ? WHERE UserID = ?`, [amount, userId]);
+        return user;
+    }
 }
