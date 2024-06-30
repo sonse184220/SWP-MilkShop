@@ -1,6 +1,8 @@
 import './ProductDetail.css'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Modal from 'react-modal';
+
 
 import Footer from "../Footer/Footer";
 import Header from "../Header/Header";
@@ -17,6 +19,7 @@ import { GetWishlist } from '../../services/wishlist/getAllWishlist';
 import { RemoveWishlist } from '../../services/wishlist/removeWishlish';
 import { DeleteFeedback } from '../../services/feedback/deleteFeedback';
 import { AddToCart } from '../../services/cart/addToCart';
+import { PreOrder } from '../../services/pre-order/pre-order';
 
 
 const ProductDetail = ({ isMember }) => {
@@ -56,9 +59,16 @@ const ProductDetail = ({ isMember }) => {
     const { ProductID } = useParams();
     const [quantity, setQuantity] = useState(1);
     const [CurrentProduct, setCurrentProduct] = useState(null);
+    const [isOpenPreOrder, setIsOpenPreOrder] = useState(false);
+    const [PreOrderFormData, setPreOrderFormData] = useState({
+        Name: '',
+        Email: '',
+        Phone: '',
+        Address: '',
+    });
 
     const userId = sessionStorage.getItem('userData') ? JSON.parse(sessionStorage.getItem('userData')).UserID : "Guest";
-    const MemberToken = 'Bearer ' + localStorage.getItem('token');
+    const MemberToken = 'Bearer ' + sessionStorage.getItem('token');
 
     const [feedbacks, setFeedbacks] = useState([])
     const [newFeedback, setNewFeedback] = useState({
@@ -68,13 +78,49 @@ const ProductDetail = ({ isMember }) => {
     });
     const [inWishlist, setInWishlist] = useState(false);
 
+    const handlePreOrderAction = async () => {
+        try {
+            const PreOrderInfo = {
+                "userId": userId,
+                "productId": CurrentProduct[0].ProductID,
+                "quantity": quantity,
+                "paymentMethod": "COD",
+                "name": PreOrderFormData.Name,
+                "email": PreOrderFormData.Email,
+                "phone": PreOrderFormData.Phone,
+                "address": PreOrderFormData.Address
+            }
+            const response = await PreOrder(MemberToken, PreOrderInfo);
+            if (response.data.PreorderID) {
+                console.log("preorder sucess")
+            }
+        } catch (error) {
 
+        }
+    }
+
+    const handleGetUserInfo = () => {
+        try {
+            const user = JSON.parse(sessionStorage.getItem("userData"));
+            if (user) {
+                // setUserInfo(user);
+                setPreOrderFormData({
+                    Name: user.Name,
+                    Email: user.Email,
+                    Phone: user.Phone,
+                    Address: user.Address,
+                })
+            }
+        } catch (error) {
+
+        }
+    }
 
     const handleAddToCart = async (e) => {
         e.preventDefault();
         try {
             if (isMember) {
-                const MemberToken = 'Bearer ' + sessionStorage.getItem('token');
+                // const MemberToken = 'Bearer ' + sessionStorage.getItem('token');
                 console.log(MemberToken);
                 const prInfo = {
                     "ProductID": ProductID,
@@ -150,7 +196,7 @@ const ProductDetail = ({ isMember }) => {
         try {
             e.preventDefault();
 
-            const MemberToken = 'Bearer ' + sessionStorage.getItem('token');
+            // const MemberToken = 'Bearer ' + sessionStorage.getItem('token');
             console.log("token======", MemberToken)
             if (!inWishlist) {
                 setInWishlist(prevState => !prevState);
@@ -194,7 +240,7 @@ const ProductDetail = ({ isMember }) => {
         if (!isMember) return;
         e.preventDefault();
         try {
-            const MemberToken = 'Bearer ' + sessionStorage.getItem('token');
+            // const MemberToken = 'Bearer ' + sessionStorage.getItem('token');
             const response = await DeleteFeedback(feedbackid, MemberToken);
             if (response.data.msg) {
                 toast.success('Feedback deleted successfully', {
@@ -214,7 +260,7 @@ const ProductDetail = ({ isMember }) => {
     const handleAddFeedback = async () => {
         if (!isMember) return;
         try {
-            const MemberToken = 'Bearer ' + sessionStorage.getItem('token');
+            // const MemberToken = 'Bearer ' + sessionStorage.getItem('token');
             const response = await AddFeedback(MemberToken, ProductID, newFeedback);
             if (!response.data.error) {
                 toast.success('Feedback added successfully', {
@@ -272,18 +318,116 @@ const ProductDetail = ({ isMember }) => {
         }
     };
 
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setPreOrderFormData(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    };
+
 
     useEffect(() => {
         handleGetProductByID();
         handleGetFeedback();
         handleGetWishlist();
         checkIsWishlistState();
+        handleGetUserInfo();
     }, [])
 
     return (
         <div className='body'>
             <div><Header isMember={isMember} /></div>
             <img className='image' src="/img/milkbuying.jpeg" />
+            {CurrentProduct && (
+                <Modal
+                    isOpen={isOpenPreOrder}
+                    onRequestClose={() => setIsOpenPreOrder(false)}
+                    className="custom-modal-preorder"
+                    overlayClassName="custom-overlay"
+                >
+                    <h2>Pre-Order</h2>
+                    <p className='pre-order-intro'>The product is out-of-stock. Do you want to pre-order?</p>
+                    <div className='pre-order-content'>
+                        <div className='pre-order-product'>
+                            <h3>{CurrentProduct[0].Name}</h3>
+                            <h4>CATEGORY: {CurrentProduct[0].BrandName}</h4>
+                            <div><img src='/img/P001.jpg' /></div>
+                            <div className="pre-order-quantity">
+                                <span>Quantity</span>
+                                <div className="product-variable-quantity">
+                                    <input min="1" max="100" value={quantity} type="number"
+                                        onChange={e => setQuantity(parseInt(e.target.value))}
+                                        onIncrement={handleIncrement}
+                                        onDecrement={handleDecrement} />
+                                </div>
+                            </div>
+                        </div>
+                        <div className='pre-order-form-btn'>
+                            <div className='pre-order-form'>
+                                <form>
+                                    <div className='pre-order-form-group'>
+                                        <label className='mb-1'>Name</label>
+                                        <input
+                                            className='form-control mb-1'
+                                            type='text'
+                                            name="Name"
+                                            placeholder='Name'
+                                            value={PreOrderFormData.Name}
+                                            onChange={handleInputChange}
+                                        />
+
+                                    </div>
+                                    {PreOrderFormData.Name.length === 0 && <p className="pOinfo-error-message">*Please input name</p>}
+                                    <div className='pre-order-form-group'>
+                                        <label className='mb-1'>Email</label>
+                                        <input
+                                            className='form-control mb-1'
+                                            type='text'
+                                            name="Email"
+                                            placeholder='Email'
+                                            value={PreOrderFormData.Email}
+                                            onChange={handleInputChange}
+                                        />
+
+                                    </div>
+                                    {PreOrderFormData.Email.length === 0 && <p className="pOinfo-error-message">*Please input name</p>}
+
+                                    <div className='pre-order-form-group'>
+                                        <label className='mb-1'>Phone</label>
+                                        <input
+                                            className='form-control mb-1'
+                                            type='text'
+                                            name="Phone"
+                                            placeholder='Phone'
+                                            value={PreOrderFormData.Phone}
+                                            onChange={handleInputChange}
+                                        />
+
+                                    </div>
+                                    {PreOrderFormData.Phone.length === 0 && <p className="pOinfo-error-message">*Please input name</p>}
+
+                                    <div className='pre-order-form-group'>
+                                        <label className='mb-1'>Address</label>
+                                        <input
+                                            className='form-control mb-1'
+                                            type='text'
+                                            name="Address"
+                                            placeholder='Address'
+                                            value={PreOrderFormData.Address}
+                                            onChange={handleInputChange}
+                                        />
+
+                                    </div>
+                                    {PreOrderFormData.Address.length === 0 && <p className="pOinfo-error-message">*Please input name</p>}
+                                </form>
+                            </div>
+                            <a onClick={handlePreOrderAction} className="btn btn-block btn-lg btn-black-default-hover" data-bs-toggle="modal" data-bs-target="#modalAddcart">Submit Order</a>
+
+                        </div>
+                    </div>
+                </Modal>
+            )}
             {CurrentProduct ? (
                 <div>
                     <ToastContainer style={{ top: '110px' }} />
@@ -317,7 +461,7 @@ const ProductDetail = ({ isMember }) => {
 
                                     <div className="product-add-to-cart-btn">
                                         {(isMember && CurrentProduct[0].Quantity === 0) ?
-                                            (<a href="#" className="btn btn-block btn-lg btn-black-default-hover" data-bs-toggle="modal" data-bs-target="#modalAddcart">Pre-Order</a>)
+                                            (<a href="#" onClick={() => setIsOpenPreOrder(true)} className="btn btn-block btn-lg btn-black-default-hover" data-bs-toggle="modal" data-bs-target="#modalAddcart">Pre-Order</a>)
                                             :
                                             (<a href="#" onClick={handleAddToCart} className="btn btn-block btn-lg btn-black-default-hover" data-bs-toggle="modal" data-bs-target="#modalAddcart">+ Add To Cart</a>)
                                         }

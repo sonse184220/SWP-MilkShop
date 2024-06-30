@@ -48,7 +48,7 @@ export function CustomerRoutes({ isMember }) {
             <Route path="BlogDetail/:BlogID" element={<BlogDetail isMember={isMember} />} />
             <Route path='Cart' element={<Cart isMember={isMember} />} />
             <Route path='GuestCart' element={<GuestCart />} />
-            <Route path='OrderHistory' element={<OrderHistory />} />
+            <Route path='OrderHistory' element={<OrderHistory isMember={isMember} />} />
             <Route path='ProductManagement' element={<ProductManagement />} />
         </Routes>
 
