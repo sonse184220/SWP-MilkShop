@@ -14,6 +14,7 @@ import BlogDetail from '../components/Blog/BlogDetail.jsx';
 import { Cart } from '../components/Cart/Cart.jsx';
 import ProductManagement from '../components/Staff/ProductManagement.jsx';
 import { GuestCart } from '../components/Guest/GuestCart.jsx';
+import { OrderHistory } from '../components/OrderHistory/OrderHistory.jsx';
 
 export function CustomerRoutes({ isMember }) {
     //state isLogin để chuyển giữa Login.jsx và Homepage.jsx (Route '/')
@@ -47,6 +48,7 @@ export function CustomerRoutes({ isMember }) {
             <Route path="BlogDetail/:BlogID" element={<BlogDetail isMember={isMember} />} />
             <Route path='Cart' element={<Cart isMember={isMember} />} />
             <Route path='GuestCart' element={<GuestCart />} />
+            <Route path='OrderHistory' element={<OrderHistory isMember={isMember} />} />
             <Route path='ProductManagement' element={<ProductManagement />} />
         </Routes>
 

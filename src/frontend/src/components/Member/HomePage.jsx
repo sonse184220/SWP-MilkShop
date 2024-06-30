@@ -37,15 +37,15 @@ const HomePage = ({ onLogin, isMember }) => {
 
   const getUserName = () => {
     try {
-      const userDataString = localStorage.getItem("userData");
+      const userDataString = localStorage.getItem('userData');
       if (userDataString) {
         const userData = JSON.parse(userDataString);
-        return userData.Name || "Guest";
+        return userData.Name || 'Guest';
       }
     } catch (error) {
-      console.error("Error parsing user data:", error);
+      console.error('Error parsing user data:', error);
     }
-    return "Guest";
+    return 'Guest';
   };
 
   const userName = isMember ? getUserName() : "Guest";

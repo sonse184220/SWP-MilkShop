@@ -1,17 +1,18 @@
 import { Router } from "express";
 import { checkAuthenticated, getAuthRole } from "../middlewares/authMiddleware.js";
 import { PreorderController } from "../controllers/PreorderController.js";
-import { checkMemberId } from "../middlewares/userValidators.js";
 import { checkPreorderData } from "../middlewares/preorderValidators.js";
+import { checkPaginationQuery } from "../middlewares/utilsMiddleware.js";
 
 const router = Router();
 const preorderController = new PreorderController;
 
-/** trả lại dannh sách lịch sử pre-order của một user
- * - {..id..} là id của user
+/** /api/preorder/history?limit={...}&page={...}&sort={...}
+ * - trả lại dannh sách lịch sử pre-order trong database
+ * - "sort" là cách sắp xếp. Nếu không cung cấp, "sort" mặc định là newest. "sort" bao gồm [newest, oldest, highest, lowest]
  */
-router.get("/api/preorder/:id/history", checkAuthenticated, getAuthRole, checkMemberId, async (req, res) => {
-    // await preorderController.
+router.get("/api/preorder/history", checkAuthenticated, getAuthRole, checkPaginationQuery, async (req, res) => {
+    await preorderController.getPreorderHistory(req, res);
 });
 
 /** Đặt pre-order cho 1 sản phẩm

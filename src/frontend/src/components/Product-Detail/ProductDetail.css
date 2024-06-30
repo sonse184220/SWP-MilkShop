@@ -196,3 +196,122 @@
     font-style: italic;
     font-size: 16px;
 }
+
+.custom-modal-preorder {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    right: auto;
+    bottom: auto;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    width: 500px;
+    height: 400px;
+}
+
+.pre-order-intro {
+    font-style: italic;
+    font-size: 12px;
+}
+
+.pre-order-content {
+    display: flex;
+    gap: 10px;
+}
+
+.pre-order-product * {
+    margin: 5px auto;
+}
+
+.custom-modal-preorder img {
+    width: 80%;
+    border-radius: 10px;
+}
+
+.custom-modal-preorder .pre-order-product {
+    width: 40%;
+}
+
+.custom-modal-preorder .pre-order-form {
+    height: 90%;
+}
+
+.pre-order-form-group {
+    display: flex;
+    gap: 5px;
+    text-align: center;
+    margin: 5px auto;
+}
+
+.pre-order-form-group label {
+    width: 30%;
+    text-align: left;
+}
+
+.pre-order-form-group input {
+    width: 70%;
+}
+
+.pOinfo-error-message {
+    color: #dc3545;
+    font-size: 12px;
+    font-weight: 400;
+    text-align: left;
+    padding-left: 80px;
+    margin-bottom: 8px;
+    font-style: italic;
+    margin-top: -10px;
+}
+
+.pre-order-quantity {
+    display: flex;
+    margin: 10px auto;
+    gap: 10px;
+}
+
+.pre-order-quantity span {
+    align-content: center;
+}
+
+.pre-order-quantity .product-variable-quantity input {
+    height: 30px;
+}
+
+.custom-modal-preorder h3 {
+    font-size: large;
+}
+
+.custom-modal-preorder h4 {
+    font-size: small;
+    color: #777;
+}
+
+/* .custom-modal-preorder .btn {
+    background-color: #333;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-left: 20px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+} */
+.custom-modal-preorder .btn:hover {
+    background-color: #777;
+    transition: background-color 0.3s ease;
+}
+
+.custom-modal-preorder .btn {
+    width: 74%;
+    margin-left: 30px;
+}
+
+.pre-order-form-btn {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+}

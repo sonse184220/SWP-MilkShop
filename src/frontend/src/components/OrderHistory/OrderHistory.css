@@ -1,0 +1,17 @@
+/* .history-order .section {
+    position: relative;
+    padding: 80px 0;
+}
+
+.history-order .table-nowrap td,
+.table-nowrap th {
+    white-space: nowrap;
+} */
+
+.history-order thead {
+    text-align: center;
+}
+
+.history-order .avatar-title img {
+    width: 50%;
+}
