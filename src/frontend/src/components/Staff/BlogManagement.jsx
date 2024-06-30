@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import "./BlogManagement.css"; // Import CSS file
 import Sidebar from "./Sidebar";
 import Modal from "react-modal";
@@ -6,6 +6,8 @@ import Modal from "react-modal";
 const BlogManagement = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isAddOpen, setIsAddOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
   const [blogs, setBlogs] = useState([
     {
       BlogID: 1,
@@ -25,6 +27,12 @@ const BlogManagement = () => {
     },
   ]);
 
+  const toggleDropdown = () => {
+    if (dropdownRef.current) {
+      dropdownRef.current.classList.toggle("dropdown-menu");
+    }
+  };
+
   return (
     <div className="blog-management-container">
       <Sidebar />
@@ -32,7 +40,19 @@ const BlogManagement = () => {
         <div className="content-header">
           <h1>Blog Management</h1>
           <header>
-            <button className="staff-name">Staff Name</button>
+            <button className="staff-name" onClick={toggleDropdown}>
+              Staff Name
+            </button>
+            <div ref={dropdownRef} className="dropdown-menu">
+              <ul className="dropdown">
+                <li>
+                  <a href="#">Profile</a>
+                </li>
+                <li>
+                  <a href="#">Logout</a>
+                </li>
+              </ul>
+            </div>
           </header>
         </div>
 
@@ -94,7 +114,7 @@ const BlogManagement = () => {
             <h2>Update Blog</h2>
             <label htmlFor="">Blog name: </label>
             <input placeholder="Enter new blog name" /> <br />
-            <label htmlFor="">Blog content: </label>{" "}
+            <label htmlFor="">Blog content: </label>
             <input placeholder="Enter new blog content" /> <br />
             <br />
             <div className="modal-actions-blog">
@@ -118,21 +138,22 @@ const BlogManagement = () => {
             className="custom-modal-product"
             overlayClassName="custom-overlay-product"
           >
-            <h2>Add Product</h2>
-            <label>Product ID: </label>
-            <input name="productName" placeholder="Enter product id" />
+            <h2>Add Blog</h2>
+            <label>Blog ID: </label>
+            <input name="blogID" placeholder="Enter blog id" />
             <br />
-            <label>Product name: </label>
-            <input name="productName" placeholder="Enter product name" />
+            <label>Blog name: </label>
+            <input name="blogtName" placeholder="Enter blog name" />
             <br />
-            <label>Product quantity: </label>
-            <input name="quantity" placeholder="Enter product quantity" />
+            <label>Blog quantity: </label>
+            <input name="content" placeholder="Enter blog content" />
             <br />
-            <label>Product date: </label>
-            <input name="date" placeholder="Enter product date" type="date" />
-            <br />
-            <label>Product voucher: </label>
-            <input name="voucher" placeholder="Enter product voucher" />
+            <label>Created date: </label>
+            <input
+              name="createdDate"
+              placeholder="Enter blog created date"
+              type="date"
+            />
             <br />
             <div className="modal-actions-product">
               <button

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Sidebar from "./Sidebar";
 import "./OrderManagement.css";
 
@@ -7,6 +7,8 @@ import Modal from "react-modal";
 const OrderManagement = () => {
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+
+  const dropdownRef = useRef(null);
   const [orders, setOrders] = useState([
     {
       OrderDetailID: 1,
@@ -30,7 +32,11 @@ const OrderManagement = () => {
       Price: 50.0,
     },
   ]);
-
+  const toggleDropdown = () => {
+    if (dropdownRef.current) {
+      dropdownRef.current.classList.toggle("dropdown-menu");
+    }
+  };
   return (
     <div className="order-management-container">
       <Sidebar />
@@ -38,7 +44,19 @@ const OrderManagement = () => {
         <div className="content-header">
           <h1>Order Management</h1>
           <header>
-            <button className="staff-name">Staff Name</button>
+            <button className="staff-name" onClick={toggleDropdown}>
+              Staff Name
+            </button>
+            <div ref={dropdownRef} className="dropdown-menu">
+              <ul className="dropdown">
+                <li>
+                  <a href="#">Profile</a>
+                </li>
+                <li>
+                  <a href="#">Logout</a>
+                </li>
+              </ul>
+            </div>
           </header>
         </div>
         <div className="table-container">
@@ -98,21 +116,18 @@ const OrderManagement = () => {
             className="custom-modal-product"
             overlayClassName="custom-overlay-product"
           >
-            <h2>Add Product</h2>
-            <label>Product ID: </label>
-            <input name="productName" placeholder="Enter product id" />
+            <h2>Add Order</h2>
+            <label>Order ID: </label>
+            <input name="ordertName" placeholder="Enter order id" />
             <br />
-            <label>Product name: </label>
-            <input name="productName" placeholder="Enter product name" />
+            <label>Order name: </label>
+            <input name="orderName" placeholder="Enter order name" />
             <br />
-            <label>Product quantity: </label>
-            <input name="quantity" placeholder="Enter product quantity" />
+            <label>Order quantity: </label>
+            <input name="quantity" placeholder="Enter order quantity" />
             <br />
-            <label>Product date: </label>
-            <input name="date" placeholder="Enter product date" type="date" />
-            <br />
-            <label>Product voucher: </label>
-            <input name="voucher" placeholder="Enter product voucher" />
+            <label>Order price: </label>
+            <input name="price" placeholder="Enter order price" />
             <br />
             <div className="modal-actions-product">
               <button

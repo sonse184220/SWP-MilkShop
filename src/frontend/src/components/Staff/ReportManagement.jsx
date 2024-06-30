@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import "./ReportManagement.css"; // Import CSS file
 import Sidebar from "./Sidebar";
 import Modal from "react-modal";
 
 const ReportManagement = () => {
   const [isAddOpen, setIsAddOpen] = useState(false);
+  const dropdownRef = useRef(null);
   const [reports, setReports] = useState([
     {
       ReportID: 1,
@@ -23,14 +24,32 @@ const ReportManagement = () => {
       updated: "2024-02-02",
     },
   ]);
-
+  const toggleDropdown = () => {
+    if (dropdownRef.current) {
+      dropdownRef.current.classList.toggle("dropdown-menu");
+    }
+  };
   return (
     <div className="report-management">
       <Sidebar />
       <div className="report-management__content">
         <div className="report-management__header">
           <h1>Report Management</h1>
-          <button className="staff-name">Staff Name</button>
+          <header>
+            <button className="staff-name" onClick={toggleDropdown}>
+              Staff Name
+            </button>
+            <div ref={dropdownRef} className="dropdown-menu">
+              <ul className="dropdown">
+                <li>
+                  <a href="#">Profile</a>
+                </li>
+                <li>
+                  <a href="#">Logout</a>
+                </li>
+              </ul>
+            </div>
+          </header>
         </div>
 
         <div className="table-container">
