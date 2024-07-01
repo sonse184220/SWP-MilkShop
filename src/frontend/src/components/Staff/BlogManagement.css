@@ -32,6 +32,7 @@
   color: #fff;
   border: none;
   cursor: pointer;
+  margin-right: 5px;
 }
 
 .issues-table {
@@ -133,3 +134,54 @@
 .btn-cancel-blog:hover {
   background-color: #c82333;
 }
+/* Header styling */
+header {
+  position: relative;
+  display: inline-block;
+}
+
+.staff-name {
+  padding: 10px 20px;
+  background-color: palevioletred;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  width: 100px;
+}
+
+.dropdown-menu {
+  position: absolute;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  background-color: #fff;
+  color: #333;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+.dropdown {
+  margin-top: 45px;
+  width: 100px;
+}
+
+.dropdown li {
+  text-align: center;
+  background-color: #f5f5f5;
+  border-radius: 5px;
+  padding: 8px 12px;
+  margin-bottom: 5px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.dropdown li:hover {
+  background-color: pink;
+  color: snow;
+}
+
+
+
+
+
+

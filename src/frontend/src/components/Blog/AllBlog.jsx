@@ -139,13 +139,10 @@ const AllBlog = ({ isMember }) => {
     <>
       <img className="image" src="/img/P004.jpg" alt="Blog Header" />
       <Header />
-      <Link to="/EditProfile">Edit Profile</Link>
       <div className="container">
         <div className="row">
           <div className="col-lg-8">
             <h2>All Blogs</h2>
-            {/* searchBlog */}
-            {/* searchBlog */}
             <div className="searchBlog">
               Search blog:
               <input
@@ -155,7 +152,6 @@ const AllBlog = ({ isMember }) => {
               />
               <button onClick={handleSearch}>Search</button>
             </div>
-            <BlogPost blogs={blogs} />
             <BlogPost blogs={blogs} />
           </div>
           <div className="col-lg-4">

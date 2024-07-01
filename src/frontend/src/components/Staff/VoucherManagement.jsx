@@ -1,6 +1,6 @@
 // src/OrderManagement.js
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Sidebar from "./Sidebar";
 import "./VoucherManagement.css";
 import Modal from "react-modal";
@@ -8,6 +8,7 @@ import Modal from "react-modal";
 const VoucherManagement = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isAddOpen, setIsAddOpen] = useState(false);
+  const dropdownRef = useRef(null);
   const [vouchers, setVouchers] = useState([
     {
       VoucherID: 1,
@@ -31,7 +32,11 @@ const VoucherManagement = () => {
       Content: "15% off on selected items",
     },
   ]);
-
+  const toggleDropdown = () => {
+    if (dropdownRef.current) {
+      dropdownRef.current.classList.toggle("dropdown-menu");
+    }
+  };
   return (
     <div className="order-management-container">
       <Sidebar />
@@ -39,7 +44,19 @@ const VoucherManagement = () => {
         <div className="content-header">
           <h1>Voucher Management</h1>
           <header>
-            <button className="staff-name">Staff Name</button>
+            <button className="staff-name" onClick={toggleDropdown}>
+              Staff Name
+            </button>
+            <div ref={dropdownRef} className="dropdown-menu">
+              <ul className="dropdown">
+                <li>
+                  <a href="#">Profile</a>
+                </li>
+                <li>
+                  <a href="#">Logout</a>
+                </li>
+              </ul>
+            </div>
           </header>
         </div>
         <div className="table-container">
@@ -128,21 +145,25 @@ const VoucherManagement = () => {
             className="custom-modal-product"
             overlayClassName="custom-overlay-product"
           >
-            <h2>Add Product</h2>
-            <label>Product ID: </label>
-            <input name="productName" placeholder="Enter product id" />
+            <h2>Add Voucher</h2>
+            <label>Voucher ID: </label>
+            <input name="voucherName" placeholder="Enter voucher id" />
             <br />
-            <label>Product name: </label>
-            <input name="productName" placeholder="Enter product name" />
+            <label>Voucher discount: </label>
+            <input name="voucherName" placeholder="Enter voucher discount" />
             <br />
-            <label>Product quantity: </label>
-            <input name="quantity" placeholder="Enter product quantity" />
+            <label>Voucher quantity: </label>
+            <input name="quantity" placeholder="Enter voucher quantity" />
             <br />
-            <label>Product date: </label>
-            <input name="date" placeholder="Enter product date" type="date" />
+            <label>Voucher expiration date: </label>
+            <input
+              name="date"
+              placeholder="Enter voucher expiration date"
+              type="date"
+            />
             <br />
-            <label>Product voucher: </label>
-            <input name="voucher" placeholder="Enter product voucher" />
+            <label>Voucher content: </label>
+            <input name="content" placeholder="Enter voucher content" />
             <br />
             <div className="modal-actions-product">
               <button
