@@ -22,7 +22,11 @@ export class OrderService {
     }
 
     async getOrderDetail(id) {
-        const [orderDetail] = await poolConnect.query(`SELECT * FROM order_details WHERE OrderID = ?`, [id]);
+        const [orderDetail] = await poolConnect.query(`SELECT od.*, p.Name, p.Price, p.brandId, b.Name as brandName
+                                                    FROM order_details AS od
+                                                    JOIN product AS p ON od.ProductID = p.ProductID
+                                                    JOIN brand AS b ON b.BrandID = p.BrandID
+                                                    WHERE OrderID = ?`, [id]);
         return orderDetail;
     }
 
