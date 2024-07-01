@@ -26,7 +26,7 @@ function ProductManagement() {
               <div ref={dropdownRef} className="dropdown-menu">
                 <ul className="dropdown">
                   <li>
-                    <a href="#">Profile</a>
+                    <a href="/Staff/StaffProfile">Profile</a>
                   </li>
                   <li>
                     <a href="#">Logout</a>

@@ -5,6 +5,7 @@ import OrderManagement from '../components/Staff/OrderManagement.jsx';
 import BlogManagement from '../components/Staff/BlogManagement.jsx';
 import VoucherManagement from '../components/Staff/VoucherManagement.jsx';
 import ReportManagement from '../components/Staff/ReportManagement.jsx';
+import StaffProfile from '../components/Staff/StaffProfile.jsx';
 
 export function StaffRoutes() {
     return (
@@ -14,7 +15,7 @@ export function StaffRoutes() {
             <Route path='BlogManagement' element={<BlogManagement />} />
             <Route path='VoucherManagement' element={<VoucherManagement />} />
             <Route path='ReportManagement' element={<ReportManagement/>} />
-
+            <Route path='StaffProfile' element={<StaffProfile/>} />
         </Routes>
     )
 }

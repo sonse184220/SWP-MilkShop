@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import "./BlogManagement.css"; // Import CSS file
 import Sidebar from "./Sidebar";
 import Modal from "react-modal";
+import StaffProfile from "./StaffProfile";
 
 const BlogManagement = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -46,7 +47,7 @@ const BlogManagement = () => {
             <div ref={dropdownRef} className="dropdown-menu">
               <ul className="dropdown">
                 <li>
-                  <a href="#">Profile</a>
+                  <a href="/Staff/StaffProfile">Profile</a>
                 </li>
                 <li>
                   <a href="#">Logout</a>
