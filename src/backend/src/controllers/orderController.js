@@ -109,4 +109,28 @@ export class OrderController {
             res.status(200).json(result);
         });
     }
+
+    async updateOrderStatus(req, res) {
+        if (req.userRole !== "admin" && req.userRole !== "staff") {
+            return res.status(401).send({ msg: "Unauthorized! Only staff or admin can update order status!" });
+        }
+
+        const orderId = req.params.id;
+        const status = req.body.status;
+
+        const order = await orderService.getOrder(orderId);
+        if (order.length === 0) {
+            return res.status(404).send({ error: "Order not found!" });
+        }
+
+        const updatingOrder = await orderService.updateOrderStatus(orderId, status);
+        if (updatingOrder.affectedRows === 0 && order[0].Status === status) {
+            return res.status(200).send(order);
+        } else if (updatingOrder.affectedRows === 0) {
+            return res.status(500).send({ error: "Cant update order status!" });
+        }
+
+        const updatedOrder = await orderService.getOrder(orderId);
+        return res.status(200).send(updatedOrder);
+    }
 }

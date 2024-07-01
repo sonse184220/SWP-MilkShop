@@ -120,4 +120,28 @@ export class PreorderController {
         return res.status(201).send(preorder);
     }
 
+    async updatePreorderStatus(req, res) {
+        if (req.userRole !== "admin" && req.userRole !== "staff") {
+            return res.status(401).send({ msg: "Unauthorized! Only staff or admin can update pre-order status!" });
+        }
+
+        const preorderId = req.params.id;
+        const status = req.body.status;
+
+        const preorder = await preorderService.getPreorder(preorderId);
+        if (preorder.length === 0) {
+            return res.status(404).send({ error: "Pre-order not found!" });
+        }
+
+        const updatingPreorder = await preorderService.updatePreorderStatus(preorderId, status);
+        if (updatingPreorder.affectedRows === 0 && preorder[0].Status === status) {
+            return res.status(200).send(preorder);
+        } else if (updatingPreorder.affectedRows === 0) {
+            return res.status(500).send({ error: "Cant update pre-order status!" });
+        }
+
+        const updatedPreorder = await preorderService.getPreorder(preorderId);
+        return res.status(200).send(updatedPreorder);
+    }
+
 }

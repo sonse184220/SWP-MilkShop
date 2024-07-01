@@ -3,6 +3,7 @@ import { checkAuthenticated, getAuthRole } from "../middlewares/authMiddleware.j
 import { PreorderController } from "../controllers/PreorderController.js";
 import { checkPreorderData } from "../middlewares/preorderValidators.js";
 import { checkPaginationQuery } from "../middlewares/utilsMiddleware.js";
+import { checkOrderId, checkOrderInputStatus } from "../middlewares/orderValidators.js";
 
 const router = Router();
 const preorderController = new PreorderController;
@@ -20,6 +21,13 @@ router.get("/api/preorder/history", checkAuthenticated, getAuthRole, checkPagina
  */
 router.post("/api/preorder/place-preorder", checkAuthenticated, getAuthRole, checkPreorderData, async (req, res) => {
     await preorderController.placePreorder(req, res);
+})
+
+/** /api/preorder/{..id của pre-order..}/status
+ * Cập nhật status của 1 đơn pre-order
+ */
+router.patch("/api/preorder/:id/status", checkAuthenticated, getAuthRole, checkOrderId, checkOrderInputStatus, async (req, res) => {
+    await preorderController.updatePreorderStatus(req, res);
 })
 
 

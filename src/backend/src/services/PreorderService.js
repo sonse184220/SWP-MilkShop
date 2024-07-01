@@ -47,4 +47,9 @@ export class PreorderService {
         const count = total[0].count;
         return count;
     }
+
+    async updatePreorderStatus(preorderId, status) {
+        const [preorder] = await poolConnect.query("UPDATE pre_order SET Status = ? WHERE PreorderID = ?", [status, preorderId]);
+        return preorder;
+    }
 }
