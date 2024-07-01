@@ -102,7 +102,7 @@ export function Header({ onLogin, isMember }) {
                                         </div>
                                         <ul className={`header-dropdown-menu ${isDropdownOpen ? 'show' : ''}`}>
                                             <li><button onClick={() => { navigate('/Customer/EditProfile') }}>View Profile</button></li>
-                                            <li><button >Purchase History</button></li>
+                                            <li><button onClick={() => { navigate('/Customer/OrderHistory') }} >Purchase History</button></li>
                                             <li><button onClick={showLogin}>Logout</button></li>
                                         </ul>
                                     </li>

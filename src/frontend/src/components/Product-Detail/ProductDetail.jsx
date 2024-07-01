@@ -461,7 +461,7 @@ const ProductDetail = ({ isMember }) => {
 
                                     <div className="product-add-to-cart-btn">
                                         {(isMember && CurrentProduct[0].Quantity === 0) ?
-                                            (<a href="#" onClick={() => setIsOpenPreOrder(true)} className="btn btn-block btn-lg btn-black-default-hover" data-bs-toggle="modal" data-bs-target="#modalAddcart">Pre-Order</a>)
+                                            (<a href="#" onClick={(e) => { e.preventDefault(); setIsOpenPreOrder(true) }} className="btn btn-block btn-lg btn-black-default-hover" data-bs-toggle="modal" data-bs-target="#modalAddcart">Pre-Order</a>)
                                             :
                                             (<a href="#" onClick={handleAddToCart} className="btn btn-block btn-lg btn-black-default-hover" data-bs-toggle="modal" data-bs-target="#modalAddcart">+ Add To Cart</a>)
                                         }
