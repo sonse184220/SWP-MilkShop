@@ -8,7 +8,8 @@ import Modal from "react-modal";
 import { changePassword } from "../../services/changepassword/changePassword";
 
 const EditProfile = ({ isMember }) => {
-  const [imageSrc, setImageSrc] = useState("https://via.placeholder.com/30");
+  const [imageSrc, setImageSrc] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [Password, setPassword] = useState("");
   const [ConfirmPassword, setConfirmPassword] = useState("");
@@ -33,6 +34,8 @@ const EditProfile = ({ isMember }) => {
         setEmail(userData.Email);
         setPhone(userData.Phone);
         setAddress(userData.Address);
+        // setImageSrc(btoa(String.fromCharCode.apply(null, userData.ProfilePicture.data)));
+        setImageSrc(`data:image/jpeg;base64,${btoa(String.fromCharCode.apply(null, userData.ProfilePicture.data))}`);
       } catch (error) {
         setErrorMessage({ message: "Error fetching user data" });
       }
@@ -54,16 +57,26 @@ const EditProfile = ({ isMember }) => {
 
     setIsPasswordMatch(true);
 
-    const updatedUserData = {
-      Name,
-      Email,
-      Phone,
-      Address,
-      ...(Password && { Password }),
-    };
+    // const updatedUserData = {
+    //   Name,
+    //   Email,
+    //   Phone,
+    //   Address,
+    //   ...(Password && { Password }),
+    // };
+    const formData = new FormData();
+    if (imageFile) {
+      formData.append('profilePicture', imageFile);
+    }
+    formData.append('Name', Name);
+    formData.append('Email', Email);
+    formData.append('Phone', Phone);
+    formData.append('Address', Address);
+
+
 
     try {
-      const response = await putInfo(userId, updatedUserData);
+      const response = await putInfo(userId, formData);
       setSuccessMessage({ message: "Profile updated successfully!" });
       setName(response.Name);
       setEmail(response.Email);
@@ -116,6 +129,7 @@ const EditProfile = ({ isMember }) => {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
+      setImageFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
         setImageSrc(reader.result);
