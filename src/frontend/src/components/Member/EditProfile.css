@@ -29,7 +29,7 @@
     height: 150px;
     border-radius: 50%;
     margin-top: 5px;
-    margin-left: 5px
+    margin-left: 80px
 }
 
 .editProfile .image-holder-content {
@@ -175,4 +175,18 @@
 .changePassword{
     display: flex;
     justify-content: center;
+}
+
+input[type="file"] {
+    border-radius: 3px;
+    padding: 5px 8px;
+    text-shadow: 1px 1px #fff;
+    margin-right: 50px;
+    width: 65%;
+    margin-left: 105px;
+    margin-top: 15px;
+}
+
+#file-upload{
+    color: transparent;
 }

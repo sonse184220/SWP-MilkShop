@@ -8,6 +8,7 @@ import Modal from "react-modal";
 import { changePassword } from "../../services/changepassword/changePassword";
 
 const EditProfile = ({ isMember }) => {
+  const [imageSrc, setImageSrc] = useState("https://via.placeholder.com/30");
   const [isOpen, setIsOpen] = useState(false);
   const [Password, setPassword] = useState("");
   const [ConfirmPassword, setConfirmPassword] = useState("");
@@ -112,6 +113,17 @@ const EditProfile = ({ isMember }) => {
     }
   };
 
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImageSrc(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <>
       <img className="image" src="/img/milkbuying.jpeg" alt="Blog Header" />
@@ -123,10 +135,13 @@ const EditProfile = ({ isMember }) => {
               <div className="row">
                 <div className="col-lg-6 image-holder">
                   <div className="image-holder-content">
-                    <img src="https://via.placeholder.com/30" alt="" />
-                    <div className="importButton">
-                      <button>Import image</button>
-                    </div>
+                    <img src={imageSrc} alt="" />
+                    <input
+                      id="file-upload"
+                      type="file"
+                      name="file"
+                      onChange={handleFileChange}
+                    />
                   </div>
                 </div>
                 <div className="col-lg-6">
