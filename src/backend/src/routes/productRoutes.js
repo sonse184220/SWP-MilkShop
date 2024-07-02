@@ -1,13 +1,13 @@
 import { Router } from "express";
-
-import { checkProductSearch, checkProductId, checkProductSearchBrand, checkFeedbackData, checkFeedbackId } from "../middlewares/productValidators.js";
+import multer from 'multer';
 import { ProductController } from "../controllers/ProductController.js";
-import { getAuthRole, checkAuthenticated } from "../middlewares/authMiddleware.js";
+import { checkProductId, checkProductSearch, checkProductSearchBrand, checkFeedbackData, checkFeedbackId, checkProductData } from "../middlewares/productValidators.js";
+import { checkAuthenticated, getAuthRole, isStaff } from "../middlewares/authMiddleware.js";
 import { checkPaginationQuery } from "../middlewares/utilsMiddleware.js";
 
 const router = Router();
 const productController = new ProductController();
-
+const upload = multer();
 /**
  * 
  */
@@ -75,10 +75,21 @@ router.post("/api/product/:id/feedbacks", checkAuthenticated, getAuthRole, check
  * - {...} là feedback id
  */
 router.delete("/api/product/feedbacks/:id", checkAuthenticated, getAuthRole, checkFeedbackId, async (req, res) => {
-    await productController.deleteFeedback(req, res); 
+    await productController.deleteFeedback(req, res);
 });
 
+router.post("/api/product/create", checkAuthenticated, isStaff, upload.single('image'), (req, res, next) => {
+    if (!req.file) {
+        return res.status(400).send({ error: "No file uploaded" });
+    }
+    console.log("File received:", req.file);
+    next();
+}, checkProductData, async (req, res) => {
+    await productController.createProduct(req, res);
+});
 
-
+router.put("/api/product/:id", checkAuthenticated, isStaff, checkProductId, upload.single('image'), async (req, res) => {
+    await productController.updateProduct(req, res);
+});
 // export router
 export { router as productRoutes };

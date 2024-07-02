@@ -1,5 +1,6 @@
 import { poolConnect, connection } from "../utils/dbConnection.js";
 import { ProductService } from "../services/ProductService.js";
+import sharp from 'sharp';
 
 const productService = new ProductService();
 
@@ -13,7 +14,7 @@ export class ProductController {
         }
         return res.status(200).send(product);
     };
-    
+
     async searchProducts(req, res) {
         const name = req.query.name;
         const limit = parseInt(req.query.limit);
@@ -41,7 +42,7 @@ export class ProductController {
 
         const products = await productService.searchProducts(name, limit, sortBy, offset);
         const total = await productService.getTotalProductsByName(name);
-        
+
         return res.status(200).send({
             total: total,
             page: page,
@@ -77,7 +78,7 @@ export class ProductController {
 
         const products = await productService.searchProductsByBrand(id, limit, sortBy, offset);
         const total = await productService.getTotalProductsByBrand(id);
-        
+
         return res.status(200).send({
             total: total,
             page: page,
@@ -100,7 +101,7 @@ export class ProductController {
         const feedbacks = await productService.getFeedbacksByProductID(productId);
         return res.status(200).send(feedbacks);
     }
-    
+
     async createFeedback(req, res) {
         const productId = req.params.id;
         const userId = req.body.userId;
@@ -108,7 +109,7 @@ export class ProductController {
         const content = req.body.content;
 
         if (req.userRole !== "member" || req.user.userId !== userId) {
-            return res.status(401).send({ msg: "Unauthorized!" }); 
+            return res.status(401).send({ msg: "Unauthorized!" });
         }
 
         const product = await productService.getProduct(productId);
@@ -145,8 +146,30 @@ export class ProductController {
         if (deletedFeedback.affectedRows === 0) {
             return res.status(500).send({ msg: "Failed to delete feedback!" });
         }
-        
+
         return res.status(200).send({ msg: `Feedback ${feedbackId} successfully deleted!` });
     }
+    async createProduct(req, res) {
+        try {
+            const { file } = req;
+            const result = await productService.createProduct(req.body, file.buffer);
+            res.status(201).json(result);
+        } catch (error) {
+            console.error("Error creating product:", error);
+            res.status(500).json({ error: error.message || "Error creating product" });
+        }
+    }
 
+    async updateProduct(req, res) {
+        try {
+            const { file } = req;
+            const productId = req.params.id;
+            const result = await productService.updateProduct(productId, req.body, file ? file.buffer : null);
+
+            res.status(200).json(result);
+        } catch (error) {
+            console.error("Error updating product:", error);
+            res.status(500).json({ error: error.message || "Error updating product" });
+        }
+    }
 }

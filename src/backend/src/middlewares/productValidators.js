@@ -14,7 +14,7 @@ export async function checkProductId(req, res, next) {
     }
     Object.assign(req.params, matchedData(req));
     next();
-}
+};
 export async function checkProductIdInQuery(req, res, next) {
     await query("productId")
         .trim()
@@ -22,7 +22,7 @@ export async function checkProductIdInQuery(req, res, next) {
         .exists().withMessage("ID is required!")
         .notEmpty().withMessage("ID can not be blank!")
         .run(req);
-        
+
     const result = validationResult(req);
     if (!result.isEmpty()) {
         return res.status(400).send({ error: result.array() });
@@ -43,7 +43,7 @@ export async function checkProductSearch(req, res, next) {
     if (!result.isEmpty()) {
         return res.status(400).send({ error: result.array() });
     }
-    
+
     Object.assign(req.query, matchedData(req));
     next();
 }
@@ -60,7 +60,7 @@ export async function checkProductSearchBrand(req, res, next) {
     if (!result.isEmpty()) {
         return res.status(400).send({ error: result.array() });
     }
-    
+
     Object.assign(req.query, matchedData(req));
     next();
 }
@@ -73,7 +73,7 @@ export async function checkFeedbackData(req, res, next) {
         .exists().withMessage("UserID is required!")
         .notEmpty().withMessage("UserID can not be blank!")
         .run(req);
-        
+
     await body("rating")
         .trim()
         .escape()
@@ -114,3 +114,54 @@ export async function checkFeedbackId(req, res, next) {
     Object.assign(req.params, matchedData(req));
     next();
 }
+export const checkProductData = async (req, res, next) => {
+    await body('BrandID')
+        .exists().withMessage('BrandID is required')
+        .notEmpty().withMessage('BrandID cannot be empty')
+        .trim()
+        .escape()
+        .run(req);
+
+    await body('Name')
+        .exists().withMessage('Name is required')
+        .notEmpty().withMessage('Name cannot be empty')
+        .trim()
+        .escape()
+        .run(req);
+
+    await body('Price')
+        .exists().withMessage('Price is required')
+        .isInt({ min: 0 }).withMessage('Price must be a positive integer')
+        .run(req);
+
+    await body('Expiration')
+        .optional({ checkFalsy: true })
+        .isISO8601().withMessage('Expiration date must be a valid date')
+        .toDate()
+        .run(req);
+
+    await body('Quantity')
+        .exists().withMessage('Quantity is required')
+        .isInt({ min: 0 }).withMessage('Quantity must be a positive integer')
+        .run(req);
+
+    await body('Content')
+        .optional({ checkFalsy: true })
+        .trim()
+        .escape()
+        .run(req);
+
+    await body('Status')
+        .exists().withMessage('Status is required')
+        .notEmpty().withMessage('Status cannot be empty')
+        .trim()
+        .escape()
+        .run(req);
+
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+        return res.status(400).send({ error: result.array() });
+    }
+    Object.assign(req.body, matchedData(req));
+    next();
+};

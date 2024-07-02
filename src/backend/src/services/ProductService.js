@@ -1,4 +1,5 @@
 import { poolConnect, connection } from "../utils/dbConnection.js";
+import sharp from 'sharp';
 
 
 export class ProductService {
@@ -16,8 +17,8 @@ export class ProductService {
                                                     FROM blog_products AS bp 
                                                     JOIN product AS p ON bp.ProductID = p.ProductID
                                                     JOIN brand AS b ON p.BrandID = b.BrandID
-                                                    WHERE BlogID = ?`, 
-                                                    [blogId]);
+                                                    WHERE BlogID = ?`,
+            [blogId]);
         return products;
     }
 
@@ -36,11 +37,11 @@ export class ProductService {
     // đếm số lượng product trong database bằng name
     async getTotalProductsByName(name) {
         const search = `%${name}%`;
-        
+
         const [total] = await poolConnect.query('SELECT COUNT(*) as count FROM PRODUCT WHERE Name LIKE ?', [search]);
         const count = total[0].count;
         return count;
-    } 
+    }
 
     // tìm product trong database bằng brand id
     async searchProductsByBrand(id, limit, sortBy, offset) {
@@ -57,7 +58,7 @@ export class ProductService {
         const [total] = await poolConnect.query(`SELECT COUNT(*) as count 
                                                                         FROM PRODUCT 
                                                                         WHERE BrandID = ?`, [search]);
-                                                                  
+
         const count = total[0].count;
         return count;
     }
@@ -104,10 +105,10 @@ export class ProductService {
                                                     WHERE UserID = ? AND Status = 'Done'AND ProductID = ?
                                                     LIMIT 1
                                                 ) AS result;`,
-                                                [userId, productId, userId, productId]);
+            [userId, productId, userId, productId]);
         return result;
     }
-    
+
     // tạo feedback và lưu xuống database
     async createFeedback(productId, userId, rating, content) {
         const [feedback] = await poolConnect.query("INSERT INTO feedback (ProductID, UserID, Rating, Content) VALUES (?, ?, ?, ?)", [productId, userId, rating, content]);
@@ -119,5 +120,91 @@ export class ProductService {
         const [result] = await poolConnect.query('DELETE FROM feedback WHERE FeedbackID = ?', [id]);
         return result;
     }
+    async createProduct(productData, imageBuffer) {
+        const { BrandID, Name, Price, Expiration, Quantity, Content, Status } = productData;
 
+        try {
+            const getMaxProductIdQuery = 'SELECT MAX(CAST(SUBSTR(ProductID, 2) AS UNSIGNED)) AS maxProductId FROM product WHERE ProductID LIKE "P%"';
+            const [maxIdResult] = await poolConnect.query(getMaxProductIdQuery);
+            const newProductId = `P${(maxIdResult[0].maxProductId ? maxIdResult[0].maxProductId + 1 : 1).toString().padStart(3, '0')}`;
+
+            const resizedImageBuffer = await sharp(imageBuffer)
+                .resize(720, 800)
+                .toBuffer();
+
+            const query = `
+                INSERT INTO product (ProductID, BrandID, Name, Price, Expiration, Quantity, Content, Status, created, updated, Image)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?)
+            `;
+            await poolConnect.query(query, [newProductId, BrandID, Name, Price, Expiration, Quantity, Content, Status, resizedImageBuffer]);
+            return { message: "Product created successfully" };
+        } catch (error) {
+            console.error("Error creating product:", error);
+            throw new Error(error.message || "Error creating product");
+        }
+    }
+    async updateProduct(productId, newProductData, imageBuffer) {
+        try {
+            const [currentData] = await poolConnect.query('SELECT * FROM product WHERE ProductID = ?', [productId]);
+            if (currentData.length === 0) {
+                return { message: "Product not found" };
+            }
+
+            const currentProduct = currentData[0];
+            const fieldsToUpdate = [];
+            const values = [];
+
+            if (newProductData.BrandID && newProductData.BrandID !== currentProduct.BrandID) {
+                fieldsToUpdate.push('BrandID = ?');
+                values.push(newProductData.BrandID);
+            }
+            if (newProductData.Name && newProductData.Name.trim() !== currentProduct.Name) {
+                fieldsToUpdate.push('Name = ?');
+                values.push(newProductData.Name.trim());
+            }
+            if (newProductData.Price && newProductData.Price !== currentProduct.Price) {
+                fieldsToUpdate.push('Price = ?');
+                values.push(newProductData.Price);
+            }
+            if (newProductData.Expiration && newProductData.Expiration !== currentProduct.Expiration) {
+                fieldsToUpdate.push('Expiration = ?');
+                values.push(newProductData.Expiration);
+            }
+            if (newProductData.Quantity && newProductData.Quantity !== currentProduct.Quantity) {
+                fieldsToUpdate.push('Quantity = ?');
+                values.push(newProductData.Quantity);
+            }
+            if (newProductData.Content && newProductData.Content.trim() !== currentProduct.Content) {
+                fieldsToUpdate.push('Content = ?');
+                values.push(newProductData.Content.trim());
+            }
+            if (newProductData.Status && newProductData.Status !== currentProduct.Status) {
+                fieldsToUpdate.push('Status = ?');
+                values.push(newProductData.Status);
+            }
+            if (imageBuffer) {
+                try {
+                    const resizedImageBuffer = await sharp(imageBuffer)
+                        .resize(720, 800)
+                        .toBuffer();
+                    fieldsToUpdate.push('Image = ?');
+                    values.push(resizedImageBuffer);
+                } catch (err) {
+                    return { message: 'Failed to process image', error: err.message };
+                }
+            }
+
+            if (fieldsToUpdate.length > 0) {
+                const query = `UPDATE product SET ${fieldsToUpdate.join(', ')}, updated = NOW() WHERE ProductID = ?`;
+                values.push(productId);
+
+                await poolConnect.query(query, values);
+            }
+
+            return { message: 'Product updated successfully' };
+        } catch (error) {
+            console.error("Error updating product:", error);
+            throw new Error(error.message || "Error updating product");
+        }
+    }
 }
