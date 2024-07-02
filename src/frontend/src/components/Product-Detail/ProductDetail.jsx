@@ -20,6 +20,7 @@ import { RemoveWishlist } from '../../services/wishlist/removeWishlish';
 import { DeleteFeedback } from '../../services/feedback/deleteFeedback';
 import { AddToCart } from '../../services/cart/addToCart';
 import { PreOrder } from '../../services/pre-order/pre-order';
+import GetProductByBrandID from '../../services/product/getProductByBrandID';
 
 
 const ProductDetail = ({ isMember }) => {
@@ -66,6 +67,7 @@ const ProductDetail = ({ isMember }) => {
         Phone: '',
         Address: '',
     });
+    const [relatedProduct, setRelatedProduct] = useState([]);
 
     const userId = sessionStorage.getItem('userData') ? JSON.parse(sessionStorage.getItem('userData')).UserID : "Guest";
     const MemberToken = 'Bearer ' + sessionStorage.getItem('token');
@@ -77,6 +79,18 @@ const ProductDetail = ({ isMember }) => {
         content: ''
     });
     const [inWishlist, setInWishlist] = useState(false);
+
+    const handleGetRelatedProduct = async () => {
+        try {
+            const response = await GetProductByBrandID(CurrentProduct[0].BrandID);
+            // console.log('related', response);
+            if (response.data.total > 0) {
+                setRelatedProduct(response.data.data);
+            }
+        } catch (error) {
+
+        }
+    }
 
     const handlePreOrderAction = async () => {
         try {
@@ -333,7 +347,14 @@ const ProductDetail = ({ isMember }) => {
         handleGetWishlist();
         checkIsWishlistState();
         handleGetUserInfo();
-    }, [])
+        // handleGetRelatedProduct();
+    }, []);
+
+    useEffect(() => {
+        if (CurrentProduct && CurrentProduct[0]) {
+            handleGetRelatedProduct();
+        }
+    }, [CurrentProduct]);
 
     return (
         <div className='body'>
@@ -496,7 +517,11 @@ const ProductDetail = ({ isMember }) => {
                             userId={userId}
                             isMember={isMember}
                         /></div>
-                    <div><ProductList products={products} /></div></div>
+                    {/* <div><ProductList products={products} /></div> */}
+                    <div>
+                        {relatedProduct.length > 0 && <ProductList products={relatedProduct} />}
+                    </div>
+                </div>
             ) : (
                 <div><Page404 /></div>
             )
