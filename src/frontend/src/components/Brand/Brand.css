@@ -16,7 +16,6 @@
     overflow: hidden;
 }
 
-/* Search input */
 .search {
     flex: 1;
     padding: 8px 12px;
@@ -25,7 +24,7 @@
     outline: none;
 }
 
-/* Search button */
+
 .search-btn {
     background-color: transparent;
     border: none;
