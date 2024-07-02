@@ -154,3 +154,10 @@ export const checkImageUpload = (req, res, next) => {
 
     next();
 };
+
+export const isAdmin = (req, res, next) => {
+    if (req.user && req.user.isAdmin) {
+        return next();
+    }
+    res.status(403).json({ message: 'Only Admin can do this.' });
+};

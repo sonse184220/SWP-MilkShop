@@ -45,3 +45,10 @@ export function getAuthRole(req, res, next) {
     req.userRole = "guest";
     return next();
 }
+
+export const isStaff = (req, res, next) => {
+    if (req.user && req.user.isStaff) {
+        return next();
+    }
+    res.status(403).json({ message: "Only Staff can do this." });
+};

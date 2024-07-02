@@ -75,7 +75,11 @@ export class AuthService {
                     return callback(null, { message: 'Invalid credentials', status: 401 });
                 }
 
-                const token = jwt.sign({ userId: user.UserID }, process.env.JWT_SECRET, { expiresIn: '24h' });
+                const token = jwt.sign({
+                    userId: user.UserID,
+                    isAdmin: user.isAdmin,
+                    isStaff: user.isStaff
+                }, process.env.JWT_SECRET, { expiresIn: '24h' });
                 const { Password, ...userWithoutPassword } = user;
                 callback(null, { message: 'Login successful', token, user: userWithoutPassword });
             });
@@ -99,7 +103,7 @@ export class AuthService {
 
                     const newUserId = `U${(results[0].maxUserId ? results[0].maxUserId + 1 : 1).toString().padStart(3, '0')}`;
 
-                    const insertQuery = 'INSERT INTO MEMBER (UserID, Password, Name, Email, Phone, Address, RewardPoints, Verified) VALUES (?, ?, ?, ?, ?, ?, 0, 1)';
+                    const insertQuery = 'INSERT INTO MEMBER (UserID, Password, Name, Email, Phone, Address, RewardPoints, Verified, isAdmin, isStaff) VALUES (?, ?, ?, ?, ?, ?, 0, 1, 0, 0)';
                     const deleteQuery = 'DELETE FROM TEMP_MEMBER WHERE TempMemberID = ?';
 
                     connection.query(insertQuery, [newUserId, user.Password, user.Name, user.Email, user.Phone, user.Address], (err, result) => {
@@ -115,5 +119,65 @@ export class AuthService {
         } catch (err) {
             callback(err);
         }
+    };
+
+    registerAdmin = (userData, callback) => {
+        const { Password, Name, Email, Phone, Address } = userData;
+
+        const checkQuery = 'SELECT * FROM MEMBER WHERE Email = ?';
+        connection.query(checkQuery, [Email], (err, results) => {
+            if (err) return callback(err);
+
+            if (results.length > 0) {
+                return callback(null, { message: 'User already exists with this Email', status: 400 });
+            }
+
+            bcrypt.hash(Password, 10, (err, hashedPassword) => {
+                if (err) return callback(err);
+
+                const getMaxUserIdQuery = 'SELECT MAX(CAST(SUBSTR(UserID, 2) AS UNSIGNED)) AS maxUserId FROM MEMBER WHERE UserID LIKE "U%"';
+                connection.query(getMaxUserIdQuery, (err, results) => {
+                    if (err) return callback(err);
+
+                    const newUserId = `U${(results[0].maxUserId ? results[0].maxUserId + 1 : 1).toString().padStart(3, '0')}`;
+
+                    const query = 'INSERT INTO MEMBER (UserID, Password, Name, Email, Phone, Address, RewardPoints, Verified, isAdmin, isStaff) VALUES (?, ?, ?, ?, ?, ?, 0, 1, 1, 0)';
+                    connection.query(query, [newUserId, hashedPassword, Name, Email, Phone, Address], (err, result) => {
+                        if (err) return callback(err);
+                        callback(null, { message: 'Admin registered successfully', status: 201 });
+                    });
+                });
+            });
+        });
+    };
+
+    createStaff = (userData, callback) => {
+        const { Password, Name, Email, Phone, Address } = userData;
+
+        const checkQuery = 'SELECT * FROM MEMBER WHERE Email = ?';
+        connection.query(checkQuery, [Email], (err, results) => {
+            if (err) return callback(err);
+
+            if (results.length > 0) {
+                return callback(null, { message: 'User already exists with this Email', status: 400 });
+            }
+
+            bcrypt.hash(Password, 10, (err, hashedPassword) => {
+                if (err) return callback(err);
+
+                const getMaxUserIdQuery = 'SELECT MAX(CAST(SUBSTR(UserID, 2) AS UNSIGNED)) AS maxUserId FROM MEMBER WHERE UserID LIKE "U%"';
+                connection.query(getMaxUserIdQuery, (err, results) => {
+                    if (err) return callback(err);
+
+                    const newUserId = `U${(results[0].maxUserId ? results[0].maxUserId + 1 : 1).toString().padStart(3, '0')}`;
+
+                    const query = 'INSERT INTO MEMBER (UserID, Password, Name, Email, Phone, Address, RewardPoints, Verified, isAdmin, isStaff) VALUES (?, ?, ?, ?, ?, ?, 0, 1, 0, 1)';
+                    connection.query(query, [newUserId, hashedPassword, Name, Email, Phone, Address], (err, result) => {
+                        if (err) return callback(err);
+                        callback(null, { message: 'Staff created successfully', status: 201 });
+                    });
+                });
+            });
+        });
     };
 }

@@ -27,4 +27,18 @@ export class AuthController {
             }
         });
     };
+
+    registerAdmin = (req, res) => {
+        authService.registerAdmin(req.body, (err, result) => {
+            if (err) return res.status(500).json({ error: err.message });
+            res.status(result.status || 201).json(result);
+        });
+    };
+
+    createStaff = (req, res) => {
+        authService.createStaff(req.body, (err, result) => {
+            if (err) return res.status(500).json({ error: err.message });
+            res.status(result.status || 201).json(result);
+        });
+    };
 }
