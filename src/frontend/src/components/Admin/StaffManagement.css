@@ -1,0 +1,254 @@
+.staff-management-container {
+  display: flex;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #f4f4f4;
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+}
+
+thead{
+  color: white;
+}
+.content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.content-header h1 {
+  margin: 0;
+}
+
+.staff-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.staff-table, .staff-table th, .staff-table td {
+  border: 1px solid #ddd;
+}
+
+.staff-table th, .staff-table td {
+  padding: 8px;
+  text-align: left;
+}
+
+.staff-table th {
+  background-color: palevioletred;
+}
+
+.custom-modal-staff {
+  position: relative;
+  width: 500px;
+  max-width: 90%;
+  margin: 50px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.custom-overlay-staff {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.custom-modal-staff h2 {
+  margin-top: 0;
+  font-size: 30px;
+  color: #333;
+  justify-content: center;
+  display: flex;
+}
+
+.custom-modal-staff label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+  color: #333;
+}
+
+.custom-modal-staff input {
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.modal-actions-staff {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.btn-confirm-staff,
+.btn-cancel-staff {
+  padding: 10px 20px;
+  margin-left: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.btn-confirm-staff {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-confirm-staff:hover {
+  background-color: #218838;
+}
+
+.btn-cancel-staff {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-cancel-staff:hover {
+  background-color: #c82333;
+}
+
+/* Header styling */
+header {
+  position: relative;
+  display: inline-block;
+}
+
+.admin-name {
+  padding: 10px 20px;
+  background-color: palevioletred;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  width: 145px;
+}
+
+.dropdown-menu {
+  position: absolute;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  background-color: #fff;
+  color: #333;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+.dropdown {
+  margin-top: 45px;
+  width: 100px;
+}
+
+.dropdown li {
+  text-align: center;
+  background-color: #f5f5f5;
+  border-radius: 5px;
+  padding: 8px 12px;
+  margin-bottom: 5px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.dropdown li:hover {
+  background-color: pink;
+  color: snow;
+}
+
+.searchStaff {
+  background-color: palevioletred;
+  color: snow;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  border-radius: 5px;
+}
+
+.searchStaff:hover {
+  background-color: white;
+  color: palevioletred;
+  border: 1px solid palevioletred;
+}
+
+.searchOrder, .addStaff {
+  background-color: palevioletred;
+  color: snow;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  border-radius: 5px;
+}
+
+.addStaff:hover {
+  background-color: white;
+  color: palevioletred;
+  border: 1px solid palevioletred;
+}
+
+.addStaff {
+  display: flex;
+  justify-content: flex-end;
+  margin-left: 225px;
+}
+
+.action-button {
+  border: 1px solid;
+  margin-left: 10px;
+  width: 80%;
+  background-color: white; /* Initial background color */
+  color: black; /* Initial text color */
+  transition: background-color 0.3s, color 0.3s; /* Smooth transition */
+}
+
+.action-button:hover {
+  background-color: palevioletred !important;
+  color: white !important;
+}
+
+.action-button a {
+  color: inherit; /* Inherit the color from the parent */
+  text-decoration: none; /* Remove underline */
+}
+
+.action-button:hover a {
+  color: white !important; /* Ensure the text color changes on hover */
+}
+
+.dropdownAdmin {
+  width: 145px;
+}
+
+.dropdownAdmin li {
+  text-align: center;
+  background-color: #f5f5f5;
+  border-radius: 5px;
+  padding: 8px 12px;
+  margin-bottom: 5px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.dropdownAdmin li:hover {
+  background-color: pink;
+  color: snow;
+}

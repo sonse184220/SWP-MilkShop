@@ -15,6 +15,7 @@ import { Cart } from './components/Cart/Cart.jsx';
 import ProductManagement from './components/Staff/ProductManagement.jsx';
 import { CustomerRoutes } from './routes/CustomerRoutes.js';
 import { StaffRoutes } from './routes/StaffRoutes.js';
+import { AdminRoutes } from './routes/AdminRoutes.js';
 //import file bootstrap và material-design-iconic-font trong index.js
 
 // function App() {
@@ -123,6 +124,8 @@ function AppContent() {
       <Route path="*" element={<Navigate to="/Customer" />} />
       <Route path='/Staff/*' element={<StaffRoutes />} />
       <Route path='*' element={<Navigate to='/Staff' />} />
+      <Route path='/Admin/*' element={<AdminRoutes />} />
+      <Route path='*' element={<Navigate to='/Admin' />} />
     </Routes>
   );
 }
