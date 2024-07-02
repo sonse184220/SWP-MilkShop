@@ -4,6 +4,7 @@ import session from "express-session";
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import cors from "cors"; // Import CORS middleware
+import passport from './utils/passportConfig.js';
 
 import { authRoutes } from './routes/authRoutes.js';
 import { brandRoutes } from './routes/brandRoutes.js';
@@ -23,6 +24,7 @@ dotenv.config();
 const PORT = process.env.PORT || 3000; // cổng kết nối localhost:xxxx
 
 const app = express(); // khởi chạy express
+app.use(passport.initialize());
 
 app.use(session({
     secret: process.env.SESSION_SECRET,
