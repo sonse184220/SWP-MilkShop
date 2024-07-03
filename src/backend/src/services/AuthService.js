@@ -97,7 +97,7 @@ export class AuthService {
                 if (results.length === 0) return callback(null, { message: 'Invalid or expired token', status: 400 });
 
                 const user = results[0];
-                const getMaxUserIdQuery = 'SELECT MAX(CAST(SUBSTR(UserID, 2) AS UNSIGNED)) AS maxUserId FROM user WHERE UserID LIKE "U%"';
+                const getMaxUserIdQuery = 'SELECT MAX(CAST(SUBSTRING(UserID, 2) AS UNSIGNED)) AS maxUserId FROM user WHERE UserID LIKE "U%"';
                 connection.query(getMaxUserIdQuery, (err, results) => {
                     if (err) return callback(err);
 
@@ -135,7 +135,7 @@ export class AuthService {
             bcrypt.hash(Password, 10, (err, hashedPassword) => {
                 if (err) return callback(err);
 
-                const getMaxUserIdQuery = 'SELECT MAX(CAST(SUBSTR(UserID, 2) AS UNSIGNED)) AS maxUserId FROM user WHERE UserID LIKE "U%"';
+                const getMaxUserIdQuery = 'SELECT MAX(CAST(SUBSTRING(UserID, 2) AS UNSIGNED)) AS maxUserId FROM user WHERE UserID LIKE "U%"';
                 connection.query(getMaxUserIdQuery, (err, results) => {
                     if (err) return callback(err);
 
@@ -165,7 +165,7 @@ export class AuthService {
             bcrypt.hash(Password, 10, (err, hashedPassword) => {
                 if (err) return callback(err);
 
-                const getMaxUserIdQuery = 'SELECT MAX(CAST(SUBSTR(UserID, 2) AS UNSIGNED)) AS maxUserId FROM user WHERE UserID LIKE "U%"';
+                const getMaxUserIdQuery = 'SELECT MAX(CAST(SUBSTRING(UserID, 2) AS UNSIGNED)) AS maxUserId FROM user WHERE UserID LIKE "U%"';
                 connection.query(getMaxUserIdQuery, (err, results) => {
                     if (err) return callback(err);
 
