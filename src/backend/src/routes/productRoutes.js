@@ -2,7 +2,8 @@ import { Router } from "express";
 import multer from 'multer';
 import { ProductController } from "../controllers/ProductController.js";
 import { checkProductId, checkProductSearch, checkProductSearchBrand, checkFeedbackData, checkFeedbackId, checkProductData } from "../middlewares/productValidators.js";
-import { checkAuthenticated, getAuthRole, isStaff } from "../middlewares/authMiddleware.js";
+import { checkAuthenticated, getAuthRole } from "../middlewares/authMiddleware.js";
+import { isStaff } from "../middlewares/validationMiddleware.js";
 import { checkPaginationQuery } from "../middlewares/utilsMiddleware.js";
 
 const router = Router();
