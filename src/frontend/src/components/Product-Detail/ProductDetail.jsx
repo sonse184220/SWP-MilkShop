@@ -356,6 +356,20 @@ const ProductDetail = ({ isMember }) => {
         }
     }, [CurrentProduct]);
 
+    const getImageSrc = (imageData) => {
+        if (!imageData || !imageData.data) return '';
+
+        try {
+            const base64 = btoa(
+                imageData.data.reduce((data, byte) => data + String.fromCharCode(byte), '')
+            );
+            return `data:image/jpeg;base64,${base64}`;
+        } catch (error) {
+            console.error('Error converting image data:', error);
+            return '';
+        }
+    };
+
     return (
         <div className='body'>
             <div><Header isMember={isMember} /></div>
@@ -454,7 +468,12 @@ const ProductDetail = ({ isMember }) => {
                     <ToastContainer style={{ top: '110px' }} />
                     <div className="product-detail">
                         <div className="detail-img">
-                            <img src={`/img/${CurrentProduct[0].ProductID}.jpg`} />
+                            {/* <img src={`${CurrentProduct[0].Image}`} /> */}
+                            {/* <img src={`data:image/jpeg;base64,${btoa(String.fromCharCode.apply(null, CurrentProduct[0].Image.data))}`} /> */}
+                            <img
+                                src={getImageSrc(CurrentProduct[0].Image)}
+                                alt={CurrentProduct[0].Name}
+                            />
                         </div>
                         <div className="product-details-content-area product-details--golden aos-init aos-animate detail-info" data-aos="fade-up" data-aos-delay="200">
                             <div className="product-details-text">

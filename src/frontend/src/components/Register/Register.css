@@ -216,6 +216,42 @@
     padding-right: 25px;
 }
 
+.back-to-home-btn {
+    border: none;
+    width: 160px;
+    height: 40px;
+    margin: auto;
+    margin-top: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    background: #f5e1da;
+    font-size: 15px;
+    color: #333;
+    vertical-align: middle;
+    -webkit-transform: perspective(1px) translateZ(0);
+    transform: perspective(1px) translateZ(0);
+    -webkit-transition-duration: 0.3s;
+    transition-duration: 0.3s;
+    border-radius: 20px;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.back-to-home-btn:hover {
+    background: #ffb5b5;
+    color: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.back-to-home-btn i {
+    margin-left: 10px;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+}
+
 /* Register.css */
 
 /* .registerbtn .google-btn {

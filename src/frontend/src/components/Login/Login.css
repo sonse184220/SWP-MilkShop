@@ -150,7 +150,7 @@ input {
 .container-login100-form-btn {
     width: 100%;
     display: flex;
-    flex-direction: column;
+    /* flex-direction: column; */
     align-items: center;
     gap: 15px;
     /* Added gap between buttons */
@@ -214,10 +214,6 @@ input {
     text-align: center;
 }
 
-/* Padding top utility class */
-.p-t-90 {
-    padding-top: 10px;
-}
 
 /* Text styles */
 .txt1 {
@@ -293,4 +289,91 @@ input[type="radio"] {
     font-size: 16px;
     font-weight: 500;
     text-align: center;
+}
+
+/* Back to Home button */
+.back-to-home-btn {
+    font: 16px/1.2 Poppins-Medium;
+    color: #333;
+    background: #f5e1da;
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    margin-top: 10px;
+}
+
+.back-to-home-btn:hover {
+    background: #ffb5b5;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.forgot-pass {
+    position: absolute;
+    z-index: 1000;
+    top: 50%;
+    left: 50%;
+    right: auto;
+    bottom: auto;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    width: 400px;
+    height: 350px;
+}
+
+.forgot-pass-intro {
+    color: #dc3545;
+    font-size: 12px;
+    font-weight: 400;
+    text-align: left;
+    /* padding-left: 150px; */
+    margin-bottom: 8px;
+    font-style: italic;
+    /* margin-top: -10px; */
+}
+
+.x-close-btn {
+    display: flex;
+    width: 100%;
+    justify-content: end;
+}
+
+.send-verification-btn {
+    /* width: 100%; */
+    /* background-color: #3498db; */
+    background-color: #ffcece;
+    /* color: white; */
+    font-weight: bold;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.div-verify-btn {
+    display: flex;
+    justify-content: center;
+}
+
+.send-verification-btn:hover {
+    background-color: #ffc1c8;
+    transform: scale(1.05);
+}
+
+.send-verification-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.5);
+}
+
+.input-forgot {
+    height: 250px;
 }

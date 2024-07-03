@@ -232,6 +232,10 @@ const Register = ({ showLogin }) => {
                     {/* <button className="login100-form-btn google-btn">
                         <i class="fab fa-google"></i> Sign in with Google
                     </button> */}
+                    <button className='back-to-home-btn' onClick={() => { navigate('/Customer/home') }}>
+                        Back to Home
+                        <i className="zmdi zmdi-home"></i>
+                    </button>
                 </form >
             </div >
         </div >

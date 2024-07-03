@@ -8,7 +8,7 @@ const BlogCard = ({ blogs = [] }) => {
       {blogs.map((blog) => (
         <Link to={`/Customer/BlogDetail/${blog.BlogID}`} key={blog.BlogID}>
           <div className="blog-card">
-            <div className="blog-name">{blog.Name}</div>
+            <div className="blog-name">{blog.Title}</div>
             <div className="createdDate">
               {new Date(blog.CreatedDate).toLocaleDateString()}
             </div>

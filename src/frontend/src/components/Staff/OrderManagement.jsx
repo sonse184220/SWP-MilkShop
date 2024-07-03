@@ -1,8 +1,11 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Sidebar from "./Sidebar";
 import "./OrderManagement.css";
 
 import Modal from "react-modal";
+import { useLocation } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const OrderManagement = () => {
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -32,6 +35,23 @@ const OrderManagement = () => {
       Price: 50.0,
     },
   ]);
+
+  const location = useLocation();
+
+  useEffect(() => {
+    console.log("Location changed:", location);
+    console.log("Location state:", location.state);
+    if (location.state && location.state.showLoginSuccess) {
+      console.log("Showing login success toast");
+      toast.success("Login successful!", {
+        duration: 3000,
+        position: "top-right",
+      });
+      console.log("sssssssss");
+      window.history.replaceState({}, document.title);
+    }
+  }, [location]);
+
   const toggleDropdown = () => {
     if (dropdownRef.current) {
       dropdownRef.current.classList.toggle("dropdown-menu");
@@ -39,6 +59,7 @@ const OrderManagement = () => {
   };
   return (
     <div className="order-management-container">
+      <ToastContainer style={{ top: "110px" }} />
       <Sidebar />
       <div className="content">
         <div className="content-header">

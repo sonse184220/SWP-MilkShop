@@ -14,6 +14,20 @@ const AllProducts = ({ isMember }) => {
     const [CurrentBrand, SetCurrentBrand] = useState(null);
     const [searchInput, setSearchInput] = useState();
 
+    const getImageSrc = (imageData) => {
+        if (!imageData || !imageData.data) return '';
+
+        try {
+            const base64 = btoa(
+                imageData.data.reduce((data, byte) => data + String.fromCharCode(byte), '')
+            );
+            return `data:image/jpeg;base64,${base64}`;
+        } catch (error) {
+            console.error('Error converting image data:', error);
+            return '';
+        }
+    };
+
     const handleSearchProductByName = async () => {
         try {
             const response = await SearchProductByName(searchInput);
@@ -68,7 +82,7 @@ const AllProducts = ({ isMember }) => {
                     <div className="product-container">
                         {products.map((product) => (
                             <Link to={`/Customer/ProductDetail/${product.ProductID}`} key={product.ProductID} className="product-preview">
-                                <img src={`/img/${product.ProductID}.jpg`} alt={product.Name} />
+                                <img src={`${getImageSrc(product.Image)}`} alt={product.Name} />
                                 <h3>{product.Name}</h3>
                                 <p>{product.Content}</p>
                                 <p>{product.Price.toLocaleString()} VND</p>
