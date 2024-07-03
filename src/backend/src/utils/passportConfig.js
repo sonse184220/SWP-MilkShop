@@ -11,7 +11,7 @@ const options = {
 };
 
 passport.use(new JwtStrategy(options, (jwtPayload, done) => {
-    const query = 'SELECT * FROM MEMBER WHERE UserID = ?';
+    const query = 'SELECT * FROM user WHERE UserID = ?';
     connection.query(query, [jwtPayload.userId], (err, results) => {
         if (err) {
             return done(err, false);
