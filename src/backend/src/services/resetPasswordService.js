@@ -12,7 +12,7 @@ export class ResetPasswordService {
     }
 
     requestResetPassword = (email, newPassword, req, callback) => {
-        const query = 'SELECT * FROM MEMBER WHERE Email = ?';
+        const query = 'SELECT * FROM user WHERE Email = ?';
         connection.query(query, [email], (err, results) => {
             if (err) return callback(err);
             if (results.length === 0) return callback(null, { message: 'Email not found', status: 404 });
@@ -41,7 +41,7 @@ export class ResetPasswordService {
             bcrypt.hash(newPassword, 10, (err, hashedPassword) => {
                 if (err) return callback(err);
 
-                const query = 'UPDATE MEMBER SET Password = ? WHERE UserID = ?';
+                const query = 'UPDATE user SET Password = ? WHERE UserID = ?';
                 connection.query(query, [hashedPassword, userId], (err, result) => {
                     if (err) return callback(err);
                     callback(null, { message: 'Password reset successfully.' });

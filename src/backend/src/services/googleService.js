@@ -8,7 +8,7 @@ export class GoogleAuthService {
     googleAuthCallback(profile, callback) {
         const email = profile.emails[0].value;
 
-        const checkQuery = 'SELECT * FROM MEMBER WHERE Email = ?';
+        const checkQuery = 'SELECT * FROM user WHERE Email = ?';
         connection.query(checkQuery, [email], (err, results) => {
             if (err) return callback(err);
 
@@ -45,7 +45,7 @@ export class GoogleAuthService {
     }
 
     completeProfile(userId, name, phone, address, callback) {
-        const query = 'UPDATE MEMBER SET Name = ?, Phone = ?, Address = ? WHERE UserID = ?';
+        const query = 'UPDATE user SET Name = ?, Phone = ?, Address = ? WHERE UserID = ?';
         connection.query(query, [name, phone, address, userId], (err, result) => {
             if (err) return callback(err);
             callback(null, { message: 'Profile completed successfully' });

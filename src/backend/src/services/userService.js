@@ -4,13 +4,13 @@ import { connection, poolConnect } from '../utils/dbConnection.js';
 
 export class UserService {
     getUserInfo = (userId, callback) => {
-        const query = 'SELECT UserID, Name, Email, Phone, Address, RewardPoints, Verified, ProfilePicture FROM MEMBER WHERE UserID = ?';
+        const query = 'SELECT UserID, Name, Email, Phone, Address, RewardPoints, Verified, ProfilePicture FROM user WHERE UserID = ?';
         connection.query(query, [userId], callback);
     };
 
     async checkUserExisted(id) {
-        const [member] = await poolConnect.query('SELECT * FROM member WHERE UserID = ?', [id]);
-        return member;
+        const [user] = await poolConnect.query('SELECT * FROM user WHERE UserID = ?', [id]);
+        return user;
     }
 
     updateUserInfo = (userId, newUserData, callback) => {
@@ -54,7 +54,7 @@ export class UserService {
                 return callback(null, { message: 'No fields to update', status: 400 });
             }
 
-            const query = `UPDATE MEMBER SET ${fieldsToUpdate.join(', ')} WHERE UserID = ?`;
+            const query = `UPDATE user SET ${fieldsToUpdate.join(', ')} WHERE UserID = ?`;
             values.push(userId);
 
             connection.query(query, values, (err, result) => {
@@ -69,7 +69,7 @@ export class UserService {
     };
 
     changePassword = (userId, oldPassword, newPassword, callback) => {
-        const query = 'SELECT Password FROM MEMBER WHERE UserID = ?';
+        const query = 'SELECT Password FROM user WHERE UserID = ?';
         connection.query(query, [userId], (err, results) => {
             if (err) return callback(err);
             if (results.length === 0) return callback(new Error('User not found'));
@@ -82,7 +82,7 @@ export class UserService {
                 bcrypt.hash(newPassword, 10, (err, hashedPassword) => {
                     if (err) return callback(err);
 
-                    const updateQuery = 'UPDATE MEMBER SET Password = ? WHERE UserID = ?';
+                    const updateQuery = 'UPDATE user SET Password = ? WHERE UserID = ?';
                     connection.query(updateQuery, [hashedPassword, userId], (err, result) => {
                         if (err) return callback(err);
                         callback(null, { message: 'Password changed successfully' });
@@ -93,7 +93,7 @@ export class UserService {
     };
 
     async updateUserRewardPoints(userId, amount) {
-        const [user] = await poolConnect.query(`UPDATE member SET RewardPoints = RewardPoints + ? WHERE UserID = ?`, [amount, userId]);
+        const [user] = await poolConnect.query(`UPDATE user SET RewardPoints = RewardPoints + ? WHERE UserID = ?`, [amount, userId]);
         return user;
     }
 }
