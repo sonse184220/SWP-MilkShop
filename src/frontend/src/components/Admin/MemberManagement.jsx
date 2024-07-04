@@ -44,7 +44,7 @@ const MemberManagement = () => {
             <div ref={dropdownRef} className="dropdown-menu">
               <ul className="dropdownAdmin">
                 <li>
-                  <a href="/Admin/Profile">Profile</a>
+                  <a href="/Admin/AdminProfile">Profile</a>
                 </li>
                 <li>
                   <a href="#">Logout</a>

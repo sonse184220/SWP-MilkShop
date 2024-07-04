@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import {
   LineChart,
   Line,
@@ -40,7 +40,12 @@ const Dashboard = () => {
     { name: "Nov", revenue: 40000 },
     { name: "Dec", revenue: 20000 },
   ];
-
+  const dropdownRef = useRef(null);
+  const toggleDropdown = () => {
+    if (dropdownRef.current) {
+      dropdownRef.current.classList.toggle("dropdown-menu");
+    }
+  };
   return (
     <>
       <div className="row">
@@ -48,6 +53,24 @@ const Dashboard = () => {
           <SidebarAdmin />
         </div>
         <div className="col-lg-10 dashboard">
+          <div className="content-header">
+            <h1>Dashboard</h1>
+            <header>
+              <button className="admin-name" onClick={toggleDropdown}>
+                Admin Name
+              </button>
+              <div ref={dropdownRef} className="dropdown-menu">
+                <ul className="dropdownAdmin">
+                  <li>
+                    <a href="/Admin/AdminProfile">Profile</a>
+                  </li>
+                  <li>
+                    <a href="#">Logout</a>
+                  </li>
+                </ul>
+              </div>
+            </header>
+          </div>
           <div className="summary">
             <div className="summary-item">
               <h2>$45,678.90</h2>
