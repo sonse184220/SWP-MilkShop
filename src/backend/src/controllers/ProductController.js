@@ -8,11 +8,18 @@ export class ProductController {
 
     async getProductById(req, res) {
         const id = req.params.id;
+
         const product = await productService.getProduct(id);
         if (product.length === 0) {
             return res.status(404).send({ error: "Product not found!" });
         }
-        return res.status(200).send(product);
+
+        const feedbacks = await productService.getFeedbacksByProductID(id)
+
+        return res.status(200).send({
+            product: product[0],
+            feedbacks: feedbacks
+        });
     };
 
     async searchProducts(req, res) {
@@ -94,13 +101,6 @@ export class ProductController {
             res.status(200).json(results);
         });
     };
-
-    async getFeedbacks(req, res) {
-        const productId = req.params.id;
-
-        const feedbacks = await productService.getFeedbacksByProductID(productId);
-        return res.status(200).send(feedbacks);
-    }
 
     async createFeedback(req, res) {
         const productId = req.params.id;
