@@ -47,14 +47,6 @@ router.get("/api/products/search/brand", checkProductSearchBrand, checkPaginatio
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /** URL: localhost:xxxx/api/product/{...}/feedbacks
- * Lấy danh sách feedbacks của một product bằng product id
- * - {...} là product id
- */
-router.get("/api/product/:id/feedbacks", checkProductId, async (req, res) => {
-    await productController.getFeedbacks(req, res);
-});
-
-/** URL: localhost:xxxx/api/product/{...}/feedbacks
  * tạo 1 feedback cho một product bằng product id và lưu xuống database
  * - {...} là product id
  * file json gửi lên API phải có thông tin như sau:

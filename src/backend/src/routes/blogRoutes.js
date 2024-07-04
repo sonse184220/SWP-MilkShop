@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { checkBlogId, checkBlogSearch } from "../middlewares/blogValidators.js";
+import { checkBlogId, checkBlogSearch, checkPaginationQueryForBlog } from "../middlewares/blogValidators.js";
 import { BlogController } from "../controllers/BlogController.js";
 
 const router = Router();
@@ -9,7 +9,7 @@ const blogController = new BlogController();
 /** URL: localhost:xxxx/api/blogs
  * Lấy toàn bộ blog trong database
  */
-router.get("/api/blogs", async (req, res) => {
+router.get("/api/blogs", checkPaginationQueryForBlog, async (req, res) => {
     await blogController.getAllBlogs(req, res);
 });
 
@@ -28,7 +28,7 @@ router.get("/api/blog/:id", checkBlogId, async (req, res) => {
  * - "page" là số trang. Nếu không cung cấp, "page" mặc định là 1
  * - "sort" là cách sắp xếp. Nếu không cung cấp, "sort" mặc định là newest. "sort" bao gồm [newest, oldest]
  */
-router.get("/api/blogs/search", checkBlogSearch, async (req, res) => {
+router.get("/api/blogs/search", checkBlogSearch, checkPaginationQueryForBlog, async (req, res) => {
     await blogController.searchBlogs(req, res);
 });
 
