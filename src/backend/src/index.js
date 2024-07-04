@@ -1,11 +1,11 @@
 import express from "express";
 import session from "express-session";
-
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import cors from "cors"; // Import CORS middleware
 import passport from './utils/passportConfig.js';
-
+import { configureSocket } from './utils/socketConfig.js';
+import { chatRoutes } from './routes/chatRoutes.js';
 import { authRoutes } from './routes/authRoutes.js';
 import { brandRoutes } from './routes/brandRoutes.js';
 import { productRoutes } from "./routes/productRoutes.js";
@@ -21,10 +21,16 @@ import { voucherRoutes } from './routes/voucherRoutes.js';
 
 dotenv.config();
 
-const PORT = process.env.PORT || 3000; // cổng kết nối localhost:xxxx
+const PORT = process.env.PORT || 4500;
 
-const app = express(); // khởi chạy express
+const app = express();
 app.use(passport.initialize());
+
+const server = app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
+
+const io = configureSocket(server);
 
 app.use(session({
     secret: process.env.SESSION_SECRET,
@@ -33,24 +39,10 @@ app.use(session({
     cookie: { secure: false }
 }));
 
-// Enable CORS for specific origin
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
-app.use(express.json()); // dùng json
+app.use(express.json());
 app.use(bodyParser.json());
-
-// API liên quan đến product
-app.use(productRoutes);
-
-// API liên quan đến blogs
-app.use(blogRoutes);
-
-// API liên quan đến wishlist
-app.use(wishlistRoutes);
-
-// API liên quan đến pre-order
-app.use(preorderRoutes);
-
 
 app.use('/api/auth', authRoutes);
 app.use('/api/reset-password', resetPasswordRoutes);
@@ -60,12 +52,12 @@ app.use('/api/google', googleRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/order', orderRoutes);
 app.use('/api/vouchers', voucherRoutes);
+app.use('/api/chat', chatRoutes);
+app.use(productRoutes);
+app.use(blogRoutes);
+app.use(wishlistRoutes);
+app.use(preorderRoutes);
 
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// bắt error bị lọt qua các check
 app.use((err, req, res, next) => {
     console.error(err);
 
@@ -78,11 +70,3 @@ app.use((err, req, res, next) => {
         message,
     });
 });
-
-// khởi chạy server 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
-
-
-

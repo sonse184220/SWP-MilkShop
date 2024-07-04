@@ -1,36 +1,47 @@
 import { Server } from 'socket.io';
-import { chatService } from '../services/chatService.js';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export const configureSocket = (server) => {
     const io = new Server(server, {
         cors: {
-            origin: "http://localhost:3000",
-            methods: ["GET", "POST"]
+            origin: 'http://localhost:3000',
+            methods: ['GET', 'POST'],
+            credentials: true
         }
     });
 
-    io.on('connection', (socket) => {
-        console.log('a user connected');
+    io.use((socket, next) => {
+        const token = socket.handshake.auth.token;
+        if (!token) {
+            return next(new Error('Authentication error'));
+        }
+        jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+            if (err) {
+                return next(new Error('Authentication error'));
+            }
+            socket.user = decoded;
+            next();
+        });
+    });
 
-        socket.on('join session', async (sessionID) => {
-            socket.join(sessionID);
-            const messages = await chatService.getChatHistory(sessionID);
-            socket.emit('chat history', messages);
+    io.on('connection', (socket) => {
+        console.log('a user connected:', socket.user);
+
+        socket.on('join session', (sessionId) => {
+            socket.join(sessionId);
         });
 
-        socket.on('chat message', async (msg) => {
-            const { sessionID, userId, message } = msg;
-
-            try {
-                const savedMessage = await chatService.saveMessage(sessionID, userId, message);
-                io.to(sessionID).emit('chat message', savedMessage);
-            } catch (error) {
-                console.error('Error saving message:', error);
-            }
+        socket.on('chat message', (msg) => {
+            io.to(msg.sessionId).emit('chat message', msg);
         });
 
         socket.on('disconnect', () => {
             console.log('user disconnected');
         });
     });
+
+    return io;
 };
