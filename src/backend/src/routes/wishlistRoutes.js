@@ -2,7 +2,7 @@ import { Router } from "express";
 import { checkMemberId } from "../middlewares/userValidators.js";
 import { WishlistController } from "../controllers/WishlistController.js";
 import { checkProductIdInQuery } from "../middlewares/productValidators.js";
-import { checkAuthenticated, getAuthRole } from "../middlewares/authMiddleware.js";
+import { checkAuthenticated } from "../middlewares/authMiddleware.js";
 
 const router = Router();
 const wishlistController = new WishlistController();
@@ -20,7 +20,7 @@ router.get("/api/wishlist/:id", checkMemberId, async (req, res) => {
  * - {...} là member ID, ID không được phép để trống, phải cung cấp ít nhất 1 ID nếu không sẽ trả về lỗi
  * - "productId" là id của product, không được phép để trống, phải cung cấp ít nhất 1 ID nếu không sẽ trả về lỗi
  */
-router.post("/api/wishlist/:id", checkAuthenticated, getAuthRole, checkMemberId, checkProductIdInQuery, async (req, res) => {
+router.post("/api/wishlist/:id", checkAuthenticated, checkMemberId, checkProductIdInQuery, async (req, res) => {
     await wishlistController.addProductToWishlist(req, res);
 });
 
@@ -29,7 +29,7 @@ router.post("/api/wishlist/:id", checkAuthenticated, getAuthRole, checkMemberId,
  * - {...} là member ID, ID không được phép để trống, phải cung cấp ít nhất 1 ID nếu không sẽ trả về lỗi
  * - "productId" là id của product, không được phép để trống, phải cung cấp ít nhất 1 ID nếu không sẽ trả về lỗi
  */
-router.delete("/api/wishlist/:id", checkAuthenticated, getAuthRole, checkMemberId, checkProductIdInQuery, async (req, res) => {
+router.delete("/api/wishlist/:id", checkAuthenticated, checkMemberId, checkProductIdInQuery, async (req, res) => {
     await wishlistController.removeProductFromWishlist(req, res);
 });
 

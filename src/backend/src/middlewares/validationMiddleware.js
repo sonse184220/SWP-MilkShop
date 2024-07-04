@@ -167,3 +167,9 @@ export const isStaff = (req, res, next) => {
     }
     res.status(403).json({ message: "Only Staff can do this." });
 };
+export const isStaffOrAdmin = (req, res, next) => {
+    if (req.user && req.user.isStaff || req.user && req.user.isAdmin) {
+        return next();
+    }
+    res.status(403).json({ message: 'Only Staff or Admin can do this.' });
+};

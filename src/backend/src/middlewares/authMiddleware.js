@@ -22,27 +22,3 @@ export const checkAuthenticated = (req, res, next) => {
     }
 };
 
-export function getAuthRole(req, res, next) {
-    const adminPattern = /^A\d+$/;
-    const staffPattern = /^S\d+$/;
-    const memberPattern = /^U\d+$/;
-
-    if (adminPattern.test(req.user.userId)) {
-        req.userRole = "admin";
-        return next();
-    }
-
-    if (staffPattern.test(req.user.userId)) {
-        req.userRole = "staff";
-        return next();
-    }
-
-    if (memberPattern.test(req.user.userId)) {
-        req.userRole = "member";
-        return next();
-    }
-
-    req.userRole = "guest";
-    return next();
-}
-

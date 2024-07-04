@@ -4,7 +4,7 @@ export class WishlistService {
 
     // lấy 1 dòng thông tin wishlist (memberId và productId)
     async getWishlistRecord(id, pid) {
-        const [record] = await poolConnect.query(`SELECT w.*, p.Name as productName, b.Name as brandName
+        const [record] = await poolConnect.query(`SELECT w.*, p.Name as productName, b.Name as brandName, b.BrandID
                                                 FROM wishlist as w 
                                                 JOIN product as p 
                                                 ON w.ProductID = p.ProductID 

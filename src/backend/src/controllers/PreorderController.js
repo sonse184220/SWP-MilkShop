@@ -10,10 +10,6 @@ const userService = new UserService();
 export class PreorderController {
 
     async getPreorderHistory(req, res) {
-        if (req.userRole !== "admin" && req.userRole !== "staff") {
-            return res.status(401).send({ msg: "Unauthorized! Only staff or admin can view all order history" });
-        }
-
         const limit = parseInt(req.query.limit);
         const page = parseInt(req.query.page);
         const sort = req.query.sort;
@@ -49,8 +45,8 @@ export class PreorderController {
     }
 
     async getUserPreorderHistory(req, res) {
-        if (req.user.userId !== req.params.id && req.userRole !== "admin" && req.userRole !== "staff") {
-            return res.status(401).send({ msg: "Unauthorized" });
+        if (req.user.userId !== req.params.id && !req.user.isAdmin && !req.user.isStaff) {
+            return res.status(403).send({ msg: "Forbidden." });
         }
 
         const userId = req.params.id;
@@ -90,7 +86,7 @@ export class PreorderController {
 
     async placePreorder(req, res) {
         if (req.user.userId !== req.body.userId) {
-            return res.status(401).send({ msg: "Unauthorized" });
+            return res.status(403).send({ msg: "Forbidden." });
         }
 
         const { userId, productId, quantity, paymentMethod, name, email, phone, address } = req.body;
@@ -121,10 +117,6 @@ export class PreorderController {
     }
 
     async updatePreorderStatus(req, res) {
-        if (req.userRole !== "admin" && req.userRole !== "staff") {
-            return res.status(401).send({ msg: "Unauthorized! Only staff or admin can update pre-order status!" });
-        }
-
         const preorderId = req.params.id;
         const status = req.body.status;
 
