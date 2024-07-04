@@ -49,11 +49,11 @@
     transform: scale(1.05);
 }
 
-.product-preview img {
+/* .product-preview img {
     max-width: 100%;
     height: 60%;
     border-radius: 20px;
-}
+} */
 
 .product-preview h3 {
     margin-top: 10px;

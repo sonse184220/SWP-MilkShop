@@ -47,7 +47,12 @@ const StaffProfile = () => {
         backgroundPosition: "center",
       }}
     >
-      <h2>Staff Profile</h2>
+      <div className="header-container">
+        <h2>Staff Profile</h2>
+        <button>
+          <a href="/Staff/OrderManagement">Back to main</a>
+        </button>
+      </div>
       <form onSubmit={handleSubmit}>
         <div className="row">
           <div className="col-lg-4">

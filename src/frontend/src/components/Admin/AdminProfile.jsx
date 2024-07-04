@@ -47,7 +47,12 @@ const AdminProfile = () => {
         backgroundPosition: "center",
       }}
     >
-      <h2>Admin Profile</h2>
+      <div className="header-container">
+        <h2>Admin Profile</h2>
+        <button>
+          <a href="/Admin/StaffManagement">Back to main</a>
+        </button>
+      </div>
       <form onSubmit={handleSubmit}>
         <div className="row">
           <div className="col-lg-4">

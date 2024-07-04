@@ -36,6 +36,47 @@
     margin-top: 50px;
 }
 
+h2 {
+    text-align: center;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    margin-left: 250px;
+}
+
+.header-container button {
+    background-color: palevioletred;
+    color: snow;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    border: 1px solid palevioletred;
+    position: relative; /* Set the position to relative */
+    top: -10px; /* Move the button up by 10px */
+}
+
+.header-container button a {
+    color: snow;
+    text-decoration: none;
+}
+
+.header-container button a:hover {
+    color: palevioletred;
+}
+
+.header-container button:hover {
+    background-color: snow;
+}
+
+.header-container button:hover a {
+    color: palevioletred;
+}
+
+
 .editProfile .inner form {
     width: 500px;
     padding-top: 40px;

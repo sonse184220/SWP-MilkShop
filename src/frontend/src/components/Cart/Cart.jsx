@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Modal from 'react-modal';
@@ -24,6 +25,7 @@ import { MemberOrder } from '../../services/order/memberOrder';
 import { GetAllVouchers } from '../../services/voucher/GetAllVouchers';
 
 export const Cart = ({ isMember }) => {
+    const navigate = useNavigate();
     const [CartItems, setCartItems] = useState([]);
     const [UserInfo, setUserInfo] = useState();
     const [userFormData, setUserFormData] = useState({
@@ -305,7 +307,7 @@ export const Cart = ({ isMember }) => {
                                                                     </div>
                                                                     <h4 className="title">Your Cart is Empty</h4>
                                                                     <h6 className="sub-title">Sorry... No item Found inside your cart!</h6>
-                                                                    <a href="#" className="btn btn-lg btn-golden">Continue Shopping</a>
+                                                                    <a href="" onClick={(e) => { e.preventDefault(); navigate('/Customer/home') }} className="btn btn-lg btn-golden">Continue Shopping</a>
                                                                 </div>
                                                             </div>
                                                         </div>
