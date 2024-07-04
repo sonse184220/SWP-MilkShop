@@ -82,7 +82,7 @@ const ProductDetail = ({ isMember }) => {
 
     const handleGetRelatedProduct = async () => {
         try {
-            const response = await GetProductByBrandID(CurrentProduct[0].BrandID);
+            const response = await GetProductByBrandID(CurrentProduct.BrandID);
             // console.log('related', response);
             if (response.data.total > 0) {
                 setRelatedProduct(response.data.data);
@@ -96,7 +96,7 @@ const ProductDetail = ({ isMember }) => {
         try {
             const PreOrderInfo = {
                 "userId": userId,
-                "productId": CurrentProduct[0].ProductID,
+                "productId": CurrentProduct.ProductID,
                 "quantity": quantity,
                 "paymentMethod": "COD",
                 "name": PreOrderFormData.Name,
@@ -160,9 +160,9 @@ const ProductDetail = ({ isMember }) => {
                 } else {
                     // If the product doesn't exist, add it to the cart
                     cart.push({
-                        ProductID: CurrentProduct[0].ProductID,
-                        Name: CurrentProduct[0].Name,
-                        Price: CurrentProduct[0].Price,
+                        ProductID: CurrentProduct.ProductID,
+                        Name: CurrentProduct.Name,
+                        Price: CurrentProduct.Price,
                         CartQuantity: quantity,
                     });
                 }
@@ -216,7 +216,7 @@ const ProductDetail = ({ isMember }) => {
                 setInWishlist(prevState => !prevState);
                 const response = await AddWishlist(MemberToken, userId, ProductID);
                 console.log(response);
-                if (response.data && response.data[0].ProductID === ProductID) {
+                if (response.data && response.data.ProductID === ProductID) {
                     toast.success('Added to wishlist', {
                         theme: "colored",
                     });
@@ -304,9 +304,10 @@ const ProductDetail = ({ isMember }) => {
 
     const handleGetFeedback = async () => {
         try {
-            const response = await GetFeedback(ProductID);
+            // const response = await GetFeedback(ProductID);
+            const response = await getProductById(ProductID);
             console.log(response);
-            setFeedbacks(response.data)
+            setFeedbacks(response.data.feedbacks)
         } catch (error) {
 
         }
@@ -316,7 +317,7 @@ const ProductDetail = ({ isMember }) => {
         try {
             const response = await getProductById(ProductID);
             console.log(response);
-            setCurrentProduct(response.data);
+            setCurrentProduct(response.data.product);
         } catch (error) {
 
         }
@@ -347,11 +348,11 @@ const ProductDetail = ({ isMember }) => {
         handleGetWishlist();
         checkIsWishlistState();
         handleGetUserInfo();
-        // handleGetRelatedProduct();
+        handleGetRelatedProduct();
     }, []);
 
     useEffect(() => {
-        if (CurrentProduct && CurrentProduct[0]) {
+        if (CurrentProduct) {
             handleGetRelatedProduct();
         }
     }, [CurrentProduct]);
@@ -385,8 +386,8 @@ const ProductDetail = ({ isMember }) => {
                     <p className='pre-order-intro'>The product is out-of-stock. Do you want to pre-order?</p>
                     <div className='pre-order-content'>
                         <div className='pre-order-product'>
-                            <h3>{CurrentProduct[0].Name}</h3>
-                            <h4>CATEGORY: {CurrentProduct[0].BrandName}</h4>
+                            <h3>{CurrentProduct.Name}</h3>
+                            <h4>CATEGORY: {CurrentProduct.BrandName}</h4>
                             <div><img src='/img/P001.jpg' /></div>
                             <div className="pre-order-quantity">
                                 <span>Quantity</span>
@@ -471,21 +472,21 @@ const ProductDetail = ({ isMember }) => {
                             {/* <img src={`${CurrentProduct[0].Image}`} /> */}
                             {/* <img src={`data:image/jpeg;base64,${btoa(String.fromCharCode.apply(null, CurrentProduct[0].Image.data))}`} /> */}
                             <img
-                                src={getImageSrc(CurrentProduct[0].Image)}
-                                alt={CurrentProduct[0].Name}
+                                src={getImageSrc(CurrentProduct.Image)}
+                                alt={CurrentProduct.Name}
                             />
                         </div>
                         <div className="product-details-content-area product-details--golden aos-init aos-animate detail-info" data-aos="fade-up" data-aos-delay="200">
                             <div className="product-details-text">
-                                <h4 className="title">{CurrentProduct[0].Name}</h4>
-                                <div className="price">{CurrentProduct[0].Price.toLocaleString()} VND</div>
-                                <p>{CurrentProduct[0].Content}</p>
+                                <h4 className="title">{CurrentProduct.Name}</h4>
+                                <div className="price">{CurrentProduct.Price.toLocaleString()} VND</div>
+                                <p>{CurrentProduct.Content}</p>
                             </div>
                             <div className="product-details-variable">
                                 <h4 className="title">Available Options</h4>
 
                                 <div className="variable-single-item">
-                                    <div className="product-stock"> <span className="product-stock-in"><i className="zmdi zmdi-check-circle"></i></span> {CurrentProduct[0].Quantity} IN STOCK</div>
+                                    <div className="product-stock"> <span className="product-stock-in"><i className="zmdi zmdi-check-circle"></i></span> {CurrentProduct.Quantity} IN STOCK</div>
                                 </div>
 
                                 <div className="d-flex align-items-center ">
@@ -500,7 +501,7 @@ const ProductDetail = ({ isMember }) => {
                                     </div>
 
                                     <div className="product-add-to-cart-btn">
-                                        {(isMember && CurrentProduct[0].Quantity === 0) ?
+                                        {(isMember && CurrentProduct.Quantity === 0) ?
                                             (<a href="#" onClick={(e) => { e.preventDefault(); setIsOpenPreOrder(true) }} className="btn btn-block btn-lg btn-black-default-hover" data-bs-toggle="modal" data-bs-target="#modalAddcart">Pre-Order</a>)
                                             :
                                             (<a href="#" onClick={handleAddToCart} className="btn btn-block btn-lg btn-black-default-hover" data-bs-toggle="modal" data-bs-target="#modalAddcart">+ Add To Cart</a>)
@@ -519,7 +520,7 @@ const ProductDetail = ({ isMember }) => {
                             <div className="product-details-catagory mb-2">
                                 <span className="title">CATEGORY:</span>
                                 <ul>
-                                    <li><a href="#">{CurrentProduct[0].BrandName}</a></li>
+                                    <li><a href="#">{CurrentProduct.BrandName}</a></li>
                                     {/* <li><a href="#">KITCHEN UTENSILS</a></li>
                                     <li><a href="#"></a></li> */}
                                 </ul>
