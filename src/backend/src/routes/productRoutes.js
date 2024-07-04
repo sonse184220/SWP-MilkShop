@@ -9,9 +9,7 @@ import { checkPaginationQuery } from "../middlewares/utilsMiddleware.js";
 const router = Router();
 const productController = new ProductController();
 const upload = multer();
-/**
- * 
- */
+
 router.get('/api/products', productController.getAllProducts);
 
 /** URL: localhost:xxxx/api/product/{...}
@@ -82,5 +80,6 @@ router.post("/api/product/create", checkAuthenticated, isStaff, upload.single('i
 router.put("/api/product/:id", checkAuthenticated, isStaff, checkProductId, upload.single('image'), async (req, res) => {
     await productController.updateProduct(req, res);
 });
+
 // export router
 export { router as productRoutes };

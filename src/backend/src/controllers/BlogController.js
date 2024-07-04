@@ -1,5 +1,8 @@
+import sharp from "sharp";
+
 import { BlogService } from "../services/BlogService.js";
 import { ProductService } from "../services/ProductService.js";
+import { poolConnect } from "../utils/dbConnection.js";
 
 const blogService = new BlogService();
 const productService = new ProductService();
@@ -78,5 +81,41 @@ export class BlogController {
             data: blogs,
         });
     };
+
+    async createBlog(req, res) {
+        const { userId, title, content, productList } = req.body;
+        let nextMaxId;
+        const resizedImage = await sharp(req.file.buffer)
+                                .resize(800, 600)
+                                .toBuffer();
+
+        const maxBlogId = await blogService.getMaxBlogId();
+        if (!maxBlogId[0].maxId) {
+            nextMaxId = "B001";
+        } else {
+            const nextNumericId = maxBlogId[0].maxId + 1;
+            nextMaxId = `B${nextNumericId.toString().padStart(3, '0')}`;
+        }
+
+        const creatingBlog = await blogService.createBlog(nextMaxId, userId, title, resizedImage, content);
+        if (creatingBlog.affectedRows === 0) {
+            return res.status(500).send({ error: "Failed to create blog!" })
+        }
+
+        for (const productId of productList) {
+            const creatingBlogProducts = await productService.addProductToBlogProductList(nextMaxId, productId);
+            if (creatingBlogProducts.affectedRows === 0) {
+                return res.status(500).send({ error: `Failed to add product ${productId} into product list for blog ${nextMaxId}!` })
+            }
+        }
+
+        const blog = await blogService.getBlog(nextMaxId);
+        const blogProducts = await productService.getBlogProductList(nextMaxId);
+
+        res.status(200).send({
+            blog: blog[0],
+            blogProducts: blogProducts,
+        });
+    }
 
 }

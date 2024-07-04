@@ -4,7 +4,7 @@ import { poolConnect, connection } from "../utils/dbConnection.js";
 export class BlogService {
     // Lấy thông tin của 1 blog bằng ID
     async getBlog(id) {
-        const [blog] = await poolConnect.query(`SELECT u.Name, b.* 
+        const [blog] = await poolConnect.query(`SELECT u.Name AS Author, b.* 
                                                 FROM blog as b 
                                                 JOIN user as u ON b.UserID = u.UserID 
                                                 WHERE BlogID = ?`, [id]);
@@ -13,7 +13,7 @@ export class BlogService {
 
     // Lấy thông tin của toàn bộ blogs
     async getAllBlogs(limit, sortBy, offset) {
-        const [blogs] = await poolConnect.query(`SELECT u.Name, b.* 
+        const [blogs] = await poolConnect.query(`SELECT u.Name AS Author, b.* 
                                                 FROM blog as b 
                                                 JOIN user as u ON b.UserID = u.UserID 
                                                 ORDER BY ${sortBy} LIMIT ? OFFSET ?`, [limit, offset]);
@@ -29,7 +29,7 @@ export class BlogService {
     async searchBlogs(content, limit, sortBy, offset) {
         const search = `%${content}%`;
 
-        const [blogs] = await poolConnect.query(`SELECT u.Name, b.* 
+        const [blogs] = await poolConnect.query(`SELECT u.Name AS Author, b.* 
                                                 FROM blog as b 
                                                 JOIN user as u ON b.UserID = u.UserID 
                                                 WHERE Title LIKE ? OR Content like ? ORDER BY ${sortBy} LIMIT ? OFFSET ?`, [search, search, limit, offset]);
@@ -43,5 +43,16 @@ export class BlogService {
         const [total] = await poolConnect.query('SELECT COUNT(*) as count FROM BLOG WHERE Title LIKE ? OR Content like ?', [search, search]);
         const count = total[0].count;
         return count;
+    }
+
+    async getMaxBlogId() {
+        const [blogId] = await poolConnect.query("SELECT MAX(CAST(SUBSTR(BlogID, 2) AS UNSIGNED)) AS maxId FROM blog WHERE BlogID LIKE 'B%'");
+        return blogId;
+    }
+
+    async createBlog(blogId, userId, title, image, content) {
+        const [blog] = await poolConnect.query(`INSERT INTO blog (BlogID, UserID, Title, Image, Content)
+                                                VALUES (?,?,?,?,?)`,[blogId, userId, title, image, content]);
+        return blog;
     }
 }

@@ -21,6 +21,11 @@ export class ProductService {
             [blogId]);
         return products;
     }
+    async addProductToBlogProductList(blogId, productId) {
+        const [products] = await poolConnect.execute(`INSERT INTO blog_products (BlogID, ProductID)
+                                                    VALUES (?,?)`, [blogId, productId]);
+        return products;
+    }
 
     // tìm product trong database bằng name
     async searchProducts(name, limit, sortBy, offset) {

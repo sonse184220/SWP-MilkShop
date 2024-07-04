@@ -1,9 +1,13 @@
 import { Router } from "express";
+import multer from "multer";
 
-import { checkBlogId, checkBlogSearch, checkPaginationQueryForBlog } from "../middlewares/blogValidators.js";
+import { checkBlogData, checkBlogId, checkBlogSearch, checkPaginationQueryForBlog } from "../middlewares/blogValidators.js";
 import { BlogController } from "../controllers/BlogController.js";
+import { checkAuthenticated } from "../middlewares/authMiddleware.js";
+import { isStaff, isStaffOrAdmin } from "../middlewares/validationMiddleware.js";
 
 const router = Router();
+const upload = multer();
 const blogController = new BlogController();
 
 /** URL: localhost:xxxx/api/blogs
@@ -32,6 +36,12 @@ router.get("/api/blogs/search", checkBlogSearch, checkPaginationQueryForBlog, as
     await blogController.searchBlogs(req, res);
 });
 
+/** tạo 1 blog
+ * 
+ */
+router.post("/api/blog/create", upload.single("image"), checkBlogData, async (req, res) => {
+    await blogController.createBlog(req, res);
+})
 
 
 // export router
