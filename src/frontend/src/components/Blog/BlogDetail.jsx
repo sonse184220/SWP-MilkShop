@@ -11,12 +11,14 @@ const BlogDetail = ({ isMember }) => {
   const { BlogID } = useParams(); // Get the BlogID parameter from the URL
   const [blog, setBlog] = useState(null);
   const [error, setError] = useState(null);
+  const [relatedProduct, setRelatedProduct] = useState([]);
 
   useEffect(() => {
     const fetchBlog = async () => {
       try {
         const data = await blogDetail(BlogID); // Use the BlogID from useParams
-        setBlog(data);
+        setBlog(data.blog);
+        setRelatedProduct(data.blogProducts);
       } catch (err) {
         setError(err.message);
       }
@@ -57,7 +59,7 @@ const BlogDetail = ({ isMember }) => {
           </div>
         </div>
       </div>
-      <ProductList products={blog.products || []} />
+      {relatedProduct.length > 0 && <ProductList products={relatedProduct || []} />}
       <Footer />
     </>
   );

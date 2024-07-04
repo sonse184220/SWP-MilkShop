@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 import './ProductBar.css';
 import handleGetAllProduct from '../../services/product/getAllProductService';
@@ -13,7 +16,7 @@ const ProductBar = () => {
         try {
             const response = await handleGetAllProduct();
             console.log(response);
-            const slicedProducts = response.data.slice(0, 12); // Get only the first 12 elements
+            const slicedProducts = response.data.slice(0, 9); // Get only the first 12 elements
             setProducts(slicedProducts);
         } catch (error) {
 
@@ -26,35 +29,59 @@ const ProductBar = () => {
 
 
 
-    const numSlides = Math.ceil(products.length / 6);
-    const intervalRef = useRef(null);
+    // const numSlides = Math.ceil(products.length / 6);
+    // const intervalRef = useRef(null);
 
-    //chuyển qua lại giữa hiển thị 6 product đầu và 6 product sau
-    useEffect(() => {
-        const handleSlideUpdate = () => {
-            setCurrentSlide((prevSlide) => {
-                if (prevSlide >= 0 || prevSlide <= numSlides - 1) {
-                    setDirection(1); // Change direction to forward
-                } else if (prevSlide === numSlides - 1) {
-                    setDirection(-1); // Change direction to backward
+    // //chuyển qua lại giữa hiển thị 6 product đầu và 6 product sau
+    // useEffect(() => {
+    //     const handleSlideUpdate = () => {
+    //         setCurrentSlide((prevSlide) => {
+    //             if (prevSlide >= 0 || prevSlide <= numSlides - 1) {
+    //                 setDirection(1); // Change direction to forward
+    //             } else if (prevSlide === numSlides - 1) {
+    //                 setDirection(-1); // Change direction to backward
+    //             }
+    //             const newSlide = prevSlide + direction;
+    //             if (newSlide < 0) {
+    //                 return numSlides - 1; // Wrap around to the last slide
+    //             } else if (newSlide > numSlides - 1) {
+    //                 return 0; // Wrap around to the first slide
+    //             }
+    //             return newSlide;
+    //         });
+    //     };
+
+    //     intervalRef.current = setInterval(handleSlideUpdate, 4000);
+
+    //     return () => clearInterval(intervalRef.current);
+    // }, [numSlides]);
+
+    // //chuyển qua lại giữa hiển thị 6 product đầu và 6 product sau
+    // const productSlide = products.slice(currentSlide * 6, (currentSlide + 1) * 6);
+
+    const settings = {
+        dots: true,
+        infinite: false,
+        speed: 500,
+        slidesToShow: 4,
+        slidesToScroll: 6,
+        responsive: [
+            {
+                breakpoint: 1024,
+                settings: {
+                    slidesToShow: 4,
+                    slidesToScroll: 4,
                 }
-                const newSlide = prevSlide + direction;
-                if (newSlide < 0) {
-                    return numSlides - 1; // Wrap around to the last slide
-                } else if (newSlide > numSlides - 1) {
-                    return 0; // Wrap around to the first slide
+            },
+            {
+                breakpoint: 600,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 2,
                 }
-                return newSlide;
-            });
-        };
-
-        intervalRef.current = setInterval(handleSlideUpdate, 4000);
-
-        return () => clearInterval(intervalRef.current);
-    }, [numSlides]);
-
-    //chuyển qua lại giữa hiển thị 6 product đầu và 6 product sau
-    const productSlide = products.slice(currentSlide * 6, (currentSlide + 1) * 6);
+            }
+        ]
+    };
 
     return (
         <div className="product-bar">
@@ -64,15 +91,19 @@ const ProductBar = () => {
                     View all
                 </Link>
             </div>
-            <div className="product-container" >
-                {productSlide.map((product) => (
-                    <Link to={`/Customer/ProductDetail/${product.ProductID}`} key={product.ProductID} className="product-preview">
-                        <img src={`/img/${product.ProductID}.jpg`} alt={product.Name} />
-                        <h3>{product.Name}</h3>
-                        <p>{product.Content}</p>
-                        <p>{product.Price.toLocaleString()} VND</p>
-                    </Link>
-                ))}
+            <div className="" >
+                <Slider {...settings}>
+                    {products.map((product) => (
+                        <div key={product.ProductID} className="product-slide">
+                            <Link to={`/Customer/ProductDetail/${product.ProductID}`} className="product-preview">
+                                <img src={`/img/${product.ProductID}.jpg`} alt={product.Name} />
+                                <h3>{product.Name}</h3>
+                                {/* <p>{product.Content}</p> */}
+                                <p>{product.Price.toLocaleString()} VND</p>
+                            </Link>
+                        </div>
+                    ))}
+                </Slider>
             </div>
         </div >
     );
