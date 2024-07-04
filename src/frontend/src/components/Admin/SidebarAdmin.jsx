@@ -12,7 +12,7 @@ function SidebarAdmin() {
           <a href="/Admin/MemberManagement">Member</a>
         </div>
         <div>
-          <a href="/Admin/ProductManagement">Diagram</a>
+          <a href="/Admin/Dashboard">Dashboard</a>
         </div>
       </div>
     </div>
