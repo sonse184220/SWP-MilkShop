@@ -215,6 +215,7 @@ header {
 
 .addMember {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   margin-left: 225px;
+  width: 150px;
 }
