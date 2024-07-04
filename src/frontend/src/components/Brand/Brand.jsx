@@ -49,7 +49,7 @@ function Brand({ onBrandClick, onSearch, setSearchInput }) {
                         <li><a onClick={() => onBrandClick(null)} href="#" >All Brands</a></li>
                         {
                             brands.map((brand) => (
-                                <li key={brand.BrandID}><a onClick={() => onBrandClick(brand.BrandID)} href="#" >{brand.Name}</a></li>
+                                <li key={brand.BrandID}><a onClick={(e) => { e.preventDefault(); onBrandClick(brand.BrandID) }} href="" >{brand.Name}</a></li>
                             ))
                         }
                     </ul>
