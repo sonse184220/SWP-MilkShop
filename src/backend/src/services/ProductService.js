@@ -80,10 +80,10 @@ export class ProductService {
 
     // lấy feedbacks từ 1 product
     async getFeedbacksByProductID(id) {
-        const [feedbacks] = await poolConnect.query(`Select f.*, m.Name
+        const [feedbacks] = await poolConnect.query(`Select f.*, u.Name
                                                     FROM feedback as f 
-                                                    JOIN member as m
-                                                    ON f.UserID = m.UserID
+                                                    JOIN user as u
+                                                    ON f.UserID = u.UserID
                                                     WHERE ProductID = ?`, [id]);
         return feedbacks;
     }

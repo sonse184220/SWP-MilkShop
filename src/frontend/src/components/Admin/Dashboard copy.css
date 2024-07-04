@@ -1,0 +1,67 @@
+.sidebar{
+    height: 175vh;
+}
+
+.dashboard {
+  padding: 20px;
+}
+
+.summary {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+.summary-item {
+  text-align: center;
+}
+
+.charts {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+.chart {
+  width: 48%;
+}
+
+.top-users, .source-statistics {
+  margin-bottom: 20px;
+  margin-left: 20px;
+}
+
+.top-users ul {
+  list-style: none;
+  padding: 0;
+}
+
+.top-users li {
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: palevioletred;
+  color: snow;
+}
+
+.top-users li:not(:last-child) {
+  margin-bottom: 10px;
+}
+
+.source-statistics table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.source-statistics th, .source-statistics td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.source-statistics th {
+  background-color: palevioletred;
+  color: snow;
+  text-align: center;
+}
+
