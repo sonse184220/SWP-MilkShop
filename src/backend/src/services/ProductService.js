@@ -27,6 +27,11 @@ export class ProductService {
         return products;
     }
 
+    async getProductInBlogProductList(blogId, productId) {
+        const [product] = await poolConnect.execute(`SELECT * FROM blog_products WHERE BlogID = ? AND ProductID = ?`, [blogId, productId]);
+        return product;
+    }
+
     // tìm product trong database bằng name
     async searchProducts(name, limit, sortBy, offset) {
         const search = `%${name}%`;

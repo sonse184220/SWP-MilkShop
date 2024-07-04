@@ -85,9 +85,7 @@ export class BlogController {
     async createBlog(req, res) {
         const { userId, title, content, productList } = req.body;
         let nextMaxId;
-        const resizedImage = await sharp(req.file.buffer)
-                                .resize(800, 600)
-                                .toBuffer();
+        const Image = req.file.buffer;
 
         const maxBlogId = await blogService.getMaxBlogId();
         if (!maxBlogId[0].maxId) {
@@ -97,15 +95,18 @@ export class BlogController {
             nextMaxId = `B${nextNumericId.toString().padStart(3, '0')}`;
         }
 
-        const creatingBlog = await blogService.createBlog(nextMaxId, userId, title, resizedImage, content);
+        const creatingBlog = await blogService.createBlog(nextMaxId, userId, title, Image, content);
         if (creatingBlog.affectedRows === 0) {
             return res.status(500).send({ error: "Failed to create blog!" })
         }
 
         for (const productId of productList) {
-            const creatingBlogProducts = await productService.addProductToBlogProductList(nextMaxId, productId);
-            if (creatingBlogProducts.affectedRows === 0) {
-                return res.status(500).send({ error: `Failed to add product ${productId} into product list for blog ${nextMaxId}!` })
+            const checkExistedProductInList = await productService.getProductInBlogProductList(nextMaxId, productId);
+            if(checkExistedProductInList.length === 0) {
+                const creatingBlogProducts = await productService.addProductToBlogProductList(nextMaxId, productId);
+                if (creatingBlogProducts.affectedRows === 0) {
+                    return res.status(500).send({ error: `Failed to add product ${productId} into product list for blog ${nextMaxId}!` })
+                }
             }
         }
 
