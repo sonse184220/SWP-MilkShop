@@ -23,14 +23,9 @@ export class WishlistController {
     async addProductToWishlist(req, res) {
         const userId = req.params.id;
         const productId = req.query.productId;
-
-        const checkMember = await userService.checkUserExisted(userId);
-        if (checkMember.length === 0) {
-            return res.status(404).send({ error: "Member not found!" });
-        }
-
-        if (req.userRole !== "member" || req.user.userId !== userId) {
-            return res.status(401).send({ msg: "Unauthorized!" }); 
+        
+        if (req.user.userId !== userId) {
+            return res.status(403).send({ msg: "Forbidden." }); 
         }
 
         const checkProduct = await productService.getProduct(productId);
@@ -56,13 +51,8 @@ export class WishlistController {
         const userId = req.params.id;
         const productId = req.query.productId;
 
-        const checkMember = await userService.checkUserExisted(userId);
-        if (checkMember.length === 0) {
-            return res.status(404).send({ error: "Member not found!" });
-        }
-
-        if (req.user.userId !== userId && req.userRole !== "admin") {
-            return res.status(401).send({ msg: "Unauthorized!" });
+        if (req.user.userId !== userId && !req.user.isAdmin) {
+            return res.status(403).send({ msg: "Forbidden." });
         }
 
         const checkProduct = await productService.getProduct(productId);
@@ -80,6 +70,6 @@ export class WishlistController {
             return res.status(500).send({ error: "Failed to remove product from wishlist!" });
         }
         
-        return res.status(200).send({ msg: `Product ${productId} successfully deleted from user ${userId}'s wishlist!` });
+        return res.status(200).send({ msg: `Product ${checkProduct[0].Name} (${productId}) successfully deleted from user ${userId}'s wishlist!` });
     }
 }

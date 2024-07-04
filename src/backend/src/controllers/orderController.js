@@ -11,8 +11,8 @@ export class OrderController {
             return res.status(404).send({ error: "Order not found!" });
         }
 
-        if (req.user.userId !== order[0].UserID && req.userRole !== "admin" && req.userRole !== "staff") {
-            return res.status(401).send({ msg: "Unauthorized!" });
+        if (req.user.userId !== order[0].UserID && !req.user.isAdmin && !req.user.isStaff) {
+            return res.status(403).send({ msg: "Forbidden." });
         }
 
         const orderDetail = await orderService.getOrderDetail(orderId);
@@ -24,10 +24,6 @@ export class OrderController {
     }
 
     async getOrderHistory(req, res) {
-        if (req.userRole !== "admin" && req.userRole !== "staff") {
-            return res.status(401).send({ msg: "Unauthorized! Only staff or admin can view all order history" });
-        }
-
         const limit = parseInt(req.query.limit);
         const page = parseInt(req.query.page);
         const sort = req.query.sort;
@@ -63,8 +59,8 @@ export class OrderController {
     }
 
     async getUserOrderHistory(req, res) {
-        if (req.user.userId !== req.params.id && req.userRole !== "admin" && req.userRole !== "staff") {
-            return res.status(401).send({ msg: "Unauthorized" });
+        if (req.user.userId !== req.params.id && !req.user.isAdmin && !req.user.isStaff) {
+            return res.status(403).send({ msg: "Forbidden." });
         }
 
         const userId = req.params.id;
@@ -111,10 +107,6 @@ export class OrderController {
     }
 
     async updateOrderStatus(req, res) {
-        if (req.userRole !== "admin" && req.userRole !== "staff") {
-            return res.status(401).send({ msg: "Unauthorized! Only staff or admin can update order status!" });
-        }
-
         const orderId = req.params.id;
         const status = req.body.status;
 

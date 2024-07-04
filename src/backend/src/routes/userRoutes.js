@@ -1,9 +1,9 @@
 import express from 'express';
 import { UserController } from '../controllers/userController.js';
-import { OrderController } from '../controllers/OrderController.js';
+import { OrderController } from '../controllers/orderController.js';
 import { PreorderController } from '../controllers/PreorderController.js';
 import dotenv from 'dotenv';
-import { checkAuthenticated, getAuthRole } from '../middlewares/authMiddleware.js';
+import { checkAuthenticated } from '../middlewares/authMiddleware.js';
 import { checkMemberId } from '../middlewares/userValidators.js';
 import { checkPaginationQuery } from '../middlewares/utilsMiddleware.js';
 import { checkChangePassword, checkImageUpload } from '../middlewares/validationMiddleware.js';
@@ -26,7 +26,7 @@ router.post('/change-password', checkAuthenticated, checkChangePassword, userCon
  * Lấy toàn bộ lịch sử mua hàng order của 1 user
  * - "sort" là cách sắp xếp. Nếu không cung cấp, "sort" mặc định là newest. "sort" bao gồm [newest, oldest, highest, lowest]
  */
-router.get("/:id/order-history", checkAuthenticated, getAuthRole, checkMemberId, checkPaginationQuery, async (req, res) => {
+router.get("/:id/order-history", checkAuthenticated, checkMemberId, checkPaginationQuery, async (req, res) => {
     await orderController.getUserOrderHistory(req, res)
 })
 
@@ -34,7 +34,7 @@ router.get("/:id/order-history", checkAuthenticated, getAuthRole, checkMemberId,
  * Lấy toàn bộ lịch sử mua hàng pre-order của 1 user
  * - "sort" là cách sắp xếp. Nếu không cung cấp, "sort" mặc định là newest. "sort" bao gồm [newest, oldest, highest, lowest]
  */
-router.get("/:id/preorder-history", checkAuthenticated, getAuthRole, checkMemberId, checkPaginationQuery, async (req, res) => {
+router.get("/:id/preorder-history", checkAuthenticated, checkMemberId, checkPaginationQuery, async (req, res) => {
     await preorderController.getUserPreorderHistory(req, res)
 })
 
