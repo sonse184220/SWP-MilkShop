@@ -39,7 +39,7 @@ router.get("/api/blogs/search", checkBlogSearch, checkPaginationQueryForBlog, as
 /** tạo 1 blog
  * 
  */
-router.post("/api/blog/create", upload.single("image"), checkBlogData, async (req, res) => {
+router.post("/api/blog/create", checkAuthenticated, isStaff, upload.single("image"), checkBlogData, async (req, res) => {
     await blogController.createBlog(req, res);
 })
 

@@ -101,6 +101,11 @@ export class BlogController {
         }
 
         for (const productId of productList) {
+            const checkProductExist = await productService.getProduct(productId);
+            if (checkProductExist.length === 0) {
+                return res.status(404).send({ error: `Product ${productId} not found!` })
+            }
+
             const checkExistedProductInList = await productService.getProductInBlogProductList(nextMaxId, productId);
             if(checkExistedProductInList.length === 0) {
                 const creatingBlogProducts = await productService.addProductToBlogProductList(nextMaxId, productId);
