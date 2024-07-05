@@ -52,4 +52,8 @@ export class PreorderService {
         const [preorder] = await poolConnect.query("UPDATE pre_order SET Status = ? WHERE PreorderID = ?", [status, preorderId]);
         return preorder;
     }
+    async updatePreorderStatusCancel(preorderId) {
+        const [preorder] = await poolConnect.query("UPDATE pre_order SET Status = 'Cancelled' WHERE PreorderID = ?", [preorderId]);
+        return preorder;
+    }
 }

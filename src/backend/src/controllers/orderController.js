@@ -4,7 +4,7 @@ const orderService = new OrderService();
 
 export class OrderController {
     async getOrderById(req, res) {
-        const orderId = req.params.id;
+        const orderId = req.params.orderId;
 
         const order = await orderService.getOrder(orderId);
         if (order.length === 0) {
@@ -107,7 +107,7 @@ export class OrderController {
     }
 
     async updateOrderStatus(req, res) {
-        const orderId = req.params.id;
+        const orderId = req.params.orderId;
         const status = req.body.status;
 
         const order = await orderService.getOrder(orderId);
@@ -120,6 +120,28 @@ export class OrderController {
             return res.status(200).send(order);
         } else if (updatingOrder.affectedRows === 0) {
             return res.status(500).send({ error: "Cant update order status!" });
+        }
+
+        const updatedOrder = await orderService.getOrder(orderId);
+        return res.status(200).send(updatedOrder);
+    }
+    async updateOrderStatusCancel(req, res) {
+        const orderId = req.params.orderId;
+
+        const order = await orderService.getOrder(orderId);
+        if (order.length === 0) {
+            return res.status(404).send({ error: "Order not found!" });
+        }
+        if (order[0].UserID !== req.user.userId) {
+            return res.status(403).send({ msg: "Forbidden." });
+        }
+        if(order[0].Status !== 'Waiting') {
+            return res.status(409).send({ msg: "You cant no longer cancel this order!" });
+        }
+
+        const updatingOrder = await orderService.updateOrderStatusCancel(orderId);
+        if (updatingOrder.affectedRows === 0) {
+            return res.status(500).send({ error: "Failed to update order status!" });
         }
 
         const updatedOrder = await orderService.getOrder(orderId);
