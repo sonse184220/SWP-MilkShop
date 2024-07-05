@@ -1,7 +1,7 @@
 import { body, param, query, validationResult, matchedData } from 'express-validator';
 
 export async function checkOrderId(req, res, next) {
-    await param("id")
+    await param("orderId")
         .trim()
         .escape()
         .exists().withMessage("OrderID is required!")

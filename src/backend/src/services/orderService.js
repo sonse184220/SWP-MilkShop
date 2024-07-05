@@ -46,6 +46,10 @@ export class OrderService {
         const [order] = await poolConnect.query("UPDATE `order` SET Status = ? WHERE OrderID = ?", [status, orderId]);
         return order;
     }
+    async updateOrderStatusCancel(orderId) {
+        const [order] = await poolConnect.query("UPDATE `order` SET Status = 'Cancelled' WHERE OrderID = ?", [orderId]);
+        return order;
+    }
 
     placeOrder = (data, user, guestId, callback) => {
         const { PaymentMethod, VoucherIDs, useRewardPoints, Name, Email, Phone, Address, cart } = data;

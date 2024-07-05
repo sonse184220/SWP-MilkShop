@@ -19,14 +19,14 @@ router.get("/history", checkAuthenticated, isStaffOrAdmin, checkPaginationQuery,
 /** /api/order/{..id của order..}
  * Lấy thông tin chi tiết một order
  */
-router.get("/:id", checkAuthenticated, checkOrderId, async (req, res) => {
+router.get("/:orderId", checkAuthenticated, checkOrderId, async (req, res) => {
     await orderController.getOrderById(req, res)
 })
 
 /** /api/order/{..id của order..}/status
- * Cập nhật status của 1 đơn order
+ * Cập nhật status của 1 đơn order cho staff / admin
  */
-router.patch("/:id/status", checkAuthenticated, isStaffOrAdmin, checkOrderId, checkOrderInputStatus, async (req, res) => {
+router.patch("/:orderId/status", checkAuthenticated, isStaffOrAdmin, checkOrderId, checkOrderInputStatus, async (req, res) => {
     await orderController.updateOrderStatus(req, res);
 })
 

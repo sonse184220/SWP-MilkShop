@@ -1,9 +1,8 @@
 import { Router } from "express";
 import { checkAuthenticated } from "../middlewares/authMiddleware.js";
 import { PreorderController } from "../controllers/PreorderController.js";
-import { checkPreorderData } from "../middlewares/preorderValidators.js";
+import { checkPreorderData, checkPreorderId, checkPreorderInputStatus } from "../middlewares/preorderValidators.js";
 import { checkPaginationQuery } from "../middlewares/utilsMiddleware.js";
-import { checkOrderId, checkOrderInputStatus } from "../middlewares/orderValidators.js";
 import { isStaffOrAdmin } from "../middlewares/validationMiddleware.js";
 
 const router = Router();
@@ -25,9 +24,9 @@ router.post("/api/preorder/place-preorder", checkAuthenticated, checkPreorderDat
 })
 
 /** /api/preorder/{..id của pre-order..}/status
- * Cập nhật status của 1 đơn pre-order
+ * Cập nhật status của 1 đơn pre-order cho staff / admin
  */
-router.patch("/api/preorder/:id/status", checkAuthenticated, isStaffOrAdmin, checkOrderId, checkOrderInputStatus, async (req, res) => {
+router.patch("/api/preorder/:preorderId/status", checkAuthenticated, isStaffOrAdmin, checkPreorderId, checkPreorderInputStatus, async (req, res) => {
     await preorderController.updatePreorderStatus(req, res);
 })
 

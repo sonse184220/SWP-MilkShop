@@ -117,7 +117,7 @@ export class PreorderController {
     }
 
     async updatePreorderStatus(req, res) {
-        const preorderId = req.params.id;
+        const preorderId = req.params.preorderId;
         const status = req.body.status;
 
         const preorder = await preorderService.getPreorder(preorderId);
@@ -130,6 +130,28 @@ export class PreorderController {
             return res.status(200).send(preorder);
         } else if (updatingPreorder.affectedRows === 0) {
             return res.status(500).send({ error: "Cant update pre-order status!" });
+        }
+
+        const updatedPreorder = await preorderService.getPreorder(preorderId);
+        return res.status(200).send(updatedPreorder);
+    }
+    async updatePreorderStatusCancel(req, res) {
+        const preorderId = req.params.preorderId;
+
+        const preorder = await preorderService.getPreorder(preorderId);
+        if (preorder.length === 0) {
+            return res.status(404).send({ error: "Pre-order not found!" });
+        }
+        if (preorder[0].UserID !== req.user.userId) {
+            return res.status(403).send({ msg: "Forbidden." });
+        }
+        if(preorder[0].Status !== 'Waiting') {
+            return res.status(409).send({ msg: "You cant no longer cancel this pre-order!" });
+        }
+
+        const updatingPreorder = await preorderService.updatePreorderStatusCancel(preorderId);
+        if (updatingPreorder.affectedRows === 0) {
+            return res.status(500).send({ error: "Failed to update pre-order status!" });
         }
 
         const updatedPreorder = await preorderService.getPreorder(preorderId);
