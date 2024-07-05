@@ -1,5 +1,7 @@
 // AllBlog.jsx
 import React, { useState, useEffect, useRef } from "react";
+import { Oval } from 'react-loader-spinner';
+
 import BlogPost from "./BlogPost";
 import "./AllBlog.css";
 import Footer from "../Footer/Footer";
@@ -101,13 +103,18 @@ const AllBlog = ({ isMember }) => {
   const [blogs, setBlogs] = useState([]);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
 
   useEffect(() => {
     const loadBlogs = async () => {
       try {
+        setIsLoading(true);
         const fetchedBlogs = await fetchBlogs();
-        if (Array.isArray(fetchedBlogs.data)) {
-          setBlogs(fetchedBlogs.data);
+        // console.log(fetchedBlogs)
+        if (Array.isArray(fetchedBlogs.data.data)) {
+          setBlogs(fetchedBlogs.data.data);
+          // console.log('ok')
         } else {
           throw new Error("Fetched data is not an array");
         }
@@ -115,6 +122,8 @@ const AllBlog = ({ isMember }) => {
         setError(err.message);
         setBlogs(Blogs);
         console.error("Error loading blogs:", err);
+      } finally {
+        setIsLoading(false);
       }
     };
     loadBlogs();
@@ -137,7 +146,7 @@ const AllBlog = ({ isMember }) => {
   const allProducts = Blogs.flatMap((blog) => blog.products);
   return (
     <>
-      <img className="image" src="/img/P004.jpg" alt="Blog Header" />
+      <img className="image" src="/img/milkbuying.jpeg" alt="Blog Header" />
       <Header isMember={isMember} />
       <div className="container">
         <div className="row">
@@ -152,7 +161,20 @@ const AllBlog = ({ isMember }) => {
               />
               <button onClick={handleSearch}>Search</button>
             </div>
-            <BlogPost blogs={blogs} />
+            {isLoading ? (
+              <Oval
+                // height={20}
+                // width={20}
+                // color="#fff"
+                wrapperStyle={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  // alignItems: 'center',
+                  height: '100%',
+                  width: '100%'
+                }}
+              />
+            ) : (<BlogPost blogs={blogs} />)}
           </div>
           <div className="col-lg-4">
             <h3>Some Blogs</h3>
@@ -162,7 +184,7 @@ const AllBlog = ({ isMember }) => {
           </div>
         </div>
       </div>
-      <ProductList products={allProducts} />
+      {/* <ProductList products={allProducts} /> */}
       <Footer />
     </>
   );

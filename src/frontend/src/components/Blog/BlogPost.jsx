@@ -10,6 +10,20 @@ const BlogPost = ({ blogs = [] }) => {
     return `${day} ${month}, ${year}`;
   }
 
+  const getImageSrc = (imageData) => {
+    if (!imageData || !imageData.data) return '';
+
+    try {
+      const base64 = btoa(
+        imageData.data.reduce((data, byte) => data + String.fromCharCode(byte), '')
+      );
+      return `data:image/jpeg;base64,${base64}`;
+    } catch (error) {
+      console.error('Error converting image data:', error);
+      return '';
+    }
+  };
+
   return (
     <>
       {blogs.map((blog) => (
@@ -20,8 +34,9 @@ const BlogPost = ({ blogs = [] }) => {
           </div>
           <div className="blog-post-content">
             {/* <img src={`/img/${blog.BlogID}.png`} alt={blog.Name} /> */}
-            <img src="https://via.placeholder.com/800x600" />
             <p>{blog.Content}</p>
+            <img src={getImageSrc(blog.Image)} />
+
           </div>
         </div>
       ))}

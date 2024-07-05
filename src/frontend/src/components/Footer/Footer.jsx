@@ -4,39 +4,43 @@ function Footer() {
     <>
       <hr />
       <footer>
-        <div className="footer-container">
-          <div className="footer-sitename">
-            <h3>Milk Shop</h3>
-            <img src='/img/logo.jpg' />
-          </div>
-          <div className="footer-topics">
-
-            <div className="topic-list">
-              <h4>Address</h4>
-              <ul>
-                <li><a href="#">Page</a></li>
-                <li><a href="#">Page</a></li>
-                <li><a href="#">Page</a></li>
+        <div className="footer-container container text-center">
+          {/* <div className='container text-center'> */}
+          <div className='row align-items-start'>
+            <div className="footer-sitename col-3">
+              <h3>Milky Way</h3>
+              <img src='/img/logo.jpg' />
+            </div>
+            {/* <div className="footer-topics col row align-items-start"> */}
+            <div className="topic-list col-3">
+              <h4>Info
+              </h4>
+              <ul className=''>
+                <li><a href=""><span style={{ color: '#fff' }}>Address: </span>Lot E2a-7, Street D1, D. D1, Long Thanh My, Thu Duc City, Ho Chi Minh 700000</a></li>
+                <li><a href=""><span style={{ color: '#fff' }}>Phone: </span>028 7300 5588</a></li>
+                <li><a href=""><span style={{ color: '#fff' }}>Email: </span>fpt.edu.vn</a></li>
               </ul>
             </div>
 
-            <div className="topic-list">
-              <h4>Topic</h4>
+            <div className="topic-list col-3">
+              <h4>Customer Support</h4>
               <ul>
-                <li><a href="#">Page</a></li>
-                <li><a href="#">Page</a></li>
-                <li><a href="#">Page</a></li>
+                <li><a href="">Regulations & payment methods</a></li>
+                <li><a href="">Warranty & Maintenance</a></li>
+                <li><a href="">Returns & Refunds</a></li>
               </ul>
             </div>
 
-            <div className="topic-list">
-              <h4>Topic</h4>
+            <div className="topic-list col-3">
+              <h4>About Us</h4>
               <ul>
-                <li><a href="#">Page</a></li>
-                <li><a href="#">Page</a></li>
-                <li><a href="#">Page</a></li>
+                {/* <li><a href="#">Page</a></li> */}
+                <li><p>We are dedicated to providing high-quality milk products for mothers and children, ensuring optimal nutrition at every stage of growth and development.</p></li>
+                {/* <li><a href="#">Page</a></li>
+                <li><a href="#">Page</a></li> */}
               </ul>
             </div>
+            {/* </div> */}
           </div>
         </div>
       </footer>

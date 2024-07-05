@@ -1,4 +1,7 @@
 import { useRef, useEffect, useState } from "react";
+import { Oval } from 'react-loader-spinner';
+
+
 import BlogCard from "./BlogCard";
 import "./BlogList.css";
 import { fetchBlogs } from "../../services/blog/blogService";
@@ -45,6 +48,8 @@ const BlogList = ({ columnLayout = false }) => {
   ];
   const [blog, setBlogs] = useState([]);
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
   const scrollLeft = () => {
     blogListRef.current.scrollBy({ left: -525, behavior: "smooth" });
   };
@@ -56,10 +61,11 @@ const BlogList = ({ columnLayout = false }) => {
   useEffect(() => {
     const loadBlogs = async () => {
       try {
+        setIsLoading(true);
         const fetchedBlogs = await fetchBlogs();
         console.log("1", fetchBlogs);
-        if (Array.isArray(fetchedBlogs.data)) {
-          setBlogs(fetchedBlogs.data);
+        if (Array.isArray(fetchedBlogs.data.data)) {
+          setBlogs(fetchedBlogs.data.data);
         } else {
           throw new Error("Fetched data is not an array");
         }
@@ -67,6 +73,8 @@ const BlogList = ({ columnLayout = false }) => {
         setError(err.message);
         setBlogs(blogs);
         console.error("Error loading blogs:", err);
+      } finally {
+        setIsLoading(false);
       }
     };
     loadBlogs();
@@ -84,7 +92,25 @@ const BlogList = ({ columnLayout = false }) => {
           &lt;
         </button>
         <div className="blog-list" ref={blogListRef}>
-          <BlogCard blogs={blog} />
+
+
+          {isLoading ? (
+            <Oval
+              // height={20}
+              // width={20}
+              // color="#fff"
+              wrapperStyle={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100%',
+                width: '100%'
+              }}
+            />
+          ) : (
+
+            <BlogCard blogs={blog} />
+          )}
         </div>
         <button className="scroll-button right" onClick={scrollRight}>
           &gt;

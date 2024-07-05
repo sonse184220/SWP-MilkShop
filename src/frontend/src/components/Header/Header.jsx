@@ -65,7 +65,7 @@ export function Header({ onLogin, isMember }) {
                         <nav className="main-nav">
 
                             <a href="" className="logo">
-                                Milk Shop
+                                Milky Way
                             </a>
 
                             <ul className="nav">

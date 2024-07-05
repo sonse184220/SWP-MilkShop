@@ -13,6 +13,28 @@ const BlogDetail = ({ isMember }) => {
   const [error, setError] = useState(null);
   const [relatedProduct, setRelatedProduct] = useState([]);
 
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = date.toLocaleString('default', { month: 'short' });
+    const year = date.getFullYear();
+    return `${day} ${month}, ${year}`;
+  }
+
+  const getImageSrc = (imageData) => {
+    if (!imageData || !imageData.data) return '';
+
+    try {
+      const base64 = btoa(
+        imageData.data.reduce((data, byte) => data + String.fromCharCode(byte), '')
+      );
+      return `data:image/jpeg;base64,${base64}`;
+    } catch (error) {
+      console.error('Error converting image data:', error);
+      return '';
+    }
+  };
+
   useEffect(() => {
     const fetchBlog = async () => {
       try {
@@ -38,20 +60,21 @@ const BlogDetail = ({ isMember }) => {
         <div className="row">
           <div className="col-lg-8">
             <div className="blog-detail">
-              <h1>{blog.Name}</h1>
+              <h1>{blog.Title}</h1>
               <div className="blog-meta">
                 <span className="blog-date">
-                  {new Date(blog.CreatedDate).toLocaleDateString()}
+                  {formatDate(blog.updated)}
                 </span>
-                <span className="blog-author">{blog.StaffID}</span>
+                <span className="blog-author">{blog.Author}</span>
               </div>
-              <div className="blog-detail-image">
-                <img src={`/img/${blog.BlogID}.png`} />
-              </div>
-
               <div className="blog-content">
                 <p>{blog.Content}</p>
               </div>
+              <div className="blog-detail-image">
+                <img src={getImageSrc(blog.Image)} />
+              </div>
+
+
             </div>
           </div>
           <div className="col-lg-4 blogDetail">

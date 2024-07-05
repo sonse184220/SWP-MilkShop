@@ -3,6 +3,13 @@ import "./BlogCard.css";
 import { Link } from "react-router-dom";
 
 const BlogCard = ({ blogs = [] }) => {
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = date.toLocaleString('default', { month: 'short' });
+    const year = date.getFullYear();
+    return `${day} ${month}, ${year}`;
+  }
   return (
     <>
       {blogs.map((blog) => (
@@ -10,7 +17,7 @@ const BlogCard = ({ blogs = [] }) => {
           <div className="blog-card">
             <div className="blog-name">{blog.Title}</div>
             <div className="createdDate">
-              {new Date(blog.CreatedDate).toLocaleDateString()}
+              {formatDate(blog.updated)}
             </div>
           </div>
         </Link>
