@@ -9,8 +9,12 @@ import Footer from '../Footer/Footer';
 import { Get1UserOrder } from '../../services/order-history/getOrder1User';
 import { GetOrderDetail } from '../../services/order-history/getOrderDetail';
 import { GetPreOrderHistory } from '../../services/pre-order-history/getPreOrder1User';
+import { useNavigate } from 'react-router-dom';
 
 export const OrderHistory = ({ isMember }) => {
+    const navigate = useNavigate();
+
+
     const [preorderhistory, setPreOrderHistory] = useState([]);
     const [orderhistory, setOrderHistory] = useState([]);
     const [pageCount, setPageCount] = useState(1);
@@ -101,7 +105,7 @@ export const OrderHistory = ({ isMember }) => {
         handleGetOrder1User();
         handleGetPreOrder1User();
 
-    }, [currentPage])
+    }, [currentPage, POcurrentPage])
 
     useEffect(() => {
         handleGetOrder1User();
@@ -211,7 +215,29 @@ export const OrderHistory = ({ isMember }) => {
                                                                 <span className="badge bg-success-subtle text-success">{preorder.Status}</span>
                                                             </td>
                                                             <td>
-                                                                <a href="" onClick={(e) => { e.preventDefault(); setIsCancelConfirm(true); }} data-bs-toggle="modal" className="btn btn-secondary btn-sm">Cancel</a>
+                                                                {/* <a href="" onClick={(e) => { e.preventDefault(); setIsCancelConfirm(true); }} data-bs-toggle="modal" className="btn btn-secondary btn-sm"
+                                                                    {preorder.Status !== 'Waiting' ? (disabled
+                                                                        style={{ opacity: 0.5, cursor: 'not-allowed' }})}>Cancel</a> */}
+                                                                {preorder.Status !== 'Waiting' ? (
+                                                                    <button
+                                                                        className="btn btn-secondary btn-sm"
+                                                                        disabled
+                                                                        style={{ opacity: 0.5, cursor: 'not-allowed' }}
+                                                                    >
+                                                                        Cancel
+                                                                    </button>
+                                                                ) : (
+                                                                    <a
+                                                                        href=""
+                                                                        onClick={(e) => {
+                                                                            e.preventDefault();
+                                                                            setIsCancelConfirm(true);
+                                                                        }}
+                                                                        className="btn btn-secondary btn-sm"
+                                                                    >
+                                                                        Cancel
+                                                                    </a>
+                                                                )}
                                                             </td>
                                                         </tr>
                                                     ))}
@@ -219,7 +245,7 @@ export const OrderHistory = ({ isMember }) => {
                                             </table>
                                         </div>
                                         <div className="text-end">
-                                            <button className="btn btn-hover btn-primary">Continue Shopping <i className="ri-arrow-right-line align-middle ms-1"></i></button>
+                                            <button onClick={(e) => { e.preventDefault(); navigate('/Customer/home') }} className="btn btn-hover btn-primary">Continue Shopping <i className="ri-arrow-right-line align-middle ms-1"></i></button>
                                         </div>
                                     </div>
                                 </div>
@@ -293,7 +319,27 @@ export const OrderHistory = ({ isMember }) => {
                                                                 <span className="badge bg-success-subtle text-success">{order.Status}</span>
                                                             </td>
                                                             <td>
-                                                                <a href="" onClick={(e) => { e.preventDefault(); setIsCancelConfirm(true); }} data-bs-toggle="modal" className="btn btn-secondary btn-sm">Cancel</a>
+                                                                {/* <a href="" onClick={(e) => { e.preventDefault(); setIsCancelConfirm(true); }} data-bs-toggle="modal" className="btn btn-secondary btn-sm">Cancel</a> */}
+                                                                {order.Status !== 'Waiting' ? (
+                                                                    <button
+                                                                        className="btn btn-secondary btn-sm"
+                                                                        disabled
+                                                                        style={{ opacity: 0.5, cursor: 'not-allowed' }}
+                                                                    >
+                                                                        Cancel
+                                                                    </button>
+                                                                ) : (
+                                                                    <a
+                                                                        href=""
+                                                                        onClick={(e) => {
+                                                                            e.preventDefault();
+                                                                            setIsCancelConfirm(true);
+                                                                        }}
+                                                                        className="btn btn-secondary btn-sm"
+                                                                    >
+                                                                        Cancel
+                                                                    </a>
+                                                                )}
                                                             </td>
                                                         </tr>
                                                     ))}
@@ -301,7 +347,7 @@ export const OrderHistory = ({ isMember }) => {
                                             </table>
                                         </div>
                                         <div className="text-end">
-                                            <button className="btn btn-hover btn-primary">Continue Shopping <i className="ri-arrow-right-line align-middle ms-1"></i></button>
+                                            <button onClick={(e) => { e.preventDefault(); navigate('/Customer/home') }} className="btn btn-hover btn-primary">Continue Shopping <i className="ri-arrow-right-line align-middle ms-1"></i></button>
                                         </div>
                                     </div>
                                 </div>

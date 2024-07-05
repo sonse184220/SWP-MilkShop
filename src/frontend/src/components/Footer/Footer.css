@@ -1,7 +1,7 @@
 /* //Footer.jsx */
 footer {
   /* background-color: hsl(0, 0%, 97%); */
-  background-color: #24262b;
+  background-color: #f5e1da;
   padding: 20px;
   padding-bottom: 20px;
 }
@@ -19,7 +19,8 @@ footer {
 }
 
 .footer-sitename h3 {
-  color: #fff;
+  color: #407088;
+  font-weight: 600;
 }
 
 .footer-sitename img {
@@ -48,7 +49,7 @@ footer {
 } */
 
 .topic-list h4 {
-  color: #fff;
+  color: #407088;
   position: relative;
   display: inline-block;
   margin-bottom: 30px;

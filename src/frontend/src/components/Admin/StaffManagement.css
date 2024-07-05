@@ -14,9 +14,10 @@
   padding: 20px;
 }
 
-thead{
+.staff-management-container thead {
   color: white;
 }
+
 .content-header {
   display: flex;
   justify-content: space-between;
@@ -33,11 +34,14 @@ thead{
   border-collapse: collapse;
 }
 
-.staff-table, .staff-table th, .staff-table td {
+.staff-table,
+.staff-table th,
+.staff-table td {
   border: 1px solid #ddd;
 }
 
-.staff-table th, .staff-table td {
+.staff-table th,
+.staff-table td {
   padding: 8px;
   text-align: left;
 }
@@ -190,7 +194,8 @@ header {
   border: 1px solid palevioletred;
 }
 
-.searchOrder, .addStaff {
+.searchOrder,
+.addStaff {
   background-color: palevioletred;
   color: snow;
   border: none;
@@ -216,9 +221,12 @@ header {
   border: 1px solid;
   margin-left: 10px;
   width: 80%;
-  background-color: white; /* Initial background color */
-  color: black; /* Initial text color */
-  transition: background-color 0.3s, color 0.3s; /* Smooth transition */
+  background-color: white;
+  /* Initial background color */
+  color: black;
+  /* Initial text color */
+  transition: background-color 0.3s, color 0.3s;
+  /* Smooth transition */
 }
 
 .action-button:hover {
@@ -227,12 +235,15 @@ header {
 }
 
 .action-button a {
-  color: inherit; /* Inherit the color from the parent */
-  text-decoration: none; /* Remove underline */
+  color: inherit;
+  /* Inherit the color from the parent */
+  text-decoration: none;
+  /* Remove underline */
 }
 
 .action-button:hover a {
-  color: white !important; /* Ensure the text color changes on hover */
+  color: white !important;
+  /* Ensure the text color changes on hover */
 }
 
 .dropdownAdmin {

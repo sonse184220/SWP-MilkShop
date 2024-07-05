@@ -16,9 +16,9 @@ function Footer() {
               <h4>Info
               </h4>
               <ul className=''>
-                <li><a href=""><span style={{ color: '#fff' }}>Address: </span>Lot E2a-7, Street D1, D. D1, Long Thanh My, Thu Duc City, Ho Chi Minh 700000</a></li>
-                <li><a href=""><span style={{ color: '#fff' }}>Phone: </span>028 7300 5588</a></li>
-                <li><a href=""><span style={{ color: '#fff' }}>Email: </span>fpt.edu.vn</a></li>
+                <li><a href=""><span style={{ color: '#132743' }}>Address: </span>Lot E2a-7, Street D1, D. D1, Long Thanh My, Thu Duc City, Ho Chi Minh 700000</a></li>
+                <li><a href=""><span style={{ color: '#132743' }}>Phone: </span>028 7300 5588</a></li>
+                <li><a href=""><span style={{ color: '#132743' }}>Email: </span>fpt.edu.vn</a></li>
               </ul>
             </div>
 
