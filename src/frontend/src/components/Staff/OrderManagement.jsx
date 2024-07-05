@@ -11,6 +11,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { GetAllOrders } from "../../services/staff/ordermanage/getAllOrders";
 import { GetOrderDetail } from "../../services/order-history/getOrderDetail";
+import { UpdateOrderStatus } from "../../services/staff/ordermanage/updateOrderStatus";
 
 const OrderManagement = () => {
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -19,6 +20,10 @@ const OrderManagement = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageCount, setPageCount] = useState(1);
+
+  const [isStatusChangeOpen, setIsStatusChangeOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [newStatus, setNewStatus] = useState('');
 
 
   const [Orders, setOrders] = useState([]);
@@ -140,6 +145,44 @@ const OrderManagement = () => {
     }
   }
 
+  const handleStatusChange = (orderId, newStatus) => {
+    const order = Orders.find(o => o.OrderID === orderId);
+    console.log(orderId)
+    console.log(order);
+    if (order && order.Status !== newStatus) {
+      setSelectedOrder(order);
+      setNewStatus(newStatus);
+      setIsStatusChangeOpen(true);
+    }
+  };
+
+  const updateOrderStatus = async (orderId, status) => {
+    try {
+      const response = await UpdateOrderStatus(StaffToken, orderId, { status: status });
+      if (response.data[0].OrderID) {
+        // toast.success("Order status updated successfully!");
+        toast.success("Order status updated successfully!", {
+          duration: 3000,
+          position: "top-right",
+        });
+        handleGetAllOrders();
+        setIsStatusChangeOpen(false);
+        setSelectedOrder(null);
+        setNewStatus("");
+      }
+    } catch (error) {
+      console.error("Error updating order status:", error);
+      if (error) {
+        // toast.error("Failed to update order status. Please try again.");
+        setIsStatusChangeOpen(false);
+        toast.error("Failed to update order status. Please try again.", {
+          duration: 3000,
+          position: "top-right",
+        });
+      }
+    }
+  };
+
   useEffect(() => {
     handleGetAllOrders();
   }, []);
@@ -186,6 +229,19 @@ const OrderManagement = () => {
               </button>
             </div>
           </Modal> */}
+      <Modal
+        isOpen={isStatusChangeOpen}
+        onRequestClose={() => setIsStatusChangeOpen(false)}
+        className="custom-modal"
+        overlayClassName="custom-overlay"
+      >
+        <h2>Confirm Change</h2>
+        <p>Are you sure you want to update this order's status?</p>
+        <div className="modal-actions">
+          <button onClick={() => { updateOrderStatus(selectedOrder.OrderID, newStatus); }} className="btn-confirm">Confirm</button>
+          <button onClick={() => setIsStatusChangeOpen(false)} className="btn-cancel">Cancel</button>
+        </div>
+      </Modal>
       <Modal
         isOpen={isDetail}
         onRequestClose={() => setIsDetail(false)}
@@ -325,7 +381,9 @@ const OrderManagement = () => {
                   <td><a href="" onClick={(e) => { e.preventDefault(); handleGetCustomerInfo(order.OrderID) }}>View Customer Info</a></td>
                   <td>
                     <div className="select1">
-                      <select id="statusDropdown">
+                      <select id="statusDropdown"
+                        value={order.Status}
+                        onChange={(e) => handleStatusChange(order.OrderID, e.target.value)}>
                         <option value="Waiting">Waiting</option>
                         <option value="Cancelled">Cancelled</option>
                         <option value="Shipping">Shipping</option>
