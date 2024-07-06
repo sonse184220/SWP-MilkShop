@@ -18,6 +18,7 @@ import { userRoutes } from './routes/userRoutes.js';
 import { orderRoutes } from './routes/orderRoutes.js';
 import { preorderRoutes } from "./routes/preorderRoutes.js";
 import { voucherRoutes } from './routes/voucherRoutes.js';
+import { userReportRoutes } from "./routes/userreportRoutes.js";
 
 dotenv.config();
 
@@ -57,6 +58,7 @@ app.use(productRoutes);
 app.use(blogRoutes);
 app.use(wishlistRoutes);
 app.use(preorderRoutes);
+app.use(userReportRoutes);
 
 app.use((err, req, res, next) => {
     console.error(err);

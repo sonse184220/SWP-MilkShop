@@ -83,6 +83,11 @@ header {
   font-size: 14px;
 }
 
+
+img {
+  margin-left: 3px;
+}
+
 .issues-table th {
   background-color: palevioletred;
   color: white;
@@ -192,4 +197,7 @@ header {
   background-color: #c82333;
 }
 
+.updateDiv .delete-button {
+  width: 60px;
+}
 

@@ -3,7 +3,7 @@ import { OrderController } from '../controllers/orderController.js';
 import { checkAuthenticated } from '../middlewares/authMiddleware.js';
 import { checkOrderId, checkOrderInputStatus } from '../middlewares/orderValidators.js';
 import { checkPaginationQuery } from '../middlewares/utilsMiddleware.js';
-import { isStaffOrAdmin } from '../middlewares/validationMiddleware.js';
+import { isStaff, isStaffOrAdmin } from '../middlewares/validationMiddleware.js';
 
 const router = express.Router();
 const orderController = new OrderController();
@@ -28,6 +28,13 @@ router.get("/:orderId", checkAuthenticated, checkOrderId, async (req, res) => {
  */
 router.patch("/:orderId/status", checkAuthenticated, isStaffOrAdmin, checkOrderId, checkOrderInputStatus, async (req, res) => {
     await orderController.updateOrderStatus(req, res);
+})
+
+/**
+ *  chuyển paymentstatus sang done cho COD, không có tác dụng cho các hình thức thanh toán khác
+ */
+router.patch("/:orderId/cod/payment-done", checkAuthenticated, isStaff, checkOrderId, async (req, res) => {
+    await orderController.updateCodPaymentStatusDone(req, res);
 })
 
 router.post('/place-order', checkAuthenticated, orderController.placeOrder);

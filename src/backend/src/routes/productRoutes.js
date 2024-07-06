@@ -1,7 +1,7 @@
 import { Router } from "express";
 import multer from 'multer';
 import { ProductController } from "../controllers/ProductController.js";
-import { checkProductId, checkProductSearch, checkProductSearchBrand, checkFeedbackData, checkFeedbackId, checkProductData } from "../middlewares/productValidators.js";
+import { checkProductId, checkProductSearch, checkProductSearchBrand, checkFeedbackData, checkFeedbackId, checkProductData, checkFeedbackSearchInput } from "../middlewares/productValidators.js";
 import { checkAuthenticated } from "../middlewares/authMiddleware.js";
 import { isStaff } from "../middlewares/validationMiddleware.js";
 import { checkPaginationQuery } from "../middlewares/utilsMiddleware.js";
@@ -43,6 +43,21 @@ router.get("/api/products/search/brand", checkProductSearchBrand, checkPaginatio
 });
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/** /api/product/feedbacks?content={...}&filter={...}&fuid={...}&fpid={...}&sort={...}&limit={...}&page={...}
+ * Lấy danh sách tất cả feedbacks trong database
+ * - "search" là nhập từ muốn tìm kiếm trong feedback, search mặc định là "" (trống không), để trống không đồng nghĩa lấy tất cả
+ * - "filter" là lọc, nếu để trống thì sẽ không lọc, nếu có, có thể chọn giữa [user, product, user%26product]
+ * - "fUid" là userId, nhập userId vô để lọc feedback theo user đó, chỉ hoạt động khi "filter" là "user" hoặc "user%26product"
+ * - "fPid" là productId, nhập productId vô để lọc theo product đó, chỉ hoạt động khi "filter" là "product" hoặc "user%26product"
+ * 
+ * - "sort" là cách sắp xếp. Nếu không cung cấp, "sort" mặc định là newest. "sort" bao gồm [newest, oldest, highest, lowest]
+ * - "limit" là giới hạn số lượng product trả về cho 1 trang. Nếu không cung cấp, "limit" mặc định là 20
+ * - "page" là số trang. Nếu không cung cấp, "page" mặc định là 1
+ */
+router.get("/api/product/feedbacks/search", checkFeedbackSearchInput, checkPaginationQuery, async (req, res) => {
+    await productController.searchFeedback(req, res);
+})
 
 /** URL: localhost:xxxx/api/product/{...}/feedbacks
  * tạo 1 feedback cho một product bằng product id và lưu xuống database

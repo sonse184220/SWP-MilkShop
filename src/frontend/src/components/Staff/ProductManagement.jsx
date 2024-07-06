@@ -130,6 +130,7 @@ function ProductManagement() {
             <table className="issues-table">
               <thead>
                 <tr>
+                  <th>Image</th>
                   <th>ProductID</th>
                   <th>Product Name</th>
                   <th>Quantity</th>
@@ -143,6 +144,9 @@ function ProductManagement() {
               <tbody>
                 {data.map((item) => (
                   <tr key={item.productId}>
+                    <td>
+                      <img src="https://via.placeholder.com/100" alt="" />
+                    </td>
                     <td>{item.productId}</td>
                     <td>{item.productName}</td>
                     <td>{item.quantity}</td>
@@ -156,7 +160,7 @@ function ProductManagement() {
                         </button>
                       </div>
                     </td>
-                    <td className="deleteDiv">
+                    <td className="updateDiv">
                       <div className="delete">
                         <button className="delete-button">
                           <a href="#" onClick={() => setIsOpen(true)}>
