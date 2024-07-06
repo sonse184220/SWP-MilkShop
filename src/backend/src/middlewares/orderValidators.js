@@ -24,7 +24,7 @@ export async function checkOrderInputStatus(req, res, next) {
     .escape()
     .exists().withMessage("Status is required!")
     .notEmpty().withMessage("Status can not be blank!")
-    .isIn(statusList).withMessage(`Invalid status input! status can only be: ${statusList}`)
+    .isIn(statusList).withMessage(`Invalid status input! status can only be: ${statusList.join(", ")}`)
     .run(req);
 
     const result = validationResult(req);

@@ -21,7 +21,7 @@ export async function checkPaginationQuery(req, res, next) {
         .trim()
         .escape()
         .toLowerCase()
-        .isIn(sortList).withMessage(`Invalid sort input! sort can only be: ${sortList}`)
+        .isIn(sortList).withMessage(`Invalid sort input! sort can only be: ${sortList.join(", ")}`)
         .run(req);
 
     const result = validationResult(req);

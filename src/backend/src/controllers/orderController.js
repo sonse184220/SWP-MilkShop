@@ -59,7 +59,7 @@ export class OrderController {
     }
 
     async getUserOrderHistory(req, res) {
-        if (req.user.userId !== req.params.id && !req.user.isAdmin && !req.user.isStaff) {
+        if (req.user.userId !== req.params.userId && !req.user.isAdmin && !req.user.isStaff) {
             return res.status(403).send({ msg: "Forbidden." });
         }
 

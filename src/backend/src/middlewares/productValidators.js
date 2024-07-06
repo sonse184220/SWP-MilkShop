@@ -139,14 +139,14 @@ export async function checkFeedbackSearchInput(req, res, next) {
     .optional({ values: "falsy" })
     .trim()
     .toLowerCase()
-    .isIn(filterList).withMessage(`Invalid filter input! filter can only be: ${filterList}`)
+    .isIn(filterList).withMessage(`Invalid filter input! filter can only be: ${filterList.join(", ")}`)
     .run(req);
 
     const result = validationResult(req);
     if (!result.isEmpty()) {
         return res.status(400).send({ error: result.array() });
     }
-    Object.assign(req.params, matchedData(req));
+    Object.assign(req.query, matchedData(req));
     next();
 }
 
