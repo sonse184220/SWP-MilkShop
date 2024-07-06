@@ -60,11 +60,8 @@ th {
   border: 1px solid;
   width: 50%;
   background-color: white;
-  /* Initial background color */
   color: black;
-  /* Initial text color */
   transition: background-color 0.3s, color 0.3s;
-  /* Smooth transition */
 }
 
 .delete-button:hover {
@@ -74,14 +71,11 @@ th {
 
 .delete-button a {
   color: inherit;
-  /* Inherit the color from the parent */
   text-decoration: none;
-  /* Remove underline */
 }
 
 .delete-button:hover a {
   color: white !important;
-  /* Ensure the text color changes on hover */
 }
 
 
