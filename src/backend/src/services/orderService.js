@@ -138,7 +138,7 @@ export class OrderService {
 
     processOrder = (UserID, GuestID, cartItems, totalPrice, initialTotalPrice, PaymentMethod, Name, Email, Phone, Address, useRewardPoints, VoucherIDs, callback) => {
         if (useRewardPoints && UserID) {
-            const rewardQuery = 'SELECT RewardPoints FROM MEMBER WHERE UserID = ?';
+            const rewardQuery = 'SELECT RewardPoints FROM User WHERE UserID = ?';
             connection.query(rewardQuery, [UserID], (err, results) => {
                 if (err) return callback(err);
 
@@ -148,7 +148,7 @@ export class OrderService {
                     const remainingPoints = availablePoints - pointsToUse;
                     totalPrice -= pointsToUse;
 
-                    const updatePointsQuery = 'UPDATE MEMBER SET RewardPoints = ? WHERE UserID = ?';
+                    const updatePointsQuery = 'UPDATE User SET RewardPoints = ? WHERE UserID = ?';
                     connection.query(updatePointsQuery, [remainingPoints, UserID], (err, result) => {
                         if (err) return callback(err);
 
@@ -196,7 +196,7 @@ export class OrderService {
                     Promise.all(updateProductQuantityPromises)
                         .then(() => {
                             if (UserID) {
-                                const updateRewardPointsQuery = 'UPDATE MEMBER SET RewardPoints = RewardPoints + ? WHERE UserID = ?';
+                                const updateRewardPointsQuery = 'UPDATE User SET RewardPoints = RewardPoints + ? WHERE UserID = ?';
                                 connection.query(updateRewardPointsQuery, [rewardPoints, UserID], (err, result) => {
                                     if (err) return callback(err);
                                     this.getVoucherDetails(VoucherIDs, (err, vouchers) => {
