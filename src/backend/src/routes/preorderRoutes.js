@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { checkAuthenticated } from "../middlewares/authMiddleware.js";
 import { PreorderController } from "../controllers/PreorderController.js";
-import { checkPreorderData, checkPreorderId, checkPreorderInputStatus } from "../middlewares/preorderValidators.js";
+import { checkPreorderData, checkPreorderId, checkPreorderInputEta, checkPreorderInputStatus } from "../middlewares/preorderValidators.js";
 import { checkPaginationQuery } from "../middlewares/utilsMiddleware.js";
-import { isStaffOrAdmin } from "../middlewares/validationMiddleware.js";
+import { isStaff, isStaffOrAdmin } from "../middlewares/validationMiddleware.js";
 
 const router = Router();
 const preorderController = new PreorderController;
@@ -24,12 +24,18 @@ router.post("/api/preorder/place-preorder", checkAuthenticated, checkPreorderDat
 })
 
 /** /api/preorder/{..id của pre-order..}/status
- * Cập nhật status của 1 đơn pre-order cho staff / admin
+ * Cập nhật status của 1 đơn pre-order cho staff
  */
-router.patch("/api/preorder/:preorderId/status", checkAuthenticated, isStaffOrAdmin, checkPreorderId, checkPreorderInputStatus, async (req, res) => {
+router.patch("/api/preorder/:preorderId/status", checkAuthenticated, isStaff, checkPreorderId, checkPreorderInputStatus, async (req, res) => {
     await preorderController.updatePreorderStatus(req, res);
 })
 
+/** /api/preorder/{..id của pre-order..}/eta
+ * Cập nhật ETA của 1 đơn pre-order cho staff
+ */
+router.patch("/api/preorder/:preorderId/eta", checkAuthenticated, isStaff, checkPreorderId, checkPreorderInputEta, async (req, res) => {
+    await preorderController.updatePreorderEta(req, res);
+})
 
 
 export { router as preorderRoutes }

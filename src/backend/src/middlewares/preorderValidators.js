@@ -34,6 +34,22 @@ export async function checkPreorderInputStatus(req, res, next) {
     Object.assign(req.params, matchedData(req));
     next();
 }
+export async function checkPreorderInputEta(req, res, next) {
+    await body("eta")
+    .trim()
+    .escape()
+    .exists().withMessage("ETA is required!")
+    .notEmpty().withMessage("ETA can not be blank!")
+    .isISO8601().withMessage("ETA must be in ISO 8601 format (YYYY-MM-DD)!")
+    .run(req);
+
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+        return res.status(400).send({ error: result.array() });
+    }
+    Object.assign(req.params, matchedData(req));
+    next();
+}
 
 export async function checkPreorderData(req, res, next) {
     await body("userId")

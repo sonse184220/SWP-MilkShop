@@ -158,4 +158,25 @@ export class PreorderController {
         return res.status(200).send(updatedPreorder);
     }
 
+    async updatePreorderEta(req, res) {
+        const preorderId = req.params.preorderId;
+        const etaDate = req.body.eta;
+
+        const preorder = await preorderService.getPreorder(preorderId);
+        if (preorder.length === 0) {
+            return res.status(404).send({ error: "Pre-order not found!" });
+        }
+
+        const updatingPreorder = await preorderService.updatePreorderEta(preorderId, etaDate);
+        if (updatingPreorder.affectedRows === 0 && preorder[0].ETA === etaDate) {
+            return res.status(200).send(preorder);
+        } else if (updatingPreorder.affectedRows === 0) {
+            return res.status(500).send({ error: "Cant update pre-order status!" });
+        }
+        console.log("you are here")
+
+        const updatedPreorder = await preorderService.getPreorder(preorderId);
+        return res.status(200).send(updatedPreorder);
+    }
+
 }

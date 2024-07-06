@@ -10,11 +10,13 @@ export class PreorderService {
     }
 
     async getPreorder(id) {
-        const [preorder] = await poolConnect.query(`SELECT po.*, p.Name as productName, p.Price as productPrice, p.brandId, b.Name as brandName
+        const [preorder] = await poolConnect.query(`SELECT po.*, u.Name AS userName, p.Name as productName, p.Price as productPrice, p.brandId, b.Name as brandName
                                                     FROM pre_order AS po
+                                                    JOIN user AS u ON u.UserID = po.UserID
                                                     JOIN product AS p ON po.ProductID = p.ProductID
                                                     JOIN brand AS b ON p.BrandID = b.BrandID
                                                     WHERE PreorderID = ?`, [id]);
+        preorder[0].ETA = preorder[0].ETA.toISOString().split('T')[0];
         return preorder;
     }
 
@@ -54,6 +56,11 @@ export class PreorderService {
     }
     async updatePreorderStatusCancel(preorderId) {
         const [preorder] = await poolConnect.query("UPDATE pre_order SET Status = 'Cancelled' WHERE PreorderID = ?", [preorderId]);
+        return preorder;
+    }
+
+    async updatePreorderEta(preorderId, date) {
+        const [preorder] = await poolConnect.query("UPDATE pre_order SET ETA = ? WHERE PreorderID = ?", [date, preorderId]);
         return preorder;
     }
 }
