@@ -1,17 +1,9 @@
-/* //Footer.jsx */
+
 footer {
-  /* background-color: hsl(0, 0%, 97%); */
   background-color: #f8a9e5;
   padding: 20px;
   padding-bottom: 20px;
 }
-
-/* .footer-container {
-  display: flex;
-  justify-content: space-between;
-  gap: 20%;
-} */
-
 
 .footer-sitename {
   display: flex;
@@ -28,29 +20,10 @@ footer {
   border-radius: 50%;
   width: 50%;
   height: 60%;
-
 }
 
-/* .footer-topics {
-  display: flex;
-  gap: 130%;
-  justify-content: space-between;
-  margin-right: 50px;
-  width: auto;
-} */
-
-/* .topic-list ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-} */
-
-/* .topic-list li {
-  margin-bottom: 10px;
-} */
-
 .topic-list h4 {
-  color: #407088;
+  color: snow;
   position: relative;
   display: inline-block;
   margin-bottom: 30px;
@@ -67,13 +40,9 @@ footer {
   left: 0;
   bottom: 0;
   position: absolute;
-  background: #b19361;
+  background: snow;
 }
 
-/* .topic-list h4 ::after {
-  
-} */
-
 .topic-list a:hover {
-  color: hsl(248, 92%, 65%);
+  color: snow;
 }
