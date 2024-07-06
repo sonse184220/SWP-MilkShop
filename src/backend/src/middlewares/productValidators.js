@@ -114,6 +114,42 @@ export async function checkFeedbackId(req, res, next) {
     Object.assign(req.params, matchedData(req));
     next();
 }
+
+export async function checkFeedbackSearchInput(req, res, next) {
+    await query("content")
+    .default("")
+    .trim()
+    .escape()
+    .run(req);
+
+    await query("fuid")
+    .optional({ values: "falsy" })
+    .trim()
+    .escape()
+    .run(req);
+
+    await query("fpid")
+    .optional({ values: "falsy" })
+    .trim()
+    .escape()
+    .run(req);
+
+    const filterList = ["user", "product", "user&product"]
+    await query("filter")
+    .optional({ values: "falsy" })
+    .trim()
+    .toLowerCase()
+    .isIn(filterList).withMessage(`Invalid filter input! filter can only be: ${filterList}`)
+    .run(req);
+
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+        return res.status(400).send({ error: result.array() });
+    }
+    Object.assign(req.params, matchedData(req));
+    next();
+}
+
 export const checkProductData = async (req, res, next) => {
     await body('BrandID')
         .exists().withMessage('BrandID is required')

@@ -131,6 +131,12 @@ export class ProductController {
         return res.status(201).send(createdFeedback);
     }
 
+    async searchFeedback(req, res) {
+        const { content, fuid, fpid, filter, sort, limit, page } = req.query;
+        console.log(content, fuid, fpid, filter, sort, limit, page);
+        res.status(200).send({content, fuid, fpid, filter, sort, limit, page});
+    }
+
     async deleteFeedback(req, res) {
         const feedbackId = req.params.id;
 
@@ -149,6 +155,7 @@ export class ProductController {
 
         return res.status(200).send({ msg: `Feedback ${feedbackId} successfully deleted!` });
     }
+
     async createProduct(req, res) {
         try {
             const { file } = req;
