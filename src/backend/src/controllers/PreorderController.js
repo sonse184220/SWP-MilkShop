@@ -49,7 +49,7 @@ export class PreorderController {
             return res.status(403).send({ msg: "Forbidden." });
         }
 
-        const userId = req.params.id;
+        const userId = req.params.userId;
         const limit = parseInt(req.query.limit);
         const page = parseInt(req.query.page);
         const sort = req.query.sort;
