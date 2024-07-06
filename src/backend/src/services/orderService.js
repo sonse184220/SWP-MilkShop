@@ -51,6 +51,11 @@ export class OrderService {
         return order;
     }
 
+    async updateCodPaymentStatusDone(orderId) {
+        const [order] = await poolConnect.query("UPDATE `order` SET PaymentStatus = 'Done' WHERE OrderID = ?", [orderId]);
+        return order;
+    }
+
     placeOrder = (data, user, guestId, callback) => {
         const { PaymentMethod, VoucherIDs, useRewardPoints, Name, Email, Phone, Address, cart } = data;
         const UserID = user && user.userId !== 'guest' ? user.userId : null;

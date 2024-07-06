@@ -10,16 +10,32 @@ import { useLocation } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { GetAllOrders } from "../../services/staff/ordermanage/getAllOrders";
+import { GetOrderDetail } from "../../services/order-history/getOrderDetail";
+import { UpdateOrderStatus } from "../../services/staff/ordermanage/updateOrderStatus";
 
 const OrderManagement = () => {
   const [isAddOpen, setIsAddOpen] = useState(false);
-  const [isInfoOpen, setIsInfoOpen] = useState(true);
+  const [isInfoOpen, setIsInfoOpen] = useState(false);
+  const [isDetail, setIsDetail] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageCount, setPageCount] = useState(1);
 
+  const [isStatusChangeOpen, setIsStatusChangeOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [newStatus, setNewStatus] = useState('');
+
 
   const [Orders, setOrders] = useState([]);
+  const [OrderDetail, setOrderDetail] = useState([]);
+  const [OrderInfo, setOrderInfo] = useState({
+    UserId: '',
+    Name: '',
+    Email: '',
+    Phone: '',
+    Address: '',
+  });
+
 
   const StaffToken = 'Bearer ' + sessionStorage.getItem('token');
   const userId = sessionStorage.getItem('userData') ? JSON.parse(sessionStorage.getItem('userData')).UserID : "Guest";
@@ -98,6 +114,75 @@ const OrderManagement = () => {
     setCurrentPage(event.selected + 1);
   };
 
+  const handleViewOrderDetail = async (orderId) => {
+    try {
+      const response = await GetOrderDetail(StaffToken, orderId);
+      if (Array.isArray(response.data.detail) && response.data.detail.length > 0) {
+        // console.log("Okkkk");
+        setOrderDetail(response.data.detail);
+        setIsDetail(true);
+      }
+    } catch (error) {
+
+    }
+  };
+
+  const handleGetCustomerInfo = async (orderId) => {
+    try {
+      const response = await GetOrderDetail(StaffToken, orderId);
+      if (Array.isArray(response.data.detail) && response.data.detail.length > 0) {
+        setOrderInfo({
+          UserId: response.data.order.UserID ? response.data.order.UserID : 'Guest',
+          Name: response.data.order.Name,
+          Email: response.data.order.Email,
+          Phone: response.data.order.Phone,
+          Address: response.data.order.Address,
+        });
+        setIsInfoOpen(true);
+      }
+    } catch (error) {
+
+    }
+  }
+
+  const handleStatusChange = (orderId, newStatus) => {
+    const order = Orders.find(o => o.OrderID === orderId);
+    console.log(orderId)
+    console.log(order);
+    if (order && order.Status !== newStatus) {
+      setSelectedOrder(order);
+      setNewStatus(newStatus);
+      setIsStatusChangeOpen(true);
+    }
+  };
+
+  const updateOrderStatus = async (orderId, status) => {
+    try {
+      const response = await UpdateOrderStatus(StaffToken, orderId, { status: status });
+      if (response.data[0].OrderID) {
+        // toast.success("Order status updated successfully!");
+        toast.success("Order status updated successfully!", {
+          duration: 3000,
+          position: "top-right",
+        });
+        handleGetAllOrders();
+        setIsStatusChangeOpen(false);
+        setSelectedOrder(null);
+        setNewStatus("");
+      }
+    } catch (error) {
+      console.error("Error updating order status:", error);
+      if (error) {
+        // toast.error("Failed to update order status. Please try again.");
+        setIsStatusChangeOpen(false);
+        toast.error("Failed to update order status. Please try again.", {
+          duration: 3000,
+          position: "top-right",
+        });
+      }
+    }
+  };
+
   useEffect(() => {
     handleGetAllOrders();
   }, []);
@@ -145,8 +230,21 @@ const OrderManagement = () => {
             </div>
           </Modal> */}
       <Modal
-        isOpen={isAddOpen}
-        onRequestClose={() => setIsAddOpen(false)}
+        isOpen={isStatusChangeOpen}
+        onRequestClose={() => setIsStatusChangeOpen(false)}
+        className="custom-modal"
+        overlayClassName="custom-overlay"
+      >
+        <h2>Confirm Change</h2>
+        <p>Are you sure you want to update this order's status?</p>
+        <div className="modal-actions">
+          <button onClick={() => { updateOrderStatus(selectedOrder.OrderID, newStatus); }} className="btn-confirm">Confirm</button>
+          <button onClick={() => setIsStatusChangeOpen(false)} className="btn-cancel">Cancel</button>
+        </div>
+      </Modal>
+      <Modal
+        isOpen={isDetail}
+        onRequestClose={() => setIsDetail(false)}
         className="custom-modal-history"
         overlayClassName="custom-overlay">
         <table>
@@ -159,17 +257,17 @@ const OrderManagement = () => {
               <th scope="col">Quantity</th>
             </tr>
           </thead>
-          {/* <tbody>
-                {OrderDetail.map((detail) => (
-                  <tr>
-                    <td>{detail.OrderID}</td>
-                    <td>{detail.ProductID}</td>
-                    <td>{detail.OrderID}</td>
-                    <td>{detail.Price}</td>
-                    <td>{detail.Quantity}</td>
-                  </tr>
-                ))}
-              </tbody> */}
+          <tbody>
+            {OrderDetail.map((detail) => (
+              <tr>
+                <td>{detail.OrderID}</td>
+                <td>{detail.ProductID}</td>
+                <td>{detail.Name}</td>
+                <td>{detail.Price}</td>
+                <td>{detail.Quantity}</td>
+              </tr>
+            ))}
+          </tbody>
         </table>
       </Modal>
       <Modal
@@ -180,75 +278,52 @@ const OrderManagement = () => {
         <div className=''>
           <form>
             <h5 className='user-info-form-subtitle'>Order Info</h5>
-            {/* <p className='promptorder'>This info will be used for your order. Do you want to change?</p> */}
             <hr className='user-info-form-divider' />
+            <div className='form-group mb-1'>
+              <label className='mb-1' htmlFor='firstName'>UserId</label>
+              <input className='form-control mb-1' id='firstName' type='text' placeholder='UserId'
+                name='UserId'
+                value={OrderInfo.UserId}
+                readOnly
+              />
+
+            </div>
             <div className='form-group mb-1'>
               <label className='mb-1' htmlFor='firstName'>Name</label>
               <input className='form-control mb-1' id='firstName' type='text' placeholder='Name'
                 name='Name'
-              // value={name}
-              // onChange={handleInputChange} 
+                value={OrderInfo.Name}
+                readOnly
               />
 
             </div>
-            {/* {name.length === 0 && <p className="info-error-message">*Please input name</p>} */}
 
             <div className='form-group mb-1'>
               <label className='mb-1' htmlFor='lastName'>Email</label>
               <input id='lastName' type='text' className='form-control mb-1' placeholder='Email'
                 name='Email'
-              // value={email}
-              // onChange={handleInputChange} 
+                value={OrderInfo.Email}
+                readOnly
               />
 
             </div>
-            {/* {email.length === 0 && <p className="info-error-message">*Please input email</p>} */}
             <div className='form-group mb-1'>
               <label className='mb-1'>Phone</label>
               <input className='form-control mb-1' type='text' id='street1' placeholder='Phone Number'
                 name='Phone'
-              // value={phone}
-              // onChange={handleInputChange} 
+                value={OrderInfo.Phone}
+                readOnly
               />
             </div>
-            {/* {phone.length === 0 && <p className="info-error-message">*Please input phone number</p>} */}
 
             <div className='form-group mb-1'>
               <label className='mb-1' htmlFor='city'>Address</label>
               <input type='text' id='city' className='form-control mb-1' placeholder='Address'
                 name='Address'
-              // value={address}
-              // onChange={handleInputChange}
+                value={OrderInfo.Address}
+                readOnly
               />
             </div>
-            {/* {address.length === 0 && <p className="info-error-message">*Please input address</p>} */}
-
-            <div className='form-group mb-1 rewardpoint'>
-              <label className='mb-1' htmlFor='rewardPoints'>Reward Points</label>
-              <div className='d-flex'>
-                <input
-                  type='text'
-                  id='rewardPoints'
-                  className='form-control mr-2'
-                  placeholder='Available reward points'
-                  // value={rewardPoints}
-                  readOnly
-                />
-                <select
-                  className='form-control'
-                  id='useRewardPoints'
-                // value={useRewardPoints ? 'yes' : 'no'}
-                // onChange={handleRewardPointsChange}
-                >
-                  <option value='yes'>Apply all points</option>
-                  <option value='no'>Don't apply</option>
-                </select>
-              </div>
-            </div>
-
-            {/* <button className='btn btn-primary mt-4 user-info-form-button' type='submit'>
-                    <i className="fas fa-lock mr-2 user-info-form-icon"></i>Submit Payment
-                </button> */}
           </form>
         </div>
       </Modal>
@@ -298,15 +373,17 @@ const OrderManagement = () => {
               {Orders.map((order) => (
                 <tr key={order.OrderID}>
                   <td>{order.OrderID}</td>
-                  <td><a href="">View products in this order</a></td>
+                  <td><a href="" onClick={(e) => { e.preventDefault(); handleViewOrderDetail(order.OrderID) }}>View products in this order</a></td>
                   <td>{formatDate(order.created)}</td>
                   <td>{formatDate(order.updated)}</td>
                   <td>{order.TotalPrice}</td>
                   <td>{order.VoucherID ? order.VoucherID : 'No voucher'}</td>
-                  <td><a href="">View Customer Info</a></td>
+                  <td><a href="" onClick={(e) => { e.preventDefault(); handleGetCustomerInfo(order.OrderID) }}>View Customer Info</a></td>
                   <td>
                     <div className="select1">
-                      <select id="statusDropdown">
+                      <select id="statusDropdown"
+                        value={order.Status}
+                        onChange={(e) => handleStatusChange(order.OrderID, e.target.value)}>
                         <option value="Waiting">Waiting</option>
                         <option value="Cancelled">Cancelled</option>
                         <option value="Shipping">Shipping</option>
