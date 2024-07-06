@@ -1,17 +1,17 @@
 import axios from "../../axios";
 
-export const GetAllPreOrders = (token, limit, page, sort) => {
+export const UpdatePreOrderStatus = (token, preorderId, Status) => {
     try {
-        return axios.get(`/api/preorder/history?limit=${limit}&page=${page}&sort=${sort}`,
+        return axios.patch(`/api/preorder/${preorderId}/status`, Status,
             {
                 headers: {
                     'Authorization': token,
                     'Content-Type': 'application/json'
                 }
             }
-        );
+        )
     } catch (error) {
-        console.error('An error occurred while get all orders (staff):', error);
+        console.error('An error occurred while get update pre-orders status(staff):', error);
         throw error;
     }
 }
