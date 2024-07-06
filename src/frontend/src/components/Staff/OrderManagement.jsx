@@ -12,20 +12,25 @@ import "react-toastify/dist/ReactToastify.css";
 import { GetAllOrders } from "../../services/staff/ordermanage/getAllOrders";
 import { GetOrderDetail } from "../../services/order-history/getOrderDetail";
 import { UpdateOrderStatus } from "../../services/staff/ordermanage/updateOrderStatus";
+import { GetAllPreOrders } from "../../services/staff/pre-order/getAllPreOrder";
+import { UpdatePreOrderStatus } from "../../services/staff/pre-order/updatePreOrderStatus";
 
 const OrderManagement = () => {
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const [isDetail, setIsDetail] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageCount, setPageCount] = useState(1);
+  const [POpageCount, setPOPageCount] = useState(1);
+  const [POcurrentPage, setPOCurrentPage] = useState(1);
 
   const [isStatusChangeOpen, setIsStatusChangeOpen] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
   const [newStatus, setNewStatus] = useState('');
+  const [itemType, setItemType] = useState('');
 
 
+  const [PreOrders, setPreOrders] = useState([]);
   const [Orders, setOrders] = useState([]);
   const [OrderDetail, setOrderDetail] = useState([]);
   const [OrderInfo, setOrderInfo] = useState({
@@ -41,29 +46,6 @@ const OrderManagement = () => {
   const userId = sessionStorage.getItem('userData') ? JSON.parse(sessionStorage.getItem('userData')).UserID : "Guest";
 
   const dropdownRef = useRef(null);
-  // const [orders, setOrders] = useState([
-  //   {
-  //     OrderDetailID: 1,
-  //     OrderID: 101,
-  //     ProductID: "P001",
-  //     Quantity: 2,
-  //     Price: 20.5,
-  //   },
-  //   {
-  //     OrderDetailID: 2,
-  //     OrderID: 102,
-  //     ProductID: "P002",
-  //     Quantity: 1,
-  //     Price: 10.0,
-  //   },
-  //   {
-  //     OrderDetailID: 3,
-  //     OrderID: 103,
-  //     ProductID: "P003",
-  //     Quantity: 5,
-  //     Price: 50.0,
-  //   },
-  // ]);
 
   const location = useLocation();
 
@@ -114,11 +96,14 @@ const OrderManagement = () => {
     setCurrentPage(event.selected + 1);
   };
 
+  const handlePOPageClick = (event) => {
+    setPOCurrentPage(event.selected + 1);
+  };
+
   const handleViewOrderDetail = async (orderId) => {
     try {
       const response = await GetOrderDetail(StaffToken, orderId);
       if (Array.isArray(response.data.detail) && response.data.detail.length > 0) {
-        // console.log("Okkkk");
         setOrderDetail(response.data.detail);
         setIsDetail(true);
       }
@@ -145,51 +130,89 @@ const OrderManagement = () => {
     }
   }
 
-  const handleStatusChange = (orderId, newStatus) => {
-    const order = Orders.find(o => o.OrderID === orderId);
-    console.log(orderId)
-    console.log(order);
-    if (order && order.Status !== newStatus) {
-      setSelectedOrder(order);
+  const handleStatusChange = (id, newStatus, type) => {
+    const items = type === 'order' ? Orders : PreOrders;
+    const item = items.find(i => type === 'order' ? i.OrderID === id : i.PreorderID === id);
+    if (item && item.Status !== newStatus) {
+      setSelectedItem(item);
       setNewStatus(newStatus);
+      setItemType(type);
       setIsStatusChangeOpen(true);
     }
   };
 
-  const updateOrderStatus = async (orderId, status) => {
+  const updateStatus = async () => {
     try {
-      const response = await UpdateOrderStatus(StaffToken, orderId, { status: status });
-      if (response.data[0].OrderID) {
-        // toast.success("Order status updated successfully!");
-        toast.success("Order status updated successfully!", {
+      let response;
+      if (itemType === 'order') {
+        response = await UpdateOrderStatus(StaffToken, selectedItem.OrderID, { status: newStatus });
+      } else {
+        response = await UpdatePreOrderStatus(StaffToken, selectedItem.PreorderID, { status: newStatus });
+      }
+
+      if (response.data[0].OrderID || response.data[0].PreorderID) {
+        toast.success(`${itemType === 'order' ? 'Order' : 'Pre-order'} status updated successfully!`, {
           duration: 3000,
           position: "top-right",
         });
-        handleGetAllOrders();
+        itemType === 'order' ? handleGetAllOrders() : handleGetAllPreOrders();
         setIsStatusChangeOpen(false);
-        setSelectedOrder(null);
+        setSelectedItem(null);
         setNewStatus("");
+        setItemType("");
       }
     } catch (error) {
-      console.error("Error updating order status:", error);
-      if (error) {
-        // toast.error("Failed to update order status. Please try again.");
-        setIsStatusChangeOpen(false);
-        toast.error("Failed to update order status. Please try again.", {
-          duration: 3000,
-          position: "top-right",
-        });
-      }
+      console.error(`Error updating ${itemType} status:`, error);
+      setIsStatusChangeOpen(false);
+      setSelectedItem(null);
+      setNewStatus("");
+      setItemType("");
+      toast.error(`Failed to update ${itemType} status. Please try again.`, {
+        duration: 3000,
+        position: "top-right",
+      });
     }
   };
 
+  const handleGetAllPreOrders = async () => {
+    try {
+      let limit = 5;
+      let page = POcurrentPage;
+      let sort = '';
+      const response = await GetAllPreOrders(StaffToken, limit, page, sort);
+      if (response.data.total > 0) {
+        setPreOrders(response.data.data);
+        setPOPageCount(response.data.totalPages);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleGetPreOrderInfo = (preorderId) => {
+    const order = PreOrders.find(o => o.PreorderID === preorderId);
+    if (order) {
+      setOrderInfo({
+        UserId: order.UserID,
+        Name: order.Name,
+        Email: order.Email,
+        Phone: order.Phone,
+        Address: order.Address,
+      });
+      setIsInfoOpen(true);
+    }
+  };
+
+
   useEffect(() => {
     handleGetAllOrders();
+    handleGetAllPreOrders();
   }, []);
 
   useEffect(() => {
     handleGetAllOrders();
-  }, [currentPage])
+    handleGetAllPreOrders();
+  }, [currentPage, POcurrentPage])
 
   return (
     <div className="order-management-container">
@@ -238,7 +261,7 @@ const OrderManagement = () => {
         <h2>Confirm Change</h2>
         <p>Are you sure you want to update this order's status?</p>
         <div className="modal-actions">
-          <button onClick={() => { updateOrderStatus(selectedOrder.OrderID, newStatus); }} className="btn-confirm">Confirm</button>
+          <button onClick={updateStatus} className="btn-confirm">Confirm</button>
           <button onClick={() => setIsStatusChangeOpen(false)} className="btn-cancel">Cancel</button>
         </div>
       </Modal>
@@ -355,6 +378,84 @@ const OrderManagement = () => {
               Add Order
             </button>
           </div>
+          <h2>Pre-Orders</h2>
+          <table className="issues-table">
+            <thead>
+              <tr>
+                <th>PreOrderID</th>
+                <th>Product</th>
+                <th>PreOrder Date</th>
+                <th>Update Date</th>
+                <th>Price</th>
+                <th>Estimated delivery date</th>
+                <th>CustomerInfo</th>
+                <th>Status</th>
+                <th>Payment Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {PreOrders.map((order) => (
+                <tr key={order.PreorderID}>
+                  <td>{order.PreorderID}</td>
+                  <td style={{ width: 'fit-content' }}>
+                    <div className="flex-grow-1">
+                      <h6 className="fs-15 mb-1">{order.ProductID}</h6>
+                      {/* <p className="mb-0 text-muted fs-13">Quantity: {preorder.Quantity}</p> */}
+                      <p className="mb-0 product-info">
+                        <span className="info-label">Quantity:</span>
+                        <span className="info-value">{order.Quantity}</span>
+                      </p>
+                    </div>
+                  </td>
+                  <td>{formatDate(order.created)}</td>
+                  <td>{formatDate(order.updated)}</td>
+                  <td>{order.TotalPrice}</td>
+                  <td>{formatDate(order.ETA)}</td>
+                  <td><a href="" onClick={(e) => { e.preventDefault(); handleGetPreOrderInfo(order.PreorderID) }}>View Customer Info</a></td>
+                  <td>
+                    <div className="select1">
+                      <select id="statusDropdown"
+                        value={order.Status}
+                        onChange={(e) => handleStatusChange(order.PreorderID, e.target.value, 'preorder')}>
+                        <option value="Waiting">Waiting</option>
+                        <option value="Cancelled">Cancelled</option>
+                        <option value="Shipping">Shipping</option>
+                        <option value="Done">Done</option>
+                      </select>
+                    </div>
+                  </td>
+                  <td>
+                    <div className="select1">
+                      <select id="statusDropdown">
+                        <option value="Pending">Pending</option>
+                        <option value="Done">Done</option>
+                      </select>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div>
+            <ReactPaginate
+              breakLabel="..."
+              nextLabel="Next >"
+              onPageChange={handlePOPageClick}
+              pageRangeDisplayed={5}
+              pageCount={POpageCount}
+              previousLabel="< Previous"
+              renderOnZeroPageCount={null}
+              containerClassName="pagination justify-content-center"
+              pageClassName="page-item"
+              pageLinkClassName="page-link"
+              previousClassName="page-item"
+              previousLinkClassName="page-link"
+              nextClassName="page-item"
+              nextLinkClassName="page-link"
+              activeClassName="active"
+            />
+          </div>
+          <h2 style={{ marginTop: '10px' }}>Orders</h2>
           <table className="issues-table">
             <thead>
               <tr>
@@ -383,7 +484,7 @@ const OrderManagement = () => {
                     <div className="select1">
                       <select id="statusDropdown"
                         value={order.Status}
-                        onChange={(e) => handleStatusChange(order.OrderID, e.target.value)}>
+                        onChange={(e) => handleStatusChange(order.OrderID, e.target.value, 'order')}>
                         <option value="Waiting">Waiting</option>
                         <option value="Cancelled">Cancelled</option>
                         <option value="Shipping">Shipping</option>
@@ -405,7 +506,6 @@ const OrderManagement = () => {
           </table>
 
           <div>
-
             <ReactPaginate
               breakLabel="..."
               nextLabel="Next >"
