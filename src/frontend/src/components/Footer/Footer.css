@@ -1,7 +1,7 @@
 /* //Footer.jsx */
 footer {
   /* background-color: hsl(0, 0%, 97%); */
-  background-color: #f5e1da;
+  background-color: #f8a9e5;
   padding: 20px;
   padding-bottom: 20px;
 }
@@ -12,6 +12,7 @@ footer {
   gap: 20%;
 } */
 
+
 .footer-sitename {
   display: flex;
   flex-direction: column;
@@ -19,7 +20,7 @@ footer {
 }
 
 .footer-sitename h3 {
-  color: #407088;
+  color: snow;
   font-weight: 600;
 }
 
