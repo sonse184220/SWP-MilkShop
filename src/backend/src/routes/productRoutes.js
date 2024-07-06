@@ -55,7 +55,7 @@ router.get("/api/products/search/brand", checkProductSearchBrand, checkPaginatio
  * - "limit" là giới hạn số lượng product trả về cho 1 trang. Nếu không cung cấp, "limit" mặc định là 20
  * - "page" là số trang. Nếu không cung cấp, "page" mặc định là 1
  */
-router.get("/api/product/feedbacks/search", checkFeedbackSearchInput, checkPaginationQuery, async (req, res) => {
+router.get("/api/product/feedbacks/search", checkAuthenticated, isStaff, checkFeedbackSearchInput, checkPaginationQuery, async (req, res) => {
     await productController.searchFeedbacks(req, res);
 })
 
