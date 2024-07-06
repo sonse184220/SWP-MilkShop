@@ -2,19 +2,21 @@
   display: flex;
   font-family: Arial, sans-serif;
 }
+
 .content {
   flex-grow: 1;
   padding: 20px;
 }
 
-h1{
+h1 {
   margin-left: 20px;
 }
 
-.content-header{
+.content-header {
   display: flex;
   justify-content: space-between;
 }
+
 .staff-name {
   background-color: palevioletred;
   color: snow;
@@ -71,12 +73,14 @@ header {
 }
 
 .issues-table {
- width: 100%;
+  width: 100%;
   border-collapse: collapse;
-  table-layout: fixed; /* Ensure the table layout is stable */
+  table-layout: fixed;
+  /* Ensure the table layout is stable */
 }
 
-.issues-table th, .issues-table td {
+.issues-table th,
+.issues-table td {
   border: 1px solid #ccc;
   padding: 10px;
   text-align: left;
@@ -85,8 +89,9 @@ header {
 }
 
 
-img {
+.app img {
   margin-left: 3px;
+  width: 100%;
 }
 
 .issues-table th {
@@ -172,17 +177,17 @@ img {
 
 .btn-confirm-product,
 .btn-cancel-product {
-      padding: 10px 20px;
-      margin-left: 10px;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
+  padding: 10px 20px;
+  margin-left: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
 }
 
 .btn-confirm-product {
-      background-color: #28a745;
-      color: white;
+  background-color: #28a745;
+  color: white;
 }
 
 .btn-confirm-product:hover {
@@ -201,4 +206,3 @@ img {
 .updateDiv .delete-button {
   width: 60px;
 }
-

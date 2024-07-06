@@ -34,38 +34,6 @@ const ProductBar = () => {
         GetAllProduct();
     }, [])
 
-
-
-    // const numSlides = Math.ceil(products.length / 6);
-    // const intervalRef = useRef(null);
-
-    // //chuyển qua lại giữa hiển thị 6 product đầu và 6 product sau
-    // useEffect(() => {
-    //     const handleSlideUpdate = () => {
-    //         setCurrentSlide((prevSlide) => {
-    //             if (prevSlide >= 0 || prevSlide <= numSlides - 1) {
-    //                 setDirection(1); // Change direction to forward
-    //             } else if (prevSlide === numSlides - 1) {
-    //                 setDirection(-1); // Change direction to backward
-    //             }
-    //             const newSlide = prevSlide + direction;
-    //             if (newSlide < 0) {
-    //                 return numSlides - 1; // Wrap around to the last slide
-    //             } else if (newSlide > numSlides - 1) {
-    //                 return 0; // Wrap around to the first slide
-    //             }
-    //             return newSlide;
-    //         });
-    //     };
-
-    //     intervalRef.current = setInterval(handleSlideUpdate, 4000);
-
-    //     return () => clearInterval(intervalRef.current);
-    // }, [numSlides]);
-
-    // //chuyển qua lại giữa hiển thị 6 product đầu và 6 product sau
-    // const productSlide = products.slice(currentSlide * 6, (currentSlide + 1) * 6);
-
     const settings = {
         dots: true,
         infinite: false,

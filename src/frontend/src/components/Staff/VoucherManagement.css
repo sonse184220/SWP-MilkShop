@@ -1,151 +1,153 @@
 .order-management-container {
-    display: flex;
-    height: 100vh;
-    font-family: Arial, sans-serif;
-  }
-  
-  .sidebar {
-    width: 250px;
-    background-color: #f4f4f4;
-  }
-  
-  .content {
-    flex: 1;
-    padding: 20px;
-  }
-  
-  .content-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .content-header h1 {
-    margin: 0;
-  }
-  
-  .staff-name {
-    background-color: palevioletred;
-    color: snow;
-    border-radius: 5px;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-    float: right;
-  }
-  
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-  }
-  
-  table, th, td {
-    border: 1px solid #ddd;
-  }
-  
-  th, td {
-    padding: 8px;
-    text-align: left;
-  }
-  
-  th {
-    background-color: #f4f4f4;
-  }
-  
-  .delete-button {
-    border: 1px solid;
-    width: 50%;
-    background-color: white; /* Change background color to white */
-  }
-  
-  .delete {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+  display: flex;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+}
 
-  .custom-modal-voucher {
-    position: relative;
-    width: 500px;
-    max-width: 90%;
-    margin: 50px auto;
-    padding: 20px;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-  }
-  
-  .custom-overlay-voucher {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.7);
-    z-index: 1000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .custom-modal-voucher h2 {
-    margin-top: 0;
-    font-size: 30px;
-    color: #333;
-    justify-content: center;
-    display: flex;
-  }
-  
-  .custom-modal-voucher label {
-    display: block;
-    margin-top: 10px;
-    font-weight: bold;
-    color: #333;
-  }
-  
-  .custom-modal-voucher input {
-    width: calc(100% - 20px);
-    padding: 10px;
-    margin-top: 5px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 16px;
-  }
-  
-  .modal-actions-voucher {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 20px;
-  }
-  
-  .btn-confirm-voucher,
-  .btn-cancel-voucher {
-    padding: 10px 20px;
-    margin-left: 10px;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  
-  .btn-confirm-voucher {
-    background-color: #28a745;
-    color: white;
-  }
-  
-  .btn-confirm-voucher:hover {
-    background-color: #218838;
-  }
-  
-  .btn-cancel-voucher {
-    background-color: #dc3545;
-    color: white;
-  }
-  
-  .btn-cancel-voucher:hover {
-    background-color: #c82333;
+.sidebar {
+  width: 250px;
+  background-color: #f4f4f4;
+}
 
-  }
-  
+.content {
+  flex: 1;
+  padding: 20px;
+}
 
+.content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.content-header h1 {
+  margin: 0;
+}
+
+.staff-name {
+  background-color: palevioletred;
+  color: snow;
+  border-radius: 5px;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  float: right;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+table,
+th,
+td {
+  border: 1px solid #ddd;
+}
+
+th,
+td {
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #f4f4f4;
+}
+
+.delete-button {
+  border: 1px solid;
+  /* width: 50%; */
+  background-color: white;
+  /* Change background color to white */
+}
+
+.delete {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.custom-modal-voucher {
+  position: relative;
+  width: 500px;
+  max-width: 90%;
+  margin: 50px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.custom-overlay-voucher {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.custom-modal-voucher h2 {
+  margin-top: 0;
+  font-size: 30px;
+  color: #333;
+  justify-content: center;
+  display: flex;
+}
+
+.custom-modal-voucher label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+  color: #333;
+}
+
+.custom-modal-voucher input {
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.modal-actions-voucher {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.btn-confirm-voucher,
+.btn-cancel-voucher {
+  padding: 10px 20px;
+  margin-left: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.btn-confirm-voucher {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-confirm-voucher:hover {
+  background-color: #218838;
+}
+
+.btn-cancel-voucher {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-cancel-voucher:hover {
+  background-color: #c82333;
+
+}

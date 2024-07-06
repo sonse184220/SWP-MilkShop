@@ -58,7 +58,7 @@ th {
 
 .delete-button {
   border: 1px solid;
-  width: 50%;
+  /* width: 50%; */
   background-color: white;
   color: black;
   transition: background-color 0.3s, color 0.3s;

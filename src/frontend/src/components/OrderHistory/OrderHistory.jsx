@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import Modal from 'react-modal';
+import { Oval } from 'react-loader-spinner';
 
 
 import './OrderHistory.css';
@@ -13,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 
 export const OrderHistory = ({ isMember }) => {
     const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(true);
 
 
     const [preorderhistory, setPreOrderHistory] = useState([]);
@@ -110,6 +112,21 @@ export const OrderHistory = ({ isMember }) => {
     useEffect(() => {
         handleGetOrder1User();
         handleGetPreOrder1User();
+        // const fetchData = async () => {
+        //     setIsLoading(true);
+        //     try {
+        //         await Promise.all([
+        //             handleGetOrder1User(),
+        //             handleGetPreOrder1User()
+        //         ]);
+        //     } catch (error) {
+        //         console.error("Error fetching data:", error);
+        //     } finally {
+        //         setIsLoading(false);
+        //     }
+        // };
+
+        // fetchData();
     }, [])
 
     return (
@@ -180,67 +197,90 @@ export const OrderHistory = ({ isMember }) => {
                                                     </tr>
                                                 </thead>
                                                 <tbody className='OrderHistory-tbody'>
-                                                    {preorderhistory.map((preorder) => (
-                                                        <tr key={preorder.PreorderID}>
-                                                            <td>
-                                                                <a href="#" className="text-body">{preorder.PreorderID}</a>
-                                                            </td>
-                                                            <td>
-                                                                <div className="d-flex gap-3">
-                                                                    <div className="avatar-sm flex-shrink-0">
-                                                                        <div className="avatar-title bg-light rounded">
-                                                                            <img src="/img/" alt="" className="avatar-xs" />
+                                                    {isLoading ? (
+                                                        <tr>
+                                                            <td colSpan="6" style={{ padding: 0 }}>
+                                                                <div style={{
+                                                                    height: '200px',
+                                                                    width: '100%'
+                                                                }}>
+                                                                    <Oval
+                                                                        // height={20}
+                                                                        // width={20}
+                                                                        // color="#fff"
+                                                                        wrapperStyle={{
+                                                                            display: 'flex',
+                                                                            justifyContent: 'center',
+                                                                            alignItems: 'center',
+                                                                            height: '100%',
+                                                                            width: '100%'
+                                                                        }}
+                                                                    />
+                                                                </div></td>
+                                                        </tr>
+                                                    ) : (
+                                                        (preorderhistory.map((preorder) => (
+                                                            <tr key={preorder.PreorderID}>
+                                                                <td>
+                                                                    <a href="#" className="text-body">{preorder.PreorderID}</a>
+                                                                </td>
+                                                                <td>
+                                                                    <div className="d-flex gap-3">
+                                                                        <div className="avatar-sm flex-shrink-0">
+                                                                            <div className="avatar-title bg-light rounded">
+                                                                                <img src="/img/" alt="" className="avatar-xs" />
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="flex-grow-1">
+                                                                            <h6 className="fs-15 mb-1">{preorder.productName}</h6>
+                                                                            {/* <p className="mb-0 text-muted fs-13">Quantity: {preorder.Quantity}</p> */}
+                                                                            <p className="mb-0 product-info">
+                                                                                <span className="info-label">Quantity:</span>
+                                                                                <span className="info-value">{preorder.Quantity}</span>
+                                                                            </p>
+
+
+                                                                            {/* <p className="mb-0 text-muted fs-13">CATEGORY: {preorder.brandName}</p> */}
+                                                                            <p className="mb-0 product-info">
+                                                                                <span className="info-label">Category:</span>
+                                                                                <span className="info-value">{preorder.brandName}</span>
+                                                                            </p>
                                                                         </div>
                                                                     </div>
-                                                                    <div className="flex-grow-1">
-                                                                        <h6 className="fs-15 mb-1">{preorder.productName}</h6>
-                                                                        {/* <p className="mb-0 text-muted fs-13">Quantity: {preorder.Quantity}</p> */}
-                                                                        <p className="mb-0 product-info">
-                                                                            <span className="info-label">Quantity:</span>
-                                                                            <span className="info-value">{preorder.Quantity}</span>
-                                                                        </p>
-
-
-                                                                        {/* <p className="mb-0 text-muted fs-13">CATEGORY: {preorder.brandName}</p> */}
-                                                                        <p className="mb-0 product-info">
-                                                                            <span className="info-label">Category:</span>
-                                                                            <span className="info-value">{preorder.brandName}</span>
-                                                                        </p>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                            <td><span className="text-muted">{formatDate(preorder.created)}</span></td>
-                                                            <td className="fw-medium">{formatPrice(preorder.TotalPrice)} VND</td>
-                                                            <td>
-                                                                <span className="badge bg-success-subtle text-success">{preorder.Status}</span>
-                                                            </td>
-                                                            <td>
-                                                                {/* <a href="" onClick={(e) => { e.preventDefault(); setIsCancelConfirm(true); }} data-bs-toggle="modal" className="btn btn-secondary btn-sm"
-                                                                    {preorder.Status !== 'Waiting' ? (disabled
-                                                                        style={{ opacity: 0.5, cursor: 'not-allowed' }})}>Cancel</a> */}
-                                                                {preorder.Status !== 'Waiting' ? (
-                                                                    <button
-                                                                        className="btn btn-secondary btn-sm"
-                                                                        disabled
-                                                                        style={{ opacity: 0.5, cursor: 'not-allowed' }}
-                                                                    >
-                                                                        Cancel
-                                                                    </button>
-                                                                ) : (
-                                                                    <a
-                                                                        href=""
-                                                                        onClick={(e) => {
-                                                                            e.preventDefault();
-                                                                            setIsCancelConfirm(true);
-                                                                        }}
-                                                                        className="btn btn-secondary btn-sm"
-                                                                    >
-                                                                        Cancel
-                                                                    </a>
-                                                                )}
-                                                            </td>
-                                                        </tr>
-                                                    ))}
+                                                                </td>
+                                                                <td><span className="text-muted">{formatDate(preorder.created)}</span></td>
+                                                                <td className="fw-medium">{formatPrice(preorder.TotalPrice)} VND</td>
+                                                                <td>
+                                                                    <span className="badge bg-success-subtle text-success">{preorder.Status}</span>
+                                                                </td>
+                                                                <td>
+                                                                    {/* <a href="" onClick={(e) => { e.preventDefault(); setIsCancelConfirm(true); }} data-bs-toggle="modal" className="btn btn-secondary btn-sm"
+                                                                        {preorder.Status !== 'Waiting' ? (disabled
+                                                                            style={{ opacity: 0.5, cursor: 'not-allowed' }})}>Cancel</a> */}
+                                                                    {preorder.Status !== 'Waiting' ? (
+                                                                        <button
+                                                                            className="btn btn-secondary btn-sm"
+                                                                            disabled
+                                                                            style={{ opacity: 0.5, cursor: 'not-allowed' }}
+                                                                        >
+                                                                            Cancel
+                                                                        </button>
+                                                                    ) : (
+                                                                        <a
+                                                                            href=""
+                                                                            onClick={(e) => {
+                                                                                e.preventDefault();
+                                                                                setIsCancelConfirm(true);
+                                                                            }}
+                                                                            className="btn btn-secondary btn-sm"
+                                                                        >
+                                                                            Cancel
+                                                                        </a>
+                                                                    )}
+                                                                </td>
+                                                            </tr>
+                                                        )))
+                                                    )}
                                                 </tbody>
                                             </table>
                                         </div>
@@ -272,7 +312,7 @@ export const OrderHistory = ({ isMember }) => {
                             activeClassName="active"
                         />
                     </div>
-                </div>
+                </div >
                 <div>
                     <section className="section">
                         <div className="container">
@@ -375,7 +415,7 @@ export const OrderHistory = ({ isMember }) => {
                         />
                     </div>
                 </div>
-            </div>
+            </div >
             <div><Footer /></div>
 
         </>
