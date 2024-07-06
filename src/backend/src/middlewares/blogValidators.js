@@ -54,7 +54,7 @@ await query("sort")
     .trim()
     .escape()
     .toLowerCase()
-    .isIn(sortList).withMessage(`invalid sort input! sort can only be: ${sortList}`)
+    .isIn(sortList).withMessage(`invalid sort input! sort can only be: ${sortList.join(", ")}`)
     .run(req);
 
     const result = validationResult(req);
