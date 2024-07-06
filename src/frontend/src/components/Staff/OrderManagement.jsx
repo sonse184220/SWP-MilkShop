@@ -46,29 +46,6 @@ const OrderManagement = () => {
   const userId = sessionStorage.getItem('userData') ? JSON.parse(sessionStorage.getItem('userData')).UserID : "Guest";
 
   const dropdownRef = useRef(null);
-  // const [orders, setOrders] = useState([
-  //   {
-  //     OrderDetailID: 1,
-  //     OrderID: 101,
-  //     ProductID: "P001",
-  //     Quantity: 2,
-  //     Price: 20.5,
-  //   },
-  //   {
-  //     OrderDetailID: 2,
-  //     OrderID: 102,
-  //     ProductID: "P002",
-  //     Quantity: 1,
-  //     Price: 10.0,
-  //   },
-  //   {
-  //     OrderDetailID: 3,
-  //     OrderID: 103,
-  //     ProductID: "P003",
-  //     Quantity: 5,
-  //     Price: 50.0,
-  //   },
-  // ]);
 
   const location = useLocation();
 
@@ -127,7 +104,6 @@ const OrderManagement = () => {
     try {
       const response = await GetOrderDetail(StaffToken, orderId);
       if (Array.isArray(response.data.detail) && response.data.detail.length > 0) {
-        // console.log("Okkkk");
         setOrderDetail(response.data.detail);
         setIsDetail(true);
       }
@@ -227,43 +203,6 @@ const OrderManagement = () => {
     }
   };
 
-  // const handlePOStatusChange = (preorderId, newStatus) => {
-  //   const order = Orders.find(o => o.PreorderID === preorderId);
-  //   if (order && order.Status !== newStatus) {
-  //     setSelectedOrder(order);
-  //     setNewStatus(newStatus);
-  //     setIsStatusChangeOpen(true);
-  //   }
-  // };
-
-  // const updatePreOrderStatus = async (orderId, status) => {
-  //   try {
-  //     const response = await UpdatePreOrderStatus(StaffToken, orderId, { status: status });
-  //     if (response.data[0].OrderID) {
-  //       // toast.success("Order status updated successfully!");
-  //       toast.success("Order status updated successfully!", {
-  //         duration: 3000,
-  //         position: "top-right",
-  //       });
-  //       handleGetAllPreOrders();
-  //       setIsStatusChangeOpen(false);
-  //       setSelectedOrder(null);
-  //       setNewStatus("");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error updating pre order status:", error);
-  //     if (error) {
-  //       // toast.error("Failed to update order status. Please try again.");
-  //       setIsStatusChangeOpen(false);
-  //       setSelectedOrder(null);
-  //       setNewStatus("");
-  //       toast.error("Failed to update pre-order status. Please try again.", {
-  //         duration: 3000,
-  //         position: "top-right",
-  //       });
-  //     }
-  //   }
-  // };
 
   useEffect(() => {
     handleGetAllOrders();
