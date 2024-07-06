@@ -56,7 +56,7 @@ router.get("/api/products/search/brand", checkProductSearchBrand, checkPaginatio
  * - "page" là số trang. Nếu không cung cấp, "page" mặc định là 1
  */
 router.get("/api/product/feedbacks/search", checkFeedbackSearchInput, checkPaginationQuery, async (req, res) => {
-    await productController.searchFeedback(req, res);
+    await productController.searchFeedbacks(req, res);
 })
 
 /** URL: localhost:xxxx/api/product/{...}/feedbacks

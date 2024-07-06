@@ -36,7 +36,6 @@ export class ProductService {
     async searchProducts(name, limit, sortBy, offset) {
         const search = `%${name}%`;
 
-        // const [products] = await poolConnect.query('SELECT * FROM product WHERE Name LIKE ?', [search]);
         const [products] = await poolConnect.query(`SELECT p.*, b.Name AS BrandName
                                                     FROM PRODUCT AS p
                                                     JOIN brand AS b ON p.BrandID = b.BrandID
@@ -96,6 +95,32 @@ export class ProductService {
                                                     ON f.UserID = u.UserID
                                                     WHERE ProductID = ?`, [id]);
         return feedbacks;
+    }
+
+    async searchFeedbacks(content, filterQuery, filterValue, limit, sortBy, offset) {
+        const search = `%${content}%`;
+
+        const [feedbacks] = await poolConnect.query(`SELECT 
+                                                        f.FeedbackID, f.ProductID,
+                                                        p.Name AS ProductName, p.BrandID, b.Name AS BrandName,
+                                                        f.UserID, u.Name, f.Rating, f.Content, f.created
+                                                    FROM feedback AS f
+                                                    JOIN product AS p ON p.ProductID = f.ProductID
+                                                    JOIN brand AS b ON b.BrandID = p.BrandID
+                                                    JOIN user AS u ON u.UserID = f.UserID
+                                                    WHERE f.Content LIKE ? ${filterQuery}
+                                                    ORDER BY ${sortBy} LIMIT ? OFFSET ?`, [search, ...filterValue, limit, offset]);
+        return feedbacks;
+    }
+    async getTotalSearchFeedbacks(content, filterQuery, filterValue) {
+        const search = `%${content}%`;
+
+        const [total] = await poolConnect.query(`SELECT COUNT(*) as count
+                                                FROM feedback AS f
+                                                WHERE Content LIKE ? ${filterQuery}`, [search, ...filterValue]);
+        
+        const count = total[0].count;
+        return count;
     }
 
     // check xem người dùng đã từng mua sản phẩm này chưa? kể cả order và pre-order

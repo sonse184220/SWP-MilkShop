@@ -1,8 +1,10 @@
 import { poolConnect, connection } from "../utils/dbConnection.js";
 import { ProductService } from "../services/ProductService.js";
 import sharp from 'sharp';
+import { UserService } from "../services/userService.js";
 
 const productService = new ProductService();
+const userService = new UserService();
 
 export class ProductController {
 
@@ -131,10 +133,77 @@ export class ProductController {
         return res.status(201).send(createdFeedback);
     }
 
-    async searchFeedback(req, res) {
-        const { content, fuid, fpid, filter, sort, limit, page } = req.query;
-        console.log(content, fuid, fpid, filter, sort, limit, page);
-        res.status(200).send({content, fuid, fpid, filter, sort, limit, page});
+    async searchFeedbacks(req, res) {
+        const { content, fuid, fpid, filter, sort } = req.query;
+        const limit = parseInt(req.query.limit);
+        const page = parseInt(req.query.page);
+        const offset = (page - 1) * limit;
+
+        let filterField = "";
+        let valueField = [];
+        
+        switch (filter) {
+            case "user":
+                const checkUser = await userService.checkUserExisted(fuid);
+                if (checkUser.length === 0) {
+                    return res.status(404).send({ error: "User not found!"})
+                }
+
+                filterField = "AND f.UserID = ?";
+                valueField = [fuid];
+                break;
+            case "product":
+                const checkProduct = await productService.getProduct(fpid);
+                if (checkProduct.length === 0) {
+                    return res.status(404).send({ error: "Product not found!" });
+                }
+
+                filterField = "AND f.ProductID = ?"
+                valueField = [fpid];
+                break;
+            case "user&product":
+                const checkUserAndProduct = await Promise.all([userService.checkUserExisted(fuid), productService.getProduct(fpid)]);
+                if (checkUserAndProduct[0].length === 0) {
+                    return res.status(404).send({ error: "User not found!"})
+                }
+                if (checkUserAndProduct[1].length === 0) {
+                    return res.status(404).send({ error: "Product not found!" });
+                }
+
+                filterField = "AND f.UserID = ? AND f.ProductID = ?"
+                valueField = [fuid, fpid]
+                break;
+            default:
+                // nothing
+        }   
+
+        let sortBy;
+        switch (sort) {
+            case "newest":
+                sortBy = "created DESC";
+                break;
+            case "oldest":
+                sortBy = "created ASC";
+                break;
+            case "lowest":
+                sortBy = "Rating ASC";
+                break;
+            case "highest":
+                sortBy = "Rating DESC";
+                break;
+            default:
+                sortBy = "created DESC";
+        }
+
+        const feedbacks = await productService.searchFeedbacks(content, filterField, valueField, limit, sortBy, offset);
+        const total = await productService.getTotalSearchFeedbacks(content, filterField, valueField)
+
+        return res.status(200).send({
+            total: total,
+            page: page,
+            totalPages: Math.ceil(total / limit),
+            data: feedbacks,
+        });
     }
 
     async deleteFeedback(req, res) {
