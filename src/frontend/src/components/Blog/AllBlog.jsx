@@ -1,103 +1,14 @@
 // AllBlog.jsx
 import React, { useState, useEffect, useRef } from "react";
-import { Oval } from 'react-loader-spinner';
-
+import { Oval } from "react-loader-spinner";
+import ReactPaginate from "react-paginate";
 import BlogPost from "./BlogPost";
 import "./AllBlog.css";
 import Footer from "../Footer/Footer";
 import Header from "../Header/Header";
 import BlogList from "./BlogList";
-import ProductList from "../Product/ProductList";
-import { Link } from "react-router-dom";
 import { fetchBlogs } from "../../services/blog/blogService"; // Adjusted the path here
 import { searchBlogs } from "../../services/blog/searchBlogs";
-
-// Static blogs data for fallback
-const Blogs = [
-  {
-    title: "The Benefits of Drinking Milk",
-    author: {
-      name: "John Doe",
-      bio: "Nutritionist and Blogger",
-      image: "https://via.placeholder.com/40",
-    },
-    content:
-      "Milk is an excellent source of vitamins and minerals, particularly calcium. It has several health benefits for people of all ages.",
-    date: new Date("2023-06-01"),
-    image: "https://via.placeholder.com/400",
-
-    products: [
-      {
-        name: "Organic Whole Milk",
-        description: "Rich and creamy organic whole milk from grass-fed cows.",
-        image: "https://via.placeholder.com/100",
-        url: "https://example.com/organic-whole-milk",
-      },
-      {
-        name: "Calcium Fortified Milk",
-        description: "Milk fortified with extra calcium for stronger bones.",
-        image: "https://via.placeholder.com/100",
-        url: "https://example.com/calcium-fortified-milk",
-      },
-    ],
-  },
-  {
-    title: "Different Types of Milk and Their Uses",
-    author: {
-      name: "Jane Smith",
-      bio: "Food Scientist and Writer",
-      image: "https://via.placeholder.com/40",
-    },
-    content:
-      "Explore the various types of milk, including cow’s milk, almond milk, soy milk, and more, and learn how to use them in your recipes.",
-    date: new Date("2023-05-15"),
-    image: "https://via.placeholder.com/400",
-    products: [
-      {
-        name: "Almond Milk",
-        description:
-          "A dairy-free alternative with a nutty flavor, perfect for smoothies and cereals.",
-        image: "https://via.placeholder.com/100",
-        url: "https://example.com/almond-milk",
-      },
-      {
-        name: "Soy Milk",
-        description:
-          "A popular plant-based milk that’s high in protein and great for baking.",
-        image: "https://via.placeholder.com/100",
-        url: "https://example.com/soy-milk",
-      },
-    ],
-  },
-  {
-    title: "How Milk Can Help You Build Muscle",
-    author: {
-      name: "Mark Johnson",
-      bio: "Fitness Expert and Author",
-      image: "https://via.placeholder.com/40",
-    },
-    content:
-      "Milk contains high-quality protein and is a great post-workout recovery drink. Learn how it can help you build and repair muscle tissue.",
-    date: new Date("2023-05-10"),
-    image: "hinh1.png",
-    products: [
-      {
-        name: "Protein Shake with Milk",
-        description:
-          "A protein shake made with milk for optimal muscle recovery.",
-        image: "https://via.placeholder.com/100",
-        url: "https://example.com/protein-shake",
-      },
-      {
-        name: "Chocolate Milk",
-        description: "A tasty and effective post-workout recovery drink.",
-        image: "https://via.placeholder.com/100",
-        url: "https://example.com/chocolate-milk",
-      },
-    ],
-  },
-  // Add more blog post objects here
-];
 
 const AllBlog = ({ isMember }) => {
   const [blogs, setBlogs] = useState([]);
@@ -105,45 +16,63 @@ const AllBlog = ({ isMember }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const [pageCount, setPageCount] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const [searchPageCount, setSearchPageCount] = useState(1);
+  const [searchCurrentPage, setSearchCurrentPage] = useState(1);
+
+  const handlePageClick = (event) => {
+    setCurrentPage(event.selected + 1);
+  };
+
+  const handleSearchPageClick = (event) => {
+    setSearchCurrentPage(event.selected + 1);
+  };
 
   useEffect(() => {
     const loadBlogs = async () => {
       try {
+        let limit = 5;
+        let page = currentPage;
+        let sort = "";
         setIsLoading(true);
-        const fetchedBlogs = await fetchBlogs();
-        // console.log(fetchedBlogs)
+        const fetchedBlogs = await fetchBlogs(limit, page, sort);
         if (Array.isArray(fetchedBlogs.data.data)) {
           setBlogs(fetchedBlogs.data.data);
-          // console.log('ok')
+          setPageCount(fetchedBlogs.data.totalPages);
         } else {
           throw new Error("Fetched data is not an array");
         }
       } catch (err) {
         setError(err.message);
-        setBlogs(Blogs);
         console.error("Error loading blogs:", err);
       } finally {
         setIsLoading(false);
       }
     };
     loadBlogs();
-  }, []);
+  }, [currentPage]);
 
   const handleSearch = async () => {
     try {
-      const searchedBlogs = await searchBlogs(searchQuery);
+      let searchLimit = 5;
+      let searchPage = searchCurrentPage;
+      let searchSort = "";
+      const searchedBlogs = await searchBlogs(
+        searchQuery,
+        searchLimit,
+        searchPage,
+        searchSort
+      );
       setBlogs(searchedBlogs.data);
-
-      console.log("After that: ", searchedBlogs);
-
-      console.log("After that: ", searchedBlogs);
+      setSearchPageCount(searchedBlogs.data.totalPages);
     } catch (err) {
       setError(err.message);
       console.error("Error searching blogs:", err);
     }
   };
 
-  const allProducts = Blogs.flatMap((blog) => blog.products);
   return (
     <>
       <img className="image" src="/img/milkbuying.jpeg" alt="Blog Header" />
@@ -161,20 +90,19 @@ const AllBlog = ({ isMember }) => {
               />
               <button onClick={handleSearch}>Search</button>
             </div>
+
             {isLoading ? (
               <Oval
-                // height={20}
-                // width={20}
-                // color="#fff"
                 wrapperStyle={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  // alignItems: 'center',
-                  height: '100%',
-                  width: '100%'
+                  display: "flex",
+                  justifyContent: "center",
+                  height: "100%",
+                  width: "100%",
                 }}
               />
-            ) : (<BlogPost blogs={blogs} />)}
+            ) : (
+              <BlogPost blogs={blogs} />
+            )}
           </div>
           <div className="col-lg-4">
             <h3>Some Blogs</h3>
@@ -183,11 +111,48 @@ const AllBlog = ({ isMember }) => {
             </div>
           </div>
         </div>
+        <div>
+          {searchQuery === "" ? (
+            <ReactPaginate
+              breakLabel="..."
+              nextLabel=">>"
+              onPageChange={handlePageClick}
+              pageRangeDisplayed={5}
+              pageCount={pageCount}
+              previousLabel="<<"
+              renderOnZeroPageCount={null}
+              containerClassName="pagination justify-content-center"
+              pageClassName="page-item"
+              pageLinkClassName="page-link"
+              previousClassName="page-item"
+              previousLinkClassName="page-link"
+              nextClassName="page-item"
+              nextLinkClassName="page-link"
+              activeClassName="active"
+            />
+          ) : (
+            <ReactPaginate
+              breakLabel="..."
+              nextLabel=">>"
+              onPageChange={handleSearchPageClick}
+              pageRangeDisplayed={5}
+              pageCount={searchPageCount}
+              previousLabel="<<"
+              renderOnZeroPageCount={null}
+              containerClassName="pagination justify-content-center"
+              pageClassName="page-item"
+              pageLinkClassName="page-link"
+              previousClassName="page-item"
+              previousLinkClassName="page-link"
+              nextClassName="page-item"
+              nextLinkClassName="page-link"
+              activeClassName="active"
+            />
+          )}
+        </div>
       </div>
-      {/* <ProductList products={allProducts} /> */}
       <Footer />
     </>
   );
 };
-
 export default AllBlog;

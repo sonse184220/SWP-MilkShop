@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import ReactPaginate from 'react-paginate';
-
+import ReactPaginate from "react-paginate";
 
 import Sidebar from "./Sidebar";
 import "./OrderManagement.css";
@@ -26,24 +25,24 @@ const OrderManagement = () => {
 
   const [isStatusChangeOpen, setIsStatusChangeOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [newStatus, setNewStatus] = useState('');
-  const [itemType, setItemType] = useState('');
-
+  const [newStatus, setNewStatus] = useState("");
+  const [itemType, setItemType] = useState("");
 
   const [PreOrders, setPreOrders] = useState([]);
   const [Orders, setOrders] = useState([]);
   const [OrderDetail, setOrderDetail] = useState([]);
   const [OrderInfo, setOrderInfo] = useState({
-    UserId: '',
-    Name: '',
-    Email: '',
-    Phone: '',
-    Address: '',
+    UserId: "",
+    Name: "",
+    Email: "",
+    Phone: "",
+    Address: "",
   });
 
-
-  const StaffToken = 'Bearer ' + sessionStorage.getItem('token');
-  const userId = sessionStorage.getItem('userData') ? JSON.parse(sessionStorage.getItem('userData')).UserID : "Guest";
+  const StaffToken = "Bearer " + sessionStorage.getItem("token");
+  const userId = sessionStorage.getItem("userData")
+    ? JSON.parse(sessionStorage.getItem("userData")).UserID
+    : "Guest";
 
   const dropdownRef = useRef(null);
 
@@ -73,7 +72,7 @@ const OrderManagement = () => {
     try {
       let limit = 5;
       let page = currentPage;
-      let sort = '';
+      let sort = "";
       const response = await GetAllOrders(StaffToken, limit, page, sort);
       if (response.data.total > 0) {
         setOrders(response.data.data);
@@ -86,8 +85,8 @@ const OrderManagement = () => {
 
   function formatDate(dateString) {
     const date = new Date(dateString);
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = date.toLocaleString('default', { month: 'short' });
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = date.toLocaleString("default", { month: "short" });
     const year = date.getFullYear();
     return `${day} ${month}, ${year}`;
   }
@@ -103,21 +102,27 @@ const OrderManagement = () => {
   const handleViewOrderDetail = async (orderId) => {
     try {
       const response = await GetOrderDetail(StaffToken, orderId);
-      if (Array.isArray(response.data.detail) && response.data.detail.length > 0) {
+      if (
+        Array.isArray(response.data.detail) &&
+        response.data.detail.length > 0
+      ) {
         setOrderDetail(response.data.detail);
         setIsDetail(true);
       }
-    } catch (error) {
-
-    }
+    } catch (error) {}
   };
 
   const handleGetCustomerInfo = async (orderId) => {
     try {
       const response = await GetOrderDetail(StaffToken, orderId);
-      if (Array.isArray(response.data.detail) && response.data.detail.length > 0) {
+      if (
+        Array.isArray(response.data.detail) &&
+        response.data.detail.length > 0
+      ) {
         setOrderInfo({
-          UserId: response.data.order.UserID ? response.data.order.UserID : 'Guest',
+          UserId: response.data.order.UserID
+            ? response.data.order.UserID
+            : "Guest",
           Name: response.data.order.Name,
           Email: response.data.order.Email,
           Phone: response.data.order.Phone,
@@ -125,14 +130,14 @@ const OrderManagement = () => {
         });
         setIsInfoOpen(true);
       }
-    } catch (error) {
-
-    }
-  }
+    } catch (error) {}
+  };
 
   const handleStatusChange = (id, newStatus, type) => {
-    const items = type === 'order' ? Orders : PreOrders;
-    const item = items.find(i => type === 'order' ? i.OrderID === id : i.PreorderID === id);
+    const items = type === "order" ? Orders : PreOrders;
+    const item = items.find((i) =>
+      type === "order" ? i.OrderID === id : i.PreorderID === id
+    );
     if (item && item.Status !== newStatus) {
       setSelectedItem(item);
       setNewStatus(newStatus);
@@ -144,18 +149,29 @@ const OrderManagement = () => {
   const updateStatus = async () => {
     try {
       let response;
-      if (itemType === 'order') {
-        response = await UpdateOrderStatus(StaffToken, selectedItem.OrderID, { status: newStatus });
+      if (itemType === "order") {
+        response = await UpdateOrderStatus(StaffToken, selectedItem.OrderID, {
+          status: newStatus,
+        });
       } else {
-        response = await UpdatePreOrderStatus(StaffToken, selectedItem.PreorderID, { status: newStatus });
+        response = await UpdatePreOrderStatus(
+          StaffToken,
+          selectedItem.PreorderID,
+          { status: newStatus }
+        );
       }
 
       if (response.data[0].OrderID || response.data[0].PreorderID) {
-        toast.success(`${itemType === 'order' ? 'Order' : 'Pre-order'} status updated successfully!`, {
-          duration: 3000,
-          position: "top-right",
-        });
-        itemType === 'order' ? handleGetAllOrders() : handleGetAllPreOrders();
+        toast.success(
+          `${
+            itemType === "order" ? "Order" : "Pre-order"
+          } status updated successfully!`,
+          {
+            duration: 3000,
+            position: "top-right",
+          }
+        );
+        itemType === "order" ? handleGetAllOrders() : handleGetAllPreOrders();
         setIsStatusChangeOpen(false);
         setSelectedItem(null);
         setNewStatus("");
@@ -178,7 +194,7 @@ const OrderManagement = () => {
     try {
       let limit = 5;
       let page = POcurrentPage;
-      let sort = '';
+      let sort = "";
       const response = await GetAllPreOrders(StaffToken, limit, page, sort);
       if (response.data.total > 0) {
         setPreOrders(response.data.data);
@@ -190,7 +206,7 @@ const OrderManagement = () => {
   };
 
   const handleGetPreOrderInfo = (preorderId) => {
-    const order = PreOrders.find(o => o.PreorderID === preorderId);
+    const order = PreOrders.find((o) => o.PreorderID === preorderId);
     if (order) {
       setOrderInfo({
         UserId: order.UserID,
@@ -203,7 +219,6 @@ const OrderManagement = () => {
     }
   };
 
-
   useEffect(() => {
     handleGetAllOrders();
     handleGetAllPreOrders();
@@ -212,7 +227,7 @@ const OrderManagement = () => {
   useEffect(() => {
     handleGetAllOrders();
     handleGetAllPreOrders();
-  }, [currentPage, POcurrentPage])
+  }, [currentPage, POcurrentPage]);
 
   return (
     <div className="order-management-container">
@@ -261,15 +276,23 @@ const OrderManagement = () => {
         <h2>Confirm Change</h2>
         <p>Are you sure you want to update this order's status?</p>
         <div className="modal-actions">
-          <button onClick={updateStatus} className="btn-confirm">Confirm</button>
-          <button onClick={() => setIsStatusChangeOpen(false)} className="btn-cancel">Cancel</button>
+          <button onClick={updateStatus} className="btn-confirm">
+            Confirm
+          </button>
+          <button
+            onClick={() => setIsStatusChangeOpen(false)}
+            className="btn-cancel"
+          >
+            Cancel
+          </button>
         </div>
       </Modal>
       <Modal
         isOpen={isDetail}
         onRequestClose={() => setIsDetail(false)}
         className="custom-modal-history"
-        overlayClassName="custom-overlay">
+        overlayClassName="custom-overlay"
+      >
         <table>
           <thead>
             <tr>
@@ -297,52 +320,78 @@ const OrderManagement = () => {
         isOpen={isInfoOpen}
         onRequestClose={() => setIsInfoOpen(false)}
         className="custom-modal-history"
-        overlayClassName="custom-overlay">
-        <div className=''>
+        overlayClassName="custom-overlay"
+      >
+        <div className="">
           <form>
-            <h5 className='user-info-form-subtitle'>Order Info</h5>
-            <hr className='user-info-form-divider' />
-            <div className='form-group mb-1'>
-              <label className='mb-1' htmlFor='firstName'>UserId</label>
-              <input className='form-control mb-1' id='firstName' type='text' placeholder='UserId'
-                name='UserId'
+            <h5 className="user-info-form-subtitle">Order Info</h5>
+            <hr className="user-info-form-divider" />
+            <div className="form-group mb-1">
+              <label className="mb-1" htmlFor="firstName">
+                UserId
+              </label>
+              <input
+                className="form-control mb-1"
+                id="firstName"
+                type="text"
+                placeholder="UserId"
+                name="UserId"
                 value={OrderInfo.UserId}
                 readOnly
               />
-
             </div>
-            <div className='form-group mb-1'>
-              <label className='mb-1' htmlFor='firstName'>Name</label>
-              <input className='form-control mb-1' id='firstName' type='text' placeholder='Name'
-                name='Name'
+            <div className="form-group mb-1">
+              <label className="mb-1" htmlFor="firstName">
+                Name
+              </label>
+              <input
+                className="form-control mb-1"
+                id="firstName"
+                type="text"
+                placeholder="Name"
+                name="Name"
                 value={OrderInfo.Name}
                 readOnly
               />
-
             </div>
 
-            <div className='form-group mb-1'>
-              <label className='mb-1' htmlFor='lastName'>Email</label>
-              <input id='lastName' type='text' className='form-control mb-1' placeholder='Email'
-                name='Email'
+            <div className="form-group mb-1">
+              <label className="mb-1" htmlFor="lastName">
+                Email
+              </label>
+              <input
+                id="lastName"
+                type="text"
+                className="form-control mb-1"
+                placeholder="Email"
+                name="Email"
                 value={OrderInfo.Email}
                 readOnly
               />
-
             </div>
-            <div className='form-group mb-1'>
-              <label className='mb-1'>Phone</label>
-              <input className='form-control mb-1' type='text' id='street1' placeholder='Phone Number'
-                name='Phone'
+            <div className="form-group mb-1">
+              <label className="mb-1">Phone</label>
+              <input
+                className="form-control mb-1"
+                type="text"
+                id="street1"
+                placeholder="Phone Number"
+                name="Phone"
                 value={OrderInfo.Phone}
                 readOnly
               />
             </div>
 
-            <div className='form-group mb-1'>
-              <label className='mb-1' htmlFor='city'>Address</label>
-              <input type='text' id='city' className='form-control mb-1' placeholder='Address'
-                name='Address'
+            <div className="form-group mb-1">
+              <label className="mb-1" htmlFor="city">
+                Address
+              </label>
+              <input
+                type="text"
+                id="city"
+                className="form-control mb-1"
+                placeholder="Address"
+                name="Address"
                 value={OrderInfo.Address}
                 readOnly
               />
@@ -397,7 +446,7 @@ const OrderManagement = () => {
               {PreOrders.map((order) => (
                 <tr key={order.PreorderID}>
                   <td>{order.PreorderID}</td>
-                  <td style={{ width: 'fit-content' }}>
+                  <td style={{ width: "fit-content" }}>
                     <div className="flex-grow-1">
                       <h6 className="fs-15 mb-1">{order.ProductID}</h6>
                       {/* <p className="mb-0 text-muted fs-13">Quantity: {preorder.Quantity}</p> */}
@@ -411,12 +460,30 @@ const OrderManagement = () => {
                   <td>{formatDate(order.updated)}</td>
                   <td>{order.TotalPrice}</td>
                   <td>{formatDate(order.ETA)}</td>
-                  <td><a href="" onClick={(e) => { e.preventDefault(); handleGetPreOrderInfo(order.PreorderID) }}>View Customer Info</a></td>
+                  <td>
+                    <a
+                      href=""
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleGetPreOrderInfo(order.PreorderID);
+                      }}
+                    >
+                      View Customer Info
+                    </a>
+                  </td>
                   <td>
                     <div className="select1">
-                      <select id="statusDropdown"
+                      <select
+                        id="statusDropdown"
                         value={order.Status}
-                        onChange={(e) => handleStatusChange(order.PreorderID, e.target.value, 'preorder')}>
+                        onChange={(e) =>
+                          handleStatusChange(
+                            order.PreorderID,
+                            e.target.value,
+                            "preorder"
+                          )
+                        }
+                      >
                         <option value="Waiting">Waiting</option>
                         <option value="Cancelled">Cancelled</option>
                         <option value="Shipping">Shipping</option>
@@ -455,7 +522,7 @@ const OrderManagement = () => {
               activeClassName="active"
             />
           </div>
-          <h2 style={{ marginTop: '10px' }}>Orders</h2>
+          <h2 style={{ marginTop: "10px" }}>Orders</h2>
           <table className="issues-table">
             <thead>
               <tr>
@@ -474,17 +541,45 @@ const OrderManagement = () => {
               {Orders.map((order) => (
                 <tr key={order.OrderID}>
                   <td>{order.OrderID}</td>
-                  <td><a href="" onClick={(e) => { e.preventDefault(); handleViewOrderDetail(order.OrderID) }}>View products in this order</a></td>
+                  <td>
+                    <a
+                      href=""
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleViewOrderDetail(order.OrderID);
+                      }}
+                    >
+                      View products in this order
+                    </a>
+                  </td>
                   <td>{formatDate(order.created)}</td>
                   <td>{formatDate(order.updated)}</td>
                   <td>{order.TotalPrice}</td>
-                  <td>{order.VoucherID ? order.VoucherID : 'No voucher'}</td>
-                  <td><a href="" onClick={(e) => { e.preventDefault(); handleGetCustomerInfo(order.OrderID) }}>View Customer Info</a></td>
+                  <td>{order.VoucherID ? order.VoucherID : "No voucher"}</td>
+                  <td>
+                    <a
+                      href=""
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleGetCustomerInfo(order.OrderID);
+                      }}
+                    >
+                      View Customer Info
+                    </a>
+                  </td>
                   <td>
                     <div className="select1">
-                      <select id="statusDropdown"
+                      <select
+                        id="statusDropdown"
                         value={order.Status}
-                        onChange={(e) => handleStatusChange(order.OrderID, e.target.value, 'order')}>
+                        onChange={(e) =>
+                          handleStatusChange(
+                            order.OrderID,
+                            e.target.value,
+                            "order"
+                          )
+                        }
+                      >
                         <option value="Waiting">Waiting</option>
                         <option value="Cancelled">Cancelled</option>
                         <option value="Shipping">Shipping</option>
