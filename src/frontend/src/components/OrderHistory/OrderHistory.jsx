@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import Modal from 'react-modal';
 import { Oval } from 'react-loader-spinner';
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 import './OrderHistory.css';
@@ -11,12 +13,16 @@ import { Get1UserOrder } from '../../services/order-history/getOrder1User';
 import { GetOrderDetail } from '../../services/order-history/getOrderDetail';
 import { GetPreOrderHistory } from '../../services/pre-order-history/getPreOrder1User';
 import { useNavigate } from 'react-router-dom';
+import { CancelOrder } from '../../services/order-history/cancelOrder';
+import { CancelPreOrder } from '../../services/pre-order-history/cancelPreOrder';
 
 export const OrderHistory = ({ isMember }) => {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
 
 
+    const [selectedItem, setSelectedItem] = useState(null);
+    const [itemType, setItemType] = useState('');
     const [preorderhistory, setPreOrderHistory] = useState([]);
     const [orderhistory, setOrderHistory] = useState([]);
     const [pageCount, setPageCount] = useState(1);
@@ -103,6 +109,47 @@ export const OrderHistory = ({ isMember }) => {
         }
     }
 
+    const handleCancelOrder = (id, type) => {
+        const items = type === 'order' ? orderhistory : preorderhistory;
+        const item = items.find(i => type === 'order' ? i.OrderID === id : i.PreorderID === id);
+        if (item && item.Status === 'Waiting') {
+            setSelectedItem(item);
+            setItemType(type);
+            setIsCancelConfirm(true);
+        }
+    };
+
+    const updateStatus = async () => {
+        try {
+            let response;
+            if (itemType === 'order') {
+                response = await CancelOrder(MemberToken, selectedItem.OrderID);
+                console.log(MemberToken)
+            } else {
+                response = await CancelPreOrder(MemberToken, selectedItem.PreorderID);
+            }
+            if (Array.isArray(response.data)) {
+                toast.success(`${itemType === 'order' ? 'Order' : 'Pre-order'} cancelled successfully!`, {
+                    duration: 3000,
+                    position: "top-right",
+                });
+                itemType === 'order' ? handleGetOrder1User() : handleGetPreOrder1User();
+                setIsCancelConfirm(false);
+                setSelectedItem(null);
+                setItemType("");
+            }
+        } catch (error) {
+            console.error(`Error cancelling ${itemType}:`, error);
+            setIsCancelConfirm(false);
+            setSelectedItem(null);
+            setItemType("");
+            toast.error(`Failed to cancel ${itemType}. Please try again.`, {
+                duration: 3000,
+                position: "top-right",
+            });
+        }
+    };
+
     useEffect(() => {
         handleGetOrder1User();
         handleGetPreOrder1User();
@@ -110,29 +157,28 @@ export const OrderHistory = ({ isMember }) => {
     }, [currentPage, POcurrentPage])
 
     useEffect(() => {
-        handleGetOrder1User();
-        handleGetPreOrder1User();
-        // const fetchData = async () => {
-        //     setIsLoading(true);
-        //     try {
-        //         await Promise.all([
-        //             handleGetOrder1User(),
-        //             handleGetPreOrder1User()
-        //         ]);
-        //     } catch (error) {
-        //         console.error("Error fetching data:", error);
-        //     } finally {
-        //         setIsLoading(false);
-        //     }
-        // };
+        const fetchData = async () => {
+            setIsLoading(true);
+            try {
+                await Promise.all([
+                    handleGetOrder1User(),
+                    handleGetPreOrder1User()
+                ]);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
 
-        // fetchData();
+        fetchData();
     }, [])
 
     return (
         <>
             <div><Header isMember={isMember} /></div>
             <img className='image' src="/img/milkbuying.jpeg" />
+            <ToastContainer style={{ top: "110px" }} />
             <div className='history-order'>
                 <Modal
                     isOpen={isCancelConfirm}
@@ -143,7 +189,7 @@ export const OrderHistory = ({ isMember }) => {
                     <h2>Confirm Cancel</h2>
                     <p>Are you sure you want to cancel this order?</p>
                     <div className="modal-actions">
-                        <button className="btn-confirm">Confirm</button>
+                        <button onClick={updateStatus} className="btn-confirm">Confirm</button>
                         <button onClick={() => setIsCancelConfirm(false)} className="btn-cancel">Cancel</button>
                     </div>
                 </Modal>
@@ -270,7 +316,7 @@ export const OrderHistory = ({ isMember }) => {
                                                                             href=""
                                                                             onClick={(e) => {
                                                                                 e.preventDefault();
-                                                                                setIsCancelConfirm(true);
+                                                                                handleCancelOrder(preorder.PreorderID, 'pre-order');
                                                                             }}
                                                                             className="btn btn-secondary btn-sm"
                                                                         >
@@ -333,56 +379,80 @@ export const OrderHistory = ({ isMember }) => {
                                                     </tr>
                                                 </thead>
                                                 <tbody className='OrderHistory-tbody'>
-                                                    {orderhistory.map((order) => (
-                                                        <tr key={order.OrderID}>
-                                                            <td>
-                                                                <a href="#" className="text-body">{order.OrderID}</a>
-                                                            </td>
-                                                            <td>
-                                                                <div className="d-flex gap-3">
-                                                                    <div className="avatar-sm flex-shrink-0">
-                                                                        <div className="avatar-title bg-light rounded">
-                                                                            <img src="/img/" alt="" className="avatar-xs" />
+                                                    {isLoading ? (
+                                                        <tr>
+                                                            <td colSpan="6" style={{ padding: 0 }}>
+                                                                <div style={{
+                                                                    height: '200px',
+                                                                    width: '100%'
+                                                                }}>
+                                                                    <Oval
+                                                                        // height={20}
+                                                                        // width={20}
+                                                                        // color="#fff"
+                                                                        wrapperStyle={{
+                                                                            display: 'flex',
+                                                                            justifyContent: 'center',
+                                                                            alignItems: 'center',
+                                                                            height: '100%',
+                                                                            width: '100%'
+                                                                        }}
+                                                                    />
+                                                                </div></td>
+                                                        </tr>
+                                                    ) : (
+                                                        (orderhistory.map((order) => (
+                                                            <tr key={order.OrderID}>
+                                                                <td>
+                                                                    <a href="#" className="text-body">{order.OrderID}</a>
+                                                                </td>
+                                                                <td>
+                                                                    <div className="d-flex gap-3">
+                                                                        <div className="avatar-sm flex-shrink-0">
+                                                                            <div className="avatar-title bg-light rounded">
+                                                                                <img src="/img/" alt="" className="avatar-xs" />
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="flex-grow-1">
+                                                                            <a href="" className="view-products-link" onClick={(e) => { e.preventDefault(); handleViewOrderDetail(order.OrderID) }}>
+                                                                                <h6 className="fs-15 mb-1">View Your Products</h6>
+                                                                            </a>
+                                                                            {/* <p className="mb-0 text-muted fs-13">Women's Clothes</p> */}
                                                                         </div>
                                                                     </div>
-                                                                    <div className="flex-grow-1">
-                                                                        <a href="" className="view-products-link" onClick={(e) => { e.preventDefault(); handleViewOrderDetail(order.OrderID) }}>
-                                                                            <h6 className="fs-15 mb-1">View Your Products</h6>
+                                                                </td>
+                                                                <td><span className="text-muted">{formatDate(order.created)}</span></td>
+                                                                <td className="fw-medium">{formatPrice(order.TotalPrice)} VND</td>
+                                                                <td>
+                                                                    <span className="badge bg-success-subtle text-success">{order.Status}</span>
+                                                                </td>
+                                                                <td>
+                                                                    {/* <a href="" onClick={(e) => { e.preventDefault(); setIsCancelConfirm(true); }} data-bs-toggle="modal" className="btn btn-secondary btn-sm">Cancel</a> */}
+                                                                    {order.Status !== 'Waiting' ? (
+                                                                        <button
+                                                                            className="btn btn-secondary btn-sm"
+                                                                            disabled
+                                                                            style={{ opacity: 0.5, cursor: 'not-allowed' }}
+                                                                        >
+                                                                            Cancel
+                                                                        </button>
+                                                                    ) : (
+                                                                        <a
+                                                                            href=""
+                                                                            onClick={(e) => {
+                                                                                e.preventDefault();
+                                                                                handleCancelOrder(order.PreorderID, 'order');
+                                                                            }}
+                                                                            className="btn btn-secondary btn-sm"
+                                                                        >
+                                                                            Cancel
                                                                         </a>
-                                                                        {/* <p className="mb-0 text-muted fs-13">Women's Clothes</p> */}
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                            <td><span className="text-muted">{formatDate(order.created)}</span></td>
-                                                            <td className="fw-medium">{formatPrice(order.TotalPrice)} VND</td>
-                                                            <td>
-                                                                <span className="badge bg-success-subtle text-success">{order.Status}</span>
-                                                            </td>
-                                                            <td>
-                                                                {/* <a href="" onClick={(e) => { e.preventDefault(); setIsCancelConfirm(true); }} data-bs-toggle="modal" className="btn btn-secondary btn-sm">Cancel</a> */}
-                                                                {order.Status !== 'Waiting' ? (
-                                                                    <button
-                                                                        className="btn btn-secondary btn-sm"
-                                                                        disabled
-                                                                        style={{ opacity: 0.5, cursor: 'not-allowed' }}
-                                                                    >
-                                                                        Cancel
-                                                                    </button>
-                                                                ) : (
-                                                                    <a
-                                                                        href=""
-                                                                        onClick={(e) => {
-                                                                            e.preventDefault();
-                                                                            setIsCancelConfirm(true);
-                                                                        }}
-                                                                        className="btn btn-secondary btn-sm"
-                                                                    >
-                                                                        Cancel
-                                                                    </a>
-                                                                )}
-                                                            </td>
-                                                        </tr>
-                                                    ))}
+                                                                    )}
+                                                                </td>
+                                                            </tr>
+                                                        )))
+                                                    )}
+
                                                 </tbody>
                                             </table>
                                         </div>

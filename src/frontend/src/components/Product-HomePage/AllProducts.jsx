@@ -108,7 +108,7 @@ const AllProducts = ({ isMember }) => {
                         <div className="product-container">
                             {products.map((product) => (
                                 <Link to={`/Customer/ProductDetail/${product.ProductID}`} key={product.ProductID} className="product-preview">
-                                    <img src={`${getImageSrc(product.Image)}`} alt={product.Name} />
+                                    <img src={`${getImageSrc(product.Image)}`} alt={product.Name} loading="lazy" />
                                     <h3>{product.Name}</h3>
                                     {/* <p>{product.Content}</p> */}
                                     {/* <p><ReactQuill
