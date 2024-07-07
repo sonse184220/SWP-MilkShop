@@ -15,7 +15,7 @@ export class AuthService {
     registerUser = (userData, req, callback) => {
         const { Password, Name, Email, Phone, Address } = userData;
 
-        const checkQuery = 'SELECT * FROM user WHERE Email = ?';
+        const checkQuery = 'SELECT * FROM `user` WHERE Email = ?';
         connection.query(checkQuery, [Email], (err, results) => {
             if (err) return callback(err);
 
@@ -23,7 +23,7 @@ export class AuthService {
                 return callback(null, { message: 'User already exists with this Email', status: 400 });
             }
 
-            const tempCheckQuery = 'SELECT * FROM TEMP_USER WHERE Email = ?';
+            const tempCheckQuery = 'SELECT * FROM `TEMP_USER` WHERE Email = ?';
             connection.query(tempCheckQuery, [Email], (err, results) => {
                 if (err) return callback(err);
 
@@ -35,7 +35,7 @@ export class AuthService {
                     if (err) return callback(err);
 
                     const token = jwt.sign({ email: Email }, process.env.JWT_SECRET, { expiresIn: '24h' });
-                    const query = 'INSERT INTO TEMP_USER (Password, Name, Email, Phone, Address, Token) VALUES (?, ?, ?, ?, ?, ?)';
+                    const query = 'INSERT INTO `TEMP_USER` (Password, Name, Email, Phone, Address, Token) VALUES (?, ?, ?, ?, ?, ?)';
 
                     connection.query(query, [hashedPassword, Name, Email, Phone, Address, token], (err, result) => {
                         if (err) return callback(err);
@@ -58,7 +58,7 @@ export class AuthService {
     loginUser = (userData, callback) => {
         const { identifier, Password } = userData;
 
-        const query = 'SELECT * FROM user WHERE Email = ? OR Phone = ?';
+        const query = 'SELECT * FROM `user` WHERE Email = ? OR Phone = ?';
         connection.query(query, [identifier, identifier], (err, results) => {
             if (err) return callback(err);
 
@@ -67,6 +67,10 @@ export class AuthService {
             }
 
             const user = results[0];
+
+            if (user.activeStatus === 'inactive') {
+                return callback(null, { message: 'Account is inactive. Please contact support.', status: 403 });
+            }
 
             bcrypt.compare(Password, user.Password, (err, isMatch) => {
                 if (err) return callback(err);
@@ -91,20 +95,20 @@ export class AuthService {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             const email = decoded.email;
 
-            const selectQuery = 'SELECT * FROM TEMP_USER WHERE Token = ?';
+            const selectQuery = 'SELECT * FROM `TEMP_USER` WHERE Token = ?';
             connection.query(selectQuery, [token], (err, results) => {
                 if (err) return callback(err);
                 if (results.length === 0) return callback(null, { message: 'Invalid or expired token', status: 400 });
 
                 const user = results[0];
-                const getMaxUserIdQuery = 'SELECT MAX(CAST(SUBSTRING(UserID, 2) AS UNSIGNED)) AS maxUserId FROM user WHERE UserID LIKE "U%"';
+                const getMaxUserIdQuery = 'SELECT MAX(CAST(SUBSTRING(UserID, 2) AS UNSIGNED)) AS maxUserId FROM `user` WHERE UserID LIKE "U%"';
                 connection.query(getMaxUserIdQuery, (err, results) => {
                     if (err) return callback(err);
 
                     const newUserId = `U${(results[0].maxUserId ? results[0].maxUserId + 1 : 1).toString().padStart(3, '0')}`;
 
-                    const insertQuery = 'INSERT INTO user (UserID, Password, Name, Email, Phone, Address, RewardPoints, Verified, isAdmin, isStaff) VALUES (?, ?, ?, ?, ?, ?, 0, 1, 0, 0)';
-                    const deleteQuery = 'DELETE FROM TEMP_USER WHERE TempUserID = ?';
+                    const insertQuery = 'INSERT INTO `user` (UserID, Password, Name, Email, Phone, Address, RewardPoints, Verified, isAdmin, isStaff, activeStatus) VALUES (?, ?, ?, ?, ?, ?, 0, 1, 0, 0, "active")';
+                    const deleteQuery = 'DELETE FROM `TEMP_USER` WHERE TempUserID = ?';
 
                     connection.query(insertQuery, [newUserId, user.Password, user.Name, user.Email, user.Phone, user.Address], (err, result) => {
                         if (err) return callback(err);
@@ -124,7 +128,7 @@ export class AuthService {
     registerAdmin = (userData, callback) => {
         const { Password, Name, Email, Phone, Address } = userData;
 
-        const checkQuery = 'SELECT * FROM user WHERE Email = ?';
+        const checkQuery = 'SELECT * FROM `user` WHERE Email = ?';
         connection.query(checkQuery, [Email], (err, results) => {
             if (err) return callback(err);
 
@@ -135,13 +139,13 @@ export class AuthService {
             bcrypt.hash(Password, 10, (err, hashedPassword) => {
                 if (err) return callback(err);
 
-                const getMaxUserIdQuery = 'SELECT MAX(CAST(SUBSTRING(UserID, 2) AS UNSIGNED)) AS maxUserId FROM user WHERE UserID LIKE "U%"';
+                const getMaxUserIdQuery = 'SELECT MAX(CAST(SUBSTRING(UserID, 2) AS UNSIGNED)) AS maxUserId FROM `user` WHERE UserID LIKE "U%"';
                 connection.query(getMaxUserIdQuery, (err, results) => {
                     if (err) return callback(err);
 
                     const newUserId = `U${(results[0].maxUserId ? results[0].maxUserId + 1 : 1).toString().padStart(3, '0')}`;
 
-                    const query = 'INSERT INTO user (UserID, Password, Name, Email, Phone, Address, RewardPoints, Verified, isAdmin, isStaff) VALUES (?, ?, ?, ?, ?, ?, 0, 1, 1, 0)';
+                    const query = 'INSERT INTO `user` (UserID, Password, Name, Email, Phone, Address, RewardPoints, Verified, isAdmin, isStaff, activeStatus) VALUES (?, ?, ?, ?, ?, ?, 0, 1, 1, 0, "active")';
                     connection.query(query, [newUserId, hashedPassword, Name, Email, Phone, Address], (err, result) => {
                         if (err) return callback(err);
                         callback(null, { message: 'Admin registered successfully', status: 201 });
@@ -154,7 +158,7 @@ export class AuthService {
     createStaff = (userData, callback) => {
         const { Password, Name, Email, Phone, Address } = userData;
 
-        const checkQuery = 'SELECT * FROM user WHERE Email = ?';
+        const checkQuery = 'SELECT * FROM `user` WHERE Email = ?';
         connection.query(checkQuery, [Email], (err, results) => {
             if (err) return callback(err);
 
@@ -165,13 +169,13 @@ export class AuthService {
             bcrypt.hash(Password, 10, (err, hashedPassword) => {
                 if (err) return callback(err);
 
-                const getMaxUserIdQuery = 'SELECT MAX(CAST(SUBSTRING(UserID, 2) AS UNSIGNED)) AS maxUserId FROM user WHERE UserID LIKE "U%"';
+                const getMaxUserIdQuery = 'SELECT MAX(CAST(SUBSTRING(UserID, 2) AS UNSIGNED)) AS maxUserId FROM `user` WHERE UserID LIKE "U%"';
                 connection.query(getMaxUserIdQuery, (err, results) => {
                     if (err) return callback(err);
 
                     const newUserId = `U${(results[0].maxUserId ? results[0].maxUserId + 1 : 1).toString().padStart(3, '0')}`;
 
-                    const query = 'INSERT INTO user (UserID, Password, Name, Email, Phone, Address, RewardPoints, Verified, isAdmin, isStaff) VALUES (?, ?, ?, ?, ?, ?, 0, 1, 0, 1)';
+                    const query = 'INSERT INTO `user` (UserID, Password, Name, Email, Phone, Address, RewardPoints, Verified, isAdmin, isStaff, activeStatus) VALUES (?, ?, ?, ?, ?, ?, 0, 1, 0, 1, "active")';
                     connection.query(query, [newUserId, hashedPassword, Name, Email, Phone, Address], (err, result) => {
                         if (err) return callback(err);
                         callback(null, { message: 'Staff created successfully', status: 201 });
