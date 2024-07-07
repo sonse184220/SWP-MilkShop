@@ -1,13 +1,13 @@
 import { Router } from "express";
 import multer from "multer";
 
-import { checkBlogData, checkBlogId, checkBlogSearch, checkPaginationQueryForBlog } from "../middlewares/blogValidators.js";
+import { checkBlogData, checkBlogId, checkBlogSearch, checkBlogUpdateData, checkPaginationQueryForBlog, multerBlogFileErrorHandler } from "../middlewares/blogValidators.js";
 import { BlogController } from "../controllers/BlogController.js";
 import { checkAuthenticated } from "../middlewares/authMiddleware.js";
-import { isStaff, isStaffOrAdmin } from "../middlewares/validationMiddleware.js";
+import { checkImageUpload, isStaff, isStaffOrAdmin } from "../middlewares/validationMiddleware.js";
 
 const router = Router();
-const upload = multer();
+const upload = multer({ limits: { fileSize: 15 * 1024 * 1024 } });
 const blogController = new BlogController();
 
 /** URL: localhost:xxxx/api/blogs
@@ -39,8 +39,16 @@ router.get("/api/blogs/search", checkBlogSearch, checkPaginationQueryForBlog, as
 /** tạo 1 blog
  * 
  */
-router.post("/api/blog/create", checkAuthenticated, isStaff, upload.single("image"), checkBlogData, async (req, res) => {
+router.post("/api/blog/create", checkAuthenticated, isStaff, upload.single("image"), checkBlogData, checkImageUpload, multerBlogFileErrorHandler, async (req, res) => {
     await blogController.createBlog(req, res);
+})
+
+router.patch("/api/blog/:id", checkAuthenticated, isStaff, checkBlogId, upload.single("image"), checkBlogUpdateData, checkImageUpload, multerBlogFileErrorHandler, async (req, res) => {
+    await blogController.editBlog(req, res);
+})
+
+router.delete("/api/blog/:id", checkAuthenticated, isStaff, checkBlogId, async (req, res) => {
+    await blogController.deleteBlog(req, res)
 })
 
 

@@ -1,4 +1,5 @@
 import { body, query, check, validationResult, matchedData, param } from 'express-validator';
+import multer from 'multer';
 
 // kiểm tra id data đầu vào cho blog
 export async function checkBlogId(req, res, next) {
@@ -113,4 +114,46 @@ export async function checkBlogData(req, res, next){
     
     Object.assign(req.query, matchedData(req));
     next();
+}
+
+export async function checkBlogUpdateData(req, res, next){
+    await body("title")
+    .optional({ values: "falsy" })
+    .trim()
+    .escape()
+    .run(req);
+
+    await body("content")
+    .optional({ values: "falsy" })
+    .trim()
+    .escape()
+    .run(req);
+
+    await body("productList")
+    .optional({ values: "falsy" })
+    .trim()
+    .escape()
+    .customSanitizer((value) =>
+        value.split(",").map(product => product.trim())
+    )
+    .isArray({ min: 1 }).withMessage("Product list must be a list (example: P001, P002,...) and consisted of at least 1 product")
+    .run(req);
+
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+        return res.status(400).send({ error: result.array() });
+    }
+    
+    Object.assign(req.query, matchedData(req));
+    next();
+}
+
+export async function multerBlogFileErrorHandler(err, req, res, next) {
+    if (err instanceof multer.MulterError) {
+        if (err.code === 'LIMIT_FILE_SIZE') {
+            return res.status(400).json({ error: 'File size limit exceeded, we only allowed 15MB below' });
+        }
+        return res.status(400).json({ error: err.message });
+    }
+    next(err);
 }

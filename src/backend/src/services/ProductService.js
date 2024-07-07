@@ -32,6 +32,11 @@ export class ProductService {
         return product;
     }
 
+    async deleteBlogProductList(blogId) {
+        const [result] = await poolConnect.query(`DELETE FROM blog_products WHERE BlogID = ?`, [blogId])
+        return result;
+    }
+
     // tìm product trong database bằng name
     async searchProducts(name, limit, sortBy, offset) {
         const search = `%${name}%`;

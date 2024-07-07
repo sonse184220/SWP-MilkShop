@@ -55,4 +55,14 @@ export class BlogService {
                                                 VALUES (?,?,?,?,?)`,[blogId, userId, title, image, content]);
         return blog;
     }
+
+    async editBlog(blogId, updateQuery, updateValue) {
+        const [updatedBlog] = await poolConnect.query(`UPDATE blog SET ${updateQuery.join(", ")} WHERE BlogID = ?`, [...updateValue, blogId]);
+        return updatedBlog;
+    }
+
+    async deleteBlog(blogId) {
+        const [result] = await poolConnect.query(`DELETE FROM blog WHERE BlogID = ?`, [blogId]);
+        return result;
+    }
 }
