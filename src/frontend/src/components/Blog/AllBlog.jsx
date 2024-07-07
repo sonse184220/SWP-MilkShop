@@ -19,8 +19,8 @@ const AllBlog = ({ isMember }) => {
   const [pageCount, setPageCount] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const [searchPageCount, setSearchPageCount] = useState(1);
-  const [searchCurrentPage, setSearchCurrentPage] = useState(1);
+  const [searchPageCount, setSearchPageCount] = useState([]);
+  const [searchCurrentPage, setSearchCurrentPage] = useState([]);
 
   const handlePageClick = (event) => {
     setCurrentPage(event.selected + 1);
@@ -56,17 +56,12 @@ const AllBlog = ({ isMember }) => {
 
   const handleSearch = async () => {
     try {
-      let searchLimit = 5;
-      let searchPage = searchCurrentPage;
-      let searchSort = "";
-      const searchedBlogs = await searchBlogs(
-        searchQuery,
-        searchLimit,
-        searchPage,
-        searchSort
-      );
+      let limit = 5;
+      let page = searchCurrentPage;
+      let sort = "";
+      const searchedBlogs = await searchBlogs(searchQuery, limit, page, sort);
       setBlogs(searchedBlogs.data);
-      setSearchPageCount(searchedBlogs.data.totalPages);
+      setSearchPageCount(searchedBlogs.totalPages);
     } catch (err) {
       setError(err.message);
       console.error("Error searching blogs:", err);
