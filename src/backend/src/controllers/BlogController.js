@@ -85,7 +85,8 @@ export class BlogController {
     async createBlog(req, res) {
         const { userId, title, content, productList } = req.body;
         let nextMaxId;
-        const image = req.file.buffer;
+        const image = req.file.buffer.toString("base64");
+        console.log(image);
 
         const maxBlogId = await blogService.getMaxBlogId();
         if (!maxBlogId[0].maxId) {
@@ -127,7 +128,7 @@ export class BlogController {
     async editBlog(req, res) {
         const blogId = req.params.id;
         const { title, content, productList } = req.body;
-        const image = req.file ? req.file.buffer : undefined;
+        const image = req.file ? req.file.buffer.toString("base64") : undefined;
 
         const checkBlog = await blogService.getBlog(blogId);
         if (checkBlog.length === 0) {
@@ -199,9 +200,12 @@ export class BlogController {
             return res.status(404).send({ error: "Blog not found!" })
         }
 
-        const deletingBlogProductList = await productService.deleteBlogProductList(blogId);
-        if (deletingBlogProductList.affectedRows === 0) {
-            return res.status(500).send({ error: `Failed to delete blog ${blogId}'s product list!` })
+        const checkProductList = await productService.getBlogProductList(blogId);
+        if (checkProductList.length > 0) {
+            const deletingBlogProductList = await productService.deleteBlogProductList(blogId);
+            if (deletingBlogProductList.affectedRows === 0) {
+                return res.status(500).send({ error: `Failed to delete blog ${blogId}'s product list!` })
+            }
         }
         const deletingBlog = await blogService.deleteBlog(blogId);
         if (deletingBlog.affectedRows === 0) {
