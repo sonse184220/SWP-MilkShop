@@ -55,8 +55,10 @@ h2 {
     border-radius: 20px;
     cursor: pointer;
     border: 1px solid palevioletred;
-    position: relative; /* Set the position to relative */
-    top: -10px; /* Move the button up by 10px */
+    position: relative;
+    /* Set the position to relative */
+    top: -10px;
+    /* Move the button up by 10px */
 }
 
 .header-container button a {
@@ -218,7 +220,7 @@ h2 {
     justify-content: center;
 }
 
-input[type="file"] {
+.editProfile input[type="file"] {
     border-radius: 3px;
     padding: 5px 8px;
     text-shadow: 1px 1px #fff;

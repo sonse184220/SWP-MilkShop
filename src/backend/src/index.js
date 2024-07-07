@@ -19,6 +19,7 @@ import { orderRoutes } from './routes/orderRoutes.js';
 import { preorderRoutes } from "./routes/preorderRoutes.js";
 import { voucherRoutes } from './routes/voucherRoutes.js';
 import { userReportRoutes } from "./routes/userreportRoutes.js";
+import { adminRoutes } from './routes/adminRoutes.js';
 
 dotenv.config();
 
@@ -44,7 +45,7 @@ app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
 app.use(express.json());
 app.use(bodyParser.json());
-
+app.use('/api/admin', adminRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/reset-password', resetPasswordRoutes);
 app.use('/api/brand', brandRoutes);
