@@ -86,7 +86,6 @@ export class BlogController {
         const { userId, title, content, productList } = req.body;
         let nextMaxId;
         const image = req.file.buffer.toString("base64");
-        console.log(image);
 
         const maxBlogId = await blogService.getMaxBlogId();
         if (!maxBlogId[0].maxId) {

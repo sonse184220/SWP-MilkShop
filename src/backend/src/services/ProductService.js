@@ -168,9 +168,10 @@ export class ProductService {
             const [maxIdResult] = await poolConnect.query(getMaxProductIdQuery);
             const newProductId = `P${(maxIdResult[0].maxProductId ? maxIdResult[0].maxProductId + 1 : 1).toString().padStart(3, '0')}`;
 
-            const resizedImageBuffer = await sharp(imageBuffer)
+            const resizedImageBufferBeforeBase64 = await sharp(imageBuffer)
                 .resize(720, 800)
                 .toBuffer();
+            const resizedImageBuffer = resizedImageBufferBeforeBase64.toString("base64");
 
             const query = `
                 INSERT INTO product (ProductID, BrandID, Name, Price, Expiration, Quantity, Content, Status, created, updated, Image)
@@ -224,9 +225,10 @@ export class ProductService {
             }
             if (imageBuffer) {
                 try {
-                    const resizedImageBuffer = await sharp(imageBuffer)
+                    const resizedImageBufferBeforeBase64 = await sharp(imageBuffer)
                         .resize(720, 800)
                         .toBuffer();
+                    const resizedImageBuffer = resizedImageBufferBeforeBase64.toString("base64");
                     fieldsToUpdate.push('Image = ?');
                     values.push(resizedImageBuffer);
                 } catch (err) {
