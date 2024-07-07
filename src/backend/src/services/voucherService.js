@@ -1,4 +1,4 @@
-import { connection } from '../utils/dbConnection.js';
+import { connection, poolConnect } from '../utils/dbConnection.js';
 
 export class VoucherService {
     getAvailableVouchers = (callback) => {
@@ -19,4 +19,15 @@ export class VoucherService {
             callback(null, results[0].Discount);
         });
     };
+
+    async getVoucher(voucherId) {
+        const [voucher] = await poolConnect.query("SELECT * FROM voucher WHERE VoucherID = ?", [voucherId]);
+        return voucher;
+    }
+
+    async createVoucher(discount, quantity, expiration, content) {
+        const [voucher] = await poolConnect.query(`INSERT INTO voucher (Discount, VoucherQuantity, Expiration, Content) 
+                                                VALUES (?,?,?,?)`, [discount, quantity, expiration, content]);
+        return voucher;
+    }
 }
