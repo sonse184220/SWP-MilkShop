@@ -96,12 +96,24 @@ export class ProductController {
         });
     };
 
-    getAllProducts = (req, res) => {
-        const query = 'SELECT * FROM PRODUCT';
-        connection.query(query, (err, results) => {
-            if (err) return res.status(500).json({ error: err.message });
-            res.status(200).json(results);
-        });
+    getAllProducts = async (req, res) => {
+        const page = parseInt(req.query.page, 10) || 1;
+        const limit = parseInt(req.query.limit, 10) || 10;
+
+        try {
+            const products = await productService.getAllProducts(page, limit);
+            const totalProducts = await productService.getTotalProducts();
+            const totalPages = Math.ceil(totalProducts / limit);
+
+            res.status(200).json({
+                products,
+                totalProducts,
+                totalPages,
+                currentPage: page
+            });
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
     };
 
     async createFeedback(req, res) {
@@ -141,12 +153,12 @@ export class ProductController {
 
         let filterField = "";
         let valueField = [];
-        
+
         switch (filter) {
             case "user":
                 const checkUser = await userService.checkUserExisted(fuid);
                 if (checkUser.length === 0) {
-                    return res.status(404).send({ error: "User not found!"})
+                    return res.status(404).send({ error: "User not found!" })
                 }
 
                 filterField = "AND f.UserID = ?";
@@ -164,7 +176,7 @@ export class ProductController {
             case "user&product":
                 const checkUserAndProduct = await Promise.all([userService.checkUserExisted(fuid), productService.getProduct(fpid)]);
                 if (checkUserAndProduct[0].length === 0) {
-                    return res.status(404).send({ error: "User not found!"})
+                    return res.status(404).send({ error: "User not found!" })
                 }
                 if (checkUserAndProduct[1].length === 0) {
                     return res.status(404).send({ error: "Product not found!" });
@@ -174,8 +186,8 @@ export class ProductController {
                 valueField = [fuid, fpid]
                 break;
             default:
-                // nothing
-        }   
+            // nothing
+        }
 
         let sortBy;
         switch (sort) {

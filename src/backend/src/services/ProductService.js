@@ -78,12 +78,20 @@ export class ProductService {
     }
 
     // 
-    getAllProducts = (callback) => {
-        const query = 'SELECT * FROM PRODUCT';
-        connection.query(query, (err, results) => {
-            if (err) return callback(err);
-            callback(null, results);
-        });
+    getAllProducts = async (page, limit) => {
+        const offset = (page - 1) * limit;
+        const query = 'SELECT * FROM PRODUCT LIMIT ? OFFSET ?';
+
+        const [results] = await poolConnect.query(query, [limit, offset]);
+        return results;
+    };
+
+    getTotalProducts = async () => {
+        const query = 'SELECT COUNT(*) as count FROM PRODUCT';
+
+        const [total] = await poolConnect.query(query);
+        const count = total[0].count;
+        return count;
     };
 
     // lấy feedback bằng id của nó
@@ -123,7 +131,7 @@ export class ProductService {
         const [total] = await poolConnect.query(`SELECT COUNT(*) as count
                                                 FROM feedback AS f
                                                 WHERE Content LIKE ? ${filterQuery}`, [search, ...filterValue]);
-        
+
         const count = total[0].count;
         return count;
     }
