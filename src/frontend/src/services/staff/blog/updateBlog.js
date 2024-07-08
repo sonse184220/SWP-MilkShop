@@ -1,8 +1,8 @@
 import axios from "../../axios";
 
-export const AddProduct = (token, pInfo) => {
+export const UpdateBlog = (token, bId, bInfo) => {
     try {
-        return axios.post(`/api/product/create`, pInfo,
+        return axios.patch(`/api/blog/${bId}`, bInfo,
             {
                 headers: {
                     'Authorization': token,
@@ -10,7 +10,7 @@ export const AddProduct = (token, pInfo) => {
             }
         );
     } catch (error) {
-        console.error('An error occurred while add Product (staff):', error);
+        console.error('An error occurred while add blog (staff):', error);
         throw error;
     }
 }

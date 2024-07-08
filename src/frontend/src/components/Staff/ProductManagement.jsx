@@ -109,8 +109,8 @@ function ProductManagement() {
   const handleGetProducts = async () => {
     try {
       const response = await handleGetAllProduct();
-      if (Array.isArray(response.data)) {
-        setProducts(response.data);
+      if (response.data.totalProducts > 0) {
+        setProducts(response.data.products);
       }
     } catch (error) {
 
@@ -134,10 +134,7 @@ function ProductManagement() {
           // Image: product.Image,
         });
         setImagePreview(
-          `data:image/jpeg;base64,${btoa(
-            String.fromCharCode.apply(null, product.Image.data)
-          )}`
-        );
+          `data:image/jpeg;base64,${product.Image}`);
         setIsOpen(true);
       }
     } catch (error) {
@@ -208,9 +205,10 @@ function ProductManagement() {
       formData.append("Price", newProduct.Price);
       formData.append("Expiration", newProduct.Expiration);
       formData.append("Quantity", newProduct.Quantity);
-      formData.append("Status", newProduct.Status);
+      formData.append("Status", "out-of-stock");
       formData.append("Content", newProduct.Content);
       formData.append("BrandID", newProduct.BrandID);
+      // formData.append("Status", "out-of-stock");
 
       const response = await AddProduct(StaffToken, formData);
       if (response.data.message) {

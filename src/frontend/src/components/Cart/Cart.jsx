@@ -8,6 +8,7 @@ import Modal from "react-modal";
 // import { Alert, AlertTitle, AlertDescription } from '../../ui/alert';
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { Alert, AlertTitle } from "@mui/material";
+import { X } from 'lucide-react';
 
 import "./Cart.css";
 import Footer from "../Footer/Footer";
@@ -101,7 +102,7 @@ export const Cart = ({ isMember }) => {
           useRewardPoints: false,
         });
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const handleRemoveCart = async (pID) => {
@@ -231,16 +232,19 @@ export const Cart = ({ isMember }) => {
         className="custom-modal success-modal"
         overlayClassName="custom-overlay"
       >
+        {/* <button className='x-close-btn' onClick={() => setIsSuccessModalOpen(false)}>
+          <X size={20} />
+        </button> */}
         <Alert severity="success" icon={<CheckCircleIcon />}>
           <AlertTitle>Success!</AlertTitle>
           Your order has been placed successfully.
         </Alert>
-        <button
+        {/* <button
           onClick={() => setIsSuccessModalOpen(false)}
           className="btn-close"
         >
           Close
-        </button>
+        </button> */}
       </Modal>
       <div className="middle-part">
         <ToastContainer style={{ top: "110px" }} />

@@ -388,7 +388,7 @@ const ProductDetail = ({ isMember }) => {
                         <div className='pre-order-product'>
                             <h3>{CurrentProduct.Name}</h3>
                             <h4>CATEGORY: {CurrentProduct.BrandName}</h4>
-                            <div><img src='/img/P001.jpg' /></div>
+                            <div><img src={`data:image/jpeg;base64,${CurrentProduct.Image}`} /></div>
                             <div className="pre-order-quantity">
                                 <span>Quantity</span>
                                 <div className="product-variable-quantity">
@@ -472,7 +472,7 @@ const ProductDetail = ({ isMember }) => {
                             {/* <img src={`${CurrentProduct[0].Image}`} /> */}
                             {/* <img src={`data:image/jpeg;base64,${btoa(String.fromCharCode.apply(null, CurrentProduct[0].Image.data))}`} /> */}
                             <img
-                                src={getImageSrc(CurrentProduct.Image)}
+                                src={`data:image/jpeg;base64,${CurrentProduct.Image}`}
                                 alt={CurrentProduct.Name}
                             />
                         </div>
@@ -501,11 +501,40 @@ const ProductDetail = ({ isMember }) => {
                                     </div>
 
                                     <div className="product-add-to-cart-btn">
-                                        {(isMember && CurrentProduct.Quantity === 0) ?
+                                        {/* {(isMember && CurrentProduct.Quantity === 0) ?
                                             (<a href="#" onClick={(e) => { e.preventDefault(); setIsOpenPreOrder(true) }} className="btn btn-block btn-lg btn-black-default-hover" data-bs-toggle="modal" data-bs-target="#modalAddcart">Pre-Order</a>)
                                             :
                                             (<a href="#" onClick={handleAddToCart} className="btn btn-block btn-lg btn-black-default-hover" data-bs-toggle="modal" data-bs-target="#modalAddcart">+ Add To Cart</a>)
-                                        }
+                                        } */}
+                                        {(!isMember && CurrentProduct.Quantity === 0) ? (
+                                            <button
+                                                className="btn btn-block btn-lg btn-black-default-hover disabled-button"
+                                                disabled
+                                                style={{ cursor: 'not-allowed', opacity: 0.6 }}
+                                            >
+                                                Out of Stock
+                                            </button>
+                                        ) : (isMember && CurrentProduct.Quantity === 0) ? (
+                                            <a
+                                                href="#"
+                                                onClick={(e) => { e.preventDefault(); setIsOpenPreOrder(true) }}
+                                                className="btn btn-block btn-lg btn-black-default-hover"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalAddcart"
+                                            >
+                                                Pre-Order
+                                            </a>
+                                        ) : (
+                                            <a
+                                                href="#"
+                                                onClick={handleAddToCart}
+                                                className="btn btn-block btn-lg btn-black-default-hover"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalAddcart"
+                                            >
+                                                + Add To Cart
+                                            </a>
+                                        )}
                                     </div>
                                 </div>
 

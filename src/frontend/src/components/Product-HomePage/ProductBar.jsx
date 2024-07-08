@@ -21,7 +21,7 @@ const ProductBar = () => {
             setIsLoading(true);
             const response = await handleGetAllProduct();
             console.log(response);
-            const slicedProducts = response.data.slice(0, 9); // Get only the first 12 elements
+            const slicedProducts = response.data.products.slice(0, 9); // Get only the first 12 elements
             setProducts(slicedProducts);
         } catch (error) {
 
@@ -85,7 +85,7 @@ const ProductBar = () => {
                         {products.map((product) => (
                             <div key={product.ProductID} className="product-slide">
                                 <Link to={`/Customer/ProductDetail/${product.ProductID}`} className="product-preview">
-                                    <img src={`/img/${product.ProductID}.jpg`} alt={product.Name} />
+                                    <img src={`data:image/jpeg;base64,${product.Image}`} alt={product.Name} />
                                     <h3>{product.Name}</h3>
                                     {/* <p>{product.Content}</p> */}
                                     <p>{product.Price.toLocaleString()} VND</p>

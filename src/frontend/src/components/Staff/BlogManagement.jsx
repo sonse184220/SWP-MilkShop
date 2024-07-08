@@ -1,32 +1,43 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+
 import "./BlogManagement.css"; // Import CSS file
 import Sidebar from "./Sidebar";
 import Modal from "react-modal";
 import StaffProfile from "./StaffProfile";
+import { fetchBlogs } from "../../services/blog/blogService";
+import { AddBlog } from "../../services/staff/blog/addBlog";
+import { blogDetail } from "../../services/blog/blogDetail";
+import { UpdateBlog } from "../../services/staff/blog/updateBlog";
 
 const BlogManagement = () => {
+  const StaffToken = 'Bearer ' + sessionStorage.getItem('token');
+  const userId = sessionStorage.getItem('staffData') ? JSON.parse(sessionStorage.getItem('staffData')).UserID : "Guest";
+
+
   const [isOpen, setIsOpen] = useState(false);
   const [isAddOpen, setIsAddOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  const [blogs, setBlogs] = useState([
-    {
-      BlogID: 1,
-      BlogName: "First Blog",
-      CreatedDate: "2024-01-01",
-      Content: "This is the content of the first blog.",
-      created: "2024-01-01",
-      updated: "2024-01-02",
-    },
-    {
-      BlogID: 2,
-      BlogName: "Second Blog",
-      CreatedDate: "2024-02-01",
-      Content: "This is the content of the second blog.",
-      created: "2024-02-01",
-      updated: "2024-02-02",
-    },
-  ]);
+  const [blogs, setBlogs] = useState([]);
+  const [newBlog, setNewBlog] = useState({
+    userId: "",
+    title: "",
+    content: "",
+    productList: "",
+  });
+  const [updateBlog, setUpdateBlog] = useState({
+    BlogID: "",
+    userId: "",
+    title: "",
+    content: "",
+    productList: "",
+  });
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState('');
 
   const toggleDropdown = () => {
     if (dropdownRef.current) {
@@ -34,9 +45,148 @@ const BlogManagement = () => {
     }
   };
 
+  const getImageSrc = (imageData) => {
+    if (!imageData || !imageData.data) return '';
+
+    try {
+      const base64 = btoa(
+        imageData.data.reduce((data, byte) => data + String.fromCharCode(byte), '')
+      );
+      return `data:image/jpeg;base64,${base64}`;
+    } catch (error) {
+      console.error('Error converting image data:', error);
+      return '';
+    }
+  };
+
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = date.toLocaleString('default', { month: 'short' });
+    const year = date.getFullYear();
+    return `${day} ${month}, ${year}`;
+  }
+
+  const handleGetBlogs = async () => {
+    try {
+      const response = await fetchBlogs(5, 1, '');
+      if (response.data.total > 0) {
+        setBlogs(response.data.data);
+      }
+    } catch (error) {
+
+    }
+  }
+
+  const handleAddBlog = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("userId", userId);
+      formData.append("title", newBlog.title);
+      formData.append("content", newBlog.content);
+      formData.append("productList", newBlog.productList);
+      if (imageFile) {
+        formData.append("image", imageFile);
+      }
+
+      const response = await AddBlog(StaffToken, formData);
+      if (response.data.blog) {
+        handleGetBlogs();
+        setIsAddOpen(false);
+        setNewBlog({
+          userId: "",
+          title: "",
+          content: "",
+          productList: "",
+        });
+        setImageFile(null);
+        setImagePreview('');
+        toast.success("Blog added successfully", {
+          duration: 3000,
+          position: "top-right",
+        });
+      }
+    } catch (error) {
+      console.error("Error adding blog:", error);
+      toast.error("Failed to add blog. Please try again!", {
+        duration: 3000,
+        position: "top-right",
+      });
+    }
+  }
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleGetABlog = async (blogId) => {
+    try {
+      const response = await blogDetail(blogId);
+      console.log(response);
+      if (response.blog) {
+        const blog = response.blog;
+        console.log('get a blog')
+        setUpdateBlog({
+          BlogID: blog.BlogID,
+          userId: blog.UserID,
+          title: blog.Title,
+          content: blog.Content,
+          productList: blog.ProductList,
+        });
+        setImagePreview(blog.Image);
+        setIsOpen(true);
+      }
+    } catch (error) {
+      console.error("Error fetching blog:", error);
+    }
+  };
+
+  const handleUpdateBlog = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("userId", userId);
+      formData.append("title", updateBlog.title);
+      formData.append("content", updateBlog.content);
+      formData.append("productList", updateBlog.productList);
+      if (imageFile) {
+        formData.append("image", imageFile);
+      }
+
+      const response = await UpdateBlog(StaffToken, updateBlog.BlogID, formData);
+      if (response.data.blog) {
+        handleGetBlogs();
+        setIsOpen(false);
+        toast.success("Blog updated successfully", {
+          duration: 3000,
+          position: "top-right",
+        });
+      }
+    } catch (error) {
+      console.error("Error updating blog:", error);
+      toast.error("Failed to update blog. Please try again!", {
+        duration: 3000,
+        position: "top-right",
+      });
+    }
+  };
+
+  useEffect(() => {
+    handleGetBlogs();
+  }, [])
+
   return (
     <div className="blog-management-container">
       <Sidebar />
+      <ToastContainer style={{ top: "110px" }} />
+
       <div className="content">
         <div className="content-header">
           <h1>Blog Management</h1>
@@ -69,7 +219,9 @@ const BlogManagement = () => {
           <table className="issues-table">
             <thead>
               <tr>
+                <th>Blog Image</th>
                 <th>BlogID</th>
+                <th>Author</th>
                 <th>BlogName</th>
                 <th>Content</th>
                 <th>Created</th>
@@ -81,11 +233,15 @@ const BlogManagement = () => {
             <tbody>
               {blogs.map((blog) => (
                 <tr key={blog.BlogID}>
+                  <td>
+                    {/* <img style={{ width: '100%' }} src={getImageSrc(blog.Image)} alt="" /> */}
+                  </td>
                   <td>{blog.BlogID}</td>
-                  <td>{blog.BlogName}</td>
+                  <td>{blog.UserID}</td>
+                  <td>{blog.Title}</td>
                   <td>{blog.Content}</td>
-                  <td>{blog.created}</td>
-                  <td>{blog.updated}</td>
+                  <td>{formatDate(blog.created)}</td>
+                  <td>{formatDate(blog.updated)}</td>
                   <td className="deleteDiv">
                     <div className="delete">
                       <button className="delete-button">
@@ -96,7 +252,7 @@ const BlogManagement = () => {
                   <td className="deleteDiv">
                     <div className="delete">
                       <button className="delete-button">
-                        <a href="#" onClick={() => setIsOpen(true)}>
+                        <a href="#" onClick={() => handleGetABlog(blog.BlogID)}>
                           Update
                         </a>
                       </button>
@@ -106,7 +262,7 @@ const BlogManagement = () => {
               ))}
             </tbody>
           </table>
-          <Modal
+          {/* <Modal
             isOpen={isOpen}
             onRequestClose={() => setIsOpen(false)}
             className="custom-modal-blog"
@@ -132,40 +288,141 @@ const BlogManagement = () => {
                 Cancel
               </button>
             </div>
+          </Modal> */}
+          <Modal
+            isOpen={isOpen}
+            onRequestClose={() => setIsOpen(false)}
+            className="custom-modal-product"
+            overlayClassName="custom-overlay-blog"
+          >
+            <h2>Update Blog</h2>
+            <div className="row">
+              <div className="col-6">
+                <label>Blog ID: </label>
+                <input
+                  name="blogId"
+                  value={updateBlog.BlogID}
+                  readOnly
+                />
+
+                <label>User ID: </label>
+                <input
+                  name="userId"
+                  value={updateBlog.userId}
+                  onChange={(e) => setUpdateBlog({ ...updateBlog, userId: e.target.value })}
+                />
+
+                <label>Blog title: </label>
+                <input
+                  name="title"
+                  value={updateBlog.title}
+                  onChange={(e) => setUpdateBlog({ ...updateBlog, title: e.target.value })}
+                />
+
+                <label>Blog content: </label>
+                <ReactQuill
+                  theme="snow"
+                  value={updateBlog.content}
+                  onChange={(content) => setUpdateBlog({ ...updateBlog, content: content })}
+                />
+
+                <label>Product List: </label>
+                <input
+                  name="productList"
+                  value={updateBlog.productList}
+                  onChange={(e) => setUpdateBlog({ ...updateBlog, productList: e.target.value })}
+                />
+              </div>
+              <div className="col-6">
+                <div style={{ height: '50%' }}>
+                  <img style={{ width: '100%', height: '100%' }} src={imagePreview} alt="blog image" />
+                </div>
+                <input
+                  type="file"
+                  name="file"
+                  style={{ border: 'none', width: '100%' }}
+                  onChange={handleFileChange}
+                />
+              </div>
+            </div>
+            <div className="modal-actions-blog">
+              <button
+                onClick={handleUpdateBlog}
+                className="btn-confirm-blog"
+              >
+                Confirm
+              </button>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="btn-cancel-blog"
+              >
+                Cancel
+              </button>
+            </div>
           </Modal>
           <Modal
             isOpen={isAddOpen}
             onRequestClose={() => setIsAddOpen(false)}
             className="custom-modal-product"
-            overlayClassName="custom-overlay-product"
+            overlayClassName="custom-overlay-blog"
           >
             <h2>Add Blog</h2>
-            <label>Blog ID: </label>
-            <input name="blogID" placeholder="Enter blog id" />
-            <br />
-            <label>Blog name: </label>
-            <input name="blogtName" placeholder="Enter blog name" />
-            <br />
-            <label>Blog quantity: </label>
-            <input name="content" placeholder="Enter blog content" />
-            <br />
-            <label>Created date: </label>
-            <input
-              name="createdDate"
-              placeholder="Enter blog created date"
-              type="date"
-            />
-            <br />
-            <div className="modal-actions-product">
+            <div className="row">
+              <div className="col-6">
+                <label>User ID: </label>
+                <input
+                  name="userId"
+                  placeholder="Enter user id"
+                  value={newBlog.userId}
+                  onChange={(e) => setNewBlog({ ...newBlog, userId: e.target.value })}
+                />
+
+                <label>Blog title: </label>
+                <input
+                  name="title"
+                  placeholder="Enter blog title"
+                  value={newBlog.title}
+                  onChange={(e) => setNewBlog({ ...newBlog, title: e.target.value })}
+                />
+
+                <label>Blog content: </label>
+                <ReactQuill
+                  theme="snow"
+                  value={newBlog.content}
+                  onChange={(content) => setNewBlog({ ...newBlog, content: content })}
+                />
+
+                <label>Product List: </label>
+                <input
+                  name="productList"
+                  placeholder="Enter product IDs (comma-separated)"
+                  value={newBlog.productList}
+                  onChange={(e) => setNewBlog({ ...newBlog, productList: e.target.value })}
+                />
+              </div>
+              <div className="col-6">
+                <div style={{ height: '50%' }}>
+                  <img style={{ width: '100%', height: '100%' }} src={imagePreview} alt="blog image" />
+                </div>
+                <input
+                  type="file"
+                  name="file"
+                  style={{ border: 'none', width: '100%' }}
+                  onChange={handleFileChange}
+                />
+              </div>
+            </div>
+
+            <div className="modal-actions-blog">
               <button
-                onClick={"handleAddProduct"}
-                className="btn-confirm-product"
+                onClick={handleAddBlog}
+                className="btn-confirm-blog"
               >
                 Confirm
               </button>
               <button
                 onClick={() => setIsAddOpen(false)}
-                className="btn-cancel-product"
+                className="btn-cancel-blog"
               >
                 Cancel
               </button>

@@ -6,7 +6,6 @@ export const UpdateProduct = (token, pID, pInfo) => {
             {
                 headers: {
                     'Authorization': token,
-                    'Content-Type': 'application/json'
                 }
             }
         );
