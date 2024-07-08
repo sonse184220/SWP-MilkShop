@@ -46,7 +46,7 @@
     padding: 20px;
 }
 
-/* Cart item styles */
+
 .cart .row {
     align-items: center;
     margin-bottom: 20px;
@@ -88,7 +88,7 @@
     margin-top: 10px;
 }
 
-/* Quantity styles */
+
 .cart .quantity-wrapper {
     display: flex;
     justify-content: flex-end;
@@ -96,7 +96,7 @@
     gap: 10px;
 }
 
-/* Empty cart styles */
+
 .empty-cart-section {
     padding: 40px 0;
 }
@@ -120,20 +120,7 @@
     margin-bottom: 20px;
 }
 
-/* .btn-golden {
-    background-color: #ffc107;
-    color: #333;
-    border: none;
-    padding: 10px 20px;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
-} */
 
-/* .btn-golden:hover {
-    background-color: #ffca2c;
-} */
-
-/* Price, Total, and Quantity alignment */
 .price-total-container {
     display: flex;
     justify-content: space-between;
@@ -170,7 +157,7 @@
     width: 95%;
 }
 
-/* Responsive styles */
+
 @media (max-width: 992px) {
 
     .cart .col-lg-3,
@@ -303,7 +290,7 @@
     color: white;
 }
 
-/*smooth*/
+
 .custom-overlay {
     opacity: 0;
     transition: opacity 0.3s ease-in-out;
@@ -324,7 +311,7 @@
 }
 
 .custom-modal.ReactModal__Content--after-open {
-    /* transform: scale(1); */
+
     opacity: 1;
 }
 
@@ -333,8 +320,7 @@
     opacity: 0;
 }
 
-/*success*/
-/* Modal styling */
+
 .custom-modal {
     position: absolute;
     top: 50%;
@@ -356,10 +342,9 @@
     z-index: 999;
 }
 
-/* Success modal specific styling */
 .success-modal {
     display: flex;
-    /* align-items: center; */
+
 }
 
 .success-modal .btn-close {
@@ -377,7 +362,6 @@
     background-color: #45a049;
 }
 
-/* Alert component styling */
 .alert {
     display: flex;
     align-items: center;
@@ -396,5 +380,5 @@
 .middle2 .user-info-form-wrapper {
     margin: auto;
     margin-top: -210px;
-    margin-left: 190px;
+    margin-left: 275px;
 }

@@ -280,9 +280,9 @@ export const GuestCart = ({ isMember }) => {
                         <AlertTitle>Success!</AlertTitle>
                         Your order has been placed successfully.
                     </Alert>
-                    <button onClick={() => setIsSuccessModalOpen(false)} className="btn-close">
+                    {/* <button onClick={() => setIsSuccessModalOpen(false)} className="btn-close">
                         Close
-                    </button>
+                    </button> */}
                 </Modal>
 
                 <ToastContainer style={{ top: '110px' }} />

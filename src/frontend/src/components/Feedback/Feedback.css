@@ -11,6 +11,8 @@
     list-style: none;
     padding: 0;
     margin: 0;
+    height: 495px;
+    overflow-y: auto;
 }
 
 .comment-list {
@@ -20,6 +22,7 @@
 .comment-wrapper {
     display: flex;
     align-items: flex-start;
+    height: 75px;
 }
 
 .comment-img {

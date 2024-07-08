@@ -12,7 +12,8 @@ const ProductList = ({ products = [] }) => {
             <img className="card-img-top" src={product.image} alt={product.name} />
             <div className="card-body">
               <h5 className="card-title">{product.Name}</h5>
-              <p className="card-text">{product.Content}</p>
+              {/* <p className="card-text">{product.Content}</p> */}
+              <p>{product.Price.toLocaleString()} VND</p>
             </div>
           </a>
         ))}

@@ -1,12 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./Header.css";
-import { NavLink, useNavigate, Link } from "react-router-dom";
+import { NavLink, useNavigate, Link, useLocation } from "react-router-dom";
 import { FaSignInAlt } from "react-icons/fa";
 
 //prop onLogin chuyền từ app.js -> HomePage.jsx -> Header.jsx
 //dùng để set state isLogin
 export function Header({ onLogin, isMember }) {
   const navigate = useNavigate();
+
+  const location = useLocation();
 
   const headerRef = useRef(null);
   // const headerRef = React.createRef();
@@ -40,6 +42,10 @@ export function Header({ onLogin, isMember }) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   //Chuyển sang Route('/login-register') lúc bấm nút logout
   const showLogin = (event) => {
@@ -124,9 +130,8 @@ export function Header({ onLogin, isMember }) {
                       <img src="/img/user.png" alt="User" />
                     </div>
                     <ul
-                      className={`header-dropdown-menu ${
-                        isDropdownOpen ? "show" : ""
-                      }`}
+                      className={`header-dropdown-menu ${isDropdownOpen ? "show" : ""
+                        }`}
                     >
                       <li>
                         <button

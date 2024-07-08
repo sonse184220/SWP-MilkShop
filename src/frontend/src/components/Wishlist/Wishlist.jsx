@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from "react-router-dom";
 
 import './Wishlist.css';
 import Header from '../Header/Header';
@@ -11,6 +12,10 @@ import { AddToCart } from '../../services/cart/addToCart';
 import { ViewCart } from '../../services/cart/viewCart';
 
 export const Wishlist = ({ isMember }) => {
+    const navigate = useNavigate();
+
+    const MemberToken = 'Bearer ' + sessionStorage.getItem('token');
+
     const [showModal, setShowModal] = useState(false);
     const [wishlistItems, setWishlistItems] = useState([]);
     const [CartItems, setCartItems] = useState([]);
@@ -27,7 +32,7 @@ export const Wishlist = ({ isMember }) => {
 
     const handleViewCart = async () => {
         try {
-            const MemberToken = 'Bearer ' + localStorage.getItem('token');
+            // const MemberToken = 'Bearer ' + sessionStorage.getItem('token');
             console.log(MemberToken);
             const response = await ViewCart(MemberToken);
             console.log(response);
@@ -43,8 +48,7 @@ export const Wishlist = ({ isMember }) => {
     const handleAddToCart = async (e, pID) => {
         e.preventDefault();
         try {
-            const MemberToken = 'Bearer ' + localStorage.getItem('token');
-            console.log(MemberToken);
+            // const MemberToken = 'Bearer ' + sessionStorage.getItem('token');
             const prInfo = {
                 "ProductID": pID,
                 "CartQuantity": 1
@@ -67,7 +71,7 @@ export const Wishlist = ({ isMember }) => {
     const handleRemoveWishlist = async (e, pID) => {
         try {
             e.preventDefault();
-            const response = await RemoveWishlist(JSON.parse(localStorage.getItem("userData")).UserID, pID);
+            const response = await RemoveWishlist(MemberToken, JSON.parse(sessionStorage.getItem("userData")).UserID, pID);
             if (response.data.msg) {
                 // setMessage('Remove success');
                 // showWishlistMessage();
@@ -96,7 +100,7 @@ export const Wishlist = ({ isMember }) => {
 
     const handleGetWishlist = async () => {
         try {
-            const response = await GetWishlist(JSON.parse(localStorage.getItem("userData")).UserID);
+            const response = await GetWishlist(JSON.parse(sessionStorage.getItem("userData")).UserID);
             if (response.data) {
                 console.log(response.data);
                 setWishlistItems(response.data);
@@ -123,7 +127,7 @@ export const Wishlist = ({ isMember }) => {
                     {wishlistItems.length + ' items in wishlist'}
                 </div>
                 <div className="wishlish-table-wrapper aos-init aos-animate" data-aos="fade-up" data-aos-delay="0">
-                    <div className="container">
+                    <div className="container" style={{ width: '80%' }}>
                         <div className="row">
                             <div className="col-12">
                                 <div className="table_desc">
@@ -140,16 +144,54 @@ export const Wishlist = ({ isMember }) => {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {wishlistItems.map((item) => (
-                                                    <tr>
-                                                        <td className="product_remove"><a onClick={(e) => handleRemoveWishlist(e, item.ProductID)} href=""><i className="fa fa-trash-alt"></i></a></td>
-                                                        <td className="product_thumb"><a href="product-details-default.html"><img src={`/img/${item.ProductID}.jpg`} alt="" /></a></td>
-                                                        <td className="product_name"><a href="product-details-default.html">{item.Name}</a></td>
-                                                        <td className="product-price">{item.Price.toLocaleString()} VND</td>
-                                                        <td className="product_stock">{item.Status}</td>
-                                                        <td className="product_addcart"><a href="#" className="btn btn-md btn-golden" onClick={(e) => handleAddToCart(e, item.ProductID)}>Add To Cart</a></td>
-                                                    </tr>
-                                                ))}
+                                                {wishlistItems.length > 0 ? (
+                                                    (
+                                                        wishlistItems.map((item) => (
+                                                            <tr>
+                                                                <td className="product_remove"><a onClick={(e) => handleRemoveWishlist(e, item.ProductID)} href=""><i className="fa fa-trash-alt"></i></a></td>
+                                                                <td className="product_thumb"><a href="product-details-default.html"><img src={`/img/${item.ProductID}.jpg`} alt="" /></a></td>
+                                                                <td className="product_name"><a href="product-details-default.html">{item.Name}</a></td>
+                                                                <td className="product-price">{item.Price.toLocaleString()} VND</td>
+                                                                <td className="product_stock">{item.Status}</td>
+                                                                <td className="product_addcart"><a href="#" className="btn btn-md btn-golden" onClick={(e) => handleAddToCart(e, item.ProductID)}>Add To Cart</a></td>
+                                                            </tr>
+                                                        ))
+                                                    )
+                                                ) : (
+                                                    <tr><td colSpan={6}>
+                                                        <div className="empty-cart-section section-fluid">
+                                                            <div className="emptycart-wrapper">
+                                                                <div className="container">
+                                                                    <div className="row">
+                                                                        <div className="emptycart-content text-center">
+                                                                            <div className="cart-image">
+                                                                                <img
+                                                                                    className="img-fluid"
+                                                                                    src="/img/empty-cart.png"
+                                                                                    alt="Empty Cart"
+                                                                                />
+                                                                            </div>
+                                                                            <h4 className="title">Your Wishlist is Empty</h4>
+                                                                            <h6 className="sub-title">
+                                                                                Sorry... No item Found inside your wishlist!
+                                                                            </h6>
+                                                                            <a
+                                                                                href=""
+                                                                                onClick={(e) => {
+                                                                                    e.preventDefault();
+                                                                                    navigate("/Customer/home");
+                                                                                }}
+                                                                                className="btn btn-lg btn-golden"
+                                                                            >
+                                                                                Continue Shopping
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td></tr>
+                                                )}
                                                 {/* <tr>
                                                     <td className="product_remove"><a href="#"><i className="fa fa-trash-alt"></i></a></td>
                                                     <td className="product_thumb"><a href="product-details-default.html"><img src="assets/images/product/default/home-1/default-2.jpg" alt="" /></a></td>

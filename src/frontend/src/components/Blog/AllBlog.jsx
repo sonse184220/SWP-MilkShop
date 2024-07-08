@@ -56,7 +56,7 @@ const AllBlog = ({ isMember }) => {
 
   const handleSearch = async () => {
     try {
-      let limit = 5;
+      let limit = 1;
       let page = searchCurrentPage;
       let sort = "";
       const searchedBlogs = await searchBlogs(searchQuery, limit, page, sort);

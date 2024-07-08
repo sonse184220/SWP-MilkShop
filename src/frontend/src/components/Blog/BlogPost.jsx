@@ -1,4 +1,9 @@
 import React from "react";
+import ReadMoreReact from 'react-read-more-read-less';
+import ReactReadMoreReadLess from "react-read-more-read-less";
+import { Link } from "react-router-dom";
+
+import he from 'he';
 import "./BlogPost.css";
 
 const BlogPost = ({ blogs = [] }) => {
@@ -47,6 +52,24 @@ const BlogPost = ({ blogs = [] }) => {
   //     return '';
   //   }
   // };
+  const SafeHTML = (html) => {
+    const decodedHtml = he.decode(html);
+    return <div dangerouslySetInnerHTML={{ __html: decodedHtml }} />;
+  };
+
+  const decodeContent = (content) => {
+    if (!content) return '';
+    // First, decode the HTML entities
+    const decodedContent = he.decode(content);
+    // Then, remove any HTML tags
+    return decodedContent.replace(/<[^>]*>/g, '');
+  };
+
+  const truncateContent = (content, maxLength) => {
+    const decodedContent = decodeContent(content);
+    if (decodedContent.length <= maxLength) return decodedContent;
+    return decodedContent.substr(0, maxLength) + '...';
+  };
 
   return (
     <>
@@ -58,9 +81,58 @@ const BlogPost = ({ blogs = [] }) => {
           </div>
           <div className="blog-post-content">
             {/* <img src={`/img/${blog.BlogID}.png`} alt={blog.Name} /> */}
-            <p>{blog.Content}</p>
-            <img src={`data:image/jpeg;base64,${blog.Image}`} />
 
+            <img src={`data:image/jpeg;base64,${blog.Image}`} />
+            {/* <p>{blog.Content}</p> */}
+            {/* <ReadMoreReact
+
+              // text={blog.Content}
+              // text={he.decode(blog.Content)}
+              // text={SafeHTML(blog.Content)}
+              text={blog.Content ? he.decode(blog.Content) : "No content available"}
+              // min={100}
+              ideal={200}
+              max={300}
+              readMoreText="Show More"
+              readLessText="Show Less"
+            /> */}
+            {/* {blog.Content ? (
+              <ReadMoreReact
+                text={decodeContent(blog.Content)}
+                min={80}  
+                ideal={100} 
+                max={200}
+                readMoreText="Show More"
+                readLessText="Show Less"
+              />
+            ) : (
+              <p>No content available</p>
+            )} */}
+            {/* {blog.Content ? (
+              <ReactReadMoreReadLess
+                charLimit={200}
+                readMoreText={"Read more ▼"}
+                readLessText={"Read less ▲"}
+                readMoreClassName="read-more-less--more"
+                readLessClassName="read-more-less--less"
+              >
+                {decodeContent(blog.Content)}
+              </ReactReadMoreReadLess>
+            ) : (
+              <p>No content available</p>
+            )} */}
+            {blog.Content ? (
+              <>
+                <p>{truncateContent(blog.Content, 200)}</p>
+                {blog.Content.length > 200 && (
+                  <Link to={`/Customer/BlogDetail/${blog.BlogID}`} className="read-more-link">
+                    Show more
+                  </Link>
+                )}
+              </>
+            ) : (
+              <p>No content available</p>
+            )}
           </div>
         </div>
       ))}

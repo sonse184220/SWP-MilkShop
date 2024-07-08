@@ -146,20 +146,26 @@ export const Cart = ({ isMember }) => {
 
   const handleDecrement = async (pID, currentQuantity) => {
     try {
-      // const MemberToken = 'Bearer ' + localStorage.getItem('token');
-      console.log(MemberToken);
-      const prInfo = {
-        ProductID: pID,
-        CartQuantity: currentQuantity - 1,
-      };
-      const response = await UpdateCart(MemberToken, prInfo);
-      console.log(response);
-      if (response.data.message) {
-        handleViewCart();
-        console.log("cart", response.data.message);
+      if (currentQuantity === 1) {
+        // If quantity is 1, call remove from cart API
+        await handleRemoveCart(pID);
+      } else {
+        // If quantity is greater than 1, update the cart
+        const prInfo = {
+          ProductID: pID,
+          CartQuantity: currentQuantity - 1,
+        };
+        const response = await UpdateCart(MemberToken, prInfo);
+        if (response.data.message) {
+          handleViewCart();
+          console.log("cart updated", response.data.message);
+        }
       }
     } catch (error) {
       console.log(error);
+      toast.error("An error occurred while updating the cart", {
+        theme: "colored",
+      });
     }
   };
 

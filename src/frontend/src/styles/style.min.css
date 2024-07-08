@@ -17736,8 +17736,8 @@ a.ui-button:active {
 }
 
 .comment-img {
-    margin-right: 30px;
-    margin-bottom: 20px;
+    margin-right: 20px;
+    margin-bottom: 10px;
     /* border-radius: 5px */
 }
 
@@ -17751,7 +17751,7 @@ a.ui-button:active {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
     flex-wrap: wrap
 }
 

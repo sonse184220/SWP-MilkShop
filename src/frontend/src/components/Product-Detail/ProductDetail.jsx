@@ -3,6 +3,19 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Modal from 'react-modal';
 
+// {blog.Content ? (
+//     <>
+//       <p>{truncateContent(blog.Content, 200)}</p>
+//       {blog.Content.length > 200 && (
+//         <Link to={`/Customer/BlogDetail/${blog.BlogID}`} className="read-more-link">
+//           Show more
+//         </Link>
+//       )}
+//     </>
+//   ) : (
+//     <p>No content available</p>
+//   )}
+
 
 import Footer from "../Footer/Footer";
 import Header from "../Header/Header";
@@ -186,7 +199,7 @@ const ProductDetail = ({ isMember }) => {
     const checkIsWishlistState = async () => {
         if (!isMember) return;
         await handleGetWishlist();
-        const wishlistItems = JSON.parse(localStorage.getItem("wishlist"));
+        const wishlistItems = JSON.parse(sessionStorage.getItem("wishlist"));
         const matchItem = wishlistItems ? wishlistItems.find(product => product.ProductID === ProductID) : false;
         console.log("statussssssss", matchItem)
         setInWishlist(!!matchItem);
@@ -198,7 +211,7 @@ const ProductDetail = ({ isMember }) => {
             const response = await GetWishlist(userId);
             if (response.data) {
                 console.log(response.data);
-                localStorage.setItem("wishlist", JSON.stringify(response.data));
+                sessionStorage.setItem("wishlist", JSON.stringify(response.data));
             }
         } catch (error) {
 
@@ -216,18 +229,19 @@ const ProductDetail = ({ isMember }) => {
                 setInWishlist(prevState => !prevState);
                 const response = await AddWishlist(MemberToken, userId, ProductID);
                 console.log(response);
-                if (response.data && response.data.ProductID === ProductID) {
+                if (response.data && response.data[0].ProductID === ProductID) {
                     toast.success('Added to wishlist', {
                         theme: "colored",
                     });
                     checkIsWishlistState();
-                } else {
-                    // If the response is not as expected, revert the state
-                    setInWishlist(prevState => !prevState);
-                    toast.error('Failed to add to wishlist', {
-                        theme: "colored",
-                    });
                 }
+                //  else {
+                //     // If the response is not as expected, revert the state
+                //     setInWishlist(prevState => !prevState);
+                //     toast.error('Failed to add to wishlist', {
+                //         theme: "colored",
+                //     });
+                // }
             } else {
                 setInWishlist(prevState => !prevState);
                 const response = await RemoveWishlist(MemberToken, userId, ProductID);
