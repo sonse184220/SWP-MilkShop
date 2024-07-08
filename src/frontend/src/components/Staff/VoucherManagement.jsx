@@ -1,11 +1,15 @@
-// src/OrderManagement.js
-
 import React, { useState, useRef } from "react";
 import Sidebar from "./Sidebar";
 import "./VoucherManagement.css";
 import Modal from "react-modal";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { addVoucher } from "../../services/voucher/addVoucher";
 
 const VoucherManagement = () => {
+  const StaffToken = "Bearer " + sessionStorage.getItem("token");
+  console.log("Retrieved Staff Token:", StaffToken); // Debugging line
+
   const [isOpen, setIsOpen] = useState(false);
   const [isAddOpen, setIsAddOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -32,14 +36,72 @@ const VoucherManagement = () => {
       Content: "15% off on selected items",
     },
   ]);
+
+  const [newVoucher, setNewVoucher] = useState({
+    VoucherID: "",
+    Discount: "",
+    Quantity: "",
+    Expiration: "",
+    Content: "",
+  });
+
+  const [imageFile, setImageFile] = useState(null);
+
   const toggleDropdown = () => {
     if (dropdownRef.current) {
       dropdownRef.current.classList.toggle("dropdown-menu");
     }
   };
+
+  const handleAddVoucher = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("VoucherID", newVoucher.VoucherID);
+      formData.append("Discount", newVoucher.Discount);
+      formData.append("Quantity", newVoucher.Quantity);
+      formData.append("Expiration", newVoucher.Expiration);
+      formData.append("Content", newVoucher.Content);
+      if (imageFile) {
+        formData.append("image", imageFile);
+      }
+
+      const response = await addVoucher(StaffToken, formData);
+      console.log("API response:", response); // Debugging line
+
+      if (response.data.voucher) {
+        setVouchers([...vouchers, response.data.voucher]);
+        setIsAddOpen(false);
+        setNewVoucher({
+          VoucherID: "",
+          Discount: "",
+          Quantity: "",
+          Expiration: "",
+          Content: "",
+        });
+        setImageFile(null);
+        toast.success("Voucher added successfully", {
+          duration: 3000,
+          position: "top-right",
+        });
+      }
+    } catch (error) {
+      console.error("Error adding voucher:", error);
+      toast.error("Failed to add voucher. Please try again!", {
+        duration: 3000,
+        position: "top-right",
+      });
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setImageFile(file);
+  };
+
   return (
     <div className="order-management-container">
       <Sidebar />
+      <ToastContainer />
       <div className="content">
         <div className="content-header">
           <h1>Voucher Management</h1>
@@ -109,6 +171,7 @@ const VoucherManagement = () => {
               ))}
             </tbody>
           </table>
+
           <Modal
             isOpen={isOpen}
             onRequestClose={() => setIsOpen(false)}
@@ -117,7 +180,7 @@ const VoucherManagement = () => {
           >
             <h2>Update Voucher</h2>
             <label htmlFor="">Voucher Discount: </label>
-            <input placeholder="Enter new voucher name" /> <br />
+            <input placeholder="Enter new voucher discount" /> <br />
             <label htmlFor="">Voucher Quantity: </label>{" "}
             <input placeholder="Enter new voucher quantity" /> <br />
             <label htmlFor="">Voucher Content: </label>{" "}
@@ -125,7 +188,7 @@ const VoucherManagement = () => {
             <br />
             <div className="modal-actions-voucher">
               <button
-                onClick={"handleMemberOrderAction"}
+                onClick={handleFileChange}
                 className="btn-confirm-voucher"
               >
                 Confirm
@@ -147,27 +210,59 @@ const VoucherManagement = () => {
           >
             <h2>Add Voucher</h2>
             <label>Voucher ID: </label>
-            <input name="voucherName" placeholder="Enter voucher id" />
-            <br />
-            <label>Voucher discount: </label>
-            <input name="voucherName" placeholder="Enter voucher discount" />
-            <br />
-            <label>Voucher quantity: </label>
-            <input name="quantity" placeholder="Enter voucher quantity" />
-            <br />
-            <label>Voucher expiration date: </label>
             <input
-              name="date"
-              placeholder="Enter voucher expiration date"
-              type="date"
+              name="VoucherID"
+              placeholder="Enter voucher id"
+              value={newVoucher.VoucherID}
+              onChange={(e) =>
+                setNewVoucher({ ...newVoucher, VoucherID: e.target.value })
+              }
             />
             <br />
-            <label>Voucher content: </label>
-            <input name="content" placeholder="Enter voucher content" />
+            <label>Voucher Discount: </label>
+            <input
+              name="Discount"
+              placeholder="Enter voucher discount"
+              value={newVoucher.Discount}
+              onChange={(e) =>
+                setNewVoucher({ ...newVoucher, Discount: e.target.value })
+              }
+            />
+            <br />
+            <label>Voucher Quantity: </label>
+            <input
+              name="Quantity"
+              placeholder="Enter voucher quantity"
+              value={newVoucher.Quantity}
+              onChange={(e) =>
+                setNewVoucher({ ...newVoucher, Quantity: e.target.value })
+              }
+            />
+            <br />
+            <label>Voucher Expiration Date: </label>
+            <input
+              name="Expiration"
+              placeholder="Enter voucher expiration date"
+              type="date"
+              value={newVoucher.Expiration}
+              onChange={(e) =>
+                setNewVoucher({ ...newVoucher, Expiration: e.target.value })
+              }
+            />
+            <br />
+            <label>Voucher Content: </label>
+            <input
+              name="Content"
+              placeholder="Enter voucher content"
+              value={newVoucher.Content}
+              onChange={(e) =>
+                setNewVoucher({ ...newVoucher, Content: e.target.value })
+              }
+            />
             <br />
             <div className="modal-actions-product">
               <button
-                onClick={"handleAddProduct"}
+                onClick={handleAddVoucher}
                 className="btn-confirm-product"
               >
                 Confirm
