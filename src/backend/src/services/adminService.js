@@ -59,4 +59,21 @@ export class AdminService {
             });
         });
     };
+
+    getAllAccounts = (page, limit, callback) => {
+        const offset = (page - 1) * limit;
+        const query = 'SELECT UserID, Name, Address, Phone, isAdmin, isStaff, activeStatus FROM `user` LIMIT ? OFFSET ?';
+
+        connection.query(query, [limit, offset], (err, results) => {
+            if (err) return callback(err);
+
+            const countQuery = 'SELECT COUNT(*) AS total FROM `user`';
+            connection.query(countQuery, (err, countResults) => {
+                if (err) return callback(err);
+
+                const total = countResults[0].total;
+                callback(null, { accounts: results, total });
+            });
+        });
+    };
 }
