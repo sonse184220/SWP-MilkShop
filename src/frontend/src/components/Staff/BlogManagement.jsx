@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 import "./BlogManagement.css"; // Import CSS file
 import Sidebar from "./Sidebar";
@@ -12,11 +12,12 @@ import { fetchBlogs } from "../../services/blog/blogService";
 import { AddBlog } from "../../services/staff/blog/addBlog";
 import { blogDetail } from "../../services/blog/blogDetail";
 import { UpdateBlog } from "../../services/staff/blog/updateBlog";
-
+import { deleteBlog } from "../../services/staff/blog/deleteBlog";
 const BlogManagement = () => {
-  const StaffToken = 'Bearer ' + sessionStorage.getItem('token');
-  const userId = sessionStorage.getItem('staffData') ? JSON.parse(sessionStorage.getItem('staffData')).UserID : "Guest";
-
+  const StaffToken = "Bearer " + sessionStorage.getItem("token");
+  const userId = sessionStorage.getItem("staffData")
+    ? JSON.parse(sessionStorage.getItem("staffData")).UserID
+    : "Guest";
 
   const [isOpen, setIsOpen] = useState(false);
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -37,7 +38,7 @@ const BlogManagement = () => {
     productList: "",
   });
   const [imageFile, setImageFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState('');
+  const [imagePreview, setImagePreview] = useState("");
 
   const toggleDropdown = () => {
     if (dropdownRef.current) {
@@ -46,37 +47,38 @@ const BlogManagement = () => {
   };
 
   const getImageSrc = (imageData) => {
-    if (!imageData || !imageData.data) return '';
+    if (!imageData || !imageData.data) return "";
 
     try {
       const base64 = btoa(
-        imageData.data.reduce((data, byte) => data + String.fromCharCode(byte), '')
+        imageData.data.reduce(
+          (data, byte) => data + String.fromCharCode(byte),
+          ""
+        )
       );
       return `data:image/jpeg;base64,${base64}`;
     } catch (error) {
-      console.error('Error converting image data:', error);
-      return '';
+      console.error("Error converting image data:", error);
+      return "";
     }
   };
 
   function formatDate(dateString) {
     const date = new Date(dateString);
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = date.toLocaleString('default', { month: 'short' });
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = date.toLocaleString("default", { month: "short" });
     const year = date.getFullYear();
     return `${day} ${month}, ${year}`;
   }
 
   const handleGetBlogs = async () => {
     try {
-      const response = await fetchBlogs(5, 1, '');
+      const response = await fetchBlogs(5, 1, "");
       if (response.data.total > 0) {
         setBlogs(response.data.data);
       }
-    } catch (error) {
-
-    }
-  }
+    } catch (error) {}
+  };
 
   const handleAddBlog = async () => {
     try {
@@ -100,7 +102,7 @@ const BlogManagement = () => {
           productList: "",
         });
         setImageFile(null);
-        setImagePreview('');
+        setImagePreview("");
         toast.success("Blog added successfully", {
           duration: 3000,
           position: "top-right",
@@ -113,7 +115,7 @@ const BlogManagement = () => {
         position: "top-right",
       });
     }
-  }
+  };
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -133,7 +135,7 @@ const BlogManagement = () => {
       console.log(response);
       if (response.blog) {
         const blog = response.blog;
-        console.log('get a blog')
+        console.log("get a blog");
         setUpdateBlog({
           BlogID: blog.BlogID,
           userId: blog.UserID,
@@ -160,7 +162,11 @@ const BlogManagement = () => {
         formData.append("image", imageFile);
       }
 
-      const response = await UpdateBlog(StaffToken, updateBlog.BlogID, formData);
+      const response = await UpdateBlog(
+        StaffToken,
+        updateBlog.BlogID,
+        formData
+      );
       if (response.data.blog) {
         handleGetBlogs();
         setIsOpen(false);
@@ -180,7 +186,24 @@ const BlogManagement = () => {
 
   useEffect(() => {
     handleGetBlogs();
-  }, [])
+  }, []);
+
+  const handleDeleteBlog = async (blogId) => {
+    try {
+      await deleteBlog(StaffToken, blogId);
+      toast.success("Blog deleted successfully", {
+        duration: 3000,
+        position: "top-right",
+      });
+      handleGetBlogs(); // Refresh the blog list
+    } catch (error) {
+      console.error("Error deleting blog:", error);
+      toast.error("Failed to delete blog. Please try again!", {
+        duration: 3000,
+        position: "top-right",
+      });
+    }
+  };
 
   return (
     <div className="blog-management-container">
@@ -245,7 +268,12 @@ const BlogManagement = () => {
                   <td className="deleteDiv">
                     <div className="delete">
                       <button className="delete-button">
-                        <a href="#">Delete</a>
+                        <a
+                          href="#"
+                          onClick={() => handleDeleteBlog(blog.BlogID)}
+                        >
+                          Delete
+                        </a>
                       </button>
                     </div>
                   </td>
@@ -299,57 +327,65 @@ const BlogManagement = () => {
             <div className="row">
               <div className="col-6">
                 <label>Blog ID: </label>
-                <input
-                  name="blogId"
-                  value={updateBlog.BlogID}
-                  readOnly
-                />
+                <input name="blogId" value={updateBlog.BlogID} readOnly />
 
                 <label>User ID: </label>
                 <input
                   name="userId"
                   value={updateBlog.userId}
-                  onChange={(e) => setUpdateBlog({ ...updateBlog, userId: e.target.value })}
+                  onChange={(e) =>
+                    setUpdateBlog({ ...updateBlog, userId: e.target.value })
+                  }
                 />
 
                 <label>Blog title: </label>
                 <input
                   name="title"
                   value={updateBlog.title}
-                  onChange={(e) => setUpdateBlog({ ...updateBlog, title: e.target.value })}
+                  onChange={(e) =>
+                    setUpdateBlog({ ...updateBlog, title: e.target.value })
+                  }
                 />
 
                 <label>Blog content: </label>
                 <ReactQuill
                   theme="snow"
                   value={updateBlog.content}
-                  onChange={(content) => setUpdateBlog({ ...updateBlog, content: content })}
+                  onChange={(content) =>
+                    setUpdateBlog({ ...updateBlog, content: content })
+                  }
                 />
 
                 <label>Product List: </label>
                 <input
                   name="productList"
                   value={updateBlog.productList}
-                  onChange={(e) => setUpdateBlog({ ...updateBlog, productList: e.target.value })}
+                  onChange={(e) =>
+                    setUpdateBlog({
+                      ...updateBlog,
+                      productList: e.target.value,
+                    })
+                  }
                 />
               </div>
               <div className="col-6">
-                <div style={{ height: '50%' }}>
-                  <img style={{ width: '100%', height: '100%' }} src={imagePreview} alt="blog image" />
+                <div style={{ height: "50%" }}>
+                  <img
+                    style={{ width: "100%", height: "100%" }}
+                    src={imagePreview}
+                    alt="blog image"
+                  />
                 </div>
                 <input
                   type="file"
                   name="file"
-                  style={{ border: 'none', width: '100%' }}
+                  style={{ border: "none", width: "100%" }}
                   onChange={handleFileChange}
                 />
               </div>
             </div>
             <div className="modal-actions-blog">
-              <button
-                onClick={handleUpdateBlog}
-                className="btn-confirm-blog"
-              >
+              <button onClick={handleUpdateBlog} className="btn-confirm-blog">
                 Confirm
               </button>
               <button
@@ -374,7 +410,9 @@ const BlogManagement = () => {
                   name="userId"
                   placeholder="Enter user id"
                   value={newBlog.userId}
-                  onChange={(e) => setNewBlog({ ...newBlog, userId: e.target.value })}
+                  onChange={(e) =>
+                    setNewBlog({ ...newBlog, userId: e.target.value })
+                  }
                 />
 
                 <label>Blog title: </label>
@@ -382,14 +420,18 @@ const BlogManagement = () => {
                   name="title"
                   placeholder="Enter blog title"
                   value={newBlog.title}
-                  onChange={(e) => setNewBlog({ ...newBlog, title: e.target.value })}
+                  onChange={(e) =>
+                    setNewBlog({ ...newBlog, title: e.target.value })
+                  }
                 />
 
                 <label>Blog content: </label>
                 <ReactQuill
                   theme="snow"
                   value={newBlog.content}
-                  onChange={(content) => setNewBlog({ ...newBlog, content: content })}
+                  onChange={(content) =>
+                    setNewBlog({ ...newBlog, content: content })
+                  }
                 />
 
                 <label>Product List: </label>
@@ -397,27 +439,30 @@ const BlogManagement = () => {
                   name="productList"
                   placeholder="Enter product IDs (comma-separated)"
                   value={newBlog.productList}
-                  onChange={(e) => setNewBlog({ ...newBlog, productList: e.target.value })}
+                  onChange={(e) =>
+                    setNewBlog({ ...newBlog, productList: e.target.value })
+                  }
                 />
               </div>
               <div className="col-6">
-                <div style={{ height: '50%' }}>
-                  <img style={{ width: '100%', height: '100%' }} src={imagePreview} alt="blog image" />
+                <div style={{ height: "50%" }}>
+                  <img
+                    style={{ width: "100%", height: "100%" }}
+                    src={imagePreview}
+                    alt="blog image"
+                  />
                 </div>
                 <input
                   type="file"
                   name="file"
-                  style={{ border: 'none', width: '100%' }}
+                  style={{ border: "none", width: "100%" }}
                   onChange={handleFileChange}
                 />
               </div>
             </div>
 
             <div className="modal-actions-blog">
-              <button
-                onClick={handleAddBlog}
-                className="btn-confirm-blog"
-              >
+              <button onClick={handleAddBlog} className="btn-confirm-blog">
                 Confirm
               </button>
               <button
