@@ -16,7 +16,7 @@ export class PreorderService {
                                                     JOIN product AS p ON po.ProductID = p.ProductID
                                                     JOIN brand AS b ON p.BrandID = b.BrandID
                                                     WHERE PreorderID = ?`, [id]);
-        preorder[0].ETA = preorder[0].ETA.toISOString().split('T')[0];
+        preorder[0].ETA = preorder[0].ETA ? preorder[0].ETA.toISOString().split('T')[0] : null;
         return preorder;
     }
 

@@ -95,7 +95,7 @@ export class PreorderController {
         if (product.length === 0) {
             return res.status(400).send({ error: "Product not found!" });
         }
-        if (product[0].Status !== "out-of-stock") {
+        if (product[0].Quantity > 0 || product[0].Status !== "available") {
             return res.status(400).send({ error: "Product is not eligible for pre-order!" });
         }
 
