@@ -21,7 +21,7 @@ export class WishlistController {
     }
 
     async addProductToWishlist(req, res) {
-        const userId = req.params.id;
+        const userId = req.params.userId;
         const productId = req.query.productId;
         
         if (req.user.userId !== userId) {
@@ -48,7 +48,7 @@ export class WishlistController {
     }
 
     async removeProductFromWishlist(req, res) {
-        const userId = req.params.id;
+        const userId = req.params.userId;
         const productId = req.query.productId;
 
         if (req.user.userId !== userId && !req.user.isAdmin) {
