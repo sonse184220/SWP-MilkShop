@@ -9,7 +9,7 @@ const userService = new UserService();
 export class WishlistController {
 
     async getWishlist(req, res) {
-        const userId = req.params.id;
+        const userId = req.params.userId;
 
         const checkMember = userService.checkUserExisted(userId);
         if (checkMember.length === 0) {
