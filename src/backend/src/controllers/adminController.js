@@ -25,4 +25,13 @@ export class AdminController {
             res.status(result.status || 200).json(result);
         });
     };
+    getAllAccounts = (req, res) => {
+        const page = parseInt(req.query.page, 10) || 1;
+        const limit = parseInt(req.query.limit, 10) || 10;
+
+        adminService.getAllAccounts(page, limit, (err, result) => {
+            if (err) return res.status(500).json({ error: err.message });
+            res.status(200).json(result);
+        });
+    };
 }
