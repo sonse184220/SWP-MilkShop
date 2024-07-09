@@ -40,17 +40,4 @@ router.get("/:userId/preorder-history", checkAuthenticated, checkUserId, checkPa
     await preorderController.getUserPreorderHistory(req, res);
 })
 
-// /** /api/order/{..id của order..}/status
-//  * Cancel status của 1 đơn order cho user
-//  */
-// router.patch("/:orderId/order-cancel", checkAuthenticated, checkOrderId, async (req, res) => {
-//     await orderController.updateOrderStatusCancel(req, res);
-// })
-// /** /api/preorder/{..id của pre-order..}/status
-//  * Cancel status của 1 đơn pre-order cho user
-//  */
-// router.patch("/:preorderId/preorder-cancel", checkAuthenticated, checkPreorderId, async (req, res) => {
-//     await preorderController.updatePreorderStatusCancel(req, res);
-// })
-
 export { router as userRoutes };

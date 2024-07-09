@@ -30,6 +30,13 @@ router.patch("/api/preorder/staff/:preorderId/status", checkAuthenticated, isSta
     await preorderController.updatePreorderStatus(req, res);
 })
 
+/**
+ * cho user cancel status của 1 đơn pre-order
+ */
+router.patch("/api/preorder/:preorderId/preorder-cancel", checkAuthenticated, checkPreorderId, async (req, res) => {
+    await preorderController.updatePreorderStatusCancel(req, res);
+})
+
 /** /api/preorder/{..id của pre-order..}/eta
  * Cập nhật ETA của 1 đơn pre-order cho staff
  */
