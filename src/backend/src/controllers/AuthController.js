@@ -1,44 +1,54 @@
-import { AuthService } from "../services/AuthService.js";
+import { AuthService } from '../services/AuthService.js';
 
 const authService = new AuthService();
 
 export class AuthController {
-    registerUser = (req, res) => {
-        authService.registerUser(req.body, req, (err, result) => {
-            if (err) return res.status(500).json({ error: err.message });
-            res.status(result.status || 201).json(result);
-        });
+    registerUser = async (req, res) => {
+        try {
+            const result = await authService.registerUser(req.body, req);
+            res.status(201).json(result);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
     };
 
-    loginUser = (req, res) => {
-        authService.loginUser(req.body, (err, result) => {
-            if (err) return res.status(500).json({ error: err.message });
-            res.status(result.status || 200).json(result);
-        });
+    loginUser = async (req, res) => {
+        try {
+            const result = await authService.loginUser(req.body);
+            res.status(200).json(result);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
     };
 
-    verifyEmail = (req, res) => {
-        authService.verifyEmail(req.query.token, (err, result) => {
-            if (err) return res.status(500).json({ error: err.message });
+    verifyEmail = async (req, res) => {
+        try {
+            const result = await authService.verifyEmail(req.query.token);
             if (result.status === 200) {
                 res.redirect('http://localhost:3000/login-register');
             } else {
                 res.status(result.status).json(result);
             }
-        });
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
     };
 
-    registerAdmin = (req, res) => {
-        authService.registerAdmin(req.body, (err, result) => {
-            if (err) return res.status(500).json({ error: err.message });
-            res.status(result.status || 201).json(result);
-        });
+    registerAdmin = async (req, res) => {
+        try {
+            const result = await authService.registerAdmin(req.body);
+            res.status(201).json(result);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
     };
 
-    createStaff = (req, res) => {
-        authService.createStaff(req.body, (err, result) => {
-            if (err) return res.status(500).json({ error: err.message });
-            res.status(result.status || 201).json(result);
-        });
+    createStaff = async (req, res) => {
+        try {
+            const result = await authService.createStaff(req.body);
+            res.status(201).json(result);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
     };
 }
