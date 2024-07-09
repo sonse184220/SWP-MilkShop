@@ -2,7 +2,7 @@ import axios from "../../axios";
 
 export const AddProduct = (token, pInfo) => {
     try {
-        return axios.post(`/api/product/create`, pInfo,
+        return axios.post(`/api/product/staff/create`, pInfo,
             {
                 headers: {
                     'Authorization': token,

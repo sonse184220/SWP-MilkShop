@@ -2,7 +2,7 @@ import axios from "../../axios";
 
 export const UpdateBlog = (token, bId, bInfo) => {
     try {
-        return axios.patch(`/api/blog/${bId}`, bInfo,
+        return axios.patch(`/api/blog/staff/${bId}`, bInfo,
             {
                 headers: {
                     'Authorization': token,

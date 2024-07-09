@@ -87,7 +87,6 @@ const ProductDetail = ({ isMember }) => {
 
     const [feedbacks, setFeedbacks] = useState([])
     const [newFeedback, setNewFeedback] = useState({
-        userId: userId,
         rating: 0,
         content: ''
     });
@@ -227,7 +226,7 @@ const ProductDetail = ({ isMember }) => {
             console.log("token======", MemberToken)
             if (!inWishlist) {
                 setInWishlist(prevState => !prevState);
-                const response = await AddWishlist(MemberToken, userId, ProductID);
+                const response = await AddWishlist(MemberToken, ProductID);
                 console.log(response);
                 if (response.data && response.data[0].ProductID === ProductID) {
                     toast.success('Added to wishlist', {
@@ -295,7 +294,6 @@ const ProductDetail = ({ isMember }) => {
                     theme: "colored",
                 });
                 setNewFeedback({
-                    userId: userId,
                     rating: 0,
                     content: ''
                 });

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import ReactPaginate from "react-paginate";
+import { NavLink, useNavigate, Link, } from "react-router-dom";
 
 import Sidebar from "./Sidebar";
 import "./OrderManagement.css";
@@ -13,8 +14,12 @@ import { GetOrderDetail } from "../../services/order-history/getOrderDetail";
 import { UpdateOrderStatus } from "../../services/staff/ordermanage/updateOrderStatus";
 import { GetAllPreOrders } from "../../services/staff/pre-order/getAllPreOrder";
 import { UpdatePreOrderStatus } from "../../services/staff/pre-order/updatePreOrderStatus";
+import { UpdatePreOrderETA } from "../../services/staff/pre-order/updatePreOrderETA";
+import { UpdateOrderPaymentStatus } from "../../services/staff/ordermanage/updatePaymentStatus";
 
 const OrderManagement = () => {
+  const navigate = useNavigate();
+
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const [isDetail, setIsDetail] = useState(false);
@@ -109,7 +114,7 @@ const OrderManagement = () => {
         setOrderDetail(response.data.detail);
         setIsDetail(true);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const handleGetCustomerInfo = async (orderId) => {
@@ -130,7 +135,7 @@ const OrderManagement = () => {
         });
         setIsInfoOpen(true);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const handleStatusChange = (id, newStatus, type) => {
@@ -163,8 +168,7 @@ const OrderManagement = () => {
 
       if (response.data[0].OrderID || response.data[0].PreorderID) {
         toast.success(
-          `${
-            itemType === "order" ? "Order" : "Pre-order"
+          `${itemType === "order" ? "Order" : "Pre-order"
           } status updated successfully!`,
           {
             duration: 3000,
@@ -219,6 +223,45 @@ const OrderManagement = () => {
     }
   };
 
+  const handleUpdatePreOrderETA = async (preOrderId, newETA) => {
+    try {
+      const ETADate = {
+        "eta": formatDateForDisplay(newETA)
+      }
+      const response = await UpdatePreOrderETA(StaffToken, preOrderId, ETADate);
+      console.log(ETADate);
+      if (response.data && response.data.length > 0) {
+        toast.success("Pre-order ETA updated successfully!", {
+          duration: 3000,
+          position: "top-right",
+        });
+        handleGetAllPreOrders();
+      } else {
+        throw new Error("Failed to update ETA");
+      }
+    } catch (error) {
+      console.error("Error updating pre-order ETA:", error);
+      toast.error("Failed to update pre-order ETA. Please try again.", {
+        duration: 3000,
+        position: "top-right",
+      });
+    }
+  };
+
+  function formatDateForDisplay(dateString) {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toISOString().split('T')[0]; // Returns "YYYY-MM-DD"
+  }
+
+  const handleUpdateOrderPaymentStatus = async (orderId) => {
+    try {
+      const response = await UpdateOrderPaymentStatus(StaffToken, orderId);
+    } catch (error) {
+
+    }
+  }
+
   useEffect(() => {
     handleGetAllOrders();
     handleGetAllPreOrders();
@@ -229,44 +272,18 @@ const OrderManagement = () => {
     handleGetAllPreOrders();
   }, [currentPage, POcurrentPage]);
 
+  const handleLogout = () => {
+
+    // event.preventDefault();
+    sessionStorage.clear();
+    navigate("/Customer/home");
+    window.location.reload();
+  }
+
   return (
     <div className="order-management-container">
       <ToastContainer style={{ top: "110px" }} />
       <Sidebar />
-      {/* <Modal
-            isOpen={isAddOpen}
-            onRequestClose={() => setIsAddOpen(false)}
-            className="custom-modal-product"
-            overlayClassName="custom-overlay-product"
-          >
-            <h2>Add Order</h2>
-            <label>Order ID: </label>
-            <input name="ordertName" placeholder="Enter order id" />
-            <br />
-            <label>Order name: </label>
-            <input name="orderName" placeholder="Enter order name" />
-            <br />
-            <label>Order quantity: </label>
-            <input name="quantity" placeholder="Enter order quantity" />
-            <br />
-            <label>Order price: </label>
-            <input name="price" placeholder="Enter order price" />
-            <br />
-            <div className="modal-actions-product">
-              <button
-                onClick={"handleAddProduct"}
-                className="btn-confirm-product"
-              >
-                Confirm
-              </button>
-              <button
-                onClick={() => setIsAddOpen(false)}
-                className="btn-cancel-product"
-              >
-                Cancel
-              </button>
-            </div>
-          </Modal> */}
       <Modal
         isOpen={isStatusChangeOpen}
         onRequestClose={() => setIsStatusChangeOpen(false)}
@@ -412,7 +429,7 @@ const OrderManagement = () => {
                   <a href="/Staff/StaffProfile">Profile</a>
                 </li>
                 <li>
-                  <a href="#">Logout</a>
+                  <a href="" onClick={handleLogout}>Logout</a>
                 </li>
               </ul>
             </div>
@@ -428,81 +445,108 @@ const OrderManagement = () => {
             </button>
           </div>
           <h2>Pre-Orders</h2>
-          <table className="issues-table">
-            <thead>
-              <tr>
-                <th>PreOrderID</th>
-                <th>Product</th>
-                <th>PreOrder Date</th>
-                <th>Update Date</th>
-                <th>Price</th>
-                <th>Estimated delivery date</th>
-                <th>CustomerInfo</th>
-                <th>Status</th>
-                <th>Payment Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {PreOrders.map((order) => (
-                <tr key={order.PreorderID}>
-                  <td>{order.PreorderID}</td>
-                  <td style={{ width: "fit-content" }}>
-                    <div className="flex-grow-1">
-                      <h6 className="fs-15 mb-1">{order.ProductID}</h6>
-                      {/* <p className="mb-0 text-muted fs-13">Quantity: {preorder.Quantity}</p> */}
-                      <p className="mb-0 product-info">
-                        <span className="info-label">Quantity:</span>
-                        <span className="info-value">{order.Quantity}</span>
-                      </p>
-                    </div>
-                  </td>
-                  <td>{formatDate(order.created)}</td>
-                  <td>{formatDate(order.updated)}</td>
-                  <td>{order.TotalPrice}</td>
-                  <td>{formatDate(order.ETA)}</td>
-                  <td>
-                    <a
-                      href=""
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleGetPreOrderInfo(order.PreorderID);
-                      }}
-                    >
-                      View Customer Info
-                    </a>
-                  </td>
-                  <td>
-                    <div className="select1">
-                      <select
-                        id="statusDropdown"
-                        value={order.Status}
-                        onChange={(e) =>
-                          handleStatusChange(
-                            order.PreorderID,
-                            e.target.value,
-                            "preorder"
-                          )
-                        }
-                      >
-                        <option value="Waiting">Waiting</option>
-                        <option value="Cancelled">Cancelled</option>
-                        <option value="Shipping">Shipping</option>
-                        <option value="Done">Done</option>
-                      </select>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="select1">
-                      <select id="statusDropdown">
-                        <option value="Pending">Pending</option>
-                        <option value="Done">Done</option>
-                      </select>
-                    </div>
-                  </td>
+          <div className="table-wrapper" style={{ width: '100%', overflowX: 'auto' }}>
+            <table className="issues-table" style={{ width: '100%', minWidth: '1100px' }}>
+              <thead>
+                <tr>
+                  <th>PreOrderID</th>
+                  <th style={{ width: '10%' }}>Product</th>
+                  <th>PreOrder Date</th>
+                  <th>Update Date</th>
+                  <th>Price</th>
+                  <th style={{ width: '15%' }}>Estimated delivery date</th>
+                  <th>Customer Info</th>
+                  <th>Payment Method</th>
+                  <th>Status</th>
+                  <th>Payment Status</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {PreOrders.map((order) => (
+                  <tr key={order.PreorderID}>
+                    <td>{order.PreorderID}</td>
+                    <td style={{ width: "fit-content" }}>
+                      <div className="flex-grow-1">
+                        <h6 className="fs-15 mb-1">{order.ProductID}</h6>
+                        <p className="mb-0 product-info">
+                          <span className="info-label">Quantity:</span>
+                          <span className="info-value">{order.Quantity}</span>
+                        </p>
+                      </div>
+                    </td>
+                    <td>{formatDate(order.created)}</td>
+                    <td>{formatDate(order.updated)}</td>
+                    <td>{order.TotalPrice}</td>
+                    <td><input type="date" value={formatDateForDisplay(order.ETA)}
+                      style={{
+                        padding: '5px 10px',
+                        borderRadius: '4px',
+                        border: '1px solid #ccc',
+                        fontSize: '14px',
+                        width: '150px',
+                        cursor: 'pointer'
+                      }}
+                      onChange={(e) => handleUpdatePreOrderETA(order.PreorderID, e.target.value)}
+                    /></td>
+                    <td>
+                      <a
+                        href=""
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleGetPreOrderInfo(order.PreorderID);
+                        }}
+                      >
+                        View Customer Info
+                      </a>
+                    </td>
+                    <td>{order.PaymentMethod}</td>
+                    <td>
+                      <div className="select1">
+                        <select
+                          id="statusDropdown"
+                          value={order.Status}
+                          onChange={(e) =>
+                            handleStatusChange(
+                              order.PreorderID,
+                              e.target.value,
+                              "preorder"
+                            )
+                          }
+                        >
+                          <option value="Waiting">Waiting</option>
+                          <option value="Cancelled">Cancelled</option>
+                          <option value="Shipping">Shipping</option>
+                          <option value="Done">Done</option>
+                        </select>
+                      </div>
+                    </td>
+
+                    <td>
+                      <div className="select1">
+                        {order.PaymentStatus === 'Pending' ? (
+                          <button
+                            onClick={() => setIsStatusChangeOpen(false)}
+                            className="btn-confirm"
+                          >
+                            Done
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => setIsStatusChangeOpen(false)}
+                            className="btn-confirm"
+                            disabled
+                            style={{ opacity: 0.5, cursor: 'not-allowed' }}
+                          >
+                            Done
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
           <div>
             <ReactPaginate
               breakLabel="..."
@@ -532,7 +576,8 @@ const OrderManagement = () => {
                 <th>Update Date</th>
                 <th>Price</th>
                 <th>VoucherId</th>
-                <th>CustomerInfo</th>
+                <th>Customer Info</th>
+                <th>Payment Method</th>
                 <th>Status</th>
                 <th>Payment Status</th>
               </tr>
@@ -567,6 +612,7 @@ const OrderManagement = () => {
                       View Customer Info
                     </a>
                   </td>
+                  <td>{order.PaymentMethod}</td>
                   <td>
                     <div className="select1">
                       <select

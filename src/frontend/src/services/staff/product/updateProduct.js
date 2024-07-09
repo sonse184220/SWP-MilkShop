@@ -2,7 +2,7 @@ import axios from "../../axios";
 
 export const UpdateProduct = (token, pID, pInfo) => {
     try {
-        return axios.put(`/api/product/${pID}`, pInfo,
+        return axios.put(`/api/product/staff/${pID}`, pInfo,
             {
                 headers: {
                     'Authorization': token,

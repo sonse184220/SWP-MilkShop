@@ -2,7 +2,7 @@ import axios from '../axios';
 
 export const AddWishlist = (token, uID, pID) => {
     try {
-        return axios.post(`/api/wishlist/${uID}?productId=${pID}`, {},
+        return axios.post(`/api/wishlist/?productId=${pID}`, {},
             {
                 headers: {
                     'authorization': token,

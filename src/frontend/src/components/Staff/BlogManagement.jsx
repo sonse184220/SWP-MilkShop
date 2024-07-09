@@ -3,6 +3,8 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { NavLink, useNavigate, Link, } from "react-router-dom";
+import ReactPaginate from "react-paginate";
 
 import "./BlogManagement.css"; // Import CSS file
 import Sidebar from "./Sidebar";
@@ -14,6 +16,8 @@ import { blogDetail } from "../../services/blog/blogDetail";
 import { UpdateBlog } from "../../services/staff/blog/updateBlog";
 import { deleteBlog } from "../../services/staff/blog/deleteBlog";
 const BlogManagement = () => {
+  const navigate = useNavigate();
+
   const StaffToken = "Bearer " + sessionStorage.getItem("token");
   const userId = sessionStorage.getItem("staffData")
     ? JSON.parse(sessionStorage.getItem("staffData")).UserID
@@ -22,6 +26,9 @@ const BlogManagement = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isAddOpen, setIsAddOpen] = useState(false);
   const dropdownRef = useRef(null);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageCount, setPageCount] = useState(1);
 
   const [blogs, setBlogs] = useState([]);
   const [newBlog, setNewBlog] = useState({
@@ -46,21 +53,8 @@ const BlogManagement = () => {
     }
   };
 
-  const getImageSrc = (imageData) => {
-    if (!imageData || !imageData.data) return "";
-
-    try {
-      const base64 = btoa(
-        imageData.data.reduce(
-          (data, byte) => data + String.fromCharCode(byte),
-          ""
-        )
-      );
-      return `data:image/jpeg;base64,${base64}`;
-    } catch (error) {
-      console.error("Error converting image data:", error);
-      return "";
-    }
+  const handlePageClick = (event) => {
+    setCurrentPage(event.selected + 1);
   };
 
   function formatDate(dateString) {
@@ -73,17 +67,23 @@ const BlogManagement = () => {
 
   const handleGetBlogs = async () => {
     try {
-      const response = await fetchBlogs(5, 1, "");
+      let limit = 5;
+      let page = currentPage;
+      let sort = "";
+      const response = await fetchBlogs(limit, page, sort)
       if (response.data.total > 0) {
         setBlogs(response.data.data);
+        setPageCount(response.data.totalPages);
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error fetching blogs:", error);
+    }
   };
 
   const handleAddBlog = async () => {
     try {
       const formData = new FormData();
-      formData.append("userId", userId);
+      // formData.append("userId", userId);
       formData.append("title", newBlog.title);
       formData.append("content", newBlog.content);
       formData.append("productList", newBlog.productList);
@@ -188,6 +188,10 @@ const BlogManagement = () => {
     handleGetBlogs();
   }, []);
 
+  useEffect(() => {
+    handleGetBlogs();
+  }, [currentPage]);
+
   const handleDeleteBlog = async (blogId) => {
     try {
       await deleteBlog(StaffToken, blogId);
@@ -204,6 +208,14 @@ const BlogManagement = () => {
       });
     }
   };
+
+  const handleLogout = () => {
+
+    // event.preventDefault();
+    sessionStorage.clear();
+    navigate("/Customer/home");
+    window.location.reload();
+  }
 
   return (
     <div className="blog-management-container">
@@ -223,7 +235,7 @@ const BlogManagement = () => {
                   <a href="/Staff/StaffProfile">Profile</a>
                 </li>
                 <li>
-                  <a href="#">Logout</a>
+                  <a href="" onClick={handleLogout}>Logout</a>
                 </li>
               </ul>
             </div>
@@ -246,7 +258,7 @@ const BlogManagement = () => {
                 <th>BlogID</th>
                 <th>Author</th>
                 <th>BlogName</th>
-                <th>Content</th>
+                {/* <th>Content</th> */}
                 <th>Created</th>
                 <th>Updated</th>
                 <th></th>
@@ -257,12 +269,12 @@ const BlogManagement = () => {
               {blogs.map((blog) => (
                 <tr key={blog.BlogID}>
                   <td>
-                    {/* <img style={{ width: '100%' }} src={getImageSrc(blog.Image)} alt="" /> */}
+                    <img style={{ width: '100%' }} src={`data:image/jpeg;base64,${blog.Image}`} alt="" />
                   </td>
                   <td>{blog.BlogID}</td>
                   <td>{blog.UserID}</td>
                   <td>{blog.Title}</td>
-                  <td>{blog.Content}</td>
+                  {/* <td>{blog.Content}</td> */}
                   <td>{formatDate(blog.created)}</td>
                   <td>{formatDate(blog.updated)}</td>
                   <td className="deleteDiv">
@@ -290,33 +302,25 @@ const BlogManagement = () => {
               ))}
             </tbody>
           </table>
-          {/* <Modal
-            isOpen={isOpen}
-            onRequestClose={() => setIsOpen(false)}
-            className="custom-modal-blog"
-            overlayClassName="custom-overlay-blog"
-          >
-            <h2>Update Blog</h2>
-            <label htmlFor="">Blog name: </label>
-            <input placeholder="Enter new blog name" /> <br />
-            <label htmlFor="">Blog content: </label>
-            <input placeholder="Enter new blog content" /> <br />
-            <br />
-            <div className="modal-actions-blog">
-              <button
-                onClick={"handleMemberOrderAction"}
-                className="btn-confirm-blog"
-              >
-                Confirm
-              </button>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="btn-cancel-blog"
-              >
-                Cancel
-              </button>
-            </div>
-          </Modal> */}
+          <div>
+            <ReactPaginate
+              breakLabel="..."
+              nextLabel="Next >"
+              onPageChange={handlePageClick}
+              pageRangeDisplayed={5}
+              pageCount={pageCount}
+              previousLabel="< Previous"
+              renderOnZeroPageCount={null}
+              containerClassName="pagination justify-content-center"
+              pageClassName="page-item"
+              pageLinkClassName="page-link"
+              previousClassName="page-item"
+              previousLinkClassName="page-link"
+              nextClassName="page-item"
+              nextLinkClassName="page-link"
+              activeClassName="active"
+            />
+          </div>
           <Modal
             isOpen={isOpen}
             onRequestClose={() => setIsOpen(false)}
@@ -372,7 +376,7 @@ const BlogManagement = () => {
                 <div style={{ height: "50%" }}>
                   <img
                     style={{ width: "100%", height: "100%" }}
-                    src={imagePreview}
+                    src={`data:image/jpeg;base64,${imagePreview}`}
                     alt="blog image"
                   />
                 </div>

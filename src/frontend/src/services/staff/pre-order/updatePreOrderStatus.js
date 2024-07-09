@@ -2,7 +2,7 @@ import axios from "../../axios";
 
 export const UpdatePreOrderStatus = (token, preorderId, Status) => {
     try {
-        return axios.patch(`/api/preorder/${preorderId}/status`, Status,
+        return axios.patch(`/api/preorder/staff/${preorderId}/status`, Status,
             {
                 headers: {
                     'Authorization': token,

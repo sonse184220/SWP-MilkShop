@@ -2,7 +2,7 @@ import axios from "../../axios";
 
 export const GetAllPreOrders = (token, limit, page, sort) => {
     try {
-        return axios.get(`/api/preorder/history?limit=${limit}&page=${page}&sort=${sort}`,
+        return axios.get(`/api/preorder/staff/history?limit=${limit}&page=${page}&sort=${sort}`,
             {
                 headers: {
                     'Authorization': token,

@@ -2,7 +2,7 @@ import axios from "../../axios";
 
 export const AddBlog = (token, bInfo) => {
     try {
-        return axios.post(`/api/blog/create`, bInfo,
+        return axios.post(`/api/blog/staff/create`, bInfo,
             {
                 headers: {
                     'Authorization': token,

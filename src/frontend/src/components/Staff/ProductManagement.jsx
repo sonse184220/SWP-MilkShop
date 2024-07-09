@@ -3,6 +3,8 @@ import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { NavLink, useNavigate, Link, } from "react-router-dom";
+import ReactPaginate from "react-paginate";
 
 import Sidebar from "./Sidebar";
 import "./ProductManagement.css";
@@ -15,12 +17,16 @@ import { UpdateProduct } from "../../services/staff/product/updateProduct";
 import { AddProduct } from "../../services/staff/product/addProduct";
 
 function ProductManagement() {
+  const navigate = useNavigate();
 
   const StaffToken = 'Bearer ' + sessionStorage.getItem('token');
   const userId = sessionStorage.getItem('userData') ? JSON.parse(sessionStorage.getItem('userData')).UserID : "Guest";
 
   const [isOpen, setIsOpen] = useState(false);
   const [isAddOpen, setIsAddOpen] = useState(false);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageCount, setPageCount] = useState(1);
 
   const [products, setProducts] = useState([]);
   const [updateProduct, setUpdateProduct] = useState({
@@ -55,6 +61,11 @@ function ProductManagement() {
     }
   };
 
+  const handlePageClick = (event) => {
+    setCurrentPage(event.selected + 1);
+  };
+
+
   function formatDate(dateString) {
     const date = new Date(dateString);
     const day = date.getDate().toString().padStart(2, '0');
@@ -69,51 +80,18 @@ function ProductManagement() {
     return date.toISOString().split('T')[0]; // Returns "YYYY-MM-DD"
   }
 
-  // function formatDateForState(dateString) {
-  //   if (!dateString) return '';
-  //   const [year, month, day] = dateString.split('-');
-  //   return `${day}/${month}/${year}`;
-  // }
-
-
-  // function formatDateISO(dateString) {
-  //   const date = new Date(dateString);
-  //   const day = date.getDate().toString().padStart(2, '0');
-  //   const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  //   const year = date.getFullYear();
-  //   return `${year}/${month}/${day}`;
-  // }
-
-  // function formatDateDMY(dateString) {
-  //   const date = new Date(dateString);
-  //   const day = date.getDate().toString().padStart(2, '0');
-  //   const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  //   const year = date.getFullYear();
-  //   return `${day}/${month}/${year}`;
-  // }
-
-  const getImageSrc = (imageData) => {
-    if (!imageData || !imageData.data) return '';
-
-    try {
-      const base64 = btoa(
-        imageData.data.reduce((data, byte) => data + String.fromCharCode(byte), '')
-      );
-      return `data:image/jpeg;base64,${base64}`;
-    } catch (error) {
-      console.error('Error converting image data:', error);
-      return '';
-    }
-  };
-
   const handleGetProducts = async () => {
     try {
-      const response = await handleGetAllProduct();
+      let limit = 5; // Adjust this value as needed
+      let page = currentPage;
+      // let sort = "";
+      const response = await handleGetAllProduct(page, limit);
       if (response.data.totalProducts > 0) {
         setProducts(response.data.products);
+        setPageCount(response.data.totalPages);
       }
     } catch (error) {
-
+      console.error("Error fetching products:", error);
     }
   };
 
@@ -133,8 +111,7 @@ function ProductManagement() {
           Status: product.Status,
           // Image: product.Image,
         });
-        setImagePreview(
-          `data:image/jpeg;base64,${product.Image}`);
+        setImagePreview(`data:image/jpeg;base64,${product.Image}`);
         setIsOpen(true);
       }
     } catch (error) {
@@ -205,7 +182,7 @@ function ProductManagement() {
       formData.append("Price", newProduct.Price);
       formData.append("Expiration", newProduct.Expiration);
       formData.append("Quantity", newProduct.Quantity);
-      formData.append("Status", "out-of-stock");
+      formData.append("Status", "Available");
       formData.append("Content", newProduct.Content);
       formData.append("BrandID", newProduct.BrandID);
       // formData.append("Status", "out-of-stock");
@@ -244,6 +221,19 @@ function ProductManagement() {
     handleGetProducts();
   }, []);
 
+  useEffect(() => {
+    handleGetProducts();
+  }, [currentPage]);
+
+
+  const handleLogout = () => {
+
+    // event.preventDefault();
+    sessionStorage.clear();
+    navigate("/Customer/home");
+    window.location.reload();
+  }
+
   return (
     <>
       <div className="app">
@@ -262,7 +252,7 @@ function ProductManagement() {
                     <a href="/Staff/StaffProfile">Profile</a>
                   </li>
                   <li>
-                    <a href="#">Logout</a>
+                    <a href="" onClick={handleLogout}>Logout</a>
                   </li>
                 </ul>
               </div>
@@ -300,7 +290,7 @@ function ProductManagement() {
                 {products.map((item) => (
                   <tr key={item.ProductID}>
                     <td>
-                      <img src={getImageSrc(item.Image)} alt="" />
+                      <img src={`data:image/jpeg;base64,${item.Image}`} alt={`${item.Name}`} />
                     </td>
                     <td>{item.ProductID}</td>
                     <td>{item.Name}</td>
@@ -327,6 +317,25 @@ function ProductManagement() {
                 ))}
               </tbody>
             </table>
+            <div>
+              <ReactPaginate
+                breakLabel="..."
+                nextLabel="Next >"
+                onPageChange={handlePageClick}
+                pageRangeDisplayed={5}
+                pageCount={pageCount}
+                previousLabel="< Previous"
+                renderOnZeroPageCount={null}
+                containerClassName="pagination justify-content-center"
+                pageClassName="page-item"
+                pageLinkClassName="page-link"
+                previousClassName="page-item"
+                previousLinkClassName="page-link"
+                nextClassName="page-item"
+                nextLinkClassName="page-link"
+                activeClassName="active"
+              />
+            </div>
             <Modal
               isOpen={isOpen}
               onRequestClose={() => setIsOpen(false)}
@@ -380,43 +389,6 @@ function ProductManagement() {
               </div>
             </Modal>
 
-            {/* <Modal
-              isOpen={isAddOpen}
-              onRequestClose={() => setIsAddOpen(false)}
-              className="custom-modal-product"
-              overlayClassName="custom-overlay-product"
-            >
-              <h2>Add Product</h2>
-              <label>Product ID: </label>
-              <input name="productName" placeholder="Enter product id" />
-              <br />
-              <label>Product name: </label>
-              <input name="productName" placeholder="Enter product name" />
-              <br />
-              <label>Product quantity: </label>
-              <input name="quantity" placeholder="Enter product quantity" />
-              <br />
-              <label>Product date: </label>
-              <input name="date" placeholder="Enter product date" type="date" />
-              <br />
-              <label>Product voucher: </label>
-              <input name="voucher" placeholder="Enter product voucher" />
-              <br />
-              <div className="modal-actions-product">
-                <button
-                  onClick={"handleAddProduct"}
-                  className="btn-confirm-product"
-                >
-                  Confirm
-                </button>
-                <button
-                  onClick={() => setIsAddOpen(false)}
-                  className="btn-cancel-product"
-                >
-                  Cancel
-                </button>
-              </div>
-            </Modal> */}
             <Modal
               isOpen={isAddOpen}
               onRequestClose={() => setIsAddOpen(false)}
