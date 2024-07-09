@@ -10,29 +10,17 @@ export class GoogleController {
         const user = req.user;
 
         if (user.UserID) {
-            // Existing user
             const token = jwt.sign({
                 userId: user.UserID,
                 isAdmin: user.isAdmin,
                 isStaff: user.isStaff
             }, process.env.JWT_SECRET, { expiresIn: '24h' });
 
-            res.send({
-                message: 'Google authentication successful.',
-                token,
-                user: {
-                    UserID: user.UserID,
-                    Name: user.Name,
-                    Email: user.Email,
-                    Phone: user.Phone,
-                    Address: user.Address,
-                    RewardPoints: user.RewardPoints
-                }
-            });
+            res.redirect(`http://localhost:3000/Customer/home?token=${token}`);
         } else {
-            // New user, provide temp token for completing registration
+
             const tempUserToken = jwt.sign({ email: user.Email, name: user.Name }, process.env.JWT_SECRET, { expiresIn: '1h' });
-            res.send({ tempUserToken, message: 'Google authentication successful. Please complete your registration.' });
+            res.redirect(`http://localhost:3000/complete-registration?tempUserToken=${tempUserToken}`);
         }
     }
 
