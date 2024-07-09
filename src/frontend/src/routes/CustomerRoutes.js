@@ -12,61 +12,43 @@ import ProductDetail from '../components/Product-Detail/ProductDetail.jsx';
 import { Wishlist } from '../components/Wishlist/Wishlist.jsx';
 import BlogDetail from '../components/Blog/BlogDetail.jsx';
 import { Cart } from '../components/Cart/Cart.jsx';
-import ProductManagement from '../components/Staff/ProductManagement.jsx';
 import { GuestCart } from '../components/Guest/GuestCart.jsx';
 import { OrderHistory } from '../components/OrderHistory/OrderHistory.jsx';
-
-const HomePageWrapper = ({ onLogin, isMember }) => {
-    const location = useLocation();
-    const navigate = useNavigate();
-    const searchParams = new URLSearchParams(location.search);
-    // const token = searchParams.get('token');
-    const token = searchParams.get('tempUserToken');
-    console.log(token);
-    // if (token) {
-    //     If there's a token, redirect to the registration completion page
-    //     navigate('/Customer/complete-registration', { state: { token } });
-    // }
-
-    useEffect(() => {
-        if (token) {
-            // If there's a token, redirect to the registration completion page
-            navigate('/Customer/complete-registration', { state: { token } });
-        }
-    }, [token, navigate]);
-
-    // If there's no token, render the regular HomePage
-    return <HomePage onLogin={onLogin} isMember={isMember} />;
-};
 
 const TokenHandler = ({ children }) => {
     const location = useLocation();
     const navigate = useNavigate();
     const searchParams = new URLSearchParams(location.search);
-    // const token = searchParams.get('token' || 'tempUserToken');
     const token = searchParams.get('token');
     const tempUserToken = searchParams.get('tempUserToken');
 
     useEffect(() => {
         if (token) {
-            // if (location.pathname === '/Customer/home') {
-            // If on the home route with token, redirect to home without token
-            navigate('/Customer/home', { state: { token } });
-            // }
+            // If there's a token, store it and remove from URL
+            console.log('home token')
+            // sessionStorage.setItem('token', token);
+            navigate('/Customer/home', { replace: true, state: { token } });
         } else if (tempUserToken) {
-            // If there's a token and not on the home route, redirect to the registration completion page
-            navigate('/Customer/complete-registration', { state: { tempUserToken } });
+            // If there's a tempUserToken, store it and redirect to complete-registration
+            // sessionStorage.setItem('tempUserToken', tempUserToken);
+            navigate('/Customer/complete-registration', { replace: true, state: { tempUserToken, showLoginSuccess: true } });
+            console.log('complete token')
         }
-    }, [token, location.pathname, navigate, tempUserToken]);
+    }, [token, tempUserToken, navigate, location.pathname]);
 
     return children;
 };
 
-const CompleteRegistrationWrapper = () => {
+const HomePageWrapper = ({ onLogin, isMember }) => {
     const location = useLocation();
-    const { token } = location.state || {};
+    const token = location.state?.token || sessionStorage.getItem('token');
+    return <HomePage onLogin={onLogin} isMember={isMember} token={token} />;
+};
 
-    return <Register showLogin={() => { }} isCompleteRegistration={true} token={token} />;
+const CompleteRegistrationWrapper = ({ showLogin }) => {
+    const location = useLocation();
+    const tempUserToken = location.state?.tempUserToken || sessionStorage.getItem('tempUserToken');
+    return <Register showLogin={showLogin} isCompleteRegistration={true} tempUserToken={tempUserToken} />;
 };
 
 export function CustomerRoutes({ isMember }) {
@@ -89,11 +71,17 @@ export function CustomerRoutes({ isMember }) {
 
     return (
         <Routes>
+            {/* <Route element={<TokenHandler />}> */}
             {/* <Route path='/' element={<Navigate to={'/login-register'} />} /> */}
-            <Route index element={<Navigate to="home" />} />
+            {/* <Route index element={<Navigate to="home" />} /> */}
+            <Route index element={<Navigate to="/Customer/home" replace />} />
             {/* <Route path='home' element={<HomePage onLogin={handleLogin} isMember={isMember} />} /> */}
-            <Route path='home' element={<HomePageWrapper onLogin={handleLogin} isMember={isMember} />} />
+            {/* <Route path='home' element={<HomePageWrapper onLogin={handleLogin} isMember={isMember} />} /> */}
             {/* <Route path='home' element={<TokenHandler><HomePage onLogin={handleLogin} isMember={isMember} /></TokenHandler>} /> */}
+            <Route path="home" element={<TokenHandler><HomePageWrapper onLogin={handleLogin} isMember={isMember} /></TokenHandler>} />
+            <Route path="complete-registration" element={<TokenHandler><CompleteRegistrationWrapper /></TokenHandler>} />
+
+            {/* <Route path='home' element={<HomePage onLogin={handleLogin} isMember={isMember} />} /> */}
             <Route path='login-register' element={!showLogin ? <Login onLogin={handleLogin} showLogin={handleShowLogin} /> : <Register showLogin={handleShowLogin} isCompleteRegistration={false} />} />
             <Route path='login-google' element={<div>Hello Google</div>} />
             <Route path='Blogs' element={<AllBlog isMember={isMember} />}></Route>
@@ -106,8 +94,10 @@ export function CustomerRoutes({ isMember }) {
             <Route path='GuestCart' element={<GuestCart />} />
             <Route path='OrderHistory' element={<OrderHistory isMember={isMember} />} />
             {/* <Route path='complete-registration' element={<Register showLogin={handleShowLogin} isCompleteRegistration={true} />} /> */}
-            <Route path='complete-registration' element={<CompleteRegistrationWrapper />} />
             {/* <Route path='complete-registration' element={<CompleteRegistrationWrapper />} /> */}
+            {/* <Route path='complete-registration' element={<CompleteRegistrationWrapper />} /> */}
+
+            {/* </Route> */}
         </Routes>
 
     )
