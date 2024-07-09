@@ -18,8 +18,8 @@ export class GoogleController {
 
             res.redirect(`http://localhost:3000/Customer/home?token=${token}`);
         } else {
-
             const tempUserToken = jwt.sign({ email: user.Email, name: user.Name }, process.env.JWT_SECRET, { expiresIn: '1h' });
+            await googleService.storeTempToken(tempUserToken, user.Email, user.Name);
             res.redirect(`http://localhost:3000/complete-registration?tempUserToken=${tempUserToken}`);
         }
     }
@@ -38,6 +38,11 @@ export class GoogleController {
 
         try {
             const tempUser = jwt.verify(tempUserToken, process.env.JWT_SECRET);
+            const storedToken = await googleService.getTempToken(tempUserToken);
+
+            if (!storedToken) {
+                throw new Error('Invalid or expired token');
+            }
 
             const createdUser = await googleService.createUser(tempUser.email, Name, Phone, Address, ProfilePicture);
 
@@ -46,6 +51,8 @@ export class GoogleController {
                 isAdmin: createdUser.isAdmin,
                 isStaff: createdUser.isStaff
             }, process.env.JWT_SECRET, { expiresIn: '24h' });
+
+            await googleService.deleteTempToken(tempUserToken);
 
             res.send({
                 message: 'Registration complete. You can now log in.',

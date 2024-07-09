@@ -32,4 +32,20 @@ export class GoogleService {
         const [results] = await poolConnect.query(query, [userId]);
         return results.length > 0 ? results[0] : null;
     }
+
+    async storeTempToken(token, email, name) {
+        const query = 'INSERT INTO TEMP_USER_TOKENS (Token, Email, Name) VALUES (?, ?, ?)';
+        await poolConnect.query(query, [token, email, name]);
+    }
+
+    async deleteTempToken(token) {
+        const query = 'DELETE FROM TEMP_USER_TOKENS WHERE Token = ?';
+        await poolConnect.query(query, [token]);
+    }
+
+    async getTempToken(token) {
+        const query = 'SELECT * FROM TEMP_USER_TOKENS WHERE Token = ?';
+        const [results] = await poolConnect.query(query, [token]);
+        return results.length > 0 ? results[0] : null;
+    }
 }
