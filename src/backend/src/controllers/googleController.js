@@ -11,8 +11,24 @@ export class GoogleController {
 
         const tempUserToken = jwt.sign({ email: user.Email, name: user.Name }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-        // Gửi JWT này cho frontend để hoàn tất đăng ký
-        res.send({ tempUserToken, message: 'Google authentication successful. Please complete your registration.' });
+        const token = jwt.sign({
+            userId: user.UserID,
+            isAdmin: user.isAdmin,
+            isStaff: user.isStaff
+        }, process.env.JWT_SECRET, { expiresIn: '24h' });
+
+        res.send({
+            message: 'Google authentication successful.',
+            token,
+            user: {
+                UserID: user.UserID,
+                Name: user.Name,
+                Email: user.Email,
+                Phone: user.Phone,
+                Address: user.Address,
+                RewardPoints: user.RewardPoints
+            }
+        });
     }
 
     async completeRegistration(req, res) {
@@ -33,9 +49,19 @@ export class GoogleController {
             const tempUser = jwt.verify(tempUserToken, process.env.JWT_SECRET);
             console.log('Decoded Token:', tempUser);
 
-            await googleService.createUser(tempUser.email, Name, Phone, Address, ProfilePicture);
+            const createdUser = await googleService.createUser(tempUser.email, Name, Phone, Address, ProfilePicture);
 
-            res.send('Registration complete. You can now log in.');
+            const token = jwt.sign({
+                userId: createdUser.UserID,
+                isAdmin: createdUser.isAdmin,
+                isStaff: createdUser.isStaff
+            }, process.env.JWT_SECRET, { expiresIn: '24h' });
+
+            res.send({
+                message: 'Registration complete. You can now log in.',
+                token,
+                user: createdUser
+            });
         } catch (err) {
             console.error('Token Verification Error:', err);  // Log lỗi
             res.status(400).json({ error: 'Invalid token. Please start the registration process again.' });
