@@ -39,7 +39,7 @@ export class EmailService {
             throw error; // Throw the error to be caught in the service method
         }
     }
-    sendVerificationEmail = (email, token, userId, phone, req) => {
+    async sendVerificationEmail(email, token, userId, phone, req) {
         const url = `${req.protocol}://${req.get('host')}/api/auth/verify-email?token=${token}`;
         const mailOptions = {
             from: process.env.EMAIL_USER,
@@ -62,14 +62,14 @@ export class EmailService {
             `
         };
 
-        return this.transporter.sendMail(mailOptions)
-            .then(info => {
-                console.log(`Verification email sent: ${info.response}`);
-            })
-            .catch(error => {
-                console.error(`Error sending verification email: ${error}`);
-            });
-    };
+        try {
+            const info = await this.transporter.sendMail(mailOptions);
+            console.log(`Verification email sent: ${info.response}`);
+        } catch (error) {
+            console.error(`Error sending verification email: ${error}`);
+            throw error;
+        }
+    }
 
     async sendOrderConfirmationEmail(email, orderId, cartItems, initialTotalPrice, totalPrice, vouchers, contactInfo) {
         const itemsDetails = cartItems.map(item => `
