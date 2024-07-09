@@ -2,9 +2,11 @@ import { poolConnect } from "../utils/dbConnection.js";
 import { PreorderService } from "../services/PreorderService.js";
 import { ProductService } from "../services/ProductService.js";
 import { UserService } from "../services/userService.js";
+import { EmailService } from "../services/EmailService.js";
 
 const preorderService = new PreorderService();
 const productService = new ProductService();
+const emailService = new EmailService();
 const userService = new UserService();
 
 export class PreorderController {
@@ -112,6 +114,15 @@ export class PreorderController {
             return res.status(500).send({ error: "Failed to create pre-order!" });
         }
 
+        try {
+            const sendingPreorderEmail = await emailService.sendPreorderConfirmationEmail(finalizePreorder.insertId, 
+                                                                                        {productId, productName: product[0].Name, quantity, price: product[0].Price}, 
+                                                                                        totalPrice, {name, email, phone, address});
+            console.log(`Pre-order confirmation email sent: ${sendingPreorderEmail.response}`);
+        } catch (err) {
+            return res.status(500).send({ error: `Error sending pre-order confirmation email: ${err}` })
+        }
+
         const preorder = await preorderService.getPreorder(finalizePreorder.insertId);
         return res.status(201).send(preorder);
     }
@@ -173,7 +184,6 @@ export class PreorderController {
         } else if (updatingPreorder.affectedRows === 0) {
             return res.status(500).send({ error: "Cant update pre-order status!" });
         }
-        console.log("you are here")
 
         const updatedPreorder = await preorderService.getPreorder(preorderId);
         return res.status(200).send(updatedPreorder);

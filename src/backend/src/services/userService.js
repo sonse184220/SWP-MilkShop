@@ -3,94 +3,82 @@ import bcrypt from 'bcryptjs';
 import { connection, poolConnect } from '../utils/dbConnection.js';
 
 export class UserService {
-    getUserInfo = (userId, callback) => {
-        const query = 'SELECT UserID, Name, Email, Phone, Address, RewardPoints, Verified, ProfilePicture FROM user WHERE UserID = ?';
-        connection.query(query, [userId], callback);
-    };
+    async getUserInfo(userId) {
+        const query = 'select UserID, Name, Email, Phone, Address, RewardPoints, Verified, ProfilePicture FROM user WHERE UserID = ?';
+        const [results] = await poolConnect.query(query, [userId]);
+        return results[0];
+    }
 
     async checkUserExisted(id) {
-        const [user] = await poolConnect.query('SELECT * FROM user WHERE UserID = ?', [id]);
+        const [user] = await poolConnect.query('Select * FROM user WHERE UserID = ?', [id]);
         return user;
     }
 
-    updateUserInfo = (userId, newUserData, callback) => {
-        this.getUserInfo(userId, async (err, results) => {
-            if (err) return callback(err);
-            if (results.length === 0) return callback(new Error('User not found'));
+    async updateUserInfo(userId, newUserData) {
+        const currentUserData = await this.getUserInfo(userId);
+        if (!currentUserData) {
+            throw new Error('User not found');
+        }
 
-            const currentUserData = results[0];
-            const fieldsToUpdate = [];
-            const values = [];
+        const fieldsToUpdate = [];
+        const values = [];
 
-            if (newUserData.Name && newUserData.Name.trim() !== currentUserData.Name) {
-                fieldsToUpdate.push('Name = ?');
-                values.push(newUserData.Name.trim());
-            }
-            if (newUserData.Email && newUserData.Email.trim() !== currentUserData.Email) {
-                fieldsToUpdate.push('Email = ?');
-                values.push(newUserData.Email.trim());
-            }
-            if (newUserData.Phone && newUserData.Phone.trim() !== currentUserData.Phone) {
-                fieldsToUpdate.push('Phone = ?');
-                values.push(newUserData.Phone.trim());
-            }
-            if (newUserData.Address && newUserData.Address.trim() !== currentUserData.Address) {
-                fieldsToUpdate.push('Address = ?');
-                values.push(newUserData.Address.trim());
-            }
-            if (newUserData.ProfilePicture) {
-                try {
-                    const resizedImageBuffer = await sharp(newUserData.ProfilePicture)
-                        .resize(480, 320)
-                        .toBuffer();
-                    fieldsToUpdate.push('ProfilePicture = ?');
-                    values.push(resizedImageBuffer);
-                } catch (err) {
-                    return callback(err);
-                }
-            }
+        if (newUserData.Name && newUserData.Name.trim() !== currentUserData.Name) {
+            fieldsToUpdate.push('Name = ?');
+            values.push(newUserData.Name.trim());
+        }
+        if (newUserData.Email && newUserData.Email.trim() !== currentUserData.Email) {
+            fieldsToUpdate.push('Email = ?');
+            values.push(newUserData.Email.trim());
+        }
+        if (newUserData.Phone && newUserData.Phone.trim() !== currentUserData.Phone) {
+            fieldsToUpdate.push('Phone = ?');
+            values.push(newUserData.Phone.trim());
+        }
+        if (newUserData.Address && newUserData.Address.trim() !== currentUserData.Address) {
+            fieldsToUpdate.push('Address = ?');
+            values.push(newUserData.Address.trim());
+        }
+        if (newUserData.ProfilePicture) {
+            const resizedImageBuffer = await sharp(newUserData.ProfilePicture)
+                .resize(480, 320)
+                .toBuffer();
+            fieldsToUpdate.push('ProfilePicture = ?');
+            values.push(resizedImageBuffer);
+        }
 
-            if (fieldsToUpdate.length === 0) {
-                return callback(null, { message: 'No fields to update', status: 400 });
-            }
+        if (fieldsToUpdate.length === 0) {
+            throw new Error('No fields to update');
+        }
 
-            const query = `UPDATE user SET ${fieldsToUpdate.join(', ')} WHERE UserID = ?`;
-            values.push(userId);
+        const query = `Update user SET ${fieldsToUpdate.join(', ')} WHERe UserID = ?`;
+        values.push(userId);
+        await poolConnect.query(query, values);
 
-            connection.query(query, values, (err, result) => {
-                if (err) return callback(err);
+        const updatedUser = await this.getUserInfo(userId);
+        return { message: 'User updated successfully', user: updatedUser };
+    }
 
-                this.getUserInfo(userId, (err, updatedResults) => {
-                    if (err) return callback(err);
-                    callback(null, { message: 'User updated successfully', user: updatedResults[0] });
-                });
-            });
-        });
-    };
+    async changePassword(userId, oldPassword, newPassword) {
+        const query = 'Select Password FROM user WHERE UserID = ?';
+        const [results] = await poolConnect.query(query, [userId]);
 
-    changePassword = (userId, oldPassword, newPassword, callback) => {
-        const query = 'SELECT Password FROM user WHERE UserID = ?';
-        connection.query(query, [userId], (err, results) => {
-            if (err) return callback(err);
-            if (results.length === 0) return callback(new Error('User not found'));
+        if (results.length === 0) {
+            throw new Error('User not found');
+        }
 
-            const storedPassword = results[0].Password;
-            bcrypt.compare(oldPassword, storedPassword, (err, isMatch) => {
-                if (err) return callback(err);
-                if (!isMatch) return callback(new Error('Old password is incorrect'));
+        const storedPassword = results[0].Password;
+        const isMatch = await bcrypt.compare(oldPassword, storedPassword);
+        if (!isMatch) {
+            throw new Error('Old password is incorrect');
+        }
 
-                bcrypt.hash(newPassword, 10, (err, hashedPassword) => {
-                    if (err) return callback(err);
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        const updateQuery = 'Update user SET Password = ? WHERE UserID = ?';
+        await poolConnect.query(updateQuery, [hashedPassword, userId]);
 
-                    const updateQuery = 'UPDATE user SET Password = ? WHERE UserID = ?';
-                    connection.query(updateQuery, [hashedPassword, userId], (err, result) => {
-                        if (err) return callback(err);
-                        callback(null, { message: 'Password changed successfully' });
-                    });
-                });
-            });
-        });
-    };
+        return { message: 'Password changed successfully' };
+    }
 
     async updateUserRewardPoints(userId, amount) {
         const [user] = await poolConnect.query(`UPDATE user SET RewardPoints = RewardPoints + ? WHERE UserID = ?`, [amount, userId]);

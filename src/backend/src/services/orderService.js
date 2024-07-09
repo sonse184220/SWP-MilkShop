@@ -46,6 +46,7 @@ export class OrderService {
         const [order] = await poolConnect.query("UPDATE `order` SET Status = ? WHERE OrderID = ?", [status, orderId]);
         return order;
     }
+
     async updateOrderStatusCancel(orderId) {
         const [order] = await poolConnect.query("UPDATE `order` SET Status = 'Cancelled' WHERE OrderID = ?", [orderId]);
         return order;
@@ -56,60 +57,55 @@ export class OrderService {
         return order;
     }
 
-    placeOrder = (data, user, guestId, callback) => {
+    async placeOrder(data, user, guestId) {
         const { PaymentMethod, VoucherIDs, useRewardPoints, Name, Email, Phone, Address, cart } = data;
         const UserID = user && user.userId !== 'guest' ? user.userId : null;
         const GuestID = user && user.userId === 'guest' ? guestId : null;
 
         if (UserID) {
             const getCartQuery = 'SELECT CART.ProductID, CART.CartQuantity, PRODUCT.Name as ProductName, PRODUCT.Price, PRODUCT.Quantity as AvailableQuantity FROM CART JOIN PRODUCT ON CART.ProductID = PRODUCT.ProductID WHERE CART.UserID = ?';
-            connection.query(getCartQuery, [UserID], (err, cartItems) => {
-                if (err) return callback(err);
+            const [cartItems] = await poolConnect.query(getCartQuery, [UserID]);
 
-                if (cartItems.length === 0) return callback(new Error('Cart is empty'));
+            if (cartItems.length === 0) throw new Error('Cart is empty');
 
-                const outOfStockItems = cartItems.filter(item => item.CartQuantity > item.AvailableQuantity);
-                if (outOfStockItems.length > 0) {
-                    const outOfStockMessages = outOfStockItems.map(item => `Product ${item.ProductName} does not have enough stock. Available quantity: ${item.AvailableQuantity}, Requested quantity: ${item.CartQuantity}`);
-                    return callback(new Error(outOfStockMessages.join('; ')));
-                }
+            const outOfStockItems = cartItems.filter(item => item.CartQuantity > item.AvailableQuantity);
+            if (outOfStockItems.length > 0) {
+                const outOfStockMessages = outOfStockItems.map(item => `Product ${item.ProductName} does not have enough stock. Available quantity: ${item.AvailableQuantity}, Requested quantity: ${item.CartQuantity}`);
+                throw new Error(outOfStockMessages.join('; '));
+            }
 
-                this.calculateTotalPriceAndProcessOrder(cartItems, UserID, null, PaymentMethod, VoucherIDs, useRewardPoints, Name, Email, Phone, Address, callback);
-            });
+            return this.calculateTotalPriceAndProcessOrder(cartItems, UserID, null, PaymentMethod, VoucherIDs, useRewardPoints, Name, Email, Phone, Address);
         } else {
             const productIds = cart.map(item => item.ProductID);
             const getProductQuery = 'SELECT ProductID, Name, Price, Quantity FROM PRODUCT WHERE ProductID IN (?)';
+            const [products] = await poolConnect.query(getProductQuery, [productIds]);
 
-            connection.query(getProductQuery, [productIds], (err, products) => {
-                if (err) return callback(err);
-
-                const outOfStockMessages = [];
-                const validatedCartItems = cart.map(cartItem => {
-                    const product = products.find(p => p.ProductID === cartItem.ProductID);
-                    if (!product) {
-                        outOfStockMessages.push(`Product ID ${cartItem.ProductID} not found`);
-                    } else if (cartItem.Quantity > product.Quantity) {
-                        outOfStockMessages.push(`Product ${product.Name} does not have enough stock. Available quantity: ${product.Quantity}, Requested quantity: ${cartItem.Quantity}`);
-                    }
-                    return {
-                        ProductID: cartItem.ProductID,
-                        CartQuantity: cartItem.Quantity,
-                        ProductName: product ? product.Name : '',
-                        Price: product ? product.Price : 0,
-                        AvailableQuantity: product ? product.Quantity : 0
-                    };
-                });
-
-                if (outOfStockMessages.length > 0) {
-                    return callback(new Error(outOfStockMessages.join('; ')));
+            const outOfStockMessages = [];
+            const validatedCartItems = cart.map(cartItem => {
+                const product = products.find(p => p.ProductID === cartItem.ProductID);
+                if (!product) {
+                    outOfStockMessages.push(`Product ID ${cartItem.ProductID} not found`);
+                } else if (cartItem.Quantity > product.Quantity) {
+                    outOfStockMessages.push(`Product ${product.Name} does not have enough stock. Available quantity: ${product.Quantity}, Requested quantity: ${cartItem.Quantity}`);
                 }
-
-                this.calculateTotalPriceAndProcessOrder(validatedCartItems, null, GuestID, PaymentMethod, VoucherIDs, useRewardPoints, Name, Email, Phone, Address, callback);
+                return {
+                    ProductID: cartItem.ProductID,
+                    CartQuantity: cartItem.Quantity,
+                    ProductName: product ? product.Name : '',
+                    Price: product ? product.Price : 0,
+                    AvailableQuantity: product ? product.Quantity : 0
+                };
             });
-        }
-    };
 
-    calculateTotalPriceAndProcessOrder = (cartItems, UserID, GuestID, PaymentMethod, VoucherIDs, useRewardPoints, Name, Email, Phone, Address, callback) => {
+            if (outOfStockMessages.length > 0) {
+                throw new Error(outOfStockMessages.join('; '));
+            }
+
+            return this.calculateTotalPriceAndProcessOrder(validatedCartItems, null, GuestID, PaymentMethod, VoucherIDs, useRewardPoints, Name, Email, Phone, Address);
+        }
+    }
+
+    async calculateTotalPriceAndProcessOrder(cartItems, UserID, GuestID, PaymentMethod, VoucherIDs, useRewardPoints, Name, Email, Phone, Address) {
         let initialTotalPrice = 0;
         cartItems.forEach(item => {
             initialTotalPrice += item.CartQuantity * item.Price;
@@ -117,120 +113,85 @@ export class OrderService {
 
         if (VoucherIDs && VoucherIDs.length > 0) {
             const voucherQuery = 'SELECT * FROM VOUCHER WHERE VoucherID IN (?) AND Expiration > NOW() AND VoucherQuantity > 0';
-            connection.query(voucherQuery, [VoucherIDs], (err, vouchers) => {
-                if (err) return callback(err);
+            const [vouchers] = await poolConnect.query(voucherQuery, [VoucherIDs]);
 
-                let totalDiscount = 0;
-                vouchers.forEach(voucher => {
-                    totalDiscount += parseFloat(voucher.Discount) / 100 * initialTotalPrice;
-                    const updateVoucherQuantity = 'UPDATE VOUCHER SET VoucherQuantity = VoucherQuantity - 1 WHERE VoucherID = ?';
-                    connection.query(updateVoucherQuantity, [voucher.VoucherID]);
-                });
+            let totalDiscount = 0;
+            for (const voucher of vouchers) {
+                totalDiscount += parseFloat(voucher.Discount) / 100 * initialTotalPrice;
+                const updateVoucherQuantity = 'UPDATE VOUCHER SET VoucherQuantity = VoucherQuantity - 1 WHERE VoucherID = ?';
+                await poolConnect.query(updateVoucherQuantity, [voucher.VoucherID]);
+            }
 
-                const totalPrice = initialTotalPrice - totalDiscount;
-                this.processOrder(UserID, GuestID, cartItems, totalPrice, initialTotalPrice, PaymentMethod, Name, Email, Phone, Address, useRewardPoints, VoucherIDs, callback);
-            });
+            const totalPrice = initialTotalPrice - totalDiscount;
+            return this.processOrder(UserID, GuestID, cartItems, totalPrice, initialTotalPrice, PaymentMethod, Name, Email, Phone, Address, useRewardPoints, VoucherIDs);
         } else {
             const totalPrice = initialTotalPrice;
-            this.processOrder(UserID, GuestID, cartItems, totalPrice, initialTotalPrice, PaymentMethod, Name, Email, Phone, Address, useRewardPoints, [], callback);
+            return this.processOrder(UserID, GuestID, cartItems, totalPrice, initialTotalPrice, PaymentMethod, Name, Email, Phone, Address, useRewardPoints, []);
         }
-    };
+    }
 
-    processOrder = (UserID, GuestID, cartItems, totalPrice, initialTotalPrice, PaymentMethod, Name, Email, Phone, Address, useRewardPoints, VoucherIDs, callback) => {
+    async processOrder(UserID, GuestID, cartItems, totalPrice, initialTotalPrice, PaymentMethod, Name, Email, Phone, Address, useRewardPoints, VoucherIDs) {
         if (useRewardPoints && UserID) {
             const rewardQuery = 'SELECT RewardPoints FROM User WHERE UserID = ?';
-            connection.query(rewardQuery, [UserID], (err, results) => {
-                if (err) return callback(err);
+            const [results] = await poolConnect.query(rewardQuery, [UserID]);
 
-                const availablePoints = results[0].RewardPoints;
-                if (availablePoints > 0) {
-                    const pointsToUse = Math.min(availablePoints, totalPrice);
-                    const remainingPoints = availablePoints - pointsToUse;
-                    totalPrice -= pointsToUse;
+            const availablePoints = results[0].RewardPoints;
+            if (availablePoints > 0) {
+                const pointsToUse = Math.min(availablePoints, totalPrice);
+                const remainingPoints = availablePoints - pointsToUse;
+                totalPrice -= pointsToUse;
 
-                    const updatePointsQuery = 'UPDATE User SET RewardPoints = ? WHERE UserID = ?';
-                    connection.query(updatePointsQuery, [remainingPoints, UserID], (err, result) => {
-                        if (err) return callback(err);
+                const updatePointsQuery = 'UPDATE User SET RewardPoints = ? WHERE UserID = ?';
+                await poolConnect.query(updatePointsQuery, [remainingPoints, UserID]);
 
-                        this.finalizeOrder(UserID, GuestID, cartItems, totalPrice, initialTotalPrice, pointsToUse, PaymentMethod, Name, Email, Phone, Address, VoucherIDs, callback);
-                    });
-                } else {
-                    this.finalizeOrder(UserID, GuestID, cartItems, totalPrice, initialTotalPrice, 0, PaymentMethod, Name, Email, Phone, Address, VoucherIDs, callback);
-                }
-            });
+                return this.finalizeOrder(UserID, GuestID, cartItems, totalPrice, initialTotalPrice, pointsToUse, PaymentMethod, Name, Email, Phone, Address, VoucherIDs);
+            } else {
+                return this.finalizeOrder(UserID, GuestID, cartItems, totalPrice, initialTotalPrice, 0, PaymentMethod, Name, Email, Phone, Address, VoucherIDs);
+            }
         } else {
-            this.finalizeOrder(UserID, GuestID, cartItems, totalPrice, initialTotalPrice, 0, PaymentMethod, Name, Email, Phone, Address, VoucherIDs, callback);
+            return this.finalizeOrder(UserID, GuestID, cartItems, totalPrice, initialTotalPrice, 0, PaymentMethod, Name, Email, Phone, Address, VoucherIDs);
         }
-    };
+    }
 
-    finalizeOrder = (UserID, GuestID, cartItems, totalPrice, initialTotalPrice, usedPoints, PaymentMethod, Name, Email, Phone, Address, VoucherIDs, callback) => {
+    async finalizeOrder(UserID, GuestID, cartItems, totalPrice, initialTotalPrice, usedPoints, PaymentMethod, Name, Email, Phone, Address, VoucherIDs) {
         const insertOrderQuery = 'INSERT INTO `ORDER` (UserID, GuestID, TotalPrice, PaymentMethod, Name, Email, Phone, Address) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
         const values = [UserID, GuestID, totalPrice, PaymentMethod, Name, Email, Phone, Address];
+        const [result] = await poolConnect.query(insertOrderQuery, values);
 
-        connection.query(insertOrderQuery, values, (err, result) => {
-            if (err) return callback(err);
+        const orderId = result.insertId;
+        const orderDetails = cartItems.map(item => [orderId, item.ProductID, item.CartQuantity, item.Price]);
+        const insertOrderDetailsQuery = 'INSERT INTO ORDER_DETAILS (OrderID, ProductID, Quantity, Price) VALUES ?';
+        await poolConnect.query(insertOrderDetailsQuery, [orderDetails]);
 
-            const orderId = result.insertId;
-            const orderDetails = cartItems.map(item => [orderId, item.ProductID, item.CartQuantity, item.Price]);
-            const insertOrderDetailsQuery = 'INSERT INTO ORDER_DETAILS (OrderID, ProductID, Quantity, Price) VALUES ?';
+        const clearCartQuery = 'DELETE FROM CART WHERE UserID = ? OR GuestID = ?';
+        await poolConnect.query(clearCartQuery, [UserID, GuestID]);
 
-            connection.query(insertOrderDetailsQuery, [orderDetails], (err, result) => {
-                if (err) return callback(err);
+        const rewardPoints = Math.floor(totalPrice * 0.02);
 
-                const clearCartQuery = 'DELETE FROM CART WHERE UserID = ? OR GuestID = ?';
-                connection.query(clearCartQuery, [UserID, GuestID], (err, result) => {
-                    if (err) return callback(err);
+        for (const item of cartItems) {
+            const updateProductQuantityQuery = 'UPDATE PRODUCT SET Quantity = Quantity - ? WHERE ProductID = ?';
+            await poolConnect.query(updateProductQuantityQuery, [item.CartQuantity, item.ProductID]);
+        }
 
-                    const rewardPoints = Math.floor(totalPrice * 0.02);
+        if (UserID) {
+            const updateRewardPointsQuery = 'UPDATE User SET RewardPoints = RewardPoints + ? WHERE UserID = ?';
+            await poolConnect.query(updateRewardPointsQuery, [rewardPoints, UserID]);
+            const vouchers = await this.getVoucherDetails(VoucherIDs);
+            await this.emailService.sendOrderConfirmationEmail(Email, orderId, cartItems, initialTotalPrice, totalPrice, vouchers, { Name, Email, Phone, Address });
+            return { message: 'Order placed successfully', orderId, rewardPoints, cartItems, totalPrice };
+        } else {
+            const vouchers = await this.getVoucherDetails(VoucherIDs);
+            await this.emailService.sendOrderConfirmationEmail(Email, orderId, cartItems, initialTotalPrice, totalPrice, vouchers, { Name, Email, Phone, Address });
+            return { message: 'Order placed successfully', orderId, cartItems, totalPrice };
+        }
+    }
 
-                    const updateProductQuantityPromises = cartItems.map(item => {
-                        return new Promise((resolve, reject) => {
-                            const updateProductQuantityQuery = 'UPDATE PRODUCT SET Quantity = Quantity - ? WHERE ProductID = ?';
-                            connection.query(updateProductQuantityQuery, [item.CartQuantity, item.ProductID], (err, result) => {
-                                if (err) return reject(err);
-                                resolve();
-                            });
-                        });
-                    });
-
-                    Promise.all(updateProductQuantityPromises)
-                        .then(() => {
-                            if (UserID) {
-                                const updateRewardPointsQuery = 'UPDATE User SET RewardPoints = RewardPoints + ? WHERE UserID = ?';
-                                connection.query(updateRewardPointsQuery, [rewardPoints, UserID], (err, result) => {
-                                    if (err) return callback(err);
-                                    this.getVoucherDetails(VoucherIDs, (err, vouchers) => {
-                                        if (err) return callback(err);
-                                        this.emailService.sendOrderConfirmationEmail(Email, orderId, cartItems, initialTotalPrice, totalPrice, vouchers, { Name, Email, Phone, Address }, (err, result) => {
-                                            if (err) return callback(err);
-                                            callback(null, { message: 'Order placed successfully', orderId, rewardPoints, cartItems, totalPrice });
-                                        });
-                                    });
-                                });
-                            } else {
-                                this.getVoucherDetails(VoucherIDs, (err, vouchers) => {
-                                    if (err) return callback(err);
-                                    this.emailService.sendOrderConfirmationEmail(Email, orderId, cartItems, initialTotalPrice, totalPrice, vouchers, { Name, Email, Phone, Address }, (err, result) => {
-                                        if (err) return callback(err);
-                                        callback(null, { message: 'Order placed successfully', orderId, cartItems, totalPrice });
-                                    });
-                                });
-                            }
-                        })
-                        .catch(err => callback(err));
-                });
-            });
-        });
-    };
-
-    getVoucherDetails = (VoucherIDs, callback) => {
+    async getVoucherDetails(VoucherIDs) {
         if (VoucherIDs.length === 0) {
-            return callback(null, []);
+            return [];
         }
         const query = 'SELECT VoucherID, Discount, Content FROM VOUCHER WHERE VoucherID IN (?)';
-        connection.query(query, [VoucherIDs], (err, results) => {
-            if (err) return callback(err);
-            callback(null, results);
-        });
-    };
+        const [results] = await poolConnect.query(query, [VoucherIDs]);
+        return results;
+    }
 }
