@@ -3,7 +3,7 @@ import { checkAuthenticated } from "../middlewares/authMiddleware.js";
 import { PreorderController } from "../controllers/PreorderController.js";
 import { checkPreorderData, checkPreorderId, checkPreorderInputEta, checkPreorderInputStatus } from "../middlewares/preorderValidators.js";
 import { checkPaginationQuery } from "../middlewares/utilsMiddleware.js";
-import { isStaff, isStaffOrAdmin } from "../middlewares/validationMiddleware.js";
+import { isStaff } from "../middlewares/validationMiddleware.js";
 
 const router = Router();
 const preorderController = new PreorderController;
@@ -12,7 +12,7 @@ const preorderController = new PreorderController;
  * - trả lại dannh sách lịch sử pre-order trong database
  * - "sort" là cách sắp xếp. Nếu không cung cấp, "sort" mặc định là newest. "sort" bao gồm [newest, oldest, highest, lowest]
  */
-router.get("/api/preorder/history", checkAuthenticated, isStaffOrAdmin, checkPaginationQuery, async (req, res) => {
+router.get("/api/preorder/staff/history", checkAuthenticated, isStaff, checkPaginationQuery, async (req, res) => {
     await preorderController.getPreorderHistory(req, res);
 });
 
@@ -26,15 +26,22 @@ router.post("/api/preorder/place-preorder", checkAuthenticated, checkPreorderDat
 /** /api/preorder/{..id của pre-order..}/status
  * Cập nhật status của 1 đơn pre-order cho staff
  */
-router.patch("/api/preorder/:preorderId/status", checkAuthenticated, isStaff, checkPreorderId, checkPreorderInputStatus, async (req, res) => {
+router.patch("/api/preorder/staff/:preorderId/status", checkAuthenticated, isStaff, checkPreorderId, checkPreorderInputStatus, async (req, res) => {
     await preorderController.updatePreorderStatus(req, res);
 })
 
 /** /api/preorder/{..id của pre-order..}/eta
  * Cập nhật ETA của 1 đơn pre-order cho staff
  */
-router.patch("/api/preorder/:preorderId/eta", checkAuthenticated, isStaff, checkPreorderId, checkPreorderInputEta, async (req, res) => {
+router.patch("/api/preorder/staff/:preorderId/eta", checkAuthenticated, isStaff, checkPreorderId, checkPreorderInputEta, async (req, res) => {
     await preorderController.updatePreorderEta(req, res);
+})
+
+/**
+ *  chuyển paymentstatus sang done cho COD/Banking, không có tác dụng cho các hình thức thanh toán khác
+ */
+router.patch("/api/preorder/staff/:preorderId/payment-done", checkAuthenticated, isStaff, checkPreorderId, async (req, res) => {
+    await preorderController.updatePreorderPaymentStatusDone(req, res);
 })
 
 

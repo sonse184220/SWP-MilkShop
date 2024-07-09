@@ -14,19 +14,19 @@ router.post('/use', checkAuthenticated, voucherController.useVoucher);
 /**
  * Xem tất cả voucher kể cả đã hết hạn, dành cho staff
  */
-router.get("/", checkAuthenticated, isStaff, checkPaginationQuery, async (req, res) => {
+router.get("/staff/view", checkAuthenticated, isStaff, checkPaginationQuery, async (req, res) => {
     await voucherController.getAllVoucher(req, res);
 })
 
-router.post("/create", checkAuthenticated, isStaff, checkVoucherData, async (req, res) => {
+router.post("/staff/create", checkAuthenticated, isStaff, checkVoucherData, async (req, res) => {
     await voucherController.createVoucher(req, res);
 })
 
-router.patch("/:voucherId/update", checkAuthenticated, isStaff, checkVoucherId, checkVoucherUpdateData, async (req, res) => {
+router.patch("/staff/:voucherId/update", checkAuthenticated, isStaff, checkVoucherId, checkVoucherUpdateData, async (req, res) => {
     await voucherController.updateVoucher(req, res);
 })
 
-router.delete("/:voucherId/delete", checkAuthenticated, isStaff, checkVoucherId, async (req, res) => {
+router.delete("/staff/:voucherId/delete", checkAuthenticated, isStaff, checkVoucherId, async (req, res) => {
     await voucherController.deleteVoucher(req, res);
 })
 

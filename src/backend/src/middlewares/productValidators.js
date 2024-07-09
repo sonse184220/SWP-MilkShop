@@ -67,13 +67,6 @@ export async function checkProductSearchBrand(req, res, next) {
 
 // kiểm tra data đầu vào để tạo feedback
 export async function checkFeedbackData(req, res, next) {
-    await body("userId")
-        .trim()
-        .escape()
-        .exists().withMessage("UserID is required!")
-        .notEmpty().withMessage("UserID can not be blank!")
-        .run(req);
-
     await body("rating")
         .trim()
         .escape()

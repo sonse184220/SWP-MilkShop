@@ -12,7 +12,7 @@ const orderController = new OrderController();
  * Lấy toàn bộ lịch sử mua hàng order trong database
  * - "sort" là cách sắp xếp. Nếu không cung cấp, "sort" mặc định là newest. "sort" bao gồm [newest, oldest, highest, lowest]
  */
-router.get("/history", checkAuthenticated, isStaffOrAdmin, checkPaginationQuery, async (req, res) => {
+router.get("/staff/history", checkAuthenticated, isStaffOrAdmin, checkPaginationQuery, async (req, res) => {
     await orderController.getOrderHistory(req, res)
 })
 
@@ -26,15 +26,15 @@ router.get("/:orderId", checkAuthenticated, checkOrderId, async (req, res) => {
 /** /api/order/{..id của order..}/status
  * Cập nhật status của 1 đơn order cho staff / admin
  */
-router.patch("/:orderId/status", checkAuthenticated, isStaffOrAdmin, checkOrderId, checkOrderInputStatus, async (req, res) => {
+router.patch("/staff/:orderId/status", checkAuthenticated, isStaff, checkOrderId, checkOrderInputStatus, async (req, res) => {
     await orderController.updateOrderStatus(req, res);
 })
 
 /**
- *  chuyển paymentstatus sang done cho COD, không có tác dụng cho các hình thức thanh toán khác
+ *  chuyển paymentstatus sang done cho COD/Banking, không có tác dụng cho các hình thức thanh toán khác
  */
-router.patch("/:orderId/cod/payment-done", checkAuthenticated, isStaff, checkOrderId, async (req, res) => {
-    await orderController.updateCodPaymentStatusDone(req, res);
+router.patch("/staff/:orderId/payment-done", checkAuthenticated, isStaff, checkOrderId, async (req, res) => {
+    await orderController.updateOrderPaymentStatusDone(req, res);
 })
 
 router.post('/place-order', checkAuthenticated, orderController.placeOrder);

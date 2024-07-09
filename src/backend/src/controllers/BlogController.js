@@ -83,7 +83,8 @@ export class BlogController {
     };
 
     async createBlog(req, res) {
-        const { userId, title, content, productList } = req.body;
+        const userId = req.user.userId;
+        const { title, content, productList } = req.body;
         let nextMaxId;
         const image = req.file.buffer.toString("base64");
 

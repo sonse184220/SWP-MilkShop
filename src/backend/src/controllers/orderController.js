@@ -171,7 +171,7 @@ export class OrderController {
         }
     }
 
-    async updateCodPaymentStatusDone(req, res) {
+    async updateOrderPaymentStatusDone(req, res) {
         try {
             const orderId = req.params.orderId;
 
@@ -179,14 +179,11 @@ export class OrderController {
             if (order.length === 0) {
                 return res.status(404).send({ error: "Order not found!" });
             }
-            if (order[0].UserID !== req.user.userId) {
-                return res.status(403).send({ msg: "Forbidden." });
-            }
-            if (order[0].PaymentMethod !== 'COD') {
-                return res.status(409).send({ msg: "You can only use this to update payment status for COD order." });
+            if (order[0].PaymentMethod !== 'COD' && order[0].PaymentMethod !== 'Banking') {
+                return res.status(409).send({ msg: "You can only use this to update payment status for COD/Banking order." });
             }
 
-            const updatingOrder = await orderService.updateCodPaymentStatusDone(orderId);
+            const updatingOrder = await orderService.updatePaymentStatusDone(orderId);
             if (updatingOrder.affectedRows === 0) {
                 return res.status(500).send({ error: "Failed to update order payment status!" });
             }
