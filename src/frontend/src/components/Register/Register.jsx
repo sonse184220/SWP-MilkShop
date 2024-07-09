@@ -15,7 +15,7 @@ import { CompleteProfile } from '../../services/login/completeProfile';
 const Register = ({ showLogin, isCompleteRegistration }) => {
     const location = useLocation();
     // const navigate = useNavigate();
-    const { token } = location.state || {};
+    const { tempUserToken } = location.state || {};
 
     const navigate = useNavigate();
     const [UserID, setUserID] = useState('');
@@ -95,7 +95,7 @@ const Register = ({ showLogin, isCompleteRegistration }) => {
             formData.append('Name', Name);
             formData.append('Phone', Phone);
             formData.append('Address', Address);
-            const RegisToken = 'Bearer ' + token;
+            const RegisToken = 'Bearer ' + tempUserToken;
             console.log(RegisToken);
             const response = await CompleteProfile(RegisToken, formData);
             if (response.data.token && response.data.user) {

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import "./Header.css";
 import { NavLink, useNavigate, Link, useLocation } from "react-router-dom";
 import { FaSignInAlt } from "react-icons/fa";
+import { Logout } from "../../services/login/logout";
 
 //prop onLogin chuyền từ app.js -> HomePage.jsx -> Header.jsx
 //dùng để set state isLogin
@@ -48,11 +49,18 @@ export function Header({ onLogin, isMember }) {
   }, [location.pathname]);
 
   //Chuyển sang Route('/login-register') lúc bấm nút logout
-  const showLogin = (event) => {
-    event.preventDefault();
-    sessionStorage.clear();
-    navigate("/Customer/home");
-    window.location.reload();
+  const showLogin = async (event) => {
+    // const MemberToken = 'Bearer ' + sessionStorage.getItem('token');
+    try {
+      const token = 'Bearer ' + sessionStorage.getItem('token');
+      event.preventDefault();
+      sessionStorage.clear();
+      await Logout(token);
+      navigate("/Customer/home");
+      window.location.reload();
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   const isActive = (match, location) => {

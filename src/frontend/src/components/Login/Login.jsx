@@ -100,20 +100,20 @@ const Login = ({ onLogin, showLogin }) => {
             const response = await handleLoginApi(userInfo);
             console.log('Response:', response);
             if (response.data.user.isAdmin === 0 && response.data.user.isStaff === 0) {
-
                 sessionStorage.setItem('userData', JSON.stringify(response.data.user));
                 sessionStorage.setItem('token', response.data.token);
+                sessionStorage.setItem('loginSuccess', 'true'); // Set login success flag
                 navigate('/Customer/home', { state: { showLoginSuccess: true } });
                 onLogin(true);
             } else if (response.data.user.isAdmin === 0 && response.data.user.isStaff === 1) {
-                console.log('staff');
                 sessionStorage.setItem('staffData', JSON.stringify(response.data.user));
                 sessionStorage.setItem('token', response.data.token);
+                sessionStorage.setItem('loginSuccess', 'true'); // Set login success flag
                 navigate('/Staff/OrderManagement', { state: { showLoginSuccess: true } });
             } else if (response.data.user.isAdmin === 1 && response.data.user.isStaff === 0) {
-                console.log('admin');
                 sessionStorage.setItem('adminData', JSON.stringify(response.data.user));
                 sessionStorage.setItem('token', response.data.token);
+                sessionStorage.setItem('loginSuccess', 'true'); // Set login success flag
                 navigate('/Admin/StaffManagement', { state: { showLoginSuccess: true } });
 
             } else {

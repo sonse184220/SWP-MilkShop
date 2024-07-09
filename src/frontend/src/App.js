@@ -120,12 +120,16 @@ function AppContent() {
 
   return (
     <Routes>
-      <Route path='/Customer/*' element={<CustomerRoutes isMember={isMember} />} />
+      {/* <Route path='/Customer/*' element={<CustomerRoutes isMember={isMember} />} />
       <Route path="*" element={<Navigate to="/Customer" />} />
       <Route path='/Staff/*' element={<StaffRoutes />} />
       <Route path='*' element={<Navigate to='/Staff' />} />
       <Route path='/Admin/*' element={<AdminRoutes />} />
-      <Route path='*' element={<Navigate to='/Admin' />} />
+      <Route path='*' element={<Navigate to='/Admin' />} /> */}
+      <Route path="/Customer/*" element={<CustomerRoutes isMember={isMember} />} />
+      <Route path="/Staff/*" element={<StaffRoutes />} />
+      <Route path="/Admin/*" element={<AdminRoutes />} />
+      <Route path="*" element={<Navigate to="/Customer" replace />} />
     </Routes>
   );
 }
