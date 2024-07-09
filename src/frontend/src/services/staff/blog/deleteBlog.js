@@ -2,7 +2,7 @@ import axios from "../../axios";
 
 export const deleteBlog = async (token, blogId) => {
     try {
-        return await axios.delete(`/api/blog/${blogId}`, {
+        return await axios.delete(`/api/blog/staff/${blogId}`, {
             headers: {
                 'Authorization': token,
             }

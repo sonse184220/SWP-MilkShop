@@ -4,11 +4,15 @@ import "./VoucherManagement.css";
 import Modal from "react-modal";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { NavLink, useNavigate, Link, } from "react-router-dom";
+
 import { addVoucher } from "../../services/voucher/addVoucher";
 import { GetAllVouchers } from "../../services/voucher/GetAllVouchers";
 import { deleteVoucher } from "../../services/voucher/deleteVoucher";
 import { UpdateVoucher } from "../../services/voucher/updateVoucher";
 const VoucherManagement = () => {
+  const navigate = useNavigate();
+
   const StaffToken = "Bearer " + sessionStorage.getItem("token");
   console.log("Retrieved Staff Token:", StaffToken); // Debugging line
 
@@ -184,6 +188,14 @@ const VoucherManagement = () => {
     }
   };
 
+  const handleLogout = () => {
+
+    // event.preventDefault();
+    sessionStorage.clear();
+    navigate("/Customer/home");
+    window.location.reload();
+  }
+
   return (
     <div className="order-management-container">
       <Sidebar />
@@ -201,7 +213,7 @@ const VoucherManagement = () => {
                   <a href="/Staff/StaffProfile">Profile</a>
                 </li>
                 <li>
-                  <a href="#">Logout</a>
+                  <a href="" onClick={handleLogout}>Logout</a>
                 </li>
               </ul>
             </div>

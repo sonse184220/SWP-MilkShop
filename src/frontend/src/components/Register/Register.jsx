@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Oval } from 'react-loader-spinner';
 import { Toaster, toast } from 'react-hot-toast';
 // import 'react-hot-toast/dist/bundle.css';
@@ -8,10 +8,15 @@ import { Toaster, toast } from 'react-hot-toast';
 import './Register.css'
 import handleRegisterApi from '../../services/register/registerService';
 import { VerifyEmail } from '../../services/register/verifyMail';
+import { CompleteProfile } from '../../services/login/completeProfile';
 
 //prop showLogin chuyền từ App.js, 
 //dùng để set showLogin state
-const Register = ({ showLogin }) => {
+const Register = ({ showLogin, isCompleteRegistration }) => {
+    const location = useLocation();
+    // const navigate = useNavigate();
+    const { token } = location.state || {};
+
     const navigate = useNavigate();
     const [UserID, setUserID] = useState('');
     const [Password, setPassword] = useState('');
@@ -24,10 +29,10 @@ const Register = ({ showLogin }) => {
     const [passwordError, setPasswordError] = useState('');
     const [SuccessMessage, setSuccessMessage] = useState('');
     const [ErrorMessage, setErrorMessage] = useState('');
-    const [registertoken, setRegisterToken] = useState(null);
+
     const [isLoading, setIsLoading] = useState(false);
 
-    const verifymailRef = useRef(null);
+
 
     //Chuyển state showLogin trong app.js (Route '/login-register')
     //Chuyển sang màn hình Login.jsx lúc bấm Sign In
@@ -36,28 +41,6 @@ const Register = ({ showLogin }) => {
         navigate('/Customer/login-register');
         showLogin(false);
     };
-
-    const handleVerifyMail = async () => {
-        try {
-            if (registertoken) {
-                const response = await VerifyEmail(registertoken);
-                console.log("=====================", response);
-            } else {
-                console.log("nothing");
-            }
-            console.log("ref is running")
-        } catch (error) {
-            console.log(error);
-        }
-    };
-    // useEffect(() => {
-    //     verifymailRef.current = setInterval(() => {
-    //         if (registertoken) {
-    //             handleVerifyMail();
-    //         }
-    //     }, 10000);
-    //     return () => clearInterval(verifymailRef.current);
-    // }, []);
 
     const handleRegister = async (event) => {
         event.preventDefault();
@@ -79,9 +62,8 @@ const Register = ({ showLogin }) => {
                             color: '#698474',
                         },
                     });
-                    setRegisterToken(response.data.token);
                 }
-                handleShowLogin();
+                // handleShowLogin();
             }
         } catch (error) {
             if (error.response && error.response.data) {
@@ -106,6 +88,28 @@ const Register = ({ showLogin }) => {
         }
     }
 
+    const handleCompleteRegistration = async () => {
+        try {
+            setIsLoading(true);
+            const formData = new FormData();
+            formData.append('Name', Name);
+            formData.append('Phone', Phone);
+            formData.append('Address', Address);
+            const RegisToken = 'Bearer ' + token;
+            console.log(RegisToken);
+            const response = await CompleteProfile(RegisToken, formData);
+            if (response.data.token && response.data.user) {
+                sessionStorage.setItem('userData', JSON.stringify(response.data.user));
+                sessionStorage.setItem('token', response.data.token);
+                navigate('/Customer/home', { state: { showLoginSuccess: true } });
+            }
+        } catch (error) {
+
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
     //check password và confirmpassword có giống nhau ko
     useEffect(() => {
         setErrorMessage('');
@@ -113,14 +117,6 @@ const Register = ({ showLogin }) => {
         if (Password !== ConfirmPassword) {
             setIsPasswordMatch(false);
             setPasswordError('*Passwords do not match');
-            // setErrorMessage({ "message": "Passwords do not match" })
-            // toast.error("Password do not match", {
-            //     style: {
-            //         backgroundColor: '#ef4444',
-            //         color: '#ffffff',
-            //         fontWeight: 'bold',
-            //     },
-            // });
         }
         else {
             setIsPasswordMatch(true);
@@ -138,39 +134,39 @@ const Register = ({ showLogin }) => {
                     <img src="/img/P002.jpg" alt="" />
                 </div>
                 <form>
-                    <h3>Registration Form</h3>
-                    {/* <div className="form-wrapper">
-                        <input
-                            type="text"
-                            placeholder="UserID"
-                            className="form-control"
-                            onChange={(e) => setUserID(e.target.value)} />
-                    </div> */}
-                    <div className="form-wrapper" >
-                        <input
-                            type="text"
-                            placeholder="Email Address"
-                            className="form-control"
-                            onChange={(e) => setEmail(e.target.value)} />
-                        <i className="zmdi zmdi-email"></i>
-                    </div >
-                    <div className="form-wrapper" >
-                        <input
-                            type="password"
-                            placeholder="Password"
-                            className="form-control"
-                            onChange={(e) => setPassword(e.target.value)} />
-                        <i className="zmdi zmdi-lock"></i>
-                    </div >
-                    <div className="form-wrapper" >
-                        <input
-                            type="password"
-                            placeholder="Confirm Password"
-                            className="form-control"
-                            onChange={(e) => setConfirmPassword(e.target.value)} />
-                        <i className="zmdi zmdi-lock"></i>
-                    </div >
-                    {passwordError && <p className="error-message">{passwordError}</p>}
+                    {isCompleteRegistration ? (
+                        <h3>Complete Your Profile with Google Login</h3>
+                    ) : (
+                        <>
+                            <h3>Registration Form</h3>
+                            <div className="form-wrapper" >
+                                <input
+                                    type="text"
+                                    placeholder="Email Address"
+                                    className="form-control"
+                                    onChange={(e) => setEmail(e.target.value)} />
+                                <i className="zmdi zmdi-email"></i>
+                            </div >
+                            <div className="form-wrapper" >
+                                <input
+                                    type="password"
+                                    placeholder="Password"
+                                    className="form-control"
+                                    onChange={(e) => setPassword(e.target.value)} />
+                                <i className="zmdi zmdi-lock"></i>
+                            </div >
+                            <div className="form-wrapper" >
+                                <input
+                                    type="password"
+                                    placeholder="Confirm Password"
+                                    className="form-control"
+                                    onChange={(e) => setConfirmPassword(e.target.value)} />
+                                <i className="zmdi zmdi-lock"></i>
+                            </div >
+                            {passwordError && <p className="error-message">{passwordError}</p>}
+                        </>
+                    )}
+
                     <div className="form-wrapper" >
                         <input
                             type="text"
@@ -212,19 +208,20 @@ const Register = ({ showLogin }) => {
                         <p>Already registered?</p>
                         <a href='#' onClick={handleShowLogin}>Sign In</a>
                     </div>
-                    <button className='registerbt' onClick={handleRegister} disabled={isLoading}>
+                    <button
+                        className='registerbt'
+                        onClick={isCompleteRegistration ? handleCompleteRegistration : handleRegister}
+                        disabled={isLoading}
+                    >
                         {isLoading ? (
                             <Oval
                                 height={20}
                                 width={20}
                                 color="#fff"
-                            // ariaLabel="oval-loading"
-                            // wrapperStyle={{}}
-                            // visible={true}
                             />
                         ) : (
                             <>
-                                Register
+                                {isCompleteRegistration ? 'Complete Profile' : 'Register'}
                                 <i className="zmdi zmdi-arrow-right"></i>
                             </>
                         )}

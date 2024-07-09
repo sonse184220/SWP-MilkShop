@@ -130,8 +130,8 @@ export const Wishlist = ({ isMember }) => {
                     <div className="container" style={{ width: '80%' }}>
                         <div className="row">
                             <div className="col-12">
-                                <div className="table_desc">
-                                    <div className="table_page table-responsive">
+                                <div className="">
+                                    <div className="table_page table-responsive table-bx">
                                         <table>
                                             <thead>
                                                 <tr>

@@ -2,7 +2,7 @@ import axios from '../axios';
 
 export const RemoveWishlist = (token, uID, pID) => {
     try {
-        return axios.delete(`/api/wishlist/${uID}?productId=${pID}`,
+        return axios.delete(`/api/wishlist/?productId=${pID}`,
             {
                 headers: {
                     'authorization': token,

@@ -36,10 +36,7 @@ const EditProfile = ({ isMember }) => {
         setAddress(userData.Address);
         // setImageSrc(btoa(String.fromCharCode.apply(null, userData.ProfilePicture.data)));
         setImageSrc(
-          `data:image/jpeg;base64,${btoa(
-            String.fromCharCode.apply(null, userData.ProfilePicture.data)
-          )}`
-        );
+          `data:image/jpeg;base64,${userData.ProfilePicture}`);
       } catch (error) {
         setErrorMessage({ message: "Error fetching user data" });
       }

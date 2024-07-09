@@ -195,3 +195,8 @@
     display: inline-block;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
+.table-bx {
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}

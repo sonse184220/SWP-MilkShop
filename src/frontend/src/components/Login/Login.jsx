@@ -82,7 +82,6 @@ const Login = ({ onLogin, showLogin }) => {
     const handleLoginWithGoogle = async (e) => {
         e.preventDefault();
         try {
-            LoginWithGoogle();
             const response = await LoginWithGoogle();
             if (response) {
                 console.log(response);

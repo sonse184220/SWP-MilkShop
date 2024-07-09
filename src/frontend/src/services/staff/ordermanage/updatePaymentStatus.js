@@ -1,17 +1,17 @@
 import axios from "../../axios";
 
-export const GetAllOrders = (token, limit, page, sort) => {
+export const UpdateOrderPaymentStatus = (token, orderId) => {
     try {
-        return axios.get(`/api/order/staff/history?limit=${limit}&page=${page}&sort=${sort}`,
+        return axios.patch(`/api/order/staff/${orderId}/payment-done`, {},
             {
                 headers: {
                     'Authorization': token,
                     'Content-Type': 'application/json'
                 }
             }
-        );
+        )
     } catch (error) {
-        console.error('An error occurred while get all orders (staff):', error);
+        console.error('An error occurred while get update orders payment status(staff):', error);
         throw error;
     }
 }

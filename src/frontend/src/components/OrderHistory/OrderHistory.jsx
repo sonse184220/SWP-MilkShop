@@ -236,7 +236,8 @@ export const OrderHistory = ({ isMember }) => {
                                                     <tr>
                                                         <th scope="col">Order ID</th>
                                                         <th scope="col">Product</th>
-                                                        <th scope="col">Date</th>
+                                                        <th scope="col">Pre-Order Date</th>
+                                                        <th scope="col">Estimate Shipping Date</th>
                                                         <th scope="col">Total Amount</th>
                                                         <th scope="col">Status</th>
                                                         <th scope="col"></th>
@@ -295,6 +296,7 @@ export const OrderHistory = ({ isMember }) => {
                                                                     </div>
                                                                 </td>
                                                                 <td><span className="text-muted">{formatDate(preorder.created)}</span></td>
+                                                                <td><span className="text-muted">{formatDate(preorder.ETA)}</span></td>
                                                                 <td className="fw-medium">{formatPrice(preorder.TotalPrice)} VND</td>
                                                                 <td>
                                                                     <span className="badge bg-success-subtle text-success">{preorder.Status}</span>
