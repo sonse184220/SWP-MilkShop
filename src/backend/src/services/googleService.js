@@ -13,9 +13,18 @@ export class GoogleService {
         const newUserId = `U${(maxUserIdResults[0].maxUserId ? maxUserIdResults[0].maxUserId + 1 : 1).toString().padStart(3, '0')}`;
 
         const insertQuery = 'INSERT INTO user (UserID, Email, Name, Phone, Address, ProfilePicture, RewardPoints, Verified, activeStatus) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
-        const [result] = await poolConnect.query(insertQuery, [newUserId, email, name, phone, address, profilePicture, 0, 1, 'active']);
+        await poolConnect.query(insertQuery, [newUserId, email, name, phone, address, profilePicture, 0, 1, 'active']);
 
-        return result.insertId ? { UserID: newUserId, Email: email, Name: name, Phone: phone, Address: address, RewardPoints: 0, Verified: 1, activeStatus: 'active' } : null;
+        return {
+            UserID: newUserId,
+            Email: email,
+            Name: name,
+            Phone: phone,
+            Address: address,
+            RewardPoints: 0,
+            Verified: 1,
+            activeStatus: 'active'
+        };
     }
 
     async getUserById(userId) {

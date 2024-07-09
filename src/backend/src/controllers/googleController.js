@@ -9,26 +9,31 @@ export class GoogleController {
     async handleGoogleCallback(req, res) {
         const user = req.user;
 
-        const tempUserToken = jwt.sign({ email: user.Email, name: user.Name }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        if (user.UserID) {
+            // Existing user
+            const token = jwt.sign({
+                userId: user.UserID,
+                isAdmin: user.isAdmin,
+                isStaff: user.isStaff
+            }, process.env.JWT_SECRET, { expiresIn: '24h' });
 
-        const token = jwt.sign({
-            userId: user.UserID,
-            isAdmin: user.isAdmin,
-            isStaff: user.isStaff
-        }, process.env.JWT_SECRET, { expiresIn: '24h' });
-
-        res.send({
-            message: 'Google authentication successful.',
-            token,
-            user: {
-                UserID: user.UserID,
-                Name: user.Name,
-                Email: user.Email,
-                Phone: user.Phone,
-                Address: user.Address,
-                RewardPoints: user.RewardPoints
-            }
-        });
+            res.send({
+                message: 'Google authentication successful.',
+                token,
+                user: {
+                    UserID: user.UserID,
+                    Name: user.Name,
+                    Email: user.Email,
+                    Phone: user.Phone,
+                    Address: user.Address,
+                    RewardPoints: user.RewardPoints
+                }
+            });
+        } else {
+            // New user, provide temp token for completing registration
+            const tempUserToken = jwt.sign({ email: user.Email, name: user.Name }, process.env.JWT_SECRET, { expiresIn: '1h' });
+            res.send({ tempUserToken, message: 'Google authentication successful. Please complete your registration.' });
+        }
     }
 
     async completeRegistration(req, res) {
@@ -40,14 +45,11 @@ export class GoogleController {
 
         const tempUserToken = bearerHeader.split(' ')[1];
 
-        console.log('Received Token:', tempUserToken);
-
         const { Name, Phone, Address } = req.body;
         const ProfilePicture = req.file ? req.file.buffer.toString('base64') : null;
 
         try {
             const tempUser = jwt.verify(tempUserToken, process.env.JWT_SECRET);
-            console.log('Decoded Token:', tempUser);
 
             const createdUser = await googleService.createUser(tempUser.email, Name, Phone, Address, ProfilePicture);
 
@@ -63,7 +65,7 @@ export class GoogleController {
                 user: createdUser
             });
         } catch (err) {
-            console.error('Token Verification Error:', err);  // Log lỗi
+            console.error('Token Verification Error:', err);
             res.status(400).json({ error: 'Invalid token. Please start the registration process again.' });
         }
     }
