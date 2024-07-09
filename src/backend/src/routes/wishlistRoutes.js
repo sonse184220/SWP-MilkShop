@@ -15,21 +15,20 @@ router.get("/api/wishlist/:userId", checkUserId, async (req, res) => {
     await wishlistController.getWishlist(req, res);
 });
 
-/** URL: localhost:xxxx/api/wishlist/{...}?productId={...}
+/** URL: localhost:xxxx/api/wishlist/add?productId={...}
  * Thêm 1 product vào wishlist của 1 member thông qua productID và memberID
- * - {...} là member ID, ID không được phép để trống, phải cung cấp ít nhất 1 ID nếu không sẽ trả về lỗi
  * - "productId" là id của product, không được phép để trống, phải cung cấp ít nhất 1 ID nếu không sẽ trả về lỗi
  */
-router.post("/api/wishlist/:userId", checkAuthenticated, checkUserId, checkProductIdInQuery, async (req, res) => {
+router.post("/api/wishlist/add", checkAuthenticated, checkProductIdInQuery, async (req, res) => {
     await wishlistController.addProductToWishlist(req, res);
 });
 
-/** URL: localhost:xxxx/api/wishlist/{...}?productId={...}
+/** URL: localhost:xxxx/api/wishlist/remove?productId={...}
  * Xóa 1 product khỏi wishlist của 1 member thông qua productID và memberID
  * - {...} là member ID, ID không được phép để trống, phải cung cấp ít nhất 1 ID nếu không sẽ trả về lỗi
  * - "productId" là id của product, không được phép để trống, phải cung cấp ít nhất 1 ID nếu không sẽ trả về lỗi
  */
-router.delete("/api/wishlist/:userId", checkAuthenticated, checkUserId, checkProductIdInQuery, async (req, res) => {
+router.delete("/api/wishlist/remove", checkAuthenticated, checkProductIdInQuery, async (req, res) => {
     await wishlistController.removeProductFromWishlist(req, res);
 });
 

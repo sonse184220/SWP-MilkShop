@@ -39,15 +39,15 @@ router.get("/api/blogs/search", checkBlogSearch, checkPaginationQueryForBlog, as
 /** tạo 1 blog
  * 
  */
-router.post("/api/blog/create", checkAuthenticated, isStaff, upload.single("image"), checkBlogData, checkImageUpload, multerBlogFileErrorHandler, async (req, res) => {
+router.post("/api/blog/staff/create", checkAuthenticated, isStaff, upload.single("image"), checkBlogData, checkImageUpload, multerBlogFileErrorHandler, async (req, res) => {
     await blogController.createBlog(req, res);
 })
 
-router.patch("/api/blog/:id", checkAuthenticated, isStaff, checkBlogId, upload.single("image"), checkBlogUpdateData, checkImageUpload, multerBlogFileErrorHandler, async (req, res) => {
+router.patch("/api/blog/staff/:id", checkAuthenticated, isStaff, checkBlogId, upload.single("image"), checkBlogUpdateData, checkImageUpload, multerBlogFileErrorHandler, async (req, res) => {
     await blogController.editBlog(req, res);
 })
 
-router.delete("/api/blog/:id", checkAuthenticated, isStaff, checkBlogId, async (req, res) => {
+router.delete("/api/blog/staff/:id", checkAuthenticated, isStaff, checkBlogId, async (req, res) => {
     await blogController.deleteBlog(req, res)
 })
 

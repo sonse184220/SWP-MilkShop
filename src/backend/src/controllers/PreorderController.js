@@ -87,11 +87,8 @@ export class PreorderController {
     }
 
     async placePreorder(req, res) {
-        if (req.user.userId !== req.body.userId) {
-            return res.status(403).send({ msg: "Forbidden." });
-        }
-
-        const { userId, productId, quantity, paymentMethod, name, email, phone, address } = req.body;
+        const userId = req.user.userId;
+        const { productId, quantity, paymentMethod, name, email, phone, address } = req.body;
 
         const product = await productService.getProduct(productId);
         if (product.length === 0) {

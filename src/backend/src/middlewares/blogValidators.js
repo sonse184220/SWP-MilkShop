@@ -68,13 +68,6 @@ await query("sort")
 }
 
 export async function checkBlogData(req, res, next){
-    await body("userId")
-    .exists().withMessage('UserID is required')
-    .notEmpty().withMessage('UserID cannot be empty')
-    .trim()
-    .escape()
-    .run(req);
-
     await body("title")
     .exists().withMessage('Title is required')
     .notEmpty().withMessage('Title cannot be empty')

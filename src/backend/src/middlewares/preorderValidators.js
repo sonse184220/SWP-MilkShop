@@ -52,13 +52,6 @@ export async function checkPreorderInputEta(req, res, next) {
 }
 
 export async function checkPreorderData(req, res, next) {
-    await body("userId")
-    .trim()
-    .escape()
-    .exists().withMessage("UserID is required!")
-    .notEmpty().withMessage("UserID can not be blank!")
-    .run(req);
-
     await body("productId")
     .trim()
     .escape()

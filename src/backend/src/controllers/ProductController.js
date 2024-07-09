@@ -118,13 +118,9 @@ export class ProductController {
 
     async createFeedback(req, res) {
         const productId = req.params.id;
-        const userId = req.body.userId;
+        const userId = req.user.userId;
         const rating = req.body.rating;
         const content = req.body.content;
-
-        if (req.user.userId !== userId && !req.user.isAdmin && !req.user.isStaff) {
-            return res.status(403).send({ msg: "Forbidden." });
-        }
 
         const product = await productService.getProduct(productId);
         if (product.length === 0) {

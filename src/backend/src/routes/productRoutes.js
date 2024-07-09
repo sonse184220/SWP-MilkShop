@@ -42,6 +42,20 @@ router.get("/api/products/search/brand", checkProductSearchBrand, checkPaginatio
     await productController.searchProductsByBrandId(req, res);
 });
 
+router.post("/api/product/staff/create", checkAuthenticated, isStaff, upload.single('image'), (req, res, next) => {
+    if (!req.file) {
+        return res.status(400).send({ error: "No file uploaded" });
+    }
+    console.log("File received:", req.file);
+    next();
+}, checkProductData, async (req, res) => {
+    await productController.createProduct(req, res);
+});
+
+router.put("/api/product/staff/:id", checkAuthenticated, isStaff, checkProductId, upload.single('image'), async (req, res) => {
+    await productController.updateProduct(req, res);
+});
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /** /api/product/feedbacks?content={...}&filter={...}&fuid={...}&fpid={...}&sort={...}&limit={...}&page={...}
@@ -55,7 +69,7 @@ router.get("/api/products/search/brand", checkProductSearchBrand, checkPaginatio
  * - "limit" là giới hạn số lượng product trả về cho 1 trang. Nếu không cung cấp, "limit" mặc định là 20
  * - "page" là số trang. Nếu không cung cấp, "page" mặc định là 1
  */
-router.get("/api/product/feedbacks/search", checkAuthenticated, isStaff, checkFeedbackSearchInput, checkPaginationQuery, async (req, res) => {
+router.get("/api/product/staff/feedbacks/view", checkAuthenticated, isStaff, checkFeedbackSearchInput, checkPaginationQuery, async (req, res) => {
     await productController.searchFeedbacks(req, res);
 })
 
@@ -80,20 +94,6 @@ router.post("/api/product/:id/feedbacks", checkAuthenticated, checkProductId, ch
  */
 router.delete("/api/product/feedbacks/:id", checkAuthenticated, checkFeedbackId, async (req, res) => {
     await productController.deleteFeedback(req, res);
-});
-
-router.post("/api/product/create", checkAuthenticated, isStaff, upload.single('image'), (req, res, next) => {
-    if (!req.file) {
-        return res.status(400).send({ error: "No file uploaded" });
-    }
-    console.log("File received:", req.file);
-    next();
-}, checkProductData, async (req, res) => {
-    await productController.createProduct(req, res);
-});
-
-router.put("/api/product/:id", checkAuthenticated, isStaff, checkProductId, upload.single('image'), async (req, res) => {
-    await productController.updateProduct(req, res);
 });
 
 // export router
