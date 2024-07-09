@@ -20,7 +20,7 @@ export class GoogleController {
         } else {
             const tempUserToken = jwt.sign({ email: user.Email, name: user.Name }, process.env.JWT_SECRET, { expiresIn: '1h' });
             await googleService.storeTempToken(tempUserToken, user.Email, user.Name);
-            res.redirect(`http://localhost:3000/complete-registration?tempUserToken=${tempUserToken}`);
+            res.redirect(`http://localhost:3000/Customer/complete-registration?tempUserToken=${tempUserToken}`);
         }
     }
 
