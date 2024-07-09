@@ -1,11 +1,13 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Sidebar from "./Sidebar";
 import "./VoucherManagement.css";
 import Modal from "react-modal";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { addVoucher } from "../../services/voucher/addVoucher";
-
+import { GetAllVouchers } from "../../services/voucher/GetAllVouchers";
+import { deleteVoucher } from "../../services/voucher/deleteVoucher";
+import { UpdateVoucher } from "../../services/voucher/updateVoucher";
 const VoucherManagement = () => {
   const StaffToken = "Bearer " + sessionStorage.getItem("token");
   console.log("Retrieved Staff Token:", StaffToken); // Debugging line
@@ -13,39 +15,50 @@ const VoucherManagement = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isAddOpen, setIsAddOpen] = useState(false);
   const dropdownRef = useRef(null);
-  const [vouchers, setVouchers] = useState([
-    {
-      VoucherID: 1,
-      Discount: "10%",
-      Quantity: 100,
-      Expiration: "2023-12-31",
-      Content: "10% off on all products",
-    },
-    {
-      VoucherID: 2,
-      Discount: "20%",
-      Quantity: 50,
-      Expiration: "2024-01-15",
-      Content: "20% off on orders over $50",
-    },
-    {
-      VoucherID: 3,
-      Discount: "15%",
-      Quantity: 200,
-      Expiration: "2024-06-30",
-      Content: "15% off on selected items",
-    },
-  ]);
-
+  const [vouchers, setVouchers] = useState([]);
   const [newVoucher, setNewVoucher] = useState({
-    VoucherID: "",
     Discount: "",
     Quantity: "",
     Expiration: "",
     Content: "",
   });
+  const [updatedVoucherInfo, setUpdatedVoucherInfo] = useState({
+    Discount: "",
+    Quantity: "",
+    Content: "",
+  });
 
-  const [imageFile, setImageFile] = useState(null);
+  const [voucherID, setVoucherID] = useState("");
+  const openUpdateModal = (voucher) => {
+    if (voucher) {
+      setUpdatedVoucherInfo({
+        Discount: voucher.Discount ? voucher.Discount.toString() : "",
+        Quantity: voucher.VoucherQuantity
+          ? voucher.VoucherQuantity.toString()
+          : "",
+        Content: voucher.Content || "",
+      });
+      setVoucherID(voucher.VoucherID);
+      setIsOpen(true);
+    }
+  };
+
+  const fetchVouchers = async () => {
+    try {
+      const response = await GetAllVouchers(StaffToken);
+      setVouchers(response.data || []);
+    } catch (error) {
+      console.error("Error fetching vouchers:", error);
+      toast.error("Failed to fetch vouchers. Please try again!", {
+        duration: 3000,
+        position: "top-right",
+      });
+    }
+  };
+
+  useEffect(() => {
+    fetchVouchers();
+  }, [StaffToken]);
 
   const toggleDropdown = () => {
     if (dropdownRef.current) {
@@ -54,38 +67,66 @@ const VoucherManagement = () => {
   };
 
   const handleAddVoucher = async () => {
+    // Function to convert date from MM/DD/YYYY to YYYY-MM-DD
+    const formatDate = (dateString) => {
+      const [month, day, year] = dateString.split("/");
+      return `${year}-${month}-${day}`;
+    };
+
+    const voucherData = {
+      Discount: parseInt(newVoucher.Discount, 10), // Convert to integer
+      Quantity: parseInt(newVoucher.Quantity, 10), // Convert to integer
+      Expiration: formatDate(newVoucher.Expiration), // Convert to correct date format
+      Content: newVoucher.Content.trim(), // Trim any whitespace
+    };
+
+    console.log("Voucher Data:", voucherData); // Debugging line
+
+    if (
+      isNaN(voucherData.Discount) ||
+      isNaN(voucherData.Quantity) ||
+      voucherData.Discount <= 0 ||
+      voucherData.Discount > 20 ||
+      voucherData.Quantity <= 1 ||
+      !voucherData.Expiration ||
+      !/^\d{4}-\d{2}-\d{2}$/.test(voucherData.Expiration) ||
+      !voucherData.Content
+    ) {
+      console.error("Invalid voucher data", voucherData);
+      toast.error("Invalid voucher data. Please check the inputs.", {
+        duration: 3000,
+        position: "top-right",
+      });
+      return;
+    }
+
     try {
-      const formData = new FormData();
-      formData.append("VoucherID", newVoucher.VoucherID);
-      formData.append("Discount", newVoucher.Discount);
-      formData.append("Quantity", newVoucher.Quantity);
-      formData.append("Expiration", newVoucher.Expiration);
-      formData.append("Content", newVoucher.Content);
-      if (imageFile) {
-        formData.append("image", imageFile);
-      }
-
-      const response = await addVoucher(StaffToken, formData);
-      console.log("API response:", response); // Debugging line
-
-      if (response.data.voucher) {
-        setVouchers([...vouchers, response.data.voucher]);
+      const response = await addVoucher(StaffToken, voucherData);
+      if (response.data) {
+        fetchVouchers();
         setIsAddOpen(false);
         setNewVoucher({
-          VoucherID: "",
           Discount: "",
           Quantity: "",
           Expiration: "",
           Content: "",
         });
-        setImageFile(null);
         toast.success("Voucher added successfully", {
+          duration: 3000,
+          position: "top-right",
+        });
+      } else {
+        console.error("Failed to add voucher. Response:", response);
+        toast.error("Failed to add voucher. Please try again!", {
           duration: 3000,
           position: "top-right",
         });
       }
     } catch (error) {
-      console.error("Error adding voucher:", error);
+      console.error(
+        "Error adding voucher:",
+        error.response ? error.response.data : error
+      );
       toast.error("Failed to add voucher. Please try again!", {
         duration: 3000,
         position: "top-right",
@@ -93,9 +134,54 @@ const VoucherManagement = () => {
     }
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setImageFile(file);
+  const handleDeleteVoucher = async (voucherID) => {
+    try {
+      await deleteVoucher(StaffToken, voucherID);
+      toast.success("Voucher deleted successfully", {
+        duration: 3000,
+        position: "top-right",
+      });
+      fetchVouchers(); // Fetch updated list of vouchers after deletion
+    } catch (error) {
+      console.error("Error deleting voucher:", error);
+      toast.error("Failed to delete voucher. Please try again!", {
+        duration: 3000,
+        position: "top-right",
+      });
+    }
+  };
+
+  const handleUpdateVoucher = async () => {
+    try {
+      const response = await UpdateVoucher(
+        StaffToken,
+        voucherID,
+        updatedVoucherInfo
+      );
+      if (response.data) {
+        fetchVouchers();
+        setIsOpen(false);
+        toast.success("Voucher updated successfully", {
+          duration: 3000,
+          position: "top-right",
+        });
+      } else {
+        console.error("Failed to update voucher. Response:", response);
+        toast.error("Failed to update voucher. Please try again!", {
+          duration: 3000,
+          position: "top-right",
+        });
+      }
+    } catch (error) {
+      console.error(
+        "Error updating voucher:",
+        error.response ? error.response.data : error
+      );
+      toast.error("Failed to update voucher. Please try again!", {
+        duration: 3000,
+        position: "top-right",
+      });
+    }
   };
 
   return (
@@ -131,46 +217,53 @@ const VoucherManagement = () => {
             </button>
           </div>
 
-          <table className="issues-table">
-            <thead>
-              <tr>
-                <th>VoucherID</th>
-                <th>Discount</th>
-                <th>Quantity</th>
-                <th>Expiration</th>
-                <th>Content</th>
-                <th></th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {vouchers.map((voucher) => (
-                <tr key={voucher.VoucherID}>
-                  <td>{voucher.VoucherID}</td>
-                  <td>{voucher.Discount}</td>
-                  <td>{voucher.Quantity}</td>
-                  <td>{voucher.Expiration}</td>
-                  <td>{voucher.Content}</td>
-                  <td className="deleteDiv">
-                    <div className="delete">
-                      <button className="delete-button">
-                        <a href="#">Delete</a>
-                      </button>
-                    </div>
-                  </td>
-                  <td className="deleteDiv">
-                    <div className="delete">
-                      <button className="delete-button">
-                        <a href="#" onClick={() => setIsOpen(true)}>
-                          Update
-                        </a>
-                      </button>
-                    </div>
-                  </td>
+          {vouchers.length > 0 ? (
+            <table className="issues-table">
+              <thead>
+                <tr>
+                  <th>VoucherID</th>
+                  <th>Discount</th>
+                  <th>Quantity</th>
+                  <th>Expiration</th>
+                  <th>Content</th>
+                  <th></th>
+                  <th></th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {vouchers.map((voucher) => (
+                  <tr key={voucher.VoucherID}>
+                    <td>{voucher.VoucherID}</td>
+                    <td>{voucher.Discount}</td>
+                    <td>{voucher.VoucherQuantity}</td>
+                    <td>{new Date(voucher.Expiration).toLocaleDateString()}</td>
+                    <td>{voucher.Content}</td>
+                    <td className="deleteDiv">
+                      <div className="delete">
+                        <button
+                          className="delete-button"
+                          onClick={() => handleDeleteVoucher(voucher.VoucherID)}
+                        >
+                          <a href="#">Delete</a>
+                        </button>
+                      </div>
+                    </td>
+                    <td className="deleteDiv">
+                      <div className="delete">
+                        <button className="delete-button">
+                          <a href="#" onClick={() => openUpdateModal(voucher)}>
+                            Update
+                          </a>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p>No vouchers available</p>
+          )}
 
           <Modal
             isOpen={isOpen}
@@ -180,15 +273,47 @@ const VoucherManagement = () => {
           >
             <h2>Update Voucher</h2>
             <label htmlFor="">Voucher Discount: </label>
-            <input placeholder="Enter new voucher discount" /> <br />
+            <input
+              placeholder="Enter new voucher discount"
+              value={updatedVoucherInfo.Discount}
+              onChange={(e) =>
+                setUpdatedVoucherInfo({
+                  ...updatedVoucherInfo,
+                  Discount: e.target.value,
+                })
+              }
+            />{" "}
+            <br />
             <label htmlFor="">Voucher Quantity: </label>{" "}
-            <input placeholder="Enter new voucher quantity" /> <br />
+            <input
+              placeholder="Enter new voucher quantity"
+              value={updatedVoucherInfo.Quantity}
+              onChange={(e) =>
+                setUpdatedVoucherInfo({
+                  ...updatedVoucherInfo,
+                  Quantity: e.target.value,
+                })
+              }
+            />{" "}
+            <br />
             <label htmlFor="">Voucher Content: </label>{" "}
-            <input placeholder="Enter new voucher content" /> <br />
+            <input
+              placeholder="Enter new voucher content"
+              value={updatedVoucherInfo.Content}
+              onChange={(e) =>
+                setUpdatedVoucherInfo({
+                  ...updatedVoucherInfo,
+                  Content: e.target.value,
+                })
+              }
+            />{" "}
+            <br />
             <br />
             <div className="modal-actions-voucher">
               <button
-                onClick={handleFileChange}
+                onClick={() =>
+                  handleUpdateVoucher(voucherID, updatedVoucherInfo)
+                }
                 className="btn-confirm-voucher"
               >
                 Confirm
@@ -209,16 +334,6 @@ const VoucherManagement = () => {
             overlayClassName="custom-overlay-product"
           >
             <h2>Add Voucher</h2>
-            <label>Voucher ID: </label>
-            <input
-              name="VoucherID"
-              placeholder="Enter voucher id"
-              value={newVoucher.VoucherID}
-              onChange={(e) =>
-                setNewVoucher({ ...newVoucher, VoucherID: e.target.value })
-              }
-            />
-            <br />
             <label>Voucher Discount: </label>
             <input
               name="Discount"
@@ -233,9 +348,12 @@ const VoucherManagement = () => {
             <input
               name="Quantity"
               placeholder="Enter voucher quantity"
-              value={newVoucher.Quantity}
+              value={newVoucher.VoucherQuantity}
               onChange={(e) =>
-                setNewVoucher({ ...newVoucher, Quantity: e.target.value })
+                setNewVoucher({
+                  ...newVoucher,
+                  VoucherQuantity: e.target.value,
+                })
               }
             />
             <br />
@@ -243,7 +361,7 @@ const VoucherManagement = () => {
             <input
               name="Expiration"
               placeholder="Enter voucher expiration date"
-              type="date"
+              type="date" // Ensure this is set to date
               value={newVoucher.Expiration}
               onChange={(e) =>
                 setNewVoucher({ ...newVoucher, Expiration: e.target.value })
