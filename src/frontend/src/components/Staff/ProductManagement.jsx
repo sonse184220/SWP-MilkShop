@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
-import ReactQuill, { Quill } from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import ReactQuill, { Quill } from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { NavLink, useNavigate, Link, } from "react-router-dom";
+import { NavLink, useNavigate, Link } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 
 import Sidebar from "./Sidebar";
@@ -19,8 +19,10 @@ import { AddProduct } from "../../services/staff/product/addProduct";
 function ProductManagement() {
   const navigate = useNavigate();
 
-  const StaffToken = 'Bearer ' + sessionStorage.getItem('token');
-  const userId = sessionStorage.getItem('userData') ? JSON.parse(sessionStorage.getItem('userData')).UserID : "Guest";
+  const StaffToken = "Bearer " + sessionStorage.getItem("token");
+  const userId = sessionStorage.getItem("userData")
+    ? JSON.parse(sessionStorage.getItem("userData")).UserID
+    : "Guest";
 
   const [isOpen, setIsOpen] = useState(false);
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -52,7 +54,7 @@ function ProductManagement() {
     Image: null,
   });
   const [imageFile, setImageFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState('');
+  const [imagePreview, setImagePreview] = useState("");
 
   const dropdownRef = useRef(null);
   const toggleDropdown = () => {
@@ -65,19 +67,18 @@ function ProductManagement() {
     setCurrentPage(event.selected + 1);
   };
 
-
   function formatDate(dateString) {
     const date = new Date(dateString);
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = date.toLocaleString('default', { month: 'short' });
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = date.toLocaleString("default", { month: "short" });
     const year = date.getFullYear();
     return `${day} ${month}, ${year}`;
   }
 
   function formatDateForDisplay(dateString) {
-    if (!dateString) return '';
+    if (!dateString) return "";
     const date = new Date(dateString);
-    return date.toISOString().split('T')[0]; // Returns "YYYY-MM-DD"
+    return date.toISOString().split("T")[0]; // Returns "YYYY-MM-DD"
   }
 
   const handleGetProducts = async () => {
@@ -138,7 +139,11 @@ function ProductManagement() {
       formData.append("Content", updateProduct.Content);
       formData.append("BrandID", updateProduct.BrandID);
 
-      const response = await UpdateProduct(StaffToken, updateProduct.ProductID, formData);
+      const response = await UpdateProduct(
+        StaffToken,
+        updateProduct.ProductID,
+        formData
+      );
       if (response.data.message) {
         handleGetProducts();
         setIsOpen(false);
@@ -146,8 +151,6 @@ function ProductManagement() {
           duration: 3000,
           position: "top-right",
         });
-
-
       }
       // Optionally, refresh the product list or show a success message
     } catch (error) {
@@ -191,7 +194,7 @@ function ProductManagement() {
       if (response.data.message) {
         handleGetProducts();
         setIsAddOpen(false);
-        setImagePreview('');
+        setImagePreview("");
         setImageFile(null);
         setNewProduct({
           ProductID: "",
@@ -225,14 +228,12 @@ function ProductManagement() {
     handleGetProducts();
   }, [currentPage]);
 
-
   const handleLogout = () => {
-
     // event.preventDefault();
     sessionStorage.clear();
     navigate("/Customer/home");
     window.location.reload();
-  }
+  };
 
   return (
     <>
@@ -252,7 +253,9 @@ function ProductManagement() {
                     <a href="/Staff/StaffProfile">Profile</a>
                   </li>
                   <li>
-                    <a href="" onClick={handleLogout}>Logout</a>
+                    <a href="" onClick={handleLogout}>
+                      Logout
+                    </a>
                   </li>
                 </ul>
               </div>
@@ -290,7 +293,10 @@ function ProductManagement() {
                 {products.map((item) => (
                   <tr key={item.ProductID}>
                     <td>
-                      <img src={`data:image/jpeg;base64,${item.Image}`} alt={`${item.Name}`} />
+                      <img
+                        src={`data:image/jpeg;base64,${item.Image}`}
+                        alt={`${item.Name}`}
+                      />
                     </td>
                     <td>{item.ProductID}</td>
                     <td>{item.Name}</td>
@@ -308,7 +314,10 @@ function ProductManagement() {
                     </td>
                     <td className="updateDiv">
                       <div className="delete">
-                        <button className="delete-button" onClick={() => handleGetAProduct(item.ProductID)}>
+                        <button
+                          className="delete-button"
+                          onClick={() => handleGetAProduct(item.ProductID)}
+                        >
                           Update
                         </button>
                       </div>
@@ -346,31 +355,93 @@ function ProductManagement() {
               <div className="row">
                 <div className="col-6">
                   <label htmlFor="productId">ProductID: </label>
-                  <input type="text" id="productId" value={updateProduct.ProductID} readOnly />
+                  <input
+                    type="text"
+                    id="productId"
+                    value={updateProduct.ProductID}
+                    readOnly
+                  />
                   <label htmlFor="productName">Product Name: </label>
-                  <input id="productName" value={updateProduct.Name} onChange={(e) => setUpdateProduct({ ...updateProduct, Name: e.target.value })} />
+                  <input
+                    id="productName"
+                    value={updateProduct.Name}
+                    onChange={(e) =>
+                      setUpdateProduct({
+                        ...updateProduct,
+                        Name: e.target.value,
+                      })
+                    }
+                  />
                   <label htmlFor="brandId">BrandID: </label>
-                  <input id="brandId" value={updateProduct.BrandID} onChange={(e) => setUpdateProduct({ ...updateProduct, BrandID: e.target.value })} />
+                  <input
+                    id="brandId"
+                    value={updateProduct.BrandID}
+                    onChange={(e) =>
+                      setUpdateProduct({
+                        ...updateProduct,
+                        BrandID: e.target.value,
+                      })
+                    }
+                  />
                   <label htmlFor="description">Description: </label>
-                  <ReactQuill theme="snow" value={updateProduct.Content} onChange={(content) => setUpdateProduct({ ...updateProduct, Content: content })} />
+                  <ReactQuill
+                    theme="snow"
+                    value={updateProduct.Content}
+                    onChange={(content) =>
+                      setUpdateProduct({ ...updateProduct, Content: content })
+                    }
+                  />
                   <label htmlFor="quantity">Quantity: </label>
-                  <input type="number" id="quantity" value={updateProduct.Quantity} onChange={(e) => setUpdateProduct({ ...updateProduct, Quantity: parseInt(e.target.value) })} />
+                  <input
+                    type="number"
+                    id="quantity"
+                    value={updateProduct.Quantity}
+                    onChange={(e) =>
+                      setUpdateProduct({
+                        ...updateProduct,
+                        Quantity: parseInt(e.target.value),
+                      })
+                    }
+                  />
                   <label htmlFor="price">Price: </label>
-                  <input type="number" id="price" value={updateProduct.Price} onChange={(e) => setUpdateProduct({ ...updateProduct, Price: parseFloat(e.target.value) })} />
+                  <input
+                    type="number"
+                    id="price"
+                    value={updateProduct.Price}
+                    onChange={(e) =>
+                      setUpdateProduct({
+                        ...updateProduct,
+                        Price: parseFloat(e.target.value),
+                      })
+                    }
+                  />
                   <label htmlFor="expiration">Expiration date: </label>
-                  <input type="date" id="expiration" value={updateProduct.Expiration} onChange={(e) => setUpdateProduct({ ...updateProduct, Expiration: e.target.value })} />
+                  <input
+                    type="date"
+                    id="expiration"
+                    value={updateProduct.Expiration}
+                    onChange={(e) =>
+                      setUpdateProduct({
+                        ...updateProduct,
+                        Expiration: e.target.value,
+                      })
+                    }
+                  />
                 </div>
                 <div className="col-6">
-                  <div style={{ height: '50%' }}>
-                    <img style={{ width: '100%', height: '100%' }} src={imagePreview} alt="product image" />
+                  <div style={{ height: "50%" }}>
+                    <img
+                      style={{ width: "100%", height: "100%" }}
+                      src={imagePreview}
+                      alt="product image"
+                    />
                   </div>
                   <input
                     type="file"
                     name="file"
-                    style={{ border: 'none', width: '100%' }}
+                    style={{ border: "none", width: "100%" }}
                     onChange={handleFileChange}
                   />
-
                 </div>
               </div>
               <div className="modal-actions-product">
@@ -399,35 +470,107 @@ function ProductManagement() {
               <div className="row">
                 <div className="col-6">
                   <label htmlFor="newProductId">ProductID: </label>
-                  <input type="text" id="newProductId" value={newProduct.ProductID} onChange={(e) => setNewProduct({ ...newProduct, ProductID: e.target.value })} />
+                  <input
+                    type="text"
+                    id="newProductId"
+                    value={newProduct.ProductID}
+                    onChange={(e) =>
+                      setNewProduct({
+                        ...newProduct,
+                        ProductID: e.target.value,
+                      })
+                    }
+                  />
                   <label htmlFor="newProductName">Product Name: </label>
-                  <input id="newProductName" value={newProduct.Name} onChange={(e) => setNewProduct({ ...newProduct, Name: e.target.value })} />
+                  <input
+                    id="newProductName"
+                    value={newProduct.Name}
+                    onChange={(e) =>
+                      setNewProduct({ ...newProduct, Name: e.target.value })
+                    }
+                  />
                   <label htmlFor="newBrandId">BrandID: </label>
-                  <input id="newBrandId" value={newProduct.BrandID} onChange={(e) => setNewProduct({ ...newProduct, BrandID: e.target.value })} />
+                  <input
+                    id="newBrandId"
+                    value={newProduct.BrandID}
+                    onChange={(e) =>
+                      setNewProduct({ ...newProduct, BrandID: e.target.value })
+                    }
+                  />
                   <label htmlFor="newDescription">Description: </label>
-                  <ReactQuill theme="snow" value={newProduct.Content} onChange={(content) => setNewProduct({ ...newProduct, Content: content })} />
+                  <ReactQuill
+                    theme="snow"
+                    value={newProduct.Content}
+                    onChange={(content) =>
+                      setNewProduct({ ...newProduct, Content: content })
+                    }
+                  />
                   <label htmlFor="newQuantity">Quantity: </label>
-                  <input type="number" id="newQuantity" value={newProduct.Quantity} onChange={(e) => setNewProduct({ ...newProduct, Quantity: parseInt(e.target.value) })} />
+                  <input
+                    type="number"
+                    id="newQuantity"
+                    value={newProduct.Quantity}
+                    onChange={(e) =>
+                      setNewProduct({
+                        ...newProduct,
+                        Quantity: parseInt(e.target.value),
+                      })
+                    }
+                  />
                   <label htmlFor="newPrice">Price: </label>
-                  <input type="number" id="newPrice" value={newProduct.Price} onChange={(e) => setNewProduct({ ...newProduct, Price: parseFloat(e.target.value) })} />
+                  <input
+                    type="number"
+                    id="newPrice"
+                    value={newProduct.Price}
+                    onChange={(e) =>
+                      setNewProduct({
+                        ...newProduct,
+                        Price: parseFloat(e.target.value),
+                      })
+                    }
+                  />
                   <label htmlFor="newExpiration">Expiration date: </label>
-                  <input type="date" id="newExpiration" value={newProduct.Expiration} onChange={(e) => setNewProduct({ ...newProduct, Expiration: e.target.value })} />
+                  <input
+                    type="date"
+                    id="newExpiration"
+                    value={newProduct.Expiration}
+                    onChange={(e) =>
+                      setNewProduct({
+                        ...newProduct,
+                        Expiration: e.target.value,
+                      })
+                    }
+                  />
                 </div>
                 <div className="col-6">
-                  <div style={{ height: '50%' }}>
-                    <img style={{ width: '100%', height: '100%' }} src={imagePreview} alt="product image" />
+                  <div style={{ height: "50%" }}>
+                    <img
+                      style={{ width: "100%", height: "100%" }}
+                      src={imagePreview}
+                      alt="product image"
+                    />
                   </div>
                   <input
                     type="file"
                     name="file"
-                    style={{ border: 'none', width: '100%' }}
+                    style={{ border: "none", width: "100%" }}
                     onChange={(e) => handleFileChange(e, true)}
                   />
                 </div>
               </div>
               <div className="modal-actions-product">
-                <button onClick={handleAddProduct} className="btn-confirm-product">Confirm</button>
-                <button onClick={() => setIsAddOpen(false)} className="btn-cancel-product">Cancel</button>
+                <button
+                  onClick={handleAddProduct}
+                  className="btn-confirm-product"
+                >
+                  Confirm
+                </button>
+                <button
+                  onClick={() => setIsAddOpen(false)}
+                  className="btn-cancel-product"
+                >
+                  Cancel
+                </button>
               </div>
             </Modal>
           </div>

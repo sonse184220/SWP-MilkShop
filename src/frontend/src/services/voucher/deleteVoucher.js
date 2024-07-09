@@ -2,7 +2,7 @@ import axios from "../axios";
 
 export const deleteVoucher = async (token, voucherID) => {
     try {
-        return await axios.delete(`/api/vouchers/${voucherID}/delete`, {
+        return await axios.delete(`/api/vouchers/staff/${voucherID}/delete`, {
             headers: {
                 'Authorization': token,
             }

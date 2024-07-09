@@ -2,7 +2,8 @@ import axios from "../axios";
 
 export const addVoucher = (token, voucherData) => {
   try {
-    return axios.post(`/api/vouchers/create`, voucherData, {
+    console.log("Add voucher data: ", voucherData);
+    return axios.post(`/api/vouchers/staff/create`, voucherData, {
         headers: {
             'Authorization': token,
         }

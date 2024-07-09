@@ -4,12 +4,13 @@ import "./VoucherManagement.css";
 import Modal from "react-modal";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { NavLink, useNavigate, Link, } from "react-router-dom";
+import { NavLink, useNavigate, Link } from "react-router-dom";
 
 import { addVoucher } from "../../services/voucher/addVoucher";
 import { GetAllVouchers } from "../../services/voucher/GetAllVouchers";
 import { deleteVoucher } from "../../services/voucher/deleteVoucher";
 import { UpdateVoucher } from "../../services/voucher/updateVoucher";
+import ReactPaginate from "react-paginate";
 const VoucherManagement = () => {
   const navigate = useNavigate();
 
@@ -20,6 +21,10 @@ const VoucherManagement = () => {
   const [isAddOpen, setIsAddOpen] = useState(false);
   const dropdownRef = useRef(null);
   const [vouchers, setVouchers] = useState([]);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageCount, setPageCount] = useState(1);
+
   const [newVoucher, setNewVoucher] = useState({
     Discount: "",
     Quantity: "",
@@ -49,12 +54,16 @@ const VoucherManagement = () => {
 
   const fetchVouchers = async () => {
     try {
-      const response = await GetAllVouchers(StaffToken);
-      setVouchers(response.data || []);
+      let limit = 5;
+      let page = currentPage;
+      let sort = "";
+      const response = await GetAllVouchers(limit, page, sort, StaffToken);
+      setVouchers(response.data);
+      setPageCount(response.totalPages);
     } catch (error) {
       console.error("Error fetching vouchers:", error);
       toast.error("Failed to fetch vouchers. Please try again!", {
-        duration: 3000,
+        duration: 1000,
         position: "top-right",
       });
     }
@@ -62,7 +71,11 @@ const VoucherManagement = () => {
 
   useEffect(() => {
     fetchVouchers();
-  }, [StaffToken]);
+  }, []);
+
+  useEffect(() => {
+    fetchVouchers();
+  }, [currentPage]);
 
   const toggleDropdown = () => {
     if (dropdownRef.current) {
@@ -71,20 +84,25 @@ const VoucherManagement = () => {
   };
 
   const handleAddVoucher = async () => {
-    // Function to convert date from MM/DD/YYYY to YYYY-MM-DD
     const formatDate = (dateString) => {
-      const [month, day, year] = dateString.split("/");
-      return `${year}-${month}-${day}`;
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) {
+        const [month, day, year] = dateString.split("/");
+        return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+      } else {
+        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+          2,
+          "0"
+        )}-${String(date.getDate()).padStart(2, "0")}`;
+      }
     };
 
     const voucherData = {
-      Discount: parseInt(newVoucher.Discount, 10), // Convert to integer
-      Quantity: parseInt(newVoucher.Quantity, 10), // Convert to integer
-      Expiration: formatDate(newVoucher.Expiration), // Convert to correct date format
-      Content: newVoucher.Content.trim(), // Trim any whitespace
+      Discount: parseInt(newVoucher.Discount, 10),
+      Quantity: parseInt(newVoucher.VoucherQuantity, 10),
+      Expiration: formatDate(newVoucher.Expiration),
+      Content: newVoucher.Content.trim(),
     };
-
-    console.log("Voucher Data:", voucherData); // Debugging line
 
     if (
       isNaN(voucherData.Discount) ||
@@ -93,7 +111,6 @@ const VoucherManagement = () => {
       voucherData.Discount > 20 ||
       voucherData.Quantity <= 1 ||
       !voucherData.Expiration ||
-      !/^\d{4}-\d{2}-\d{2}$/.test(voucherData.Expiration) ||
       !voucherData.Content
     ) {
       console.error("Invalid voucher data", voucherData);
@@ -110,7 +127,7 @@ const VoucherManagement = () => {
         fetchVouchers();
         setIsAddOpen(false);
         setNewVoucher({
-          Discount: "",
+          Discount: "", // Clear input fields after successful addition
           Quantity: "",
           Expiration: "",
           Content: "",
@@ -157,7 +174,7 @@ const VoucherManagement = () => {
 
   const handleUpdateVoucher = async () => {
     try {
-      const response = await UpdateVoucher(
+      const response = await addVoucher(
         StaffToken,
         voucherID,
         updatedVoucherInfo
@@ -170,31 +187,41 @@ const VoucherManagement = () => {
           position: "top-right",
         });
       } else {
-        console.error("Failed to update voucher. Response:", response);
-        toast.error("Failed to update voucher. Please try again!", {
-          duration: 3000,
-          position: "top-right",
-        });
+        console.error("Failed to add voucher. Response:", response);
+        if (response.status === 400) {
+          // Handle 400 Bad Request error
+          console.error("Server response:", response.data);
+          toast.error("Invalid voucher data. Please check the inputs.", {
+            duration: 3000,
+            position: "top-right",
+          });
+        } else {
+          toast.error("Failed to add voucher. Please try again!", {
+            duration: 3000,
+            position: "top-right",
+          });
+        }
       }
     } catch (error) {
       console.error(
-        "Error updating voucher:",
+        "Error adding voucher:",
         error.response ? error.response.data : error
       );
-      toast.error("Failed to update voucher. Please try again!", {
+      toast.error("Failed to add voucher. Please try again!", {
         duration: 3000,
         position: "top-right",
       });
     }
   };
-
+  const handlePageClick = (event) => {
+    setCurrentPage(event.selected + 1);
+  };
   const handleLogout = () => {
-
     // event.preventDefault();
     sessionStorage.clear();
     navigate("/Customer/home");
     window.location.reload();
-  }
+  };
 
   return (
     <div className="order-management-container">
@@ -213,7 +240,9 @@ const VoucherManagement = () => {
                   <a href="/Staff/StaffProfile">Profile</a>
                 </li>
                 <li>
-                  <a href="" onClick={handleLogout}>Logout</a>
+                  <a href="" onClick={handleLogout}>
+                    Logout
+                  </a>
                 </li>
               </ul>
             </div>
@@ -276,7 +305,25 @@ const VoucherManagement = () => {
           ) : (
             <p>No vouchers available</p>
           )}
-
+          <div>
+            <ReactPaginate
+              breakLabel="..."
+              nextLabel="Next >"
+              onPageChange={handlePageClick}
+              pageRangeDisplayed={5}
+              pageCount={pageCount}
+              previousLabel="< Previous"
+              renderOnZeroPageCount={null}
+              containerClassName="pagination justify-content-center"
+              pageClassName="page-item"
+              pageLinkClassName="page-link"
+              previousClassName="page-item"
+              previousLinkClassName="page-link"
+              nextClassName="page-item"
+              nextLinkClassName="page-link"
+              activeClassName="active"
+            />
+          </div>
           <Modal
             isOpen={isOpen}
             onRequestClose={() => setIsOpen(false)}

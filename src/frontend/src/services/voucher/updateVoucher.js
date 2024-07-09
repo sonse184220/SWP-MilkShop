@@ -2,7 +2,7 @@ import axios from "../axios";
 
 export const UpdateVoucher = (token, voucherID, updatedVoucherInfo) => {
     try {
-        return axios.patch(`/api/vouchers/${voucherID}/update`, updatedVoucherInfo,
+        return axios.patch(`/api/vouchers/staff/${voucherID}/update`, updatedVoucherInfo,
             {
                 headers: {
                     'Authorization': token,
