@@ -37,5 +37,12 @@ router.patch("/api/preorder/staff/:preorderId/eta", checkAuthenticated, isStaff,
     await preorderController.updatePreorderEta(req, res);
 })
 
+/**
+ *  chuyển paymentstatus sang done cho COD/Banking, không có tác dụng cho các hình thức thanh toán khác
+ */
+router.patch("/api/preorder/staff/:preorderId/payment-done", checkAuthenticated, isStaff, checkPreorderId, async (req, res) => {
+    await preorderController.updatePreorderPaymentStatusDone(req, res);
+})
+
 
 export { router as preorderRoutes }

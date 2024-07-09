@@ -52,7 +52,7 @@ export class OrderService {
         return order;
     }
 
-    async updateCodPaymentStatusDone(orderId) {
+    async updatePaymentStatusDone(orderId) {
         const [order] = await poolConnect.query("UPDATE `order` SET PaymentStatus = 'Done' WHERE OrderID = ?", [orderId]);
         return order;
     }

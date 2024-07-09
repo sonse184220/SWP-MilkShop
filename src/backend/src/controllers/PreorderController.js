@@ -186,4 +186,27 @@ export class PreorderController {
         return res.status(200).send(updatedPreorder);
     }
 
+    async updatePreorderPaymentStatusDone(req, res) {
+        try {
+            const preorderId = req.params.preorderId;
+
+            const preorder = await preorderService.getPreorder(preorderId);
+            if (preorder.length === 0) {
+                return res.status(404).send({ error: "Pre-order not found!" });
+            }
+            if (preorder[0].PaymentMethod !== 'COD' && preorder[0].PaymentMethod !== 'Banking') {
+                return res.status(409).send({ msg: "You can only use this to update payment status for COD/Banking pre-order." });
+            }
+
+            const updatingPreorder = await preorderService.updatePaymentStatusDone(preorderId);
+            if (updatingPreorder.affectedRows === 0) {
+                return res.status(500).send({ error: "Failed to update pre-order payment status!" });
+            }
+
+            const updatedPreorder = await preorderService.getPreorder(preorderId);
+            return res.status(200).send(updatedPreorder);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    }
 }

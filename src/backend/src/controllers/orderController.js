@@ -183,7 +183,7 @@ export class OrderController {
                 return res.status(409).send({ msg: "You can only use this to update payment status for COD/Banking order." });
             }
 
-            const updatingOrder = await orderService.updateCodPaymentStatusDone(orderId);
+            const updatingOrder = await orderService.updatePaymentStatusDone(orderId);
             if (updatingOrder.affectedRows === 0) {
                 return res.status(500).send({ error: "Failed to update order payment status!" });
             }
