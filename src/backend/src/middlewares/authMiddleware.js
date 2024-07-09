@@ -39,4 +39,12 @@ export const checkChatAuthenticated = (req, res, next) => {
     } catch (err) {
         res.status(401).json({ message: 'Invalid token' });
     }
+
+};
+
+export const ensureAuthenticated = (req, res, next) => {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect('/login');
 };

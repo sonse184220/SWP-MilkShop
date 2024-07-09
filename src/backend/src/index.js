@@ -2,7 +2,7 @@ import express from "express";
 import session from "express-session";
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
-import cors from "cors"; // Import CORS middleware
+import cors from "cors";
 import passport from './utils/passportConfig.js';
 import { configureSocket } from './utils/socketConfig.js';
 import { chatRoutes } from './routes/chatRoutes.js';
@@ -45,6 +45,8 @@ app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
 app.use(express.json());
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use('/api/admin', adminRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/reset-password', resetPasswordRoutes);

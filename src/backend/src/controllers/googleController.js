@@ -1,41 +1,44 @@
-import { GoogleAuthService } from '../services/googleService.js';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import { GoogleService } from '../services/googleService.js';
 
 dotenv.config();
+const googleService = new GoogleService();
 
 export class GoogleController {
-    constructor() {
-        this.googleAuthService = new GoogleAuthService();
+    async handleGoogleCallback(req, res) {
+        const user = req.user;
+
+        const tempUserToken = jwt.sign({ email: user.Email, name: user.Name }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+        // Gửi JWT này cho frontend để hoàn tất đăng ký
+        res.send({ tempUserToken, message: 'Google authentication successful. Please complete your registration.' });
     }
 
-    googleAuthCallback = (req, res) => {
-        this.googleAuthService.googleAuthCallback(req.user, (err, result) => {
-            if (err) return res.status(500).json({ error: err.message });
-            if (result.newUser) {
-                res.json({ token: result.token, message: 'Profile completion required' });
-            } else {
-                res.status(200).json(result);
-            }
-        });
-    };
+    async completeRegistration(req, res) {
+        const bearerHeader = req.headers['authorization'];
 
-    completeProfile = (req, res) => {
-        const { name, phone, address } = req.body;
-        const token = req.headers.authorization.split(' ')[1];
+        if (!bearerHeader || !bearerHeader.startsWith('Bearer ')) {
+            return res.status(400).json({ error: 'Bearer token is missing or invalid' });
+        }
+
+        const tempUserToken = bearerHeader.split(' ')[1];
+
+        console.log('Received Token:', tempUserToken);
+
+        const { Name, Phone, Address } = req.body;
+        const ProfilePicture = req.file ? req.file.buffer.toString('base64') : null;
 
         try {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            const userId = decoded.userId;
+            const tempUser = jwt.verify(tempUserToken, process.env.JWT_SECRET);
+            console.log('Decoded Token:', tempUser);
 
-            this.googleAuthService.completeProfile(userId, name, phone, address, (err, result) => {
-                if (err) return res.status(500).json({ error: err.message });
-                res.status(200).json(result);
-            });
+            await googleService.createUser(tempUser.email, Name, Phone, Address, ProfilePicture);
+
+            res.send('Registration complete. You can now log in.');
         } catch (err) {
-            res.status(401).json({ error: 'Invalid token' });
+            console.error('Token Verification Error:', err);  // Log lỗi
+            res.status(400).json({ error: 'Invalid token. Please start the registration process again.' });
         }
-    };
+    }
 }
-
-export const googleController = new GoogleController();

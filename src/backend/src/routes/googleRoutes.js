@@ -1,16 +1,21 @@
 import express from 'express';
-import passport from '../utils/googlePassport.js';
-import { googleController } from '../controllers/googleController.js';
+import passport from '../utils/passportConfig.js';
+import { GoogleController } from '../controllers/googleController.js';
+import multer from 'multer';
 
 const router = express.Router();
+const upload = multer();
+const googleController = new GoogleController();
 
-router.get('/google-login', passport.authenticate('google', { scope: ['profile', 'email'] }));
-router.get('/callback', passport.authenticate('google', { failureRedirect: '/' }), googleController.googleAuthCallback);
-router.post('/complete-profile', googleController.completeProfile);
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+router.get('/callback',
+    passport.authenticate('google', { failureRedirect: 'http://localhost:3000/login-register' }),
+    (req, res) => googleController.handleGoogleCallback(req, res)
+);
+
+router.post('/complete-registration', upload.single('ProfilePicture'), (req, res) => {
+    googleController.completeRegistration(req, res);
+});
 
 export { router as googleRoutes };
-
-
-//Bật trình duyệt lên vào localhost:4500/api/google/google-login trước, sau đó đăng nhập vào bằng tài khoản google  và cấp quyền (EMAIL NÀY VẪN TÍNH LÀ UNIQUE KEY NÊN ĐỪNG ĐĂNG NHẬP BẰNG TÀI KHOẢN ĐÃ ĐĂNG KÍ TRONG DATABASE).
-//Google sẽ redirect tới /google/callback, và response ra 1 json có đựng jwt token ở trong.
-//Lên Postman vào phần complete profile, bỏ jwt token đó vào header xong test.
