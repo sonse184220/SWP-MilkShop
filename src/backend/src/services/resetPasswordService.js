@@ -1,4 +1,4 @@
-import { connection } from '../utils/dbConnection.js';
+import { poolConnect } from '../utils/dbConnection.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { EmailService } from './EmailService.js';
@@ -11,44 +11,38 @@ export class ResetPasswordService {
         this.emailService = new EmailService();
     }
 
-    requestResetPassword = (email, newPassword, req, callback) => {
-        const query = 'SELECT * FROM user WHERE Email = ?';
-        connection.query(query, [email], (err, results) => {
-            if (err) return callback(err);
-            if (results.length === 0) return callback(null, { message: 'Email not found', status: 404 });
+    async requestResetPassword(email, newPassword, req) {
+        try {
+            const query = 'Select * from user WHERE Email = ?';
+            const [results] = await poolConnect.query(query, [email]);
+            if (results.length === 0) {
+                throw new Error('Email not found');
+            }
 
             const user = results[0];
             const token = jwt.sign({ userId: user.UserID, newPassword }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-            this.emailService.sendResetPasswordEmail(email, token, req)
-                .then(() => {
-                    console.log('Reset password email sent to:', email);
-                    callback(null, { message: 'Reset password email sent.', token });
-                })
-                .catch(error => {
-                    console.error('Error sending reset password email:', error);
-                    callback(error);
-                });
-        });
+            await this.emailService.sendResetPasswordEmail(email, token, req);
+            return { message: 'Reset password email sent.', token };
+        } catch (error) {
+            throw error;
+        }
     };
 
-    resetPassword = (token, callback) => {
+    async resetPassword(token) {
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
             const userId = decoded.userId;
             const newPassword = decoded.newPassword;
 
-            bcrypt.hash(newPassword, 10, (err, hashedPassword) => {
-                if (err) return callback(err);
+            const hashedPassword = await bcrypt.hash(newPassword, 10);
+            const query = 'Update user SET Password = ? wHERE UserID = ?';
+            await poolConnect.query(query, [hashedPassword, userId]);
 
-                const query = 'UPDATE user SET Password = ? WHERE UserID = ?';
-                connection.query(query, [hashedPassword, userId], (err, result) => {
-                    if (err) return callback(err);
-                    callback(null, { message: 'Password reset successfully.' });
-                });
-            });
-        } catch (err) {
-            callback(err);
+            return { message: 'Password reset successfully.' };
+        } catch (error) {
+            throw error;
         }
-    };
+    }
 }

@@ -14,7 +14,7 @@ export class EmailService {
         });
     }
 
-    sendResetPasswordEmail = (email, token, req) => {
+    async sendResetPasswordEmail(email, token, req) {
         const url = `${req.protocol}://${req.get('host')}/api/reset-password?token=${token}`;
         const mailOptions = {
             from: process.env.EMAIL_USER,
@@ -31,15 +31,14 @@ export class EmailService {
             `
         };
 
-        return this.transporter.sendMail(mailOptions)
-            .then(info => {
-                console.log(`Email sent: ${info.response}`);
-            })
-            .catch(error => {
-                console.error(`Error sending email: ${error}`);
-            });
-    };
-
+        try {
+            const info = await this.transporter.sendMail(mailOptions);
+            console.log(`Email sent: ${info.response}`);
+        } catch (error) {
+            console.error(`Error sending email: ${error}`);
+            throw error; // Throw the error to be caught in the service method
+        }
+    }
     sendVerificationEmail = (email, token, userId, phone, req) => {
         const url = `${req.protocol}://${req.get('host')}/api/auth/verify-email?token=${token}`;
         const mailOptions = {

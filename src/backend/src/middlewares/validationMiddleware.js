@@ -1,4 +1,4 @@
-import { body, validationResult, matchedData } from 'express-validator';
+import { body, query, validationResult, matchedData } from 'express-validator';
 
 export const checkRegister = [
     body('Password')
@@ -81,37 +81,19 @@ export const checkResetPasswordRequest = [
     }
 ];
 
-export const checkResetPassword = [
-    body('token')
-        .trim()
+export const checkResetToken = [
+    query('token')
         .exists().withMessage('Token is required')
         .notEmpty().withMessage('Token cannot be empty'),
-    body('newPassword')
-        .trim()
-        .exists().withMessage('New password is required')
-        .notEmpty().withMessage('New password cannot be empty')
-        .isLength({ min: 6 }).withMessage('New password must be at least 6 characters long'),
-    body('confirmPassword')
-        .trim()
-        .exists().withMessage('Confirm password is required')
-        .notEmpty().withMessage('Confirm password cannot be empty')
-        .isLength({ min: 6 }).withMessage('Confirm password must be at least 6 characters long')
-        .custom((value, { req }) => {
-            if (value !== req.body.newPassword) {
-                throw new Error('Passwords do not match');
-            }
-            return true;
-        }),
     (req, res, next) => {
         const result = validationResult(req);
         if (!result.isEmpty()) {
             return res.status(400).send({ error: result.array() });
         }
-        Object.assign(req.body, matchedData(req));
+        Object.assign(req.query, matchedData(req));
         next();
     }
 ];
-
 export const checkChangePassword = [
     body('oldPassword')
         .trim()

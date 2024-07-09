@@ -1,34 +1,34 @@
 import { ResetPasswordService } from '../services/resetPasswordService.js';
-import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 export class ResetPasswordController {
     constructor() {
         this.resetPasswordService = new ResetPasswordService();
     }
 
-    requestResetPassword = (req, res) => {
+    requestResetPassword = async (req, res) => {
         const { email, newPassword, confirmPassword } = req.body;
         if (newPassword !== confirmPassword) {
             return res.status(400).json({ error: "Passwords do not match" });
         }
-        this.resetPasswordService.requestResetPassword(email, newPassword, req, (err, result) => {
-            if (err) return res.status(500).json({ error: err.message });
+        try {
+            const result = await this.resetPasswordService.requestResetPassword(email, newPassword, req);
             res.status(result.status || 200).json(result);
-        });
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
     };
 
-    verifyResetToken = (req, res) => {
-        const token = req.query.token;
+    verifyResetToken = async (req, res) => {
+        const { token } = req.query;
         if (!token) {
             return res.status(400).json({ error: 'Token is required' });
         }
-        this.resetPasswordService.resetPassword(token, (err, result) => {
-            if (err) return res.status(500).json({ error: err.message });
+        try {
+            const result = await this.resetPasswordService.resetPassword(token);
             res.redirect('http://localhost:3000/login-register');
-        });
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
     };
 }
 
