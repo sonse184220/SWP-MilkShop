@@ -6,7 +6,13 @@ export class UserService {
     async getUserInfo(userId) {
         const query = 'select UserID, Name, Email, Phone, Address, RewardPoints, Verified, ProfilePicture FROM user WHERE UserID = ?';
         const [results] = await poolConnect.query(query, [userId]);
-        return results[0];
+        const user = results[0];
+
+        if (user && user.ProfilePicture) {
+            user.ProfilePicture = user.ProfilePicture.toString('base64');
+        }
+
+        return user;
     }
 
     async checkUserExisted(id) {
@@ -43,8 +49,9 @@ export class UserService {
             const resizedImageBuffer = await sharp(newUserData.ProfilePicture)
                 .resize(480, 320)
                 .toBuffer();
+            const base64Image = resizedImageBuffer.toString('base64');
             fieldsToUpdate.push('ProfilePicture = ?');
-            values.push(resizedImageBuffer);
+            values.push(base64Image);
         }
 
         if (fieldsToUpdate.length === 0) {
