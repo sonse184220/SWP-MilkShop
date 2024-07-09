@@ -20,6 +20,7 @@ import { preorderRoutes } from "./routes/preorderRoutes.js";
 import { voucherRoutes } from './routes/voucherRoutes.js';
 import { userReportRoutes } from "./routes/userreportRoutes.js";
 import { adminRoutes } from './routes/adminRoutes.js';
+import { logoutRoutes } from './routes/logoutRoutes.js';
 
 dotenv.config();
 
@@ -57,6 +58,7 @@ app.use('/api/user', userRoutes);
 app.use('/api/order', orderRoutes);
 app.use('/api/vouchers', voucherRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api/logout', logoutRoutes);
 app.use(productRoutes);
 app.use(blogRoutes);
 app.use(wishlistRoutes);
