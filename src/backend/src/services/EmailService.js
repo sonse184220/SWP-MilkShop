@@ -72,7 +72,7 @@ export class EmailService {
             });
     };
 
-    sendOrderConfirmationEmail = (email, orderId, cartItems, initialTotalPrice, totalPrice, vouchers, contactInfo, callback) => {
+    async sendOrderConfirmationEmail(email, orderId, cartItems, initialTotalPrice, totalPrice, vouchers, contactInfo) {
         const itemsDetails = cartItems.map(item => `
             <tr>
                 <td style="padding: 10px; border: 1px solid #ddd; font-family: 'Arial', sans-serif; color: #444;">${item.ProductID}</td>
@@ -137,16 +137,13 @@ export class EmailService {
             `
         };
 
-        return this.transporter.sendMail(mailOptions)
-            .then(info => {
-                console.log(`Order confirmation email sent: ${info.response}`);
-                callback(null, info);
-            })
-            .catch(error => {
-                console.error(`Error sending order confirmation email: ${error}`);
-                callback(error);
-            });
-    };
+        try {
+            const info = await this.transporter.sendMail(mailOptions);
+            console.log(`Order confirmation email sent: ${info.response}`);
+        } catch (error) {
+            console.error(`Error sending order confirmation email: ${error}`);
+        }
+    }
 
     async sendPreorderConfirmationEmail(preorderId, product, totalPrice, user,) {
         const userDetails = `
