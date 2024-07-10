@@ -21,21 +21,6 @@ const AllProducts = ({ isMember }) => {
     const [pageCount, setPageCount] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
 
-
-    const getImageSrc = (imageData) => {
-        if (!imageData || !imageData.data) return '';
-
-        try {
-            const base64 = btoa(
-                imageData.data.reduce((data, byte) => data + String.fromCharCode(byte), '')
-            );
-            return `data:image/jpeg;base64,${base64}`;
-        } catch (error) {
-            console.error('Error converting image data:', error);
-            return '';
-        }
-    };
-
     const handleSearchProductByName = async () => {
         try {
             const response = await SearchProductByName(searchInput);

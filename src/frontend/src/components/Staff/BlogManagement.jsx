@@ -333,14 +333,14 @@ const BlogManagement = () => {
                 <label>Blog ID: </label>
                 <input name="blogId" value={updateBlog.BlogID} readOnly />
 
-                <label>User ID: </label>
+                {/* <label>User ID: </label>
                 <input
                   name="userId"
                   value={updateBlog.userId}
                   onChange={(e) =>
                     setUpdateBlog({ ...updateBlog, userId: e.target.value })
                   }
-                />
+                /> */}
 
                 <label>Blog title: </label>
                 <input
@@ -409,7 +409,7 @@ const BlogManagement = () => {
             <h2>Add Blog</h2>
             <div className="row">
               <div className="col-6">
-                <label>User ID: </label>
+                {/* <label>User ID: </label>
                 <input
                   name="userId"
                   placeholder="Enter user id"
@@ -417,7 +417,7 @@ const BlogManagement = () => {
                   onChange={(e) =>
                     setNewBlog({ ...newBlog, userId: e.target.value })
                   }
-                />
+                /> */}
 
                 <label>Blog title: </label>
                 <input

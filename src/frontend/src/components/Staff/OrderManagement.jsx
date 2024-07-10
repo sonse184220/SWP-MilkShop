@@ -16,6 +16,7 @@ import { GetAllPreOrders } from "../../services/staff/pre-order/getAllPreOrder";
 import { UpdatePreOrderStatus } from "../../services/staff/pre-order/updatePreOrderStatus";
 import { UpdatePreOrderETA } from "../../services/staff/pre-order/updatePreOrderETA";
 import { UpdateOrderPaymentStatus } from "../../services/staff/ordermanage/updatePaymentStatus";
+import { UpdatePreOrderPaymentStatus } from "../../services/staff/pre-order/updatePOPaymentStatus";
 
 const OrderManagement = () => {
   const navigate = useNavigate();
@@ -257,6 +258,28 @@ const OrderManagement = () => {
   const handleUpdateOrderPaymentStatus = async (orderId) => {
     try {
       const response = await UpdateOrderPaymentStatus(StaffToken, orderId);
+      if (response.data[0].OrderID) {
+        handleGetAllOrders();
+        toast.success("Payment Status update successfully", {
+          duration: 3000,
+          position: "top-right",
+        });
+      }
+    } catch (error) {
+
+    }
+  }
+
+  const handleUpdatePreOrderPaymentStatus = async (orderId) => {
+    try {
+      const response = await UpdatePreOrderPaymentStatus(StaffToken, orderId);
+      if (response.data[0].PreorderID) {
+        handleGetAllPreOrders();
+        toast.success("Payment Status update successfully", {
+          duration: 3000,
+          position: "top-right",
+        });
+      }
     } catch (error) {
 
     }
@@ -525,7 +548,7 @@ const OrderManagement = () => {
                       <div className="select1">
                         {order.PaymentStatus === 'Pending' ? (
                           <button
-                            onClick={() => setIsStatusChangeOpen(false)}
+                            onClick={() => handleUpdatePreOrderPaymentStatus(order.PreorderID)}
                             className="btn-confirm"
                           >
                             Done
@@ -635,10 +658,27 @@ const OrderManagement = () => {
                   </td>
                   <td>
                     <div className="select1">
-                      <select id="statusDropdown">
+                      {/* <select id="statusDropdown">
                         <option value="Pending">Pending</option>
                         <option value="Done">Done</option>
-                      </select>
+                      </select> */}
+                      {order.PaymentStatus === 'Pending' ? (
+                        <button
+                          onClick={() => handleUpdateOrderPaymentStatus(order.OrderID)}
+                          className="btn-confirm"
+                        >
+                          Done
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => setIsStatusChangeOpen(false)}
+                          className="btn-confirm"
+                          disabled
+                          style={{ opacity: 0.5, cursor: 'not-allowed' }}
+                        >
+                          Done
+                        </button>
+                      )}
                     </div>
                   </td>
                 </tr>

@@ -16,6 +16,7 @@ import handleGetAllProduct from "../../services/product/getAllProductService";
 import getProductById from "../../services/product/getProductByID";
 import { UpdateProduct } from "../../services/staff/product/updateProduct";
 import { AddProduct } from "../../services/staff/product/addProduct";
+import { handleAllBrand } from "../../services/brand/getAllBrand";
 
 function ProductManagement() {
   const navigate = useNavigate();
@@ -30,6 +31,8 @@ function ProductManagement() {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [pageCount, setPageCount] = useState(1);
+
+  const [brands, setBrands] = useState([]);
 
   const [products, setProducts] = useState([]);
   const [updateProduct, setUpdateProduct] = useState({
@@ -181,12 +184,12 @@ function ProductManagement() {
       if (imageFile) {
         formData.append("image", imageFile);
       }
-      formData.append("ProductID", newProduct.ProductID);
+      // formData.append("ProductID", newProduct.ProductID);
       formData.append("Name", newProduct.Name);
       formData.append("Price", newProduct.Price);
       formData.append("Expiration", newProduct.Expiration);
       formData.append("Quantity", newProduct.Quantity);
-      formData.append("Status", "Available");
+      formData.append("Status", "available");
       formData.append("Content", newProduct.Content);
       formData.append("BrandID", newProduct.BrandID);
       // formData.append("Status", "out-of-stock");
@@ -221,8 +224,20 @@ function ProductManagement() {
     }
   };
 
+  const handleGetAllBrand = async () => {
+    try {
+      const response = await handleAllBrand();
+      if (response.data.length > 0) {
+        setBrands(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching brands:", error);
+    }
+  }
+
   useEffect(() => {
     handleGetProducts();
+    handleGetAllBrand();
   }, []);
 
   useEffect(() => {
@@ -374,7 +389,7 @@ function ProductManagement() {
                     }
                   />
                   <label htmlFor="brandId">BrandID: </label>
-                  <input
+                  {/* <input
                     id="brandId"
                     value={updateProduct.BrandID}
                     onChange={(e) =>
@@ -383,7 +398,24 @@ function ProductManagement() {
                         BrandID: e.target.value,
                       })
                     }
-                  />
+                  /> */}
+                  <select
+                    id="brandId"
+                    value={updateProduct.BrandID}
+                    onChange={(e) =>
+                      setUpdateProduct({
+                        ...updateProduct,
+                        BrandID: e.target.value,
+                      })
+                    }
+                  >
+                    <option value="">Select a brand</option>
+                    {brands.map((brand) => (
+                      <option key={brand.BrandID} value={brand.BrandID}>
+                        {brand.Name}
+                      </option>
+                    ))}
+                  </select>
                   <label htmlFor="description">Description: </label>
                   <ReactQuill
                     theme="snow"
@@ -443,6 +475,21 @@ function ProductManagement() {
                     style={{ border: "none", width: "100%" }}
                     onChange={handleFileChange}
                   />
+
+                  <label htmlFor="status">Status: </label>
+                  <select
+                    id="status"
+                    value={updateProduct.Status}
+                    onChange={(e) =>
+                      setUpdateProduct({
+                        ...updateProduct,
+                        Status: e.target.value,
+                      })
+                    }
+                  >
+                    <option value="available">Available</option>
+                    <option value="unavailable">Unavailable</option>
+                  </select>
                 </div>
               </div>
               <div className="modal-actions-product">
@@ -470,7 +517,7 @@ function ProductManagement() {
               <h2>Add Product</h2>
               <div className="row">
                 <div className="col-6">
-                  <label htmlFor="newProductId">ProductID: </label>
+                  {/* <label htmlFor="newProductId">ProductID: </label>
                   <input
                     type="text"
                     id="newProductId"
@@ -481,7 +528,7 @@ function ProductManagement() {
                         ProductID: e.target.value,
                       })
                     }
-                  />
+                  /> */}
                   <label htmlFor="newProductName">Product Name: </label>
                   <input
                     id="newProductName"
@@ -491,13 +538,27 @@ function ProductManagement() {
                     }
                   />
                   <label htmlFor="newBrandId">BrandID: </label>
-                  <input
+                  {/* <input
                     id="newBrandId"
                     value={newProduct.BrandID}
                     onChange={(e) =>
                       setNewProduct({ ...newProduct, BrandID: e.target.value })
                     }
-                  />
+                  /> */}
+                  <select
+                    id="newBrandId"
+                    value={newProduct.BrandID}
+                    onChange={(e) =>
+                      setNewProduct({ ...newProduct, BrandID: e.target.value })
+                    }
+                  >
+                    <option value="">Select a brand</option>
+                    {brands.map((brand) => (
+                      <option key={brand.BrandID} value={brand.BrandID}>
+                        {brand.Name}
+                      </option>
+                    ))}
+                  </select>
                   <label htmlFor="newDescription">Description: </label>
                   <ReactQuill
                     theme="snow"

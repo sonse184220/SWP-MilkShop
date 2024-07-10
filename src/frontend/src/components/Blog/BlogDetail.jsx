@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import he from 'he';
 import { useParams } from "react-router-dom";
 import { blogDetail } from "../../services/blog/blogDetail"; // Adjust the path as per your structure
 import "./BlogDetail.css";
@@ -68,10 +69,11 @@ const BlogDetail = ({ isMember }) => {
                 <span className="blog-author">{blog.Author}</span>
               </div>
               <div className="blog-content">
-                <p>{blog.Content}</p>
+                {/* <p>{blog.Content}</p> */}
+                <div dangerouslySetInnerHTML={{ __html: he.decode(blog.Content) }}></div>
               </div>
               <div className="blog-detail-image">
-                <img src={getImageSrc(blog.Image)} />
+                <img src={`data:image/jpeg;base64,${blog.Image}`} />
               </div>
 
 

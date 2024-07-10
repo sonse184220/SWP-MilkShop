@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   LineChart,
   Line,
@@ -13,8 +13,13 @@ import {
 } from "recharts";
 import "./Dashboard.css";
 import SidebarAdmin from "./SidebarAdmin";
+import { GetMonthlyRevenue } from "../../services/admin/getMonthlyRevenue";
 
 const Dashboard = () => {
+  const AdminToken = "Bearer " + sessionStorage.getItem("token");
+
+  const [monthlyRevenue, setMonthlyRevenue] = useState([]);
+
   const lineData = [
     { name: "23 Nov", revenue: 24000 },
     { name: "24 Nov", revenue: 25000 },
@@ -46,6 +51,22 @@ const Dashboard = () => {
       dropdownRef.current.classList.toggle("dropdown-menu");
     }
   };
+
+  const handleGetMonthlyRevenue = async () => {
+    try {
+      const response = await GetMonthlyRevenue(AdminToken);
+      if (response.data.monthlyRevenue) {
+        setMonthlyRevenue(response.data.monthlyRevenue);
+      }
+    } catch (error) {
+
+    }
+  }
+
+  useEffect(() => {
+    handleGetMonthlyRevenue();
+  }, [])
+
   return (
     <>
       <div className="row">
@@ -89,17 +110,17 @@ const Dashboard = () => {
             <div className="chart">
               <h3>Revenue Over Time</h3>
               <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={lineData}>
+                <LineChart data={monthlyRevenue} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
+                  <XAxis dataKey="month" />
                   <YAxis />
                   <Tooltip />
                   <Legend />
                   <Line
-                    type="monotone"
-                    dataKey="revenue"
+                    // type="monotone"
+                    dataKey="totalRevenue"
                     stroke="#8884d8"
-                    activeDot={{ r: 8 }}
+                    activeDot={{ r: 5 }}
                   />
                 </LineChart>
               </ResponsiveContainer>

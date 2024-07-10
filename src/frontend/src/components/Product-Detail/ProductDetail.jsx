@@ -1,5 +1,8 @@
 import './ProductDetail.css'
 import { ToastContainer, toast } from 'react-toastify';
+import ReactReadMoreReadLess from "react-read-more-read-less";
+import he from 'he';
+
 import 'react-toastify/dist/ReactToastify.css';
 import Modal from 'react-modal';
 
@@ -341,6 +344,19 @@ const ProductDetail = ({ isMember }) => {
         }));
     };
 
+    const decodeContent = (content) => {
+        if (!content) return '';
+        // First, decode the HTML entities
+        const decodedContent = he.decode(content);
+        // Then, remove any HTML tags
+        return decodedContent.replace(/<[^>]*>/g, '');
+    };
+
+    const truncateContent = (content, maxLength) => {
+        const decodedContent = decodeContent(content);
+        if (decodedContent.length <= maxLength) return decodedContent;
+        return decodedContent.substr(0, maxLength) + '...';
+    };
 
     useEffect(() => {
         handleGetProductByID();
@@ -356,20 +372,6 @@ const ProductDetail = ({ isMember }) => {
             handleGetRelatedProduct();
         }
     }, [CurrentProduct]);
-
-    const getImageSrc = (imageData) => {
-        if (!imageData || !imageData.data) return '';
-
-        try {
-            const base64 = btoa(
-                imageData.data.reduce((data, byte) => data + String.fromCharCode(byte), '')
-            );
-            return `data:image/jpeg;base64,${base64}`;
-        } catch (error) {
-            console.error('Error converting image data:', error);
-            return '';
-        }
-    };
 
     return (
         <div className='body'>
@@ -493,7 +495,20 @@ const ProductDetail = ({ isMember }) => {
                             <div className="product-details-text">
                                 <h4 className="title">{CurrentProduct.Name}</h4>
                                 <div className="price">{CurrentProduct.Price.toLocaleString()} VND</div>
-                                <p>{CurrentProduct.Content}</p>
+                                {/* <p>{CurrentProduct.Content}</p> */}
+
+                                <>
+                                    <ReactReadMoreReadLess
+                                        charLimit={200}
+                                        readMoreText={"Read more ▼"}
+                                        readLessText={"Read less ▲"}
+                                        readMoreClassName="read-more-less--more"
+                                        readLessClassName="read-more-less--less"
+                                    >
+                                        {decodeContent(CurrentProduct.Content)}
+                                    </ReactReadMoreReadLess>
+                                </>
+
                             </div>
                             <div className="product-details-variable">
                                 <h4 className="title">Available Options</h4>
