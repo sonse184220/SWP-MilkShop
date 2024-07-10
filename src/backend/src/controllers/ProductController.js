@@ -115,7 +115,25 @@ export class ProductController {
             res.status(500).json({ error: error.message });
         }
     };
+    getAvailableProducts = async (req, res) => {
+        const page = parseInt(req.query.page, 10) || 1;
+        const limit = parseInt(req.query.limit, 10) || 10;
 
+        try {
+            const products = await productService.getAvailableProducts(page, limit);
+            const totalProducts = await productService.getTotalAvaialbleProducts();
+            const totalPages = Math.ceil(totalProducts / limit);
+
+            res.status(200).json({
+                products,
+                totalProducts,
+                totalPages,
+                currentPage: page
+            });
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    };
     async createFeedback(req, res) {
         const productId = req.params.id;
         const userId = req.user.userId;

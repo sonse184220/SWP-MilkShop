@@ -93,6 +93,21 @@ export class ProductService {
         const count = total[0].count;
         return count;
     }
+
+    async getAvailableProducts(page, limit) {
+        const offset = (page - 1) * limit;
+        const query = 'SELECT * FROM PRODUCT where status = "Available" LIMIT ? OFFSET ? ';
+        const [results] = await poolConnect.query(query, [limit, offset]);
+        return results;
+    }
+
+    async getTotalAvaialbleProducts() {
+        const query = 'SELECT COUNT(*) as count FROM PRODUCT where status = "Available"';
+
+        const [total] = await poolConnect.query(query);
+        const count = total[0].count;
+        return count;
+    }
     // lấy feedback bằng id của nó
     async getFeedback(id) {
         const [feedback] = await poolConnect.query("Select * FROM feedback WHERE FeedbackID = ?", [id]);
