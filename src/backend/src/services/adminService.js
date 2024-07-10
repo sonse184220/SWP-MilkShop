@@ -91,5 +91,30 @@ export class AdminService {
 
         return { monthlyRevenue, status: 200 };
     }
+    async getWeeklyRevenue() {
+        const query = `
+            Select 
+                WEEK(created, 1) AS week, 
+                SUM(TotalPrice) AS totalRevenue 
+            from (
+                SELECT TotalPrice, created FROM \`order\` WHERE Status = 'Done'
+                UNION ALL
+                SELECT TotalPrice, created FROM \`pre_order\` WHERE Status = 'Done'
+            ) as combined_orders
+            WHERE MONTH(created) = MONTH(CURRENT_DATE())
+            AND YEAR(created) = YEAR(CURRENT_DATE())
+            GROUP BY WEEK(created, 1)
+        `;
+
+        const [results] = await poolConnect.query(query);
+        const month = new Date().toLocaleString('default', { month: 'long' });
+
+        const weeks = results.map((result, index) => ({
+            Week: index + 1,
+            totalRevenue: result.totalRevenue || 0
+        }));
+
+        return { Month: month, Weeks: weeks, status: 200 };
+    }
 
 }
