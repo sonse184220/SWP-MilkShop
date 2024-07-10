@@ -9,8 +9,7 @@ export const checkAuthenticated = async (req, res, next) => {
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        req.user = { userId: 'guest' };
-        return next();
+        return res.status(401).json({ message: 'Invalid token header' });
     }
 
     const token = authHeader.split(' ')[1];

@@ -9,7 +9,7 @@ import { checkPaginationQuery } from "../middlewares/utilsMiddleware.js";
 const router = Router();
 const productController = new ProductController();
 const upload = multer();
-
+router.get('/api/available-products', productController.getAvailableProducts);
 router.get('/api/products', productController.getAllProducts);
 
 /** URL: localhost:xxxx/api/product/{...}
