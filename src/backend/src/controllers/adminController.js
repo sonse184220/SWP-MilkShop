@@ -35,8 +35,17 @@ export class AdminController {
         try {
             const page = parseInt(req.query.page, 10) || 1;
             const limit = parseInt(req.query.limit, 10) || 10;
-            const result = await adminService.getAllAccounts(page, limit);
-            res.status(200).json(result);
+    
+            const accounts = await adminService.getAllAccounts(page, limit);
+            const totalAccounts = await adminService.getTotalAccounts();
+            const totalPages = Math.ceil(totalAccounts / limit);
+    
+            res.status(200).json({
+                accounts,
+                totalAccounts,
+                totalPages,
+                currentPage: page
+            });
         } catch (err) {
             res.status(500).json({ error: err.message });
         }

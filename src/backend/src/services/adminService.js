@@ -49,4 +49,10 @@ export class AdminService {
         const total = countResults[0].total;
         return { accounts: results, total }
     }
-}
+    async getTotalAccounts() {
+        const query = `Select count(*) as count from user`;
+        const [total] = await poolConnect.query(query);
+        const count = total[0].count;
+        return count;
+    }
+        }
