@@ -8,8 +8,6 @@ import { checkUserId } from '../middlewares/userValidators.js';
 import { checkPaginationQuery } from '../middlewares/utilsMiddleware.js';
 import { checkChangePassword, checkImageUpload } from '../middlewares/validationMiddleware.js';
 import multer from 'multer';
-import { checkOrderId, checkOrderInputStatus } from '../middlewares/orderValidators.js';
-import { checkPreorderId, checkPreorderInputStatus } from '../middlewares/preorderValidators.js';
 
 dotenv.config();
 

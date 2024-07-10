@@ -1,6 +1,8 @@
 import { OrderService } from '../services/orderService.js';
+import { UserService } from '../services/userService.js';
 
 const orderService = new OrderService();
+const userService = new UserService();
 
 export class OrderController {
     async getOrderById(req, res) {
@@ -128,13 +130,27 @@ export class OrderController {
             const order = await orderService.getOrder(orderId);
             if (order.length === 0) {
                 return res.status(404).send({ error: "Order not found!" });
+            } else if (order[0].Status === status) {
+                return res.status(200).send(order);
             }
 
             const updatingOrder = await orderService.updateOrderStatus(orderId, status);
-            if (updatingOrder.affectedRows === 0 && order[0].Status === status) {
-                return res.status(200).send(order);
-            } else if (updatingOrder.affectedRows === 0) {
+            if (updatingOrder.affectedRows === 0) {
                 return res.status(500).send({ error: "Cant update order status!" });
+            }
+
+            if (status === "Cancelled") {
+                const rewardpointsDeduct = -Math.floor(order[0].TotalPrice * 0.02);
+                const updateRewardpoints = await userService.updateUserRewardPoints(order[0].UserID, rewardpointsDeduct);
+                if (updateRewardpoints.affectedRows === 0) {
+                    return res.status(500).send({ error: "Failed to update user RewardPoints!" });
+                }
+            } else if (status !== "Cancelled" && order[0].Status === "Cancelled") {
+                const rewardpointsGain = Math.floor(order[0].TotalPrice * 0.02);
+                const updateRewardpoints = await userService.updateUserRewardPoints(order[0].UserID, rewardpointsGain);
+                if (updateRewardpoints.affectedRows === 0) {
+                    return res.status(500).send({ error: "Failed to update user RewardPoints!" });
+                }
             }
 
             const updatedOrder = await orderService.getOrder(orderId);
@@ -162,6 +178,12 @@ export class OrderController {
             const updatingOrder = await orderService.updateOrderStatusCancel(orderId);
             if (updatingOrder.affectedRows === 0) {
                 return res.status(500).send({ error: "Failed to update order status!" });
+            }
+
+            const rewardpointsDeduct = -Math.floor(order[0].TotalPrice * 0.02);
+            const updateRewardpoints = await userService.updateUserRewardPoints(order[0].UserID, rewardpointsDeduct);
+            if (updateRewardpoints.affectedRows === 0) {
+                return res.status(500).send({ error: "Failed to update user RewardPoints!" });
             }
 
             const updatedOrder = await orderService.getOrder(orderId);

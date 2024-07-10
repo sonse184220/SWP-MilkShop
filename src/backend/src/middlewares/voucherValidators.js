@@ -56,13 +56,6 @@ export async function checkVoucherData(req, res, next) {
 }
 
 export async function checkVoucherUpdateData(req, res, next) {
-    await body("discount")
-    .optional({ values: "falsy" })
-    .trim()
-    .escape()
-    .isInt({ min: 1, max: 20, allow_leading_zeroes: false }).withMessage("Discount must be an integer and no more than 20!")
-    .run(req);
-
     await body("quantity")
     .optional({ values: "falsy" })
     .trim()

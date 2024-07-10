@@ -131,13 +131,27 @@ export class PreorderController {
         const preorder = await preorderService.getPreorder(preorderId);
         if (preorder.length === 0) {
             return res.status(404).send({ error: "Pre-order not found!" });
+        } else if (preorder[0].Status === status) {
+            return res.status(200).send(preorder);
         }
 
         const updatingPreorder = await preorderService.updatePreorderStatus(preorderId, status);
-        if (updatingPreorder.affectedRows === 0 && preorder[0].Status === status) {
-            return res.status(200).send(preorder);
-        } else if (updatingPreorder.affectedRows === 0) {
+        if (updatingPreorder.affectedRows === 0) {
             return res.status(500).send({ error: "Cant update pre-order status!" });
+        }
+
+        if (status === "Cancelled") {
+            const rewardpointsDeduct = -Math.floor(preorder[0].TotalPrice * 0.02);
+            const updateRewardpoints = await userService.updateUserRewardPoints(preorder[0].UserID, rewardpointsDeduct);
+            if (updateRewardpoints.affectedRows === 0) {
+                return res.status(500).send({ error: "Failed to update user RewardPoints!" });
+            }
+        } else if (status !== "Cancelled" && preorder[0].Status === "Cancelled") {
+            const rewardpointsGain = Math.floor(preorder[0].TotalPrice * 0.02);
+            const updateRewardpoints = await userService.updateUserRewardPoints(preorder[0].UserID, rewardpointsGain);
+            if (updateRewardpoints.affectedRows === 0) {
+                return res.status(500).send({ error: "Failed to update user RewardPoints!" });
+            }
         }
 
         const updatedPreorder = await preorderService.getPreorder(preorderId);
@@ -162,6 +176,12 @@ export class PreorderController {
             return res.status(500).send({ error: "Failed to update pre-order status!" });
         }
 
+        const rewardpointsDeduct = -Math.floor(preorder[0].TotalPrice * 0.02);
+        const updateRewardpoints = await userService.updateUserRewardPoints(preorder[0].UserID, rewardpointsDeduct);
+        if (updateRewardpoints.affectedRows === 0) {
+            return res.status(500).send({ error: "Failed to update user RewardPoints!" });
+        }
+        
         const updatedPreorder = await preorderService.getPreorder(preorderId);
         return res.status(200).send(updatedPreorder);
     }
