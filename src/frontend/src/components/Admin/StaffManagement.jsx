@@ -1,36 +1,49 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import ReactPaginate from "react-paginate";
+
 import "./StaffManagement.css"; // Import CSS file
 import Sidebar from "./SidebarAdmin";
 import Modal from "react-modal";
+import { GetAllAccount } from "../../services/admin/getAllAccount";
 
 const StaffManagement = () => {
+  const AdminToken = "Bearer " + sessionStorage.getItem("token");
+
   const [isOpen, setIsOpen] = useState(false);
   const [isAddOpen, setIsAddOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  const [staffMembers, setStaffMembers] = useState([
-    {
-      StaffID: 1,
-      StaffName: "John Doe",
-      JoinedDate: "2024-01-01",
-      Position: "Manager",
-      Email: "john.doe@example.com",
-      updated: "2024-01-02",
-    },
-    {
-      StaffID: 2,
-      StaffName: "Jane Smith",
-      JoinedDate: "2024-02-01",
-      Position: "Assistant",
-      Email: "jane.smith@example.com",
-      updated: "2024-02-02",
-    },
-  ]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageCount, setPageCount] = useState(1);
+
+  const [staffMembers, setStaffMembers] = useState([]);
+
+  const handleGetAllAccount = async () => {
+    try {
+      let limit = 5;
+      let page = currentPage;
+      let sort = "";
+      const response = await GetAllAccount(AdminToken, page, limit);
+      if (response.data.total > 0) {
+        setStaffMembers(response.data.accounts);
+      }
+    } catch (error) {
+
+    }
+  }
+
+  useEffect(() => {
+    handleGetAllAccount();
+  }, [])
 
   const toggleDropdown = () => {
     if (dropdownRef.current) {
       dropdownRef.current.classList.toggle("dropdown-menu");
     }
+  };
+
+  const handlePageClick = (event) => {
+    setCurrentPage(event.selected + 1);
   };
 
   return (
@@ -106,7 +119,27 @@ const StaffManagement = () => {
                 </tr>
               ))}
             </tbody>
+
           </table>
+          <div style={{ marginTop: '15px' }}>
+            <ReactPaginate
+              breakLabel="..."
+              nextLabel="Next >"
+              onPageChange={handlePageClick}
+              pageRangeDisplayed={5}
+              pageCount={pageCount}
+              previousLabel="< Previous"
+              renderOnZeroPageCount={null}
+              containerClassName="pagination justify-content-center"
+              pageClassName="page-item"
+              pageLinkClassName="page-link"
+              previousClassName="page-item"
+              previousLinkClassName="page-link"
+              nextClassName="page-item"
+              nextLinkClassName="page-link"
+              activeClassName="active"
+            />
+          </div>
           <Modal
             isOpen={isOpen}
             onRequestClose={() => setIsOpen(false)}

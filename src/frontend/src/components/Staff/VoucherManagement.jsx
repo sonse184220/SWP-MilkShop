@@ -32,20 +32,20 @@ const VoucherManagement = () => {
     Content: "",
   });
   const [updatedVoucherInfo, setUpdatedVoucherInfo] = useState({
-    Discount: "",
-    Quantity: "",
-    Content: "",
+    discount: "",
+    quantity: "",
+    content: "",
   });
 
   const [voucherID, setVoucherID] = useState("");
   const openUpdateModal = (voucher) => {
     if (voucher) {
       setUpdatedVoucherInfo({
-        Discount: voucher.Discount ? voucher.Discount.toString() : "",
-        Quantity: voucher.VoucherQuantity
+        discount: voucher.Discount ? parseInt(voucher.Discount) : "",
+        quantity: voucher.VoucherQuantity
           ? voucher.VoucherQuantity.toString()
           : "",
-        Content: voucher.Content || "",
+        content: voucher.Content || "",
       });
       setVoucherID(voucher.VoucherID);
       setIsOpen(true);
@@ -98,20 +98,20 @@ const VoucherManagement = () => {
     };
 
     const voucherData = {
-      Discount: parseInt(newVoucher.Discount, 10),
-      Quantity: parseInt(newVoucher.VoucherQuantity, 10),
-      Expiration: formatDate(newVoucher.Expiration),
-      Content: newVoucher.Content.trim(),
+      discount: parseInt(newVoucher.Discount, 10),
+      quantity: parseInt(newVoucher.VoucherQuantity, 10),
+      expiration: formatDate(newVoucher.Expiration),
+      content: newVoucher.Content.trim(),
     };
 
     if (
-      isNaN(voucherData.Discount) ||
-      isNaN(voucherData.Quantity) ||
-      voucherData.Discount <= 0 ||
-      voucherData.Discount > 20 ||
-      voucherData.Quantity <= 1 ||
-      !voucherData.Expiration ||
-      !voucherData.Content
+      isNaN(voucherData.discount) ||
+      isNaN(voucherData.quantity) ||
+      voucherData.discount <= 0 ||
+      voucherData.discount > 20 ||
+      voucherData.quantity <= 1 ||
+      !voucherData.expiration ||
+      !voucherData.content
     ) {
       console.error("Invalid voucher data", voucherData);
       toast.error("Invalid voucher data. Please check the inputs.", {
@@ -174,7 +174,7 @@ const VoucherManagement = () => {
 
   const handleUpdateVoucher = async () => {
     try {
-      const response = await addVoucher(
+      const response = await UpdateVoucher(
         StaffToken,
         voucherID,
         updatedVoucherInfo
@@ -292,7 +292,7 @@ const VoucherManagement = () => {
                     <td className="deleteDiv">
                       <div className="delete">
                         <button className="delete-button">
-                          <a href="#" onClick={() => openUpdateModal(voucher)}>
+                          <a href="#" onClick={(e) => { e.preventDefault(); openUpdateModal(voucher) }}>
                             Update
                           </a>
                         </button>
@@ -334,11 +334,11 @@ const VoucherManagement = () => {
             <label htmlFor="">Voucher Discount: </label>
             <input
               placeholder="Enter new voucher discount"
-              value={updatedVoucherInfo.Discount}
+              value={updatedVoucherInfo.discount}
               onChange={(e) =>
                 setUpdatedVoucherInfo({
                   ...updatedVoucherInfo,
-                  Discount: e.target.value,
+                  discount: e.target.value,
                 })
               }
             />{" "}
@@ -346,11 +346,11 @@ const VoucherManagement = () => {
             <label htmlFor="">Voucher Quantity: </label>{" "}
             <input
               placeholder="Enter new voucher quantity"
-              value={updatedVoucherInfo.Quantity}
+              value={updatedVoucherInfo.quantity}
               onChange={(e) =>
                 setUpdatedVoucherInfo({
                   ...updatedVoucherInfo,
-                  Quantity: e.target.value,
+                  quantity: e.target.value,
                 })
               }
             />{" "}
@@ -358,11 +358,11 @@ const VoucherManagement = () => {
             <label htmlFor="">Voucher Content: </label>{" "}
             <input
               placeholder="Enter new voucher content"
-              value={updatedVoucherInfo.Content}
+              value={updatedVoucherInfo.content}
               onChange={(e) =>
                 setUpdatedVoucherInfo({
                   ...updatedVoucherInfo,
-                  Content: e.target.value,
+                  content: e.target.value,
                 })
               }
             />{" "}

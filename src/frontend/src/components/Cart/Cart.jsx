@@ -24,6 +24,7 @@ import { UserInfoForm } from "../UserInfoForm/UserInfoForm";
 import { getUser } from "../../services/editprofile/getUser";
 import { MemberOrder } from "../../services/order/memberOrder";
 import { GetAllVouchers } from "../../services/voucher/GetAllVouchers";
+import { GetAllVouchersMember } from "../../services/voucher/getVoucherMember";
 
 export const Cart = ({ isMember }) => {
   const navigate = useNavigate();
@@ -36,6 +37,7 @@ export const Cart = ({ isMember }) => {
     Address: "",
     RewardPoints: "",
     useRewardPoints: false,
+    paymentMethod: "COD",
   });
   const [vouchers, setVouchers] = useState([]);
   const [AppliedVoucher, setAppliedVoucher] = useState(null);
@@ -47,7 +49,7 @@ export const Cart = ({ isMember }) => {
   const handleGetVouchers = async () => {
     try {
       // const MemberToken = 'Bearer ' + localStorage.getItem('token');
-      const response = await GetAllVouchers(MemberToken);
+      const response = await GetAllVouchersMember(MemberToken);
       if (Array.isArray(response.data)) setVouchers(response.data);
     } catch (error) {
       console.log(error);
@@ -58,7 +60,7 @@ export const Cart = ({ isMember }) => {
     try {
       // const MemberToken = 'Bearer ' + localStorage.getItem('token');
       const OrderInfo = {
-        PaymentMethod: "COD",
+        PaymentMethod: userFormData.paymentMethod,
         VoucherIDs: AppliedVoucher ? [AppliedVoucher] : [],
         useRewardPoints: userFormData.useRewardPoints,
         Name: userFormData.Name,
@@ -100,6 +102,7 @@ export const Cart = ({ isMember }) => {
           Address: user.Address,
           RewardPoints: user.RewardPoints,
           useRewardPoints: false,
+          paymentMethod: "COD",
         });
       }
     } catch (error) { }
