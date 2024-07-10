@@ -9,8 +9,8 @@ const adminController = new AdminController();
 
 router.post('/disable-account', checkAuthenticated, isAdmin, adminController.disableAccount);
 router.post('/enable-account', checkAuthenticated, isAdmin, adminController.enableAccount);
-router.get('/total-revenue', checkAuthenticated, isAdmin, adminController.getTotalRevenue);
+router.get('/total-revenue', checkAuthenticated, isAdmin, adminController.getTotalRevenue); //cái này lấy doanh thu của tháng hiện tại//
 router.get('/accounts', checkAuthenticated, isAdmin, adminController.getAllAccounts);
-router.get('/monthly-revenue', checkAuthenticated, isAdmin, adminController.getMonthlyRevenue);
+router.get('/monthly-revenue', checkAuthenticated, isAdmin, adminController.getMonthlyRevenue); //cái này lấy doanh thu tất cả tháng trong năm//
 
 export { router as adminRoutes };
