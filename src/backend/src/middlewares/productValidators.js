@@ -77,7 +77,6 @@ export async function checkFeedbackData(req, res, next) {
 
     await body("content")
         .trim()
-        .escape()
         .exists().withMessage("Feedback content is required!")
         .notEmpty().withMessage("Feedback content can not be blank!")
         .run(req);
@@ -112,7 +111,6 @@ export async function checkFeedbackSearchInput(req, res, next) {
     await query("content")
     .default("")
     .trim()
-    .escape()
     .run(req);
 
     await query("fuid")

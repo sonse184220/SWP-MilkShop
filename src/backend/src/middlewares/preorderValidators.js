@@ -83,7 +83,6 @@ export async function checkPreorderData(req, res, next) {
 
     await body("email")
     .trim()
-    .escape()
     .exists().withMessage("Email is required!")
     .notEmpty().withMessage("Email can not be blank!")
     .isEmail().withMessage("Invalid email!")
@@ -99,7 +98,6 @@ export async function checkPreorderData(req, res, next) {
 
     await body("address")
     .trim()
-    .escape()
     .exists().withMessage("Address is required!")
     .notEmpty().withMessage("Address can not be blank!")
     .run(req);

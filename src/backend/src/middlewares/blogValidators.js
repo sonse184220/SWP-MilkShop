@@ -22,7 +22,6 @@ export async function checkBlogSearch(req, res, next) {
     await query("content")
         .default("")
         .trim()
-        .escape()
         .run(req);
 
     const result = validationResult(req);
@@ -72,14 +71,12 @@ export async function checkBlogData(req, res, next){
     .exists().withMessage('Title is required')
     .notEmpty().withMessage('Title cannot be empty')
     .trim()
-    .escape()
     .run(req);
 
     await body("content")
     .exists().withMessage('Content is required')
     .notEmpty().withMessage('Content cannot be empty')
     .trim()
-    .escape()
     .run(req);
 
     await body("productList")
@@ -105,7 +102,7 @@ export async function checkBlogData(req, res, next){
         return res.status(400).send({ error: result.array() });
     }
     
-    Object.assign(req.query, matchedData(req));
+    Object.assign(req.body, matchedData(req));
     next();
 }
 
@@ -113,13 +110,11 @@ export async function checkBlogUpdateData(req, res, next){
     await body("title")
     .optional({ values: "falsy" })
     .trim()
-    .escape()
     .run(req);
 
     await body("content")
     .optional({ values: "falsy" })
     .trim()
-    .escape()
     .run(req);
 
     await body("productList")
