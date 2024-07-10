@@ -5,6 +5,10 @@ import "./StaffManagement.css"; // Import CSS file
 import Sidebar from "./SidebarAdmin";
 import Modal from "react-modal";
 import { GetAllAccount } from "../../services/admin/getAllAccount";
+import { DisableAccount } from "../../services/admin/disableAccount";
+import { EnableAccount } from "../../services/admin/enableAccount";
+import { toast, ToastContainer } from "react-toastify";
+import { AddStaff } from "../../services/admin/addStaff";
 
 const StaffManagement = () => {
   const AdminToken = "Bearer " + sessionStorage.getItem("token");
@@ -18,14 +22,23 @@ const StaffManagement = () => {
 
   const [staffMembers, setStaffMembers] = useState([]);
 
+  const [newStaff, setNewStaff] = useState({
+    Password: "",
+    Name: "",
+    Email: "",
+    Phone: "",
+    Address: ""
+  });
+
   const handleGetAllAccount = async () => {
     try {
       let limit = 5;
       let page = currentPage;
       let sort = "";
       const response = await GetAllAccount(AdminToken, page, limit);
-      if (response.data.total > 0) {
-        setStaffMembers(response.data.accounts);
+      if (response.data.totalAccounts > 0) {
+        setStaffMembers(response.data.accounts.accounts);
+        setPageCount(response.data.totalPages);
       }
     } catch (error) {
 
@@ -34,7 +47,11 @@ const StaffManagement = () => {
 
   useEffect(() => {
     handleGetAllAccount();
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    handleGetAllAccount();
+  }, [currentPage])
 
   const toggleDropdown = () => {
     if (dropdownRef.current) {
@@ -46,12 +63,82 @@ const StaffManagement = () => {
     setCurrentPage(event.selected + 1);
   };
 
+  const handleDisable = async (userId) => {
+    try {
+
+      const userID = {
+        "userId": userId
+      }
+
+      const response = await DisableAccount(AdminToken, userID);
+      if (response.data.message) {
+        toast.success(response.data.message, {
+          duration: 3000,
+          position: "top-right",
+          // backgroundColor: 'red',
+          // theme: "warning"
+        });
+        handleGetAllAccount();
+      }
+    } catch (error) {
+
+    }
+  }
+
+  const handleEnable = async (userId) => {
+    try {
+      const userID = {
+        "userId": userId
+      }
+      const response = await EnableAccount(AdminToken, userID);
+      console.log('check');
+      if (response.data.message) {
+        toast.success(response.data.message, {
+          duration: 3000,
+          position: "top-right",
+          theme: 'colored'
+        });
+        console.log('check');
+        handleGetAllAccount();
+      }
+    } catch (error) {
+
+    }
+  }
+
+  const handleAddStaff = async () => {
+    try {
+      const response = await AddStaff(AdminToken, newStaff);
+      if (response.data.message) {
+        toast.success("Staff added successfully", {
+          duration: 3000,
+          position: "top-right",
+        });
+        setIsAddOpen(false);
+        setNewStaff({
+          Password: "",
+          Name: "",
+          Email: "",
+          Phone: "",
+          Address: ""
+        });
+        handleGetAllAccount();
+      }
+    } catch (error) {
+      toast.error("Failed to add staff. Please try again!", {
+        duration: 3000,
+        position: "top-right",
+      });
+    }
+  }
+
   return (
     <div className="staff-management-container">
       <Sidebar />
+      <ToastContainer />
       <div className="content">
         <div className="content-header">
-          <h1>Staff Management</h1>
+          <h1>User Management</h1>
           <header>
             <button className="admin-name" onClick={toggleDropdown}>
               Admin Name
@@ -81,41 +168,61 @@ const StaffManagement = () => {
           <table className="staff-table">
             <thead>
               <tr>
-                <th>StaffID</th>
-                <th>StaffName</th>
-                <th>Position</th>
+                <th>UserID</th>
+                <th>Name</th>
                 <th>Email</th>
-                <th>Joined</th>
-                <th>Updated</th>
-                <th></th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>Is Admin</th>
+                <th>Is Staff</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
-              {staffMembers.map((staff) => (
-                <tr key={staff.StaffID}>
-                  <td>{staff.StaffID}</td>
-                  <td>{staff.StaffName}</td>
-                  <td>{staff.Position}</td>
-                  <td>{staff.Email}</td>
-                  <td>{staff.JoinedDate}</td>
-                  <td>{staff.updated}</td>
+              {staffMembers.map((user) => (
+                <tr key={user.UserID}>
+                  <td>{user.UserID}</td>
+                  <td>{user.Name}</td>
+                  <td>{user.Email}</td>
+                  <td>{user.Phone}</td>
+                  <td>{user.Address}</td>
+                  <td>{user.isAdmin}</td>
+                  <td>{user.isStaff}</td>
+                  {/* <td>{staff.updated}</td> */}
                   <td className="actionDiv">
                     <div className="action">
-                      <button className="action-button">
+                      {/* <button className="action-button">
                         <a href="#" onClick={() => setIsOpen(true)}>
                           Update
                         </a>
-                      </button>
+                      </button> */}
+                      {user.activeStatus === 'active' ? (
+                        <button
+                          onClick={() => handleDisable(user.UserID)}
+                          className="btn-confirm"
+                          style={{ backgroundColor: 'red' }}
+                        >
+                          Disable
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => handleEnable(user.UserID)}
+                          className="btn-confirm"
+                        // disabled
+                        // style={{ opacity: 0.5, cursor: 'not-allowed' }}
+                        >
+                          Enable
+                        </button>
+                      )}
                     </div>
                   </td>
-                  <td className="actionDiv">
+                  {/* <td className="actionDiv">
                     <div className="action">
                       <button className="action-button">
                         <a href="#">Delete</a>
                       </button>
                     </div>
-                  </td>
+                  </td> */}
                 </tr>
               ))}
             </tbody>
@@ -176,27 +283,45 @@ const StaffManagement = () => {
             overlayClassName="custom-overlay-staff"
           >
             <h2>Add Staff</h2>
-            <label>Staff ID: </label>
-            <input name="staffID" placeholder="Enter staff id" />
+            <label>Password: </label>
+            <input
+              type="password"
+              value={newStaff.Password}
+              onChange={(e) => setNewStaff({ ...newStaff, Password: e.target.value })}
+              placeholder="Enter staff password"
+            />
             <br />
             <label>Staff name: </label>
-            <input name="staffName" placeholder="Enter staff name" />
-            <br />
-            <label>Position: </label>
-            <input name="position" placeholder="Enter position" />
+            <input
+              value={newStaff.Name}
+              onChange={(e) => setNewStaff({ ...newStaff, Name: e.target.value })}
+              placeholder="Enter staff name"
+            />
             <br />
             <label>Email: </label>
-            <input name="email" placeholder="Enter email" />
-            <br />
-            <label>Joined date: </label>
             <input
-              name="joinedDate"
-              placeholder="Enter joined date"
-              type="date"
+              type="email"
+              value={newStaff.Email}
+              onChange={(e) => setNewStaff({ ...newStaff, Email: e.target.value })}
+              placeholder="Enter email"
+            />
+            <br />
+            <label>Phone: </label>
+            <input
+              value={newStaff.Phone}
+              onChange={(e) => setNewStaff({ ...newStaff, Phone: e.target.value })}
+              placeholder="Enter phone"
+            />
+            <br />
+            <label>Address: </label>
+            <input
+              value={newStaff.Address}
+              onChange={(e) => setNewStaff({ ...newStaff, Address: e.target.value })}
+              placeholder="Enter address"
             />
             <br />
             <div className="modal-actions-staff">
-              <button onClick={"handleAddStaff"} className="btn-confirm-staff">
+              <button onClick={handleAddStaff} className="btn-confirm-staff">
                 Confirm
               </button>
               <button

@@ -8,11 +8,11 @@ import AdminProfile from '../components/Admin/AdminProfile';
 export function AdminRoutes() {
     return (
         <Routes>
-            <Route path='StaffManagement' element={<StaffManagement/>} />
-            <Route path='MemberManagement' element={<MemberManagement/>} />
-            <Route path='Dashboard' element={<Dashboard/>} />
-            <Route path='AdminProfile' element={<AdminProfile/>} />
-
+            <Route index element={<Navigate to="/Admin/UserManagement" replace />} />
+            <Route path='UserManagement' element={<StaffManagement />} />
+            <Route path='MemberManagement' element={<MemberManagement />} />
+            <Route path='Dashboard' element={<Dashboard />} />
+            <Route path='AdminProfile' element={<AdminProfile />} />
         </Routes>
     )
 }

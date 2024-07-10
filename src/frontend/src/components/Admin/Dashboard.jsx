@@ -50,7 +50,7 @@ const Dashboard = () => {
     <>
       <div className="row">
         <div className="col-lg-2">
-          <SidebarAdmin />
+          <SidebarAdmin style={{ width: '100%' }} />
         </div>
         <div className="col-lg-10 dashboard">
           <div className="content-header">
@@ -71,7 +71,7 @@ const Dashboard = () => {
               </div>
             </header>
           </div>
-          <div className="summary">
+          {/* <div className="summary">
             <div className="summary-item">
               <h2>$45,678.90</h2>
               <p>+20% month over month</p>
@@ -84,7 +84,7 @@ const Dashboard = () => {
               <h2>10,353</h2>
               <p>-8% month over month</p>
             </div>
-          </div>
+          </div> */}
           <div className="charts">
             <div className="chart">
               <h3>Revenue Over Time</h3>
@@ -178,7 +178,7 @@ const Dashboard = () => {
             </table>
           </div>
         </div>
-      </div>
+      </div >
     </>
   );
 };

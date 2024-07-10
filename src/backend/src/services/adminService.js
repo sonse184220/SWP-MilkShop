@@ -41,7 +41,7 @@ export class AdminService {
 
     async getAllAccounts(page, limit) {
         const offset = (page - 1) * limit;
-        const query = `select UserID, Name, Address, Phone, isAdmin,
+        const query = `select UserID, Name, Address, Email, Phone, isAdmin,
          isStaff, activeStatus from \`user\` limit ? offset ? `;
         const [results] = await poolConnect.query(query, [limit, offset]);
         const countQuery = 'select count(*) as total from `user`';
@@ -55,4 +55,4 @@ export class AdminService {
         const count = total[0].count;
         return count;
     }
-        }
+}

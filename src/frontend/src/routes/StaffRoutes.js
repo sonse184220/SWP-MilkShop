@@ -10,12 +10,13 @@ import StaffProfile from '../components/Staff/StaffProfile.jsx';
 export function StaffRoutes() {
     return (
         <Routes>
+            <Route index element={<Navigate to="/Staff/OrderManagement" replace />} />
             <Route path='ProductManagement' element={<ProductManagement />} />
             <Route path='OrderManagement' element={<OrderManagement />} />
             <Route path='BlogManagement' element={<BlogManagement />} />
             <Route path='VoucherManagement' element={<VoucherManagement />} />
-            <Route path='ReportManagement' element={<ReportManagement/>} />
-            <Route path='StaffProfile' element={<StaffProfile/>} />
+            <Route path='ReportManagement' element={<ReportManagement />} />
+            <Route path='StaffProfile' element={<StaffProfile />} />
         </Routes>
     )
 }

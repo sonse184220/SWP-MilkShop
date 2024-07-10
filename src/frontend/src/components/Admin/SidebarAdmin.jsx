@@ -6,11 +6,11 @@ function SidebarAdmin() {
       <h1>Admin</h1>
       <div className="sidebar-content">
         <div>
-          <a href="/Admin/StaffManagement">Staff</a>
+          <a href="/Admin/StaffManagement">User</a>
         </div>
-        <div>
+        {/* <div>
           <a href="/Admin/MemberManagement">Member</a>
-        </div>
+        </div> */}
         <div>
           <a href="/Admin/Dashboard">Dashboard</a>
         </div>

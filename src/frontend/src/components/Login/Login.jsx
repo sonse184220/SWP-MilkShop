@@ -114,7 +114,7 @@ const Login = ({ onLogin, showLogin }) => {
                 sessionStorage.setItem('adminData', JSON.stringify(response.data.user));
                 sessionStorage.setItem('token', response.data.token);
                 sessionStorage.setItem('loginSuccess', 'true'); // Set login success flag
-                navigate('/Admin/StaffManagement', { state: { showLoginSuccess: true } });
+                navigate('/Admin/UserManagement', { state: { showLoginSuccess: true } });
 
             } else {
                 // setErrorMessage('Something went wrong');

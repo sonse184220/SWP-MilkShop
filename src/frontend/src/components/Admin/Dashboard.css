@@ -1,5 +1,9 @@
-.sidebar{
-    height: 175vh;
+.sidebar {
+  height: 175vh;
+}
+
+.col-lg-2 .sidebar {
+  width: 100%;
 }
 
 .dashboard {
@@ -26,7 +30,8 @@
   width: 48%;
 }
 
-.top-users, .source-statistics {
+.top-users,
+.source-statistics {
   margin-bottom: 20px;
   margin-left: 20px;
 }
@@ -54,7 +59,8 @@
   border-collapse: collapse;
 }
 
-.source-statistics th, .source-statistics td {
+.source-statistics th,
+.source-statistics td {
   border: 1px solid #ddd;
   padding: 8px;
 }
@@ -64,4 +70,3 @@
   color: snow;
   text-align: center;
 }
-
