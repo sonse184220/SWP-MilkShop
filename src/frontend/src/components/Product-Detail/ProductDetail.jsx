@@ -3,6 +3,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Modal from 'react-modal';
 
+import { Oval } from 'react-loader-spinner';
+
 // {blog.Content ? (
 //     <>
 //       <p>{truncateContent(blog.Content, 200)}</p>
@@ -24,7 +26,7 @@ import Feedback from '../Feedback/Feedback';
 import { useEffect, useState } from 'react';
 import getProductById from '../../services/product/getProductByID';
 import Page404 from '../404NotFound/404Page';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import GetFeedback from '../../services/feedback/getFeedback';
 import AddFeedback from '../../services/feedback/addNewFeedback';
 import { AddWishlist } from '../../services/wishlist/addWishlist';
@@ -37,38 +39,9 @@ import GetProductByBrandID from '../../services/product/getProductByBrandID';
 
 
 const ProductDetail = ({ isMember }) => {
-    const products = [
-        {
-            name: 'Product 1',
-            description: 'This is the description for Product 1.',
-            image: 'https://via.placeholder.com/150',
-            url: 'https://example.com/product1'
-        },
-        {
-            name: 'Product 2',
-            description: 'This is the description for Product 2.',
-            image: 'https://via.placeholder.com/150',
-            url: 'https://example.com/product2'
-        },
-        {
-            name: 'Product 3',
-            description: 'This is the description for Product 3.',
-            image: 'https://via.placeholder.com/150',
-            url: 'https://example.com/product3'
-        },
-        {
-            name: 'Product 4',
-            description: 'This is the description for Product 4.',
-            image: 'https://via.placeholder.com/150',
-            url: 'https://example.com/product4'
-        },
-        {
-            name: 'Product 5',
-            description: 'This is the description for Product 5.',
-            image: 'https://via.placeholder.com/150',
-            url: 'https://example.com/product5'
-        }
-    ];
+    const navigate = useNavigate();
+
+    const [isPreOrderLoading, setIsPreOrderLoading] = useState(false);
 
     const { ProductID } = useParams();
     const [quantity, setQuantity] = useState(1);
@@ -106,22 +79,35 @@ const ProductDetail = ({ isMember }) => {
 
     const handlePreOrderAction = async () => {
         try {
+            setIsPreOrderLoading(true);
             const PreOrderInfo = {
                 "userId": userId,
                 "productId": CurrentProduct.ProductID,
                 "quantity": quantity,
-                "paymentMethod": "COD",
+                "paymentMethod": "Banking",
                 "name": PreOrderFormData.Name,
                 "email": PreOrderFormData.Email,
                 "phone": PreOrderFormData.Phone,
                 "address": PreOrderFormData.Address
             }
             const response = await PreOrder(MemberToken, PreOrderInfo);
-            if (response.data.PreorderID) {
-                console.log("preorder sucess")
+            if (response.data[0].PreorderID) {
+                setPreOrderFormData({
+                    Name: '',
+                    Email: '',
+                    Phone: '',
+                    Address: '',
+                });
+                setIsOpenPreOrder(false);
+                toast.success('Pre-order placed successfully', {
+                    theme: "colored",
+                });
+                navigate('/Customer/QRBanking');
             }
         } catch (error) {
 
+        } finally {
+            setIsPreOrderLoading(false);
         }
     }
 
@@ -329,7 +315,9 @@ const ProductDetail = ({ isMember }) => {
         try {
             const response = await getProductById(ProductID);
             console.log(response);
-            setCurrentProduct(response.data.product);
+            if (response.data.product.Status === 'available') {
+                setCurrentProduct(response.data.product);
+            }
         } catch (error) {
 
         }
@@ -426,7 +414,7 @@ const ProductDetail = ({ isMember }) => {
                                         />
 
                                     </div>
-                                    {PreOrderFormData.Name.length === 0 && <p className="pOinfo-error-message">*Please input name</p>}
+                                    <div style={{ height: '15px' }}>{PreOrderFormData.Name.length === 0 && <p className="pOinfo-error-message">*Please input name</p>}</div>
                                     <div className='pre-order-form-group'>
                                         <label className='mb-1'>Email</label>
                                         <input
@@ -439,7 +427,7 @@ const ProductDetail = ({ isMember }) => {
                                         />
 
                                     </div>
-                                    {PreOrderFormData.Email.length === 0 && <p className="pOinfo-error-message">*Please input name</p>}
+                                    <div style={{ height: '15px' }}>{PreOrderFormData.Email.length === 0 && <p className="pOinfo-error-message">*Please input name</p>}</div>
 
                                     <div className='pre-order-form-group'>
                                         <label className='mb-1'>Phone</label>
@@ -453,7 +441,7 @@ const ProductDetail = ({ isMember }) => {
                                         />
 
                                     </div>
-                                    {PreOrderFormData.Phone.length === 0 && <p className="pOinfo-error-message">*Please input name</p>}
+                                    <div style={{ height: '15px' }}> {PreOrderFormData.Phone.length === 0 && <p className="pOinfo-error-message">*Please input name</p>}</div>
 
                                     <div className='pre-order-form-group'>
                                         <label className='mb-1'>Address</label>
@@ -467,10 +455,23 @@ const ProductDetail = ({ isMember }) => {
                                         />
 
                                     </div>
-                                    {PreOrderFormData.Address.length === 0 && <p className="pOinfo-error-message">*Please input name</p>}
+                                    <div style={{ height: '15px' }}>{PreOrderFormData.Address.length === 0 && <p className="pOinfo-error-message">*Please input name</p>}</div>
                                 </form>
                             </div>
-                            <a onClick={handlePreOrderAction} className="btn btn-block btn-lg btn-black-default-hover" data-bs-toggle="modal" data-bs-target="#modalAddcart">Submit Order</a>
+                            <a onClick={handlePreOrderAction} className="btn btn-block btn-lg btn-black-default-hover" data-bs-toggle="modal" data-bs-target="#modalAddcart">
+                                {isPreOrderLoading ? (
+                                    <div className="oval-container">
+                                        <Oval
+                                            height={20}
+                                            width={20}
+                                            color="#fff"
+                                            style={{ display: 'flex', justifyContent: 'center' }}
+                                        />
+                                    </div>
+                                ) : (
+                                    'Place Pre-Order'
+                                )}
+                            </a>
 
                         </div>
                     </div>

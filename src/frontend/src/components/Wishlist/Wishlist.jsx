@@ -192,22 +192,6 @@ export const Wishlist = ({ isMember }) => {
                                                         </div>
                                                     </td></tr>
                                                 )}
-                                                {/* <tr>
-                                                    <td className="product_remove"><a href="#"><i className="fa fa-trash-alt"></i></a></td>
-                                                    <td className="product_thumb"><a href="product-details-default.html"><img src="assets/images/product/default/home-1/default-2.jpg" alt="" /></a></td>
-                                                    <td className="product_name"><a href="product-details-default.html">Handbags justo</a></td>
-                                                    <td className="product-price">$90.00</td>
-                                                    <td className="product_stock">In Stock</td>
-                                                    <td className="product_addcart"><a href="#" className="btn btn-md btn-golden" onClick={openModal}>Add To Cart</a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td className="product_remove"><a href="#"><i className="fa fa-trash-alt"></i></a></td>
-                                                    <td className="product_thumb"><a href="product-details-default.html"><img src="assets/images/product/default/home-1/default-3.jpg" alt="" /></a></td>
-                                                    <td className="product_name"><a href="product-details-default.html">Handbag elit</a></td>
-                                                    <td className="product-price">$80.00</td>
-                                                    <td className="product_stock">In Stock</td>
-                                                    <td className="product_addcart"><a href="#" className="btn btn-md btn-golden" onClick={openModal}>Add To Cart</a></td>
-                                                </tr> */}
                                             </tbody>
                                         </table>
                                     </div>

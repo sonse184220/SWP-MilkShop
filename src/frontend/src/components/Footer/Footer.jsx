@@ -12,7 +12,7 @@ function Footer() {
             </div>
             <div className="topic-list col-3">
               <h4>Info</h4>
-              <ul className="">
+              <ul className="text-start">
                 <li>
                   <a href="">
                     <span style={{ color: "#132743" }}>Address: </span>Lot
@@ -36,9 +36,9 @@ function Footer() {
 
             <div className="topic-list col-3">
               <h4>Customer Support</h4>
-              <ul>
+              <ul >
                 <li>
-                  <a href="">Regulations & payment methods</a>
+                  <a href="/Customer/QRBanking">Regulations & payment methods</a>
                 </li>
                 <li>
                   <a href="">Warranty & Maintenance</a>
@@ -51,7 +51,7 @@ function Footer() {
 
             <div className="topic-list col-3">
               <h4>About Us</h4>
-              <ul>
+              <ul >
                 <li>
                   <a href="#">
                     We are dedicated to providing high-quality milk products for

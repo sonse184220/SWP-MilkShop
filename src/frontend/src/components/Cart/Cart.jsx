@@ -8,7 +8,7 @@ import Modal from "react-modal";
 // import { Alert, AlertTitle, AlertDescription } from '../../ui/alert';
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { Alert, AlertTitle } from "@mui/material";
-import { X } from 'lucide-react';
+import { Oval } from 'react-loader-spinner';
 
 import "./Cart.css";
 import Footer from "../Footer/Footer";
@@ -28,6 +28,9 @@ import { GetAllVouchersMember } from "../../services/voucher/getVoucherMember";
 
 export const Cart = ({ isMember }) => {
   const navigate = useNavigate();
+
+  const [isConfirmLoading, setIsConfirmLoading] = useState(false);
+
   const [CartItems, setCartItems] = useState([]);
   const [UserInfo, setUserInfo] = useState();
   const [userFormData, setUserFormData] = useState({
@@ -58,6 +61,7 @@ export const Cart = ({ isMember }) => {
 
   const handleMemberOrderAction = async () => {
     try {
+      setIsConfirmLoading(true);
       // const MemberToken = 'Bearer ' + localStorage.getItem('token');
       const OrderInfo = {
         PaymentMethod: userFormData.paymentMethod,
@@ -70,13 +74,36 @@ export const Cart = ({ isMember }) => {
       };
       const response = await MemberOrder(MemberToken, OrderInfo);
       if (response.data.orderId) {
-        console.log("order success==========", response.data.message);
         handleViewCart();
         setAppliedVoucher(null);
         handleGetVouchers();
         handleGetUserInfo();
         setIsOpen(false);
         setIsSuccessModalOpen(true);
+        if (userFormData.paymentMethod === 'Banking') {
+          console.log('check banking worked');
+          setUserFormData({
+            Name: "",
+            Email: "",
+            Phone: "",
+            Address: "",
+            RewardPoints: "",
+            useRewardPoints: false,
+            paymentMethod: "COD",
+          });
+          console.log('check banking worked');
+          navigate('/Customer/QRBanking');
+        } else {
+          setUserFormData({
+            Name: "",
+            Email: "",
+            Phone: "",
+            Address: "",
+            RewardPoints: "",
+            useRewardPoints: false,
+            paymentMethod: "COD",
+          });
+        }
       }
     } catch (error) {
       if (error) {
@@ -87,6 +114,9 @@ export const Cart = ({ isMember }) => {
           setIsOpen(false);
         }
       }
+    } finally {
+      setIsConfirmLoading(false);
+      setIsOpen(false);
     }
   };
 
@@ -209,7 +239,15 @@ export const Cart = ({ isMember }) => {
         <p>Are you sure you want to place this order?</p>
         <div className="modal-actions">
           <button onClick={handleMemberOrderAction} className="btn-confirm">
-            Confirm
+            {isConfirmLoading ? (
+              <Oval
+                height={20}
+                width={20}
+                color="#fff"
+              />
+            ) : (
+              "Confirm"
+            )}
           </button>
           <button onClick={() => setIsOpen(false)} className="btn-cancel">
             Cancel

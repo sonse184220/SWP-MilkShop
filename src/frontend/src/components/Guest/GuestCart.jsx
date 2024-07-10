@@ -5,6 +5,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { Alert, AlertTitle } from '@mui/material';
+import { Oval } from 'react-loader-spinner';
 
 import './GuestCart.css';
 import Footer from "../Footer/Footer";
@@ -22,6 +23,9 @@ import { GuestOrder } from '../../services/order/guestOrder';
 
 export const GuestCart = ({ isMember }) => {
     const navigate = useNavigate();
+
+    const [isConfirmLoading, setIsConfirmLoading] = useState(false);
+
     const [CartItems, setCartItems] = useState([]);
     const [UserInfo, setUserInfo] = useState();
     const [userFormData, setUserFormData] = useState({
@@ -55,6 +59,7 @@ export const GuestCart = ({ isMember }) => {
 
     const handleGuestOrderAction = async () => {
         try {
+            setIsConfirmLoading(true);
             if (userFormData.Name.length === 0 ||
                 userFormData.Email.length === 0 ||
                 userFormData.Phone.length === 0 ||
@@ -91,6 +96,8 @@ export const GuestCart = ({ isMember }) => {
             }
         } catch (error) {
 
+        } finally {
+            setIsConfirmLoading(false);
         }
     }
 
@@ -265,7 +272,17 @@ export const GuestCart = ({ isMember }) => {
                     <h2>Confirm Order</h2>
                     <p>Are you sure you want to place this order?</p>
                     <div className="modal-actions">
-                        <button onClick={handleGuestOrderAction} className="btn-confirm">Confirm</button>
+                        <button onClick={handleGuestOrderAction} className="btn-confirm">
+                            {isConfirmLoading ? (
+                                <Oval
+                                    height={20}
+                                    width={20}
+                                    color="#fff"
+                                />
+                            ) : (
+                                "Confirm"
+                            )}
+                        </button>
                         <button onClick={() => setIsOpen(false)} className="btn-cancel">Cancel</button>
                     </div>
                 </Modal>
