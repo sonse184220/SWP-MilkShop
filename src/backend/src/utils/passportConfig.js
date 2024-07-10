@@ -34,25 +34,6 @@ passport.use(new GoogleStrategy({
     }
 ));
 
-// JWT Strategy
-const jwtOptions = {
-    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: process.env.JWT_SECRET
-};
-
-passport.use(new JwtStrategy(jwtOptions, (jwtPayload, done) => {
-    const query = 'SELECT * FROM user WHERE UserID = ?';
-    connection.query(query, [jwtPayload.userId], (err, results) => {
-        if (err) {
-            return done(err, false);
-        }
-        if (results.length > 0) {
-            return done(null, results[0]);
-        } else {
-            return done(null, false);
-        }
-    });
-}));
 
 // Serialize and deserialize user
 passport.serializeUser((user, done) => {
