@@ -55,4 +55,22 @@ export class AdminService {
         const count = total[0].count;
         return count;
     }
+
+    async getMonthlyRevenue() {
+        const query = `
+            Select 
+                MONTH(created) AS month, 
+                SUM(TotalPrice) AS totalRevenue 
+            from \`order\` 
+            WHERE Status = 'Done' AND YEAR(created) = YEAR(CURRENT_DATE())
+            GROUP BY MONTH(created)
+        `;
+        const [results] = await poolConnect.query(query);
+        const monthlyRevenue = results.map(result => ({
+            month: new Date(0, result.month - 1).toLocaleString('default', { month: 'long' }),
+            totalRevenue: result.totalRevenue || 0
+        }));
+
+        return { monthlyRevenue, status: 200 };
+    };
 }
