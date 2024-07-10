@@ -116,5 +116,31 @@ export class AdminService {
 
         return { Month: month, Weeks: weeks, status: 200 };
     }
+    async getTopUsers() {
+        const query = `
+            SELECT 
+                u.UserID, 
+                u.Name, 
+                COUNT(o.OrderID) AS orderCount 
+            FROM 
+                \`order\` o
+            JOIN 
+                \`user\` u ON o.UserID = u.UserID
+            WHERE 
+                u.isAdmin = 0 
+                AND u.isStaff = 0 
+                AND u.UserID IS NOT NULL
+                AND MONTH(o.created) = MONTH(CURRENT_DATE()) 
+                AND YEAR(o.created) = YEAR(CURRENT_DATE())
+            GROUP BY 
+                u.UserID, u.Name
+            ORDER BY 
+                orderCount DESC
+            LIMIT 5;
+        `;
+
+        const [results] = await poolConnect.query(query);
+        return { topUsers: results, status: 200 };
+    }
 
 }

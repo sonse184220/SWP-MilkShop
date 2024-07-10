@@ -13,5 +13,6 @@ router.get('/total-revenue', checkAuthenticated, isAdmin, adminController.getTot
 router.get('/accounts', checkAuthenticated, isAdmin, adminController.getAllAccounts);
 router.get('/monthly-revenue', checkAuthenticated, isAdmin, adminController.getMonthlyRevenue); //cái này lấy doanh thu tất cả tháng trong năm//
 router.get('/weekly-revenue', checkAuthenticated, isAdmin, adminController.getWeeklyRevenue);
+router.get('/top-user', checkAuthenticated, isAdmin, adminController.getTopUsers);
 
 export { router as adminRoutes };
