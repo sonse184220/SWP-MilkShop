@@ -12,5 +12,6 @@ router.post('/enable-account', checkAuthenticated, isAdmin, adminController.enab
 router.get('/total-revenue', checkAuthenticated, isAdmin, adminController.getTotalRevenue); //cái này lấy doanh thu của tháng hiện tại//
 router.get('/accounts', checkAuthenticated, isAdmin, adminController.getAllAccounts);
 router.get('/monthly-revenue', checkAuthenticated, isAdmin, adminController.getMonthlyRevenue); //cái này lấy doanh thu tất cả tháng trong năm//
+router.get('/weekly-revenue', checkAuthenticated, isAdmin, adminController.getWeeklyRevenue);
 
 export { router as adminRoutes };
