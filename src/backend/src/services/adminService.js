@@ -25,19 +25,32 @@ export class AdminService {
         const query = `
             select 
                 SUM(TotalPrice) as totalRevenue
-            from \`order\` 
-            WHERE Status = 'Done' AND MONTH(created) = MONTH(CURRENT_DATE()) 
+            FROM (
+                SELECT TotalPrice, created FROM \`order\` WHERE Status = 'Done'
+                UNION ALL
+                SELECT TotalPrice, created FROM \`pre_order\` WHERE Status = 'Done'
+            ) AS combined_orders
+            WHERE MONTH(created) = MONTH(CURRENT_DATE())
             AND YEAR(created) = YEAR(CURRENT_DATE())
         `;
 
         const [results] = await poolConnect.query(query);
         const totalRevenue = results[0].totalRevenue || 0;
-        const orderQuery = `Select OrderID, TotalPrice, Status, created, updated from \`order\` 
-        where status = "Done" and month(created) = month(CURRENT_DATE()) 
-        and year(created) = year(current_date())`;
+
+        const orderQuery = `
+            Select OrderID, TotalPrice, Status, created, updated 
+            FROM (
+                SELECT OrderID, TotalPrice, Status, created, updated FROM \`order\` WHERE Status = 'Done'
+                UNION ALL
+                SELECT PreorderID AS OrderID, TotalPrice, Status, created, updated FROM \`pre_order\` WHERE Status = 'Done'
+            ) AS combined_orders
+            WHERE MONTH(created) = MONTH(CURRENT_DATE()) 
+            AND YEAR(created) = YEAR(CURRENT_DATE())
+        `;
+
         const [orders] = await poolConnect.query(orderQuery);
-        return { totalRevenue, orders, status: 200 }
-    };
+        return { totalRevenue, orders, status: 200 };
+    }
 
     async getAllAccounts(page, limit) {
         const offset = (page - 1) * limit;
@@ -61,10 +74,15 @@ export class AdminService {
             Select 
                 MONTH(created) AS month, 
                 SUM(TotalPrice) AS totalRevenue 
-            from \`order\` 
-            WHERE Status = 'Done' AND YEAR(created) = YEAR(CURRENT_DATE())
+            From (
+                SELECT TotalPrice, created FROM \`order\` WHERE Status = 'Done'
+                UNION ALL
+                SELECT TotalPrice, created FROM \`pre_order\` WHERE Status = 'Done'
+            ) AS combined_orders
+            WHERE YEAR(created) = YEAR(CURRENT_DATE())
             GROUP BY MONTH(created)
         `;
+
         const [results] = await poolConnect.query(query);
         const monthlyRevenue = results.map(result => ({
             month: new Date(0, result.month - 1).toLocaleString('default', { month: 'long' }),
@@ -72,5 +90,6 @@ export class AdminService {
         }));
 
         return { monthlyRevenue, status: 200 };
-    };
+    }
+
 }
