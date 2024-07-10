@@ -1,6 +1,5 @@
 import { useRef, useEffect, useState } from "react";
-import { Oval } from 'react-loader-spinner';
-
+import { Oval } from "react-loader-spinner";
 
 import BlogCard from "./BlogCard";
 import "./BlogList.css";
@@ -62,7 +61,10 @@ const BlogList = ({ columnLayout = false }) => {
     const loadBlogs = async () => {
       try {
         setIsLoading(true);
-        const fetchedBlogs = await fetchBlogs();
+        let limit = "";
+        let page = "";
+        let sort = "";
+        const fetchedBlogs = await fetchBlogs(limit, page, sort);
         console.log("1", fetchBlogs);
         if (Array.isArray(fetchedBlogs.data.data)) {
           setBlogs(fetchedBlogs.data.data);
@@ -92,23 +94,20 @@ const BlogList = ({ columnLayout = false }) => {
           &lt;
         </button>
         <div className="blog-list" ref={blogListRef}>
-
-
           {isLoading ? (
             <Oval
               // height={20}
               // width={20}
               // color="#fff"
               wrapperStyle={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: '100%',
-                width: '100%'
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100%",
+                width: "100%",
               }}
             />
           ) : (
-
             <BlogCard blogs={blog} />
           )}
         </div>

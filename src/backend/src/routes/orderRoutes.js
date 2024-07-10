@@ -24,10 +24,17 @@ router.get("/:orderId", checkAuthenticated, checkOrderId, async (req, res) => {
 })
 
 /** 
- * Cập nhật status của 1 đơn order cho staff / admin
+ * Cập nhật status của 1 đơn order cho staff
  */
 router.patch("/staff/:orderId/status", checkAuthenticated, isStaff, checkOrderId, checkOrderInputStatus, async (req, res) => {
     await orderController.updateOrderStatus(req, res);
+})
+
+/** 
+ * cho user cancel status của 1 đơn order
+ */
+router.patch("/:orderId/order-cancel", checkAuthenticated, checkOrderId, async (req, res) => {
+    await orderController.updateOrderStatusCancel(req, res);
 })
 
 /**
@@ -39,11 +46,5 @@ router.patch("/staff/:orderId/payment-done", checkAuthenticated, isStaff, checkO
 
 router.post('/place-order', checkAuthenticated, orderController.placeOrder);
 
-/** 
- * cho user cancel status của 1 đơn order
- */
-router.patch("/:orderId/order-cancel", checkAuthenticated, checkOrderId, async (req, res) => {
-    await orderController.updateOrderStatusCancel(req, res);
-})
 
 export { router as orderRoutes };

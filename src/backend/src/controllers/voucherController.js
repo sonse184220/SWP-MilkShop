@@ -67,7 +67,7 @@ export class VoucherController {
 
     async updateVoucher(req, res) {
         const voucherId = req.params.voucherId;
-        const { discount, quantity, expiration, content } = req.body;
+        const { quantity, expiration, content } = req.body;
 
         const checkVoucher = await voucherService.getVoucher(voucherId);
         if (checkVoucher.length === 0) {
@@ -77,10 +77,6 @@ export class VoucherController {
         const queryField = [];
         const valueField = [];
 
-        if (discount && discount !== checkVoucher[0].Discount) {
-            queryField.push("Discount = ?")
-            valueField.push(discount)
-        }
         if (quantity && quantity !== checkVoucher[0].VoucherQuantity) {
             queryField.push("VoucherQuantity = ?")
             valueField.push(quantity)
