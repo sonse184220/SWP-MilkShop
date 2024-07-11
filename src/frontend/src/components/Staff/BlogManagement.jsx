@@ -3,7 +3,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { NavLink, useNavigate, Link, } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 
 import "./BlogManagement.css"; // Import CSS file
@@ -22,6 +22,11 @@ const BlogManagement = () => {
   const userId = sessionStorage.getItem("staffData")
     ? JSON.parse(sessionStorage.getItem("staffData")).UserID
     : "Guest";
+
+  const staffData = sessionStorage.getItem("staffData");
+
+  const staffId = staffData ? JSON.parse(staffData).UserID : "";
+  const staffName = staffData ? JSON.parse(staffData).Name : "";
 
   const [isOpen, setIsOpen] = useState(false);
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -70,7 +75,7 @@ const BlogManagement = () => {
       let limit = 5;
       let page = currentPage;
       let sort = "";
-      const response = await fetchBlogs(limit, page, sort)
+      const response = await fetchBlogs(limit, page, sort);
       if (response.data.total > 0) {
         setBlogs(response.data.data);
         setPageCount(response.data.totalPages);
@@ -137,8 +142,8 @@ const BlogManagement = () => {
         const blog = response.blog;
         console.log("get a blog");
         const productIds = response.blogProducts
-          ? response.blogProducts.map(product => product.ProductID).join(', ')
-          : '';
+          ? response.blogProducts.map((product) => product.ProductID).join(", ")
+          : "";
         setUpdateBlog({
           BlogID: blog.BlogID,
           userId: blog.UserID,
@@ -213,12 +218,11 @@ const BlogManagement = () => {
   };
 
   const handleLogout = () => {
-
     // event.preventDefault();
     sessionStorage.clear();
     navigate("/Customer/home");
     window.location.reload();
-  }
+  };
 
   return (
     <div className="blog-management-container">
@@ -230,7 +234,7 @@ const BlogManagement = () => {
           <h1>Blog Management</h1>
           <header>
             <button className="staff-name" onClick={toggleDropdown}>
-              Staff Name
+              {staffName}
             </button>
             <div ref={dropdownRef} className="dropdown-menu">
               <ul className="dropdown">
@@ -238,7 +242,9 @@ const BlogManagement = () => {
                   <a href="/Staff/StaffProfile">Profile</a>
                 </li>
                 <li>
-                  <a href="" onClick={handleLogout}>Logout</a>
+                  <a href="" onClick={handleLogout}>
+                    Logout
+                  </a>
                 </li>
               </ul>
             </div>
@@ -272,7 +278,11 @@ const BlogManagement = () => {
               {blogs.map((blog) => (
                 <tr key={blog.BlogID}>
                   <td>
-                    <img style={{ width: '100%' }} src={`data:image/jpeg;base64,${blog.Image}`} alt="" />
+                    <img
+                      style={{ width: "100%" }}
+                      src={`data:image/jpeg;base64,${blog.Image}`}
+                      alt=""
+                    />
                   </td>
                   <td>{blog.BlogID}</td>
                   <td>{blog.UserID}</td>
@@ -295,7 +305,13 @@ const BlogManagement = () => {
                   <td className="deleteDiv">
                     <div className="delete">
                       <button className="delete-button">
-                        <a href="" onClick={(e) => { e.preventDefault(); handleGetABlog(blog.BlogID) }}>
+                        <a
+                          href=""
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleGetABlog(blog.BlogID);
+                          }}
+                        >
                           Update
                         </a>
                       </button>

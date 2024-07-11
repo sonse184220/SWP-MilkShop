@@ -17,6 +17,11 @@ const VoucherManagement = () => {
   const StaffToken = "Bearer " + sessionStorage.getItem("token");
   console.log("Retrieved Staff Token:", StaffToken); // Debugging line
 
+  const staffData = sessionStorage.getItem("staffData");
+
+  const staffId = staffData ? JSON.parse(staffData).UserID : "";
+  const staffName = staffData ? JSON.parse(staffData).Name : "";
+
   const [isOpen, setIsOpen] = useState(false);
   const [isAddOpen, setIsAddOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -232,7 +237,7 @@ const VoucherManagement = () => {
           <h1>Voucher Management</h1>
           <header>
             <button className="staff-name" onClick={toggleDropdown}>
-              Staff Name
+              {staffName}
             </button>
             <div ref={dropdownRef} className="dropdown-menu">
               <ul className="dropdown">
@@ -292,7 +297,13 @@ const VoucherManagement = () => {
                     <td className="deleteDiv">
                       <div className="delete">
                         <button className="delete-button">
-                          <a href="#" onClick={(e) => { e.preventDefault(); openUpdateModal(voucher) }}>
+                          <a
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              openUpdateModal(voucher);
+                            }}
+                          >
                             Update
                           </a>
                         </button>

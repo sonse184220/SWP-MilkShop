@@ -6,7 +6,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { NavLink, useNavigate, Link } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 
-
 import Sidebar from "./Sidebar";
 import "./ProductManagement.css";
 import { useRef } from "react";
@@ -25,6 +24,11 @@ function ProductManagement() {
   const userId = sessionStorage.getItem("userData")
     ? JSON.parse(sessionStorage.getItem("userData")).UserID
     : "Guest";
+
+  const staffData = sessionStorage.getItem("staffData");
+
+  const staffId = staffData ? JSON.parse(staffData).UserID : "";
+  const staffName = staffData ? JSON.parse(staffData).Name : "";
 
   const [isOpen, setIsOpen] = useState(false);
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -233,7 +237,7 @@ function ProductManagement() {
     } catch (error) {
       console.error("Error fetching brands:", error);
     }
-  }
+  };
 
   useEffect(() => {
     handleGetProducts();
@@ -261,7 +265,7 @@ function ProductManagement() {
             <h1>Manage product</h1>
             <header>
               <button className="staff-name" onClick={toggleDropdown}>
-                Staff Name
+                {staffName}
               </button>
               <div ref={dropdownRef} className="dropdown-menu">
                 <ul className="dropdown">
