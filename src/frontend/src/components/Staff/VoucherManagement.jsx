@@ -224,7 +224,7 @@ const VoucherManagement = () => {
   };
   const handleLogout = async () => {
     // event.preventDefault();
-    const token = 'Bearer ' + sessionStorage.getItem('token');
+    const token = "Bearer " + sessionStorage.getItem("token");
     await Logout(token);
     sessionStorage.clear();
     navigate("/Customer/home");
@@ -244,9 +244,9 @@ const VoucherManagement = () => {
             </button>
             <div ref={dropdownRef} className="dropdown-menu">
               <ul className="dropdown">
-                <li>
+                {/* <li>
                   <a href="/Staff/StaffProfile">Profile</a>
-                </li>
+                </li> */}
                 <li>
                   <a href="" onClick={handleLogout}>
                     Logout

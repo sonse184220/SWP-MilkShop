@@ -241,9 +241,9 @@ const BlogManagement = () => {
             </button>
             <div ref={dropdownRef} className="dropdown-menu">
               <ul className="dropdown">
-                <li>
+                {/* <li>
                   <a href="/Staff/StaffProfile">Profile</a>
-                </li>
+                </li> */}
                 <li>
                   <a href="" onClick={handleLogout}>
                     Logout
