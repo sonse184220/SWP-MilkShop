@@ -16,8 +16,12 @@ import SidebarAdmin from "./SidebarAdmin";
 import { GetMonthlyRevenue } from "../../services/admin/getMonthlyRevenue";
 import { GetWeeklyRevenue } from "../../services/admin/getWeeklyRevenue";
 import { GetTopUser } from "../../services/admin/getTopUsers";
+import { Logout } from "../../services/login/logout";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+
   const AdminToken = "Bearer " + sessionStorage.getItem("token");
 
   const [monthlyRevenue, setMonthlyRevenue] = useState([]);
@@ -67,6 +71,15 @@ const Dashboard = () => {
     }
   }
 
+  const handleLogout = async () => {
+    // event.preventDefault();
+    const token = 'Bearer ' + sessionStorage.getItem('token');
+    await Logout(token);
+    sessionStorage.clear();
+    navigate("/Customer/home");
+    window.location.reload();
+  };
+
   useEffect(() => {
     handleGetMonthlyRevenue();
     handleGetWeeklyRevenue();
@@ -92,7 +105,7 @@ const Dashboard = () => {
                     <a href="/Admin/AdminProfile">Profile</a>
                   </li>
                   <li>
-                    <a href="#">Logout</a>
+                    <a href="" onClick={(e) => { e.preventDefault(); handleLogout() }}>Logout</a>
                   </li>
                 </ul>
               </div>

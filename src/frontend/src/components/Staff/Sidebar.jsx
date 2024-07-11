@@ -19,7 +19,7 @@ function Sidebar() {
           <a href="/Staff/VoucherManagement">Voucher</a>
         </div>
         <div>
-          <a href="/Staff/ReportManagement">Report</a>
+          {/* <a href="/Staff/ReportManagement">Report</a> */}
         </div>
       </div>
     </div>
