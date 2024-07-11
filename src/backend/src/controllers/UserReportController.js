@@ -57,7 +57,28 @@ export class UserReportController {
         const { orderType, orderId, preorderId, title, content } = req.body;
         const userId = req.user.userId;
 
-        // const creatingReport = await userReportService.
+        let typeQuery = "";
+        let typeQueryValue = "";
+        let typeValue = [];
+        switch (orderType) {
+            case "order":
+                typeQuery = "OrderID,";
+                typeQueryValue = "?,";
+                typeValue = [orderId];
+                break;
+            case "preorder":
+                typeQuery = "PreorderID,";
+                typeQueryValue = "?,";
+                typeValue = [preorderId];
+                break;
+            default:
+                // do nothing
+        }
+
+        const creatingReport = await userReportService.createReport(userId, orderType, title, content, typeQuery, typeQueryValue, typeValue);
+        if (creatingReport.affectedRows === 0) {
+            return res.status(500).send({ error: "Failed to create user report!" })
+        }
     }
 
 }

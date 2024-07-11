@@ -17,7 +17,9 @@ export class UserReportService {
         return count;
     }
 
-    async createReport(userId, title, content) {
-        const [report] = await poolConnect.query("INSERT INTO user_report (UserID, Title, Content)")
+    async createReport(userId, orderType, title, content, createQuery, createQueryValue, createValue) {
+        const [report] = await poolConnect.query(`INSERT INTO user_report (OrderType, ${createQuery} UserID, Title, Content)
+                                                  VALUES (?,${createQueryValue}?,?,?)`, [orderType, ...createValue, userId, title, content])
+        return report;
     }
 }

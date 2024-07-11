@@ -21,7 +21,7 @@ router.get("/api/user-reports/staff", checkAuthenticated, isStaff, checkPaginati
 router.get("/api/user-reports/:userId")
 
 /**
- * Lấy 1 report
+ * Lấy chi tiết 1 report
  */
 router.get("/api/user-reports/:reportId")
 

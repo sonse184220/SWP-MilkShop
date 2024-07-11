@@ -17,7 +17,7 @@ import { userRoutes } from './routes/userRoutes.js';
 import { orderRoutes } from './routes/orderRoutes.js';
 import { preorderRoutes } from "./routes/preorderRoutes.js";
 import { voucherRoutes } from './routes/voucherRoutes.js';
-import { userReportRoutes } from "./routes/userreportRoutes.js";
+import { userReportRoutes } from "./routes/userReportRoutes.js";
 import { adminRoutes } from './routes/adminRoutes.js';
 import { logoutRoutes } from './routes/logoutRoutes.js';
 
