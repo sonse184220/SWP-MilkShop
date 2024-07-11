@@ -48,5 +48,21 @@ export class BrandController {
         const brand = await brandService.getBrand(nextMaxId);
         return res.status(200).send(brand);
     }
+
+    async deleteBrand(req, res) {
+        const brandId = req.param.brandId;
+
+        const checkBrand = await brandService.getBrand(brandId);
+        if (checkBrand.length === 0) {
+            return res.status(404).send({ error: "Brand not found!" })
+        }
+
+        const deletingBrand = await brandService.deleteBrand(brandId);
+        if (deletingBrand.affectedRows === 0) {
+            return res.status(500).send({ error: "Cant delete brand!" })
+        }
+
+        return res.status(200).send({ msg: `Successfully delete brand ${checkBrand[0].Name} (${brandId}).` })
+    }
     
 }
