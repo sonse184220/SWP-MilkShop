@@ -321,7 +321,7 @@ export const GuestCart = ({ isMember }) => {
                                                         <div className="row">
                                                             <div className="col-lg-3 col-md-12 mb-4 mb-lg-0">
                                                                 <div className="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
-                                                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Vertical/12a.webp" className="w-100" alt="Blue Jeans Jacket" />
+                                                                    <img src={`data:image/jpeg;base64,${item.Image}`} className="w-100" alt="Blue Jeans Jacket" />
                                                                 </div>
                                                             </div>
 
