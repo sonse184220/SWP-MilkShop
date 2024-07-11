@@ -3,18 +3,31 @@ import React, { useState } from 'react';
 
 import './TotalPrice.css'
 
-export const TotalPrice = ({ CartItems, handleMemberOrderAction, isOpen, setIsOpen }) => {
+export const TotalPrice = ({ CartItems, AppliedVoucher, userFormData, handleMemberOrderAction, isOpen, setIsOpen }) => {
 
 
     const calculateTotalPrice = () => {
-        if (CartItems != null) {
-            return CartItems.reduce((total, item) => {
+        let totalPrice = 0;
+
+        if (CartItems) {
+            totalPrice = CartItems.reduce((total, item) => {
                 return total + (item.Price * item.CartQuantity);
             }, 0);
-        } else {
-            return 0;
         }
+
+        // Apply voucher discount
+        if (AppliedVoucher) {
+            totalPrice -= AppliedVoucher.Discount;
+        }
+
+        // Apply reward points discount
+        if (userFormData.useRewardPoints) {
+            totalPrice -= userFormData.RewardPoints;
+        }
+
+        return totalPrice;
     };
+
     return (
         <section className="h-100 gradient-custom">
             <div className="container py-5">
@@ -40,9 +53,9 @@ export const TotalPrice = ({ CartItems, handleMemberOrderAction, isOpen, setIsOp
                                         className="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
                                         <div>
                                             <strong>Total amount</strong>
-                                            <strong>
+                                            {/* <strong>
                                                 <p className="mb-0">(including VAT)</p>
-                                            </strong>
+                                            </strong> */}
                                         </div>
                                         <span><strong>{calculateTotalPrice().toLocaleString()} VND</strong></span>
                                     </li>

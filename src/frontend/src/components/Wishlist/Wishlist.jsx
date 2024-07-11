@@ -76,7 +76,7 @@ export const Wishlist = ({ isMember }) => {
     const handleRemoveWishlist = async (e, pID) => {
         try {
             e.preventDefault();
-            const response = await RemoveWishlist(MemberToken, JSON.parse(sessionStorage.getItem("userData")).UserID, pID);
+            const response = await RemoveWishlist(MemberToken, pID);
             if (response.data.msg) {
                 // setMessage('Remove success');
                 // showWishlistMessage();

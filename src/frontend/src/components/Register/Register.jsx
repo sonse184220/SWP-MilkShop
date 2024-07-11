@@ -101,6 +101,7 @@ const Register = ({ showLogin, isCompleteRegistration }) => {
             if (response.data.token && response.data.user) {
                 sessionStorage.setItem('userData', JSON.stringify(response.data.user));
                 sessionStorage.setItem('token', response.data.token);
+                sessionStorage.setItem('loginSuccess', 'true');
                 navigate('/Customer/home', { state: { showLoginSuccess: true } });
             }
         } catch (error) {

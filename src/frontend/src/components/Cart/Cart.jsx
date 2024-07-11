@@ -46,6 +46,7 @@ export const Cart = ({ isMember }) => {
   const [AppliedVoucher, setAppliedVoucher] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [AppliedVoucher2, setAppliedVoucher2] = useState(null);
 
   const MemberToken = "Bearer " + sessionStorage.getItem("token");
 
@@ -218,6 +219,19 @@ export const Cart = ({ isMember }) => {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    const fetchVouchers = async () => {
+      const response = await GetAllVouchersMember(MemberToken);
+      if (Array.isArray(response.data)) {
+        const voucher = response.data.find((i) =>
+          (i.VoucherID === AppliedVoucher) && setAppliedVoucher2(i)
+        );
+        // setAppliedVoucher()
+      }
+    };
+    fetchVouchers();
+  }, [AppliedVoucher])
 
   useEffect(() => {
     handleViewCart();
@@ -436,10 +450,12 @@ export const Cart = ({ isMember }) => {
         <div className="totalpricebox">
           <TotalPrice
             CartItems={CartItems}
+            AppliedVoucher={AppliedVoucher2}
+            userFormData={userFormData}
             handleMemberOrderAction={handleMemberOrderAction}
             isOpen={isOpen}
             setIsOpen={setIsOpen}
-            AppliedVoucher={AppliedVoucher}
+          // AppliedVoucher={AppliedVoucher}
           />
         </div>
         <div className="infoform">

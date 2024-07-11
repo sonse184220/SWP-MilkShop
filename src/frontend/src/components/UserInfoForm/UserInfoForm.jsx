@@ -78,47 +78,50 @@ export const UserInfoForm = ({ userFormData, setUserFormData, isMember }) => {
                 </div>
                 {address.length === 0 && <p className="info-error-message">*Please input address</p>}
                 {isMember && (
-                    <div className='form-group mb-1 rewardpoint'>
-                        <label className='mb-1' htmlFor='rewardPoints'>Reward Points</label>
-                        <div className='d-flex'>
-                            <input
-                                type='text'
-                                id='rewardPoints'
-                                className='form-control mr-2'
-                                placeholder='Available reward points'
-                                value={rewardPoints}
-                                readOnly
-                                style={{ marginBottom: '10px' }}
-                            />
+                    <>
+                        <div className='form-group mb-1 rewardpoint'>
+                            <label className='mb-1' htmlFor='rewardPoints'>Reward Points</label>
+                            <div className='d-flex'>
+                                <input
+                                    type='text'
+                                    id='rewardPoints'
+                                    className='form-control mr-2'
+                                    placeholder='Available reward points'
+                                    value={rewardPoints}
+                                    readOnly
+                                    style={{ marginBottom: '10px' }}
+                                />
+                                <select
+                                    className='form-control'
+                                    id='useRewardPoints'
+                                    value={useRewardPoints ? 'yes' : 'no'}
+                                    onChange={handleRewardPointsChange}
+                                    style={{ marginBottom: '10px' }}
+                                >
+                                    <option value='yes'>Apply all points</option>
+                                    <option value='no'>Don't apply</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div className='form-group mb-1'>
+                            <label className='mb-1' >Payment Method</label>
+                            {/* <div className='d-flex'> */}
                             <select
                                 className='form-control'
-                                id='useRewardPoints'
-                                value={useRewardPoints ? 'yes' : 'no'}
-                                onChange={handleRewardPointsChange}
-                                style={{ marginBottom: '10px' }}
+                                id='paymentMethod'
+                                name='paymentMethod'
+                                value={paymentMethod}
+                                onChange={handlePaymentMethodChange}
+                                style={{ width: '60%', height: '100%' }}
                             >
-                                <option value='yes'>Apply all points</option>
-                                <option value='no'>Don't apply</option>
+                                <option value='COD'>COD</option>
+                                <option value='Banking'>Banking</option>
                             </select>
+                            {/* </div> */}
                         </div>
-                    </div>
+                    </>
                 )}
-                <div className='form-group mb-1'>
-                    <label className='mb-1' >Payment Method</label>
-                    {/* <div className='d-flex'> */}
-                    <select
-                        className='form-control'
-                        id='paymentMethod'
-                        name='paymentMethod'
-                        value={paymentMethod}
-                        onChange={handlePaymentMethodChange}
-                        style={{ width: '60%', height: '100%' }}
-                    >
-                        <option value='COD'>COD</option>
-                        <option value='Banking'>Banking</option>
-                    </select>
-                    {/* </div> */}
-                </div>
+
                 {/* <button className='btn btn-primary mt-4 user-info-form-button' type='submit'>
                     <i className="fas fa-lock mr-2 user-info-form-icon"></i>Submit Payment
                 </button> */}
