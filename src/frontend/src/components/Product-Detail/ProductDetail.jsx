@@ -45,6 +45,7 @@ const ProductDetail = ({ isMember }) => {
     const navigate = useNavigate();
 
     const [isPreOrderLoading, setIsPreOrderLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const { ProductID } = useParams();
     const [quantity, setQuantity] = useState(1);
@@ -316,10 +317,12 @@ const ProductDetail = ({ isMember }) => {
 
     const handleGetProductByID = async () => {
         try {
+            setIsLoading(false);
             const response = await getProductById(ProductID);
             console.log(response);
             if (response.data.product.Status === 'available') {
                 setCurrentProduct(response.data.product);
+                setIsLoading(false)
             }
         } catch (error) {
 
@@ -480,8 +483,20 @@ const ProductDetail = ({ isMember }) => {
                 </Modal>
             )
             }
-            {
-                CurrentProduct ? (
+            {/* {isLoading ? ( */}
+
+            {/* ) :  */}
+            {isLoading ? (
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <Oval
+                        // height={40}
+                        // width={40}
+                        color="#fff"
+                        style={{ display: 'flex', justifyContent: 'center' }}
+                    />
+                </div>
+            ) : (CurrentProduct && (
+                <div>
                     <div>
                         <ToastContainer style={{ top: '110px' }} />
                         <div className="product-detail">
@@ -500,16 +515,16 @@ const ProductDetail = ({ isMember }) => {
                                     {/* <p>{CurrentProduct.Content}</p> */}
                                     <div dangerouslySetInnerHTML={{ __html: he.decode(CurrentProduct.Content) }}></div>
                                     {/* <>
-                                    <ReactReadMoreReadLess
-                                        charLimit={200}
-                                        readMoreText={"Read more ▼"}
-                                        readLessText={"Read less ▲"}
-                                        readMoreClassName="read-more-less--more"
-                                        readLessClassName="read-more-less--less"
-                                    >
-                                        {decodeContent(CurrentProduct.Content)}
-                                    </ReactReadMoreReadLess>
-                                </> */}
+                                        <ReactReadMoreReadLess
+                                            charLimit={200}
+                                            readMoreText={"Read more ▼"}
+                                            readLessText={"Read less ▲"}
+                                            readMoreClassName="read-more-less--more"
+                                            readLessClassName="read-more-less--less"
+                                        >
+                                            {decodeContent(CurrentProduct.Content)}
+                                        </ReactReadMoreReadLess>
+                                    </> */}
 
                                 </div>
                                 <div className="product-details-variable">
@@ -532,10 +547,10 @@ const ProductDetail = ({ isMember }) => {
 
                                         <div className="product-add-to-cart-btn">
                                             {/* {(isMember && CurrentProduct.Quantity === 0) ?
-                                            (<a href="#" onClick={(e) => { e.preventDefault(); setIsOpenPreOrder(true) }} className="btn btn-block btn-lg btn-black-default-hover" data-bs-toggle="modal" data-bs-target="#modalAddcart">Pre-Order</a>)
-                                            :
-                                            (<a href="#" onClick={handleAddToCart} className="btn btn-block btn-lg btn-black-default-hover" data-bs-toggle="modal" data-bs-target="#modalAddcart">+ Add To Cart</a>)
-                                        } */}
+                                                (<a href="#" onClick={(e) => { e.preventDefault(); setIsOpenPreOrder(true) }} className="btn btn-block btn-lg btn-black-default-hover" data-bs-toggle="modal" data-bs-target="#modalAddcart">Pre-Order</a>)
+                                                :
+                                                (<a href="#" onClick={handleAddToCart} className="btn btn-block btn-lg btn-black-default-hover" data-bs-toggle="modal" data-bs-target="#modalAddcart">+ Add To Cart</a>)
+                                            } */}
                                             {(!isMember && CurrentProduct.Quantity === 0) ? (
                                                 <button
                                                     className="btn btn-block btn-lg btn-black-default-hover disabled-button"
@@ -581,7 +596,7 @@ const ProductDetail = ({ isMember }) => {
                                     <ul>
                                         <li><a href="#">{CurrentProduct.BrandName}</a></li>
                                         {/* <li><a href="#">KITCHEN UTENSILS</a></li>
-                                    <li><a href="#"></a></li> */}
+                                        <li><a href="#"></a></li> */}
                                     </ul>
                                 </div>
                             </div>
@@ -601,10 +616,22 @@ const ProductDetail = ({ isMember }) => {
                             {relatedProduct.length > 0 && <ProductList products={relatedProduct} />}
                         </div>
                     </div>
-                ) : (
-                    <div><Page404 /></div>
-                )
-            };
+                </div>
+            )
+                // : (
+                // <div>No product data available</div>
+                // <div style={{ display: 'flex', justifyContent: 'center' }}>
+                //     <Oval
+                //         // height={40}
+                //         // width={40}
+                //         color="#fff"
+                //         style={{ display: 'flex', justifyContent: 'center' }}
+                //     />
+                // </div>
+                // )
+            )}
+
+
             <div><Footer /></div>
         </div >
     );

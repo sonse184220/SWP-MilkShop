@@ -123,8 +123,9 @@ export const OrderHistory = ({ isMember }) => {
         try {
             let response;
             if (itemType === 'order') {
-                response = await CancelOrder(MemberToken, selectedItem.OrderID);
                 console.log(MemberToken)
+                response = await CancelOrder(MemberToken, selectedItem.OrderID);
+
             } else {
                 response = await CancelPreOrder(MemberToken, selectedItem.PreorderID);
             }
@@ -455,7 +456,7 @@ export const OrderHistory = ({ isMember }) => {
                                                                             href=""
                                                                             onClick={(e) => {
                                                                                 e.preventDefault();
-                                                                                handleCancelOrder(order.PreorderID, 'order');
+                                                                                handleCancelOrder(order.OrderID, 'order');
                                                                             }}
                                                                             className="btn btn-secondary btn-sm"
                                                                         >

@@ -102,7 +102,7 @@ const HomePage = ({ onLogin, isMember }) => {
       <div>
         <Header onLogin={onLogin} isMember={isMember} />
       </div>
-      <img className="image" src="/img/milkbuying.jpeg" />
+      <img className="image" src="/img/pinkbg.jpg" />
       {/* <div className="welcome">Welcome {userName}</div> */}
       <div>
         <ProductBar />

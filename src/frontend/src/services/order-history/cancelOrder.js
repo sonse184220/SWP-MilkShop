@@ -3,11 +3,10 @@ import axios from '../axios';
 export const CancelOrder = (token, orderId) => {
     try {
 
-        return axios.patch(`/api/user/${orderId}/order-cancel`,
+        return axios.patch(`/api/order/${orderId}/order-cancel`, {},
             {
                 headers: {
                     'Authorization': token,
-                    'Content-Type': 'application/json'
                 }
             }
         );

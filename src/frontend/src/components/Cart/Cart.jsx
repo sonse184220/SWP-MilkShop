@@ -455,6 +455,7 @@ export const Cart = ({ isMember }) => {
             handleMemberOrderAction={handleMemberOrderAction}
             isOpen={isOpen}
             setIsOpen={setIsOpen}
+            isMember={isMember}
           // AppliedVoucher={AppliedVoucher}
           />
         </div>
