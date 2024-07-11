@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import ReactPaginate from "react-paginate";
-import { NavLink, useNavigate, Link, } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import Sidebar from "./Sidebar";
 import "./OrderManagement.css";
@@ -45,12 +45,10 @@ const OrderManagement = () => {
     Phone: "",
     Address: "",
   });
-
   const StaffToken = "Bearer " + sessionStorage.getItem("token");
-  const userId = sessionStorage.getItem("userData")
-    ? JSON.parse(sessionStorage.getItem("userData")).UserID
-    : "Guest";
+  const staffData = sessionStorage.getItem("staffData");
 
+  const staffName = staffData ? JSON.parse(staffData).Name : "";
   const dropdownRef = useRef(null);
 
   const location = useLocation();
@@ -116,7 +114,7 @@ const OrderManagement = () => {
         setOrderDetail(response.data.detail);
         setIsDetail(true);
       }
-    } catch (error) { }
+    } catch (error) {}
   };
 
   const handleGetCustomerInfo = async (orderId) => {
@@ -137,7 +135,7 @@ const OrderManagement = () => {
         });
         setIsInfoOpen(true);
       }
-    } catch (error) { }
+    } catch (error) {}
   };
 
   const handleStatusChange = (id, newStatus, type) => {
@@ -170,7 +168,8 @@ const OrderManagement = () => {
 
       if (response.data[0].OrderID || response.data[0].PreorderID) {
         toast.success(
-          `${itemType === "order" ? "Order" : "Pre-order"
+          `${
+            itemType === "order" ? "Order" : "Pre-order"
           } status updated successfully!`,
           {
             duration: 3000,
@@ -228,8 +227,8 @@ const OrderManagement = () => {
   const handleUpdatePreOrderETA = async (preOrderId, newETA) => {
     try {
       const ETADate = {
-        "eta": formatDateForDisplay(newETA)
-      }
+        eta: formatDateForDisplay(newETA),
+      };
       const response = await UpdatePreOrderETA(StaffToken, preOrderId, ETADate);
       console.log(ETADate);
       if (response.data && response.data.length > 0) {
@@ -251,9 +250,9 @@ const OrderManagement = () => {
   };
 
   function formatDateForDisplay(dateString) {
-    if (!dateString) return '';
+    if (!dateString) return "";
     const date = new Date(dateString);
-    return date.toISOString().split('T')[0]; // Returns "YYYY-MM-DD"
+    return date.toISOString().split("T")[0]; // Returns "YYYY-MM-DD"
   }
 
   const handleUpdateOrderPaymentStatus = async (orderId) => {
@@ -266,10 +265,8 @@ const OrderManagement = () => {
           position: "top-right",
         });
       }
-    } catch (error) {
-
-    }
-  }
+    } catch (error) {}
+  };
 
   const handleUpdatePreOrderPaymentStatus = async (orderId) => {
     try {
@@ -281,10 +278,8 @@ const OrderManagement = () => {
           position: "top-right",
         });
       }
-    } catch (error) {
-
-    }
-  }
+    } catch (error) {}
+  };
 
   useEffect(() => {
     handleGetAllOrders();
@@ -297,14 +292,13 @@ const OrderManagement = () => {
   }, [currentPage, POcurrentPage]);
 
   const handleLogout = async () => {
-
     // event.preventDefault();
-    const token = 'Bearer ' + sessionStorage.getItem('token');
+    const token = "Bearer " + sessionStorage.getItem("token");
     await Logout(token);
     sessionStorage.clear();
     navigate("/Customer/home");
     window.location.reload();
-  }
+  };
 
   return (
     <div className="order-management-container">
@@ -447,7 +441,7 @@ const OrderManagement = () => {
           <h1>Order Management</h1>
           <header>
             <button className="staff-name" onClick={toggleDropdown}>
-              Staff Name
+              {staffName}
             </button>
             <div ref={dropdownRef} className="dropdown-menu">
               <ul className="dropdown">
@@ -455,7 +449,9 @@ const OrderManagement = () => {
                   <a href="/Staff/StaffProfile">Profile</a>
                 </li>
                 <li>
-                  <a href="" onClick={handleLogout}>Logout</a>
+                  <a href="" onClick={handleLogout}>
+                    Logout
+                  </a>
                 </li>
               </ul>
             </div>
@@ -471,16 +467,22 @@ const OrderManagement = () => {
             </button>
           </div>
           <h2>Pre-Orders</h2>
-          <div className="table-wrapper" style={{ width: '100%', overflowX: 'auto' }}>
-            <table className="issues-table" style={{ width: '100%', minWidth: '1100px' }}>
+          <div
+            className="table-wrapper"
+            style={{ width: "100%", overflowX: "auto" }}
+          >
+            <table
+              className="issues-table"
+              style={{ width: "100%", minWidth: "1100px" }}
+            >
               <thead>
                 <tr>
                   <th>PreOrderID</th>
-                  <th style={{ width: '10%' }}>Product</th>
+                  <th style={{ width: "10%" }}>Product</th>
                   <th>PreOrder Date</th>
                   <th>Update Date</th>
                   <th>Price</th>
-                  <th style={{ width: '15%' }}>Estimated delivery date</th>
+                  <th style={{ width: "15%" }}>Estimated delivery date</th>
                   <th>Customer Info</th>
                   <th>Payment Method</th>
                   <th>Status</th>
@@ -503,17 +505,26 @@ const OrderManagement = () => {
                     <td>{formatDate(order.created)}</td>
                     <td>{formatDate(order.updated)}</td>
                     <td>{order.TotalPrice}</td>
-                    <td><input type="date" value={formatDateForDisplay(order.ETA)}
-                      style={{
-                        padding: '5px 10px',
-                        borderRadius: '4px',
-                        border: '1px solid #ccc',
-                        fontSize: '14px',
-                        width: '150px',
-                        cursor: 'pointer'
-                      }}
-                      onChange={(e) => handleUpdatePreOrderETA(order.PreorderID, e.target.value)}
-                    /></td>
+                    <td>
+                      <input
+                        type="date"
+                        value={formatDateForDisplay(order.ETA)}
+                        style={{
+                          padding: "5px 10px",
+                          borderRadius: "4px",
+                          border: "1px solid #ccc",
+                          fontSize: "14px",
+                          width: "150px",
+                          cursor: "pointer",
+                        }}
+                        onChange={(e) =>
+                          handleUpdatePreOrderETA(
+                            order.PreorderID,
+                            e.target.value
+                          )
+                        }
+                      />
+                    </td>
                     <td>
                       <a
                         href=""
@@ -549,9 +560,13 @@ const OrderManagement = () => {
 
                     <td>
                       <div className="select1">
-                        {order.PaymentStatus === 'Pending' ? (
+                        {order.PaymentStatus === "Pending" ? (
                           <button
-                            onClick={() => handleUpdatePreOrderPaymentStatus(order.PreorderID)}
+                            onClick={() =>
+                              handleUpdatePreOrderPaymentStatus(
+                                order.PreorderID
+                              )
+                            }
                             className="btn-confirm"
                           >
                             Done
@@ -561,7 +576,7 @@ const OrderManagement = () => {
                             onClick={() => setIsStatusChangeOpen(false)}
                             className="btn-confirm"
                             disabled
-                            style={{ opacity: 0.5, cursor: 'not-allowed' }}
+                            style={{ opacity: 0.5, cursor: "not-allowed" }}
                           >
                             Done
                           </button>
@@ -665,9 +680,11 @@ const OrderManagement = () => {
                         <option value="Pending">Pending</option>
                         <option value="Done">Done</option>
                       </select> */}
-                      {order.PaymentStatus === 'Pending' ? (
+                      {order.PaymentStatus === "Pending" ? (
                         <button
-                          onClick={() => handleUpdateOrderPaymentStatus(order.OrderID)}
+                          onClick={() =>
+                            handleUpdateOrderPaymentStatus(order.OrderID)
+                          }
                           className="btn-confirm"
                         >
                           Done
@@ -677,7 +694,7 @@ const OrderManagement = () => {
                           onClick={() => setIsStatusChangeOpen(false)}
                           className="btn-confirm"
                           disabled
-                          style={{ opacity: 0.5, cursor: 'not-allowed' }}
+                          style={{ opacity: 0.5, cursor: "not-allowed" }}
                         >
                           Done
                         </button>

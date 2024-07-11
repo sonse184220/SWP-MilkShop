@@ -217,7 +217,7 @@ const ProductDetail = ({ isMember }) => {
                 setInWishlist(prevState => !prevState);
                 const response = await AddWishlist(MemberToken, ProductID);
                 console.log(response);
-                if (response.data && response.data[0].ProductID === ProductID) {
+                if (response.data && response.data.msg) {
                     toast.success('Added to wishlist', {
                         theme: "colored",
                     });

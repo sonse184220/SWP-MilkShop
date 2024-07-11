@@ -2,8 +2,18 @@ import React, { useState, useRef } from "react";
 import "./ReportManagement.css"; // Import CSS file
 import Sidebar from "./Sidebar";
 import Modal from "react-modal";
+import { useNavigate } from "react-router-dom";
 
 const ReportManagement = () => {
+  const navigate = useNavigate();
+
+  const StaffToken = "Bearer " + sessionStorage.getItem("token");
+  console.log("Retrieved Staff Token:", StaffToken); // Debugging line
+
+  const staffData = sessionStorage.getItem("staffData");
+
+  const staffName = staffData ? JSON.parse(staffData).Name : "";
+
   const [isAddOpen, setIsAddOpen] = useState(false);
   const dropdownRef = useRef(null);
   const [reports, setReports] = useState([
@@ -29,6 +39,13 @@ const ReportManagement = () => {
       dropdownRef.current.classList.toggle("dropdown-menu");
     }
   };
+
+  const handleLogout = () => {
+    // event.preventDefault();
+    sessionStorage.clear();
+    navigate("/Customer/home");
+    window.location.reload();
+  };
   return (
     <div className="report-management">
       <Sidebar />
@@ -37,7 +54,7 @@ const ReportManagement = () => {
           <h1>Report Management</h1>
           <header>
             <button className="staff-name" onClick={toggleDropdown}>
-              Staff Name
+              {staffName}
             </button>
             <div ref={dropdownRef} className="dropdown-menu">
               <ul className="dropdown">
@@ -45,7 +62,9 @@ const ReportManagement = () => {
                   <a href="/Staff/StaffProfile">Profile</a>
                 </li>
                 <li>
-                  <a href="#">Logout</a>
+                  <a href="#" onClick={handleLogout}>
+                    Logout
+                  </a>
                 </li>
               </ul>
             </div>
