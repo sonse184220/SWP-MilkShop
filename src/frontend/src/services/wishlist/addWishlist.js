@@ -1,8 +1,8 @@
 import axios from '../axios';
 
-export const AddWishlist = (token, uID, pID) => {
+export const AddWishlist = (token, pID) => {
     try {
-        return axios.post(`/api/wishlist/?productId=${pID}`, {},
+        return axios.post(`/api/wishlist/add?productId=${pID}`, {},
             {
                 headers: {
                     'authorization': token,

@@ -10,6 +10,7 @@ import { GetWishlist } from '../../services/wishlist/getAllWishlist';
 import { RemoveWishlist } from '../../services/wishlist/removeWishlish';
 import { AddToCart } from '../../services/cart/addToCart';
 import { ViewCart } from '../../services/cart/viewCart';
+import getProductById from '../../services/product/getProductByID';
 
 export const Wishlist = ({ isMember }) => {
     const navigate = useNavigate();
@@ -59,7 +60,11 @@ export const Wishlist = ({ isMember }) => {
                 //     theme: "colored",
                 // });
                 handleViewCart();
-                setLastPrToCart(pID);
+                // setLastPrToCart(pID);
+                const response2 = await getProductById(pID);
+                if (response2.data) {
+                    setLastPrToCart(response2.data.product.Image);
+                }
                 openModal(e);
             }
             // console.log('cart============', response)
@@ -136,7 +141,7 @@ export const Wishlist = ({ isMember }) => {
                                             <thead>
                                                 <tr>
                                                     <th className="product_remove">Delete</th>
-                                                    <th className="product_thumb">Image</th>
+                                                    {/* <th className="product_thumb">Image</th> */}
                                                     <th className="product_name">Product</th>
                                                     <th className="product-price">Price</th>
                                                     <th className="product_stock">Stock Status</th>
@@ -149,7 +154,7 @@ export const Wishlist = ({ isMember }) => {
                                                         wishlistItems.map((item) => (
                                                             <tr>
                                                                 <td className="product_remove"><a onClick={(e) => handleRemoveWishlist(e, item.ProductID)} href=""><i className="fa fa-trash-alt"></i></a></td>
-                                                                <td className="product_thumb"><a href="product-details-default.html"><img src={`/img/${item.ProductID}.jpg`} alt="" /></a></td>
+                                                                {/* <td className="product_thumb"><a href="product-details-default.html"><img src={`/img/${item.ProductID}.jpg`} alt="" /></a></td> */}
                                                                 <td className="product_name"><a href="product-details-default.html">{item.Name}</a></td>
                                                                 <td className="product-price">{item.Price.toLocaleString()} VND</td>
                                                                 <td className="product_stock">{item.Status}</td>
@@ -219,7 +224,7 @@ export const Wishlist = ({ isMember }) => {
                                         <div className="row">
                                             <div className="col-md-4">
                                                 <div className="modal-add-cart-product-img">
-                                                    <img className="img-fluid" src={`/img/${lastPrToCart}.jpg`} alt="no img found" />
+                                                    <img className="img-fluid" src={`data:image/jpeg;base64,${lastPrToCart}`} alt="no img found" />
                                                 </div>
                                             </div>
                                             <div className="col-md-8">
