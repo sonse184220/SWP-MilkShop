@@ -15,7 +15,7 @@ const ProductList = ({ products = [] }) => {
           >
             <img
               className="card-img-top"
-              src={product.image}
+              src={`data:image/jpeg;base64,${product.Image}`}
               alt={product.name}
             />
             <div className="card-body">
