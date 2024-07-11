@@ -11,6 +11,7 @@ import { GetAllVouchers } from "../../services/voucher/GetAllVouchers";
 import { deleteVoucher } from "../../services/voucher/deleteVoucher";
 import { UpdateVoucher } from "../../services/voucher/updateVoucher";
 import ReactPaginate from "react-paginate";
+import { Logout } from "../../services/login/logout";
 const VoucherManagement = () => {
   const navigate = useNavigate();
 
@@ -221,8 +222,10 @@ const VoucherManagement = () => {
   const handlePageClick = (event) => {
     setCurrentPage(event.selected + 1);
   };
-  const handleLogout = () => {
+  const handleLogout = async () => {
     // event.preventDefault();
+    const token = 'Bearer ' + sessionStorage.getItem('token');
+    await Logout(token);
     sessionStorage.clear();
     navigate("/Customer/home");
     window.location.reload();

@@ -17,6 +17,7 @@ import { UpdatePreOrderStatus } from "../../services/staff/pre-order/updatePreOr
 import { UpdatePreOrderETA } from "../../services/staff/pre-order/updatePreOrderETA";
 import { UpdateOrderPaymentStatus } from "../../services/staff/ordermanage/updatePaymentStatus";
 import { UpdatePreOrderPaymentStatus } from "../../services/staff/pre-order/updatePOPaymentStatus";
+import { Logout } from "../../services/login/logout";
 
 const OrderManagement = () => {
   const navigate = useNavigate();
@@ -290,8 +291,10 @@ const OrderManagement = () => {
     handleGetAllPreOrders();
   }, [currentPage, POcurrentPage]);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     // event.preventDefault();
+    const token = "Bearer " + sessionStorage.getItem("token");
+    await Logout(token);
     sessionStorage.clear();
     navigate("/Customer/home");
     window.location.reload();

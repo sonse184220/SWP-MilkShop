@@ -164,6 +164,7 @@ const ProductDetail = ({ isMember }) => {
                         Name: CurrentProduct.Name,
                         Price: CurrentProduct.Price,
                         CartQuantity: quantity,
+                        Image: CurrentProduct.Image
                     });
                 }
 
@@ -216,7 +217,7 @@ const ProductDetail = ({ isMember }) => {
                 setInWishlist(prevState => !prevState);
                 const response = await AddWishlist(MemberToken, ProductID);
                 console.log(response);
-                if (response.data && response.data[0].ProductID === ProductID) {
+                if (response.data && response.data.msg) {
                     toast.success('Added to wishlist', {
                         theme: "colored",
                     });
@@ -477,26 +478,28 @@ const ProductDetail = ({ isMember }) => {
                         </div>
                     </div>
                 </Modal>
-            )}
-            {CurrentProduct ? (
-                <div>
-                    <ToastContainer style={{ top: '110px' }} />
-                    <div className="product-detail">
-                        <div className="detail-img">
-                            {/* <img src={`${CurrentProduct[0].Image}`} /> */}
-                            {/* <img src={`data:image/jpeg;base64,${btoa(String.fromCharCode.apply(null, CurrentProduct[0].Image.data))}`} /> */}
-                            <img
-                                src={`data:image/jpeg;base64,${CurrentProduct.Image}`}
-                                alt={CurrentProduct.Name}
-                            />
-                        </div>
-                        <div className="product-details-content-area product-details--golden aos-init aos-animate detail-info" data-aos="fade-up" data-aos-delay="200">
-                            <div className="product-details-text">
-                                <h4 className="title">{CurrentProduct.Name}</h4>
-                                <div className="price">{CurrentProduct.Price.toLocaleString()} VND</div>
-                                {/* <p>{CurrentProduct.Content}</p> */}
-                                <div dangerouslySetInnerHTML={{ __html: he.decode(CurrentProduct.Content) }}></div>
-                                {/* <>
+            )
+            }
+            {
+                CurrentProduct ? (
+                    <div>
+                        <ToastContainer style={{ top: '110px' }} />
+                        <div className="product-detail">
+                            <div className="detail-img">
+                                {/* <img src={`${CurrentProduct[0].Image}`} /> */}
+                                {/* <img src={`data:image/jpeg;base64,${btoa(String.fromCharCode.apply(null, CurrentProduct[0].Image.data))}`} /> */}
+                                <img
+                                    src={`data:image/jpeg;base64,${CurrentProduct.Image}`}
+                                    alt={CurrentProduct.Name}
+                                />
+                            </div>
+                            <div className="product-details-content-area product-details--golden aos-init aos-animate detail-info" data-aos="fade-up" data-aos-delay="200">
+                                <div className="product-details-text">
+                                    <h4 className="title">{CurrentProduct.Name}</h4>
+                                    <div className="price">{CurrentProduct.Price.toLocaleString()} VND</div>
+                                    {/* <p>{CurrentProduct.Content}</p> */}
+                                    <div dangerouslySetInnerHTML={{ __html: he.decode(CurrentProduct.Content) }}></div>
+                                    {/* <>
                                     <ReactReadMoreReadLess
                                         charLimit={200}
                                         readMoreText={"Read more ▼"}
@@ -508,99 +511,99 @@ const ProductDetail = ({ isMember }) => {
                                     </ReactReadMoreReadLess>
                                 </> */}
 
-                            </div>
-                            <div className="product-details-variable">
-                                <h4 className="title">Available Options</h4>
-
-                                <div className="variable-single-item">
-                                    <div className="product-stock"> <span className="product-stock-in"><i className="zmdi zmdi-check-circle"></i></span> {CurrentProduct.Quantity} IN STOCK</div>
                                 </div>
+                                <div className="product-details-variable">
+                                    <h4 className="title">Available Options</h4>
 
-                                <div className="d-flex align-items-center ">
-                                    <div className="variable-single-item ">
-                                        <span>Quantity</span>
-                                        <div className="product-variable-quantity">
-                                            <input min="1" max="100" value={quantity} type="number"
-                                                onChange={e => setQuantity(parseInt(e.target.value))}
-                                                onIncrement={handleIncrement}
-                                                onDecrement={handleDecrement} />
-                                        </div>
+                                    <div className="variable-single-item">
+                                        <div className="product-stock"> <span className="product-stock-in"><i className="zmdi zmdi-check-circle"></i></span> {CurrentProduct.Quantity} IN STOCK</div>
                                     </div>
 
-                                    <div className="product-add-to-cart-btn">
-                                        {/* {(isMember && CurrentProduct.Quantity === 0) ?
+                                    <div className="d-flex align-items-center ">
+                                        <div className="variable-single-item ">
+                                            <span>Quantity</span>
+                                            <div className="product-variable-quantity">
+                                                <input min="1" max="100" value={quantity} type="number"
+                                                    onChange={e => setQuantity(parseInt(e.target.value))}
+                                                    onIncrement={handleIncrement}
+                                                    onDecrement={handleDecrement} />
+                                            </div>
+                                        </div>
+
+                                        <div className="product-add-to-cart-btn">
+                                            {/* {(isMember && CurrentProduct.Quantity === 0) ?
                                             (<a href="#" onClick={(e) => { e.preventDefault(); setIsOpenPreOrder(true) }} className="btn btn-block btn-lg btn-black-default-hover" data-bs-toggle="modal" data-bs-target="#modalAddcart">Pre-Order</a>)
                                             :
                                             (<a href="#" onClick={handleAddToCart} className="btn btn-block btn-lg btn-black-default-hover" data-bs-toggle="modal" data-bs-target="#modalAddcart">+ Add To Cart</a>)
                                         } */}
-                                        {(!isMember && CurrentProduct.Quantity === 0) ? (
-                                            <button
-                                                className="btn btn-block btn-lg btn-black-default-hover disabled-button"
-                                                disabled
-                                                style={{ cursor: 'not-allowed', opacity: 0.6 }}
-                                            >
-                                                Out of Stock
-                                            </button>
-                                        ) : (isMember && CurrentProduct.Quantity === 0) ? (
-                                            <a
-                                                href="#"
-                                                onClick={(e) => { e.preventDefault(); setIsOpenPreOrder(true) }}
-                                                className="btn btn-block btn-lg btn-black-default-hover"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#modalAddcart"
-                                            >
-                                                Pre-Order
-                                            </a>
-                                        ) : (
-                                            <a
-                                                href="#"
-                                                onClick={handleAddToCart}
-                                                className="btn btn-block btn-lg btn-black-default-hover"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#modalAddcart"
-                                            >
-                                                + Add To Cart
-                                            </a>
-                                        )}
+                                            {(!isMember && CurrentProduct.Quantity === 0) ? (
+                                                <button
+                                                    className="btn btn-block btn-lg btn-black-default-hover disabled-button"
+                                                    disabled
+                                                    style={{ cursor: 'not-allowed', opacity: 0.6 }}
+                                                >
+                                                    Out of Stock
+                                                </button>
+                                            ) : (isMember && CurrentProduct.Quantity === 0) ? (
+                                                <a
+                                                    href="#"
+                                                    onClick={(e) => { e.preventDefault(); setIsOpenPreOrder(true) }}
+                                                    className="btn btn-block btn-lg btn-black-default-hover"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#modalAddcart"
+                                                >
+                                                    Pre-Order
+                                                </a>
+                                            ) : (
+                                                <a
+                                                    href="#"
+                                                    onClick={handleAddToCart}
+                                                    className="btn btn-block btn-lg btn-black-default-hover"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#modalAddcart"
+                                                >
+                                                    + Add To Cart
+                                                </a>
+                                            )}
+                                        </div>
                                     </div>
-                                </div>
 
-                                {isMember && (
-                                    <div className="product-details-meta mb-20" style={{ display: 'flex' }}>
-                                        <a href="" onClick={handleAddRemoveWishList} className="icon-space-right"><i className={`zmdi ${inWishlist ? 'zmdi-favorite' : 'zmdi-favorite-outline'}`}></i>{inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}</a>
-                                        {/* <a href="compare.html" className="icon-space-right"><i className="zmdi zmdi-refresh"></i>Compare</a> */}
-                                        <p className='wislist-prompt'>(Mark as your favorite product)</p>
-                                    </div>
-                                )}
-                            </div>
-                            <div className="product-details-catagory mb-2">
-                                <span className="title">CATEGORY:</span>
-                                <ul>
-                                    <li><a href="#">{CurrentProduct.BrandName}</a></li>
-                                    {/* <li><a href="#">KITCHEN UTENSILS</a></li>
+                                    {isMember && (
+                                        <div className="product-details-meta mb-20" style={{ display: 'flex' }}>
+                                            <a href="" onClick={handleAddRemoveWishList} className="icon-space-right"><i className={`zmdi ${inWishlist ? 'zmdi-favorite' : 'zmdi-favorite-outline'}`}></i>{inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}</a>
+                                            {/* <a href="compare.html" className="icon-space-right"><i className="zmdi zmdi-refresh"></i>Compare</a> */}
+                                            <p className='wislist-prompt'>(Mark as your favorite product)</p>
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="product-details-catagory mb-2">
+                                    <span className="title">CATEGORY:</span>
+                                    <ul>
+                                        <li><a href="#">{CurrentProduct.BrandName}</a></li>
+                                        {/* <li><a href="#">KITCHEN UTENSILS</a></li>
                                     <li><a href="#"></a></li> */}
-                                </ul>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
+                        <div className='feedback'>
+                            <Feedback
+                                feedbacks={feedbacks}
+                                onAddFeedback={handleAddFeedback}
+                                onDeleteFeedback={handleDeleteFeedback}
+                                newFeedback={newFeedback}
+                                setNewFeedback={setNewFeedback}
+                                userId={userId}
+                                isMember={isMember}
+                            /></div>
+                        {/* <div><ProductList products={products} /></div> */}
+                        <div>
+                            {relatedProduct.length > 0 && <ProductList products={relatedProduct} />}
+                        </div>
                     </div>
-                    <div className='feedback'>
-                        <Feedback
-                            feedbacks={feedbacks}
-                            onAddFeedback={handleAddFeedback}
-                            onDeleteFeedback={handleDeleteFeedback}
-                            newFeedback={newFeedback}
-                            setNewFeedback={setNewFeedback}
-                            userId={userId}
-                            isMember={isMember}
-                        /></div>
-                    {/* <div><ProductList products={products} /></div> */}
-                    <div>
-                        {relatedProduct.length > 0 && <ProductList products={relatedProduct} />}
-                    </div>
-                </div>
-            ) : (
-                <div><Page404 /></div>
-            )
+                ) : (
+                    <div><Page404 /></div>
+                )
             };
             <div><Footer /></div>
         </div >

@@ -15,6 +15,7 @@ import { AddBlog } from "../../services/staff/blog/addBlog";
 import { blogDetail } from "../../services/blog/blogDetail";
 import { UpdateBlog } from "../../services/staff/blog/updateBlog";
 import { deleteBlog } from "../../services/staff/blog/deleteBlog";
+import { Logout } from "../../services/login/logout";
 const BlogManagement = () => {
   const navigate = useNavigate();
 
@@ -217,8 +218,10 @@ const BlogManagement = () => {
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     // event.preventDefault();
+    const token = "Bearer " + sessionStorage.getItem("token");
+    await Logout(token);
     sessionStorage.clear();
     navigate("/Customer/home");
     window.location.reload();

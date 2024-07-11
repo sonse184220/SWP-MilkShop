@@ -43,7 +43,7 @@ export class CartService {
     async viewCart(user) {
         const UserID = user.userId;
 
-        const query = `Select CART.ProductID, CART.CartQuantity, PRODUCT.Name, PRODUCT.Price 
+        const query = `Select CART.ProductID, CART.CartQuantity, PRODUCT.Name, PRODUCT.Price, Product.Image
                        FROM CART JOIN PRODUCT ON CART.ProductID = PRODUCT.ProductID 
                        WHERE CART.UserID = ?`;
         const [results] = await poolConnect.query(query, [UserID]);

@@ -16,6 +16,7 @@ import getProductById from "../../services/product/getProductByID";
 import { UpdateProduct } from "../../services/staff/product/updateProduct";
 import { AddProduct } from "../../services/staff/product/addProduct";
 import { handleAllBrand } from "../../services/brand/getAllBrand";
+import { Logout } from "../../services/login/logout";
 
 function ProductManagement() {
   const navigate = useNavigate();
@@ -248,8 +249,10 @@ function ProductManagement() {
     handleGetProducts();
   }, [currentPage]);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     // event.preventDefault();
+    const token = 'Bearer ' + sessionStorage.getItem('token');
+    await Logout(token);
     sessionStorage.clear();
     navigate("/Customer/home");
     window.location.reload();

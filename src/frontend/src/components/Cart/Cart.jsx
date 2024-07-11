@@ -316,7 +316,7 @@ export const Cart = ({ isMember }) => {
                                   data-mdb-ripple-color="light"
                                 >
                                   <img
-                                    src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Vertical/12a.webp"
+                                    src={`data:image/jpeg;base64,${item.Image}`}
                                     className="w-100"
                                     alt="Blue Jeans Jacket"
                                   />
