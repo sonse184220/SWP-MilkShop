@@ -153,7 +153,6 @@ export const checkProductData = async (req, res, next) => {
         .exists().withMessage('Name is required')
         .notEmpty().withMessage('Name cannot be empty')
         .trim()
-        .escape()
         .run(req);
 
     await body('Price')
@@ -175,7 +174,6 @@ export const checkProductData = async (req, res, next) => {
     await body('Content')
         .optional({ checkFalsy: true })
         .trim()
-        .escape()
         .run(req);
 
     await body('Status')
