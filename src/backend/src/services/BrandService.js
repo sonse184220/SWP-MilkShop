@@ -16,4 +16,9 @@ export class BrandService {
                                                  VALUES (?,?,?)`, [brandId, brandName, content]);
         return brand;
     }
+
+    async deleteBrand(brandId) {
+        const [result] = await poolConnect.query("DELETE FROM brand WHERE BrandID = ?", [brandId]);
+        return result;
+    }
 }

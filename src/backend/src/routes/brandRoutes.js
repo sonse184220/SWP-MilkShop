@@ -18,4 +18,8 @@ router.post("/staff/create", checkAuthenticated, isStaff, checkBrandData, async 
     await brandController.createBrand(req, res);
 })
 
+router.delete("/staff/:brandId/delete", checkAuthenticated, isStaff, checkBrandId, async (req, res) => {
+    await brandController.deleteBrand(req, res);
+})
+
 export { router as brandRoutes };
