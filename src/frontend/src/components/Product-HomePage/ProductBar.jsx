@@ -8,6 +8,7 @@ import { Oval } from 'react-loader-spinner';
 
 import './ProductBar.css';
 import handleGetAllProduct from '../../services/product/getAllProductService';
+import { GetAvailableProduct } from '../../services/product/getAvailableProduct';
 
 const ProductBar = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
@@ -19,7 +20,7 @@ const ProductBar = () => {
     const GetAllProduct = async () => {
         try {
             setIsLoading(true);
-            const response = await handleGetAllProduct();
+            const response = await GetAvailableProduct();
             console.log(response);
             const slicedProducts = response.data.products.slice(0, 9); // Get only the first 12 elements
             setProducts(slicedProducts);

@@ -136,12 +136,15 @@ const BlogManagement = () => {
       if (response.blog) {
         const blog = response.blog;
         console.log("get a blog");
+        const productIds = response.blogProducts
+          ? response.blogProducts.map(product => product.ProductID).join(', ')
+          : '';
         setUpdateBlog({
           BlogID: blog.BlogID,
           userId: blog.UserID,
           title: blog.Title,
           content: blog.Content,
-          productList: blog.ProductList,
+          productList: productIds,
         });
         setImagePreview(blog.Image);
         setIsOpen(true);
@@ -292,7 +295,7 @@ const BlogManagement = () => {
                   <td className="deleteDiv">
                     <div className="delete">
                       <button className="delete-button">
-                        <a href="#" onClick={() => handleGetABlog(blog.BlogID)}>
+                        <a href="" onClick={(e) => { e.preventDefault(); handleGetABlog(blog.BlogID) }}>
                           Update
                         </a>
                       </button>

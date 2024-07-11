@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import he from 'he';
+import ReactReadMoreReadLess from "react-read-more-read-less";
 import { useParams } from "react-router-dom";
 import { blogDetail } from "../../services/blog/blogDetail"; // Adjust the path as per your structure
 import "./BlogDetail.css";
@@ -22,18 +23,12 @@ const BlogDetail = ({ isMember }) => {
     return `${day} ${month}, ${year}`;
   }
 
-  const getImageSrc = (imageData) => {
-    if (!imageData || !imageData.data) return '';
-
-    try {
-      const base64 = btoa(
-        imageData.data.reduce((data, byte) => data + String.fromCharCode(byte), '')
-      );
-      return `data:image/jpeg;base64,${base64}`;
-    } catch (error) {
-      console.error('Error converting image data:', error);
-      return '';
-    }
+  const decodeContent = (content) => {
+    if (!content) return '';
+    // First, decode the HTML entities
+    const decodedContent = he.decode(content);
+    // Then, remove any HTML tags
+    return decodedContent.replace(/<[^>]*>/g, '');
   };
 
   useEffect(() => {
@@ -68,12 +63,24 @@ const BlogDetail = ({ isMember }) => {
                 </span>
                 <span className="blog-author">{blog.Author}</span>
               </div>
-              <div className="blog-content">
-                {/* <p>{blog.Content}</p> */}
-                <div dangerouslySetInnerHTML={{ __html: he.decode(blog.Content) }}></div>
-              </div>
               <div className="blog-detail-image">
                 <img src={`data:image/jpeg;base64,${blog.Image}`} />
+              </div>
+              <div className="blog-content">
+                {/* <p>{blog.Content}</p> */}
+                {/* <div dangerouslySetInnerHTML={{ __html: he.decode(blog.Content) }}></div> */}
+                {/* <>
+                  <ReactReadMoreReadLess
+                    charLimit={200}
+                    readMoreText={"Read more ▼"}
+                    readLessText={"Read less ▲"}
+                    readMoreClassName="read-more-less--more"
+                    readLessClassName="read-more-less--less"
+                  >
+                    {decodeContent(blog.Content)}
+                  </ReactReadMoreReadLess>
+                </> */}
+                <div dangerouslySetInnerHTML={{ __html: he.decode(blog.Content) }}></div>
               </div>
 
 

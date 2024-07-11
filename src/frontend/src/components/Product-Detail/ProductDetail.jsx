@@ -71,7 +71,6 @@ const ProductDetail = ({ isMember }) => {
     const handleGetRelatedProduct = async () => {
         try {
             const response = await GetProductByBrandID(CurrentProduct.BrandID);
-            // console.log('related', response);
             if (response.data.total > 0) {
                 setRelatedProduct(response.data.data);
             }
@@ -496,8 +495,8 @@ const ProductDetail = ({ isMember }) => {
                                 <h4 className="title">{CurrentProduct.Name}</h4>
                                 <div className="price">{CurrentProduct.Price.toLocaleString()} VND</div>
                                 {/* <p>{CurrentProduct.Content}</p> */}
-
-                                <>
+                                <div dangerouslySetInnerHTML={{ __html: he.decode(CurrentProduct.Content) }}></div>
+                                {/* <>
                                     <ReactReadMoreReadLess
                                         charLimit={200}
                                         readMoreText={"Read more ▼"}
@@ -507,7 +506,7 @@ const ProductDetail = ({ isMember }) => {
                                     >
                                         {decodeContent(CurrentProduct.Content)}
                                     </ReactReadMoreReadLess>
-                                </>
+                                </> */}
 
                             </div>
                             <div className="product-details-variable">

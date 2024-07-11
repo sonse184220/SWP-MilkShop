@@ -12,6 +12,7 @@ import Brand from '../Brand/Brand';
 import handleGetAllProduct from '../../services/product/getAllProductService';
 import GetProductByBrandID from '../../services/product/getProductByBrandID';
 import { SearchProductByName } from '../../services/product/searchProductByName';
+import { GetAvailableProduct } from '../../services/product/getAvailableProduct';
 
 const AllProducts = ({ isMember }) => {
     const [products, setProducts] = useState([]);
@@ -54,7 +55,7 @@ const AllProducts = ({ isMember }) => {
             setIsLoading(true);
             let page = currentPage;
             let limit = 6;
-            const response = await handleGetAllProduct(page, limit);
+            const response = await GetAvailableProduct(page, limit);
 
             if (response.data.totalProducts > 0) {
                 setProducts(response.data.products);

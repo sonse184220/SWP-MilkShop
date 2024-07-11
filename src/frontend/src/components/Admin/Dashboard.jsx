@@ -14,37 +14,16 @@ import {
 import "./Dashboard.css";
 import SidebarAdmin from "./SidebarAdmin";
 import { GetMonthlyRevenue } from "../../services/admin/getMonthlyRevenue";
+import { GetWeeklyRevenue } from "../../services/admin/getWeeklyRevenue";
+import { GetTopUser } from "../../services/admin/getTopUsers";
 
 const Dashboard = () => {
   const AdminToken = "Bearer " + sessionStorage.getItem("token");
 
   const [monthlyRevenue, setMonthlyRevenue] = useState([]);
+  const [weeklyRevenue, setWeeklyRevenue] = useState([]);
+  const [topUser, setTopUser] = useState([]);
 
-  const lineData = [
-    { name: "23 Nov", revenue: 24000 },
-    { name: "24 Nov", revenue: 25000 },
-    { name: "25 Nov", revenue: 30000 },
-    { name: "26 Nov", revenue: 35000 },
-    { name: "27 Nov", revenue: 38000 },
-    { name: "28 Nov", revenue: 45000 },
-    { name: "29 Nov", revenue: 47000 },
-    { name: "30 Nov", revenue: 50000 },
-  ];
-
-  const barData = [
-    { name: "Jan", revenue: 50000 },
-    { name: "Feb", revenue: 40000 },
-    { name: "Mar", revenue: 60000 },
-    { name: "Apr", revenue: 70000 },
-    { name: "May", revenue: 80000 },
-    { name: "Jun", revenue: 75000 },
-    { name: "Jul", revenue: 85000 },
-    { name: "Aug", revenue: 70000 },
-    { name: "Sep", revenue: 60000 },
-    { name: "Oct", revenue: 50000 },
-    { name: "Nov", revenue: 40000 },
-    { name: "Dec", revenue: 20000 },
-  ];
   const dropdownRef = useRef(null);
   const toggleDropdown = () => {
     if (dropdownRef.current) {
@@ -63,8 +42,35 @@ const Dashboard = () => {
     }
   }
 
+  const handleGetWeeklyRevenue = async () => {
+    try {
+      const response = await GetWeeklyRevenue(AdminToken);
+      if (response.data.Weeks.length > 0) {
+        setWeeklyRevenue(response.data.Weeks);
+      }
+    } catch (error) {
+
+    }
+  }
+  const formatXAxis = (tickItem) => {
+    return `Week ${tickItem}`;
+  };
+
+  const handleGetTopUsers = async () => {
+    try {
+      const response = await GetTopUser(AdminToken);
+      if (response.data.topUsers.length > 0) {
+        setTopUser(response.data.topUsers)
+      }
+    } catch (error) {
+
+    }
+  }
+
   useEffect(() => {
     handleGetMonthlyRevenue();
+    handleGetWeeklyRevenue();
+    handleGetTopUsers();
   }, [])
 
   return (
@@ -108,7 +114,7 @@ const Dashboard = () => {
           </div> */}
           <div className="charts">
             <div className="chart">
-              <h3>Revenue Over Time</h3>
+              <h3>Monthly Revenue</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <LineChart data={monthlyRevenue} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -126,15 +132,15 @@ const Dashboard = () => {
               </ResponsiveContainer>
             </div>
             <div className="chart">
-              <h3>Monthly Revenue</h3>
+              <h3>Weekly Revenue</h3>
               <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={barData}>
+                <BarChart data={weeklyRevenue}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
+                  <XAxis dataKey="Week" tickFormatter={formatXAxis} />
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="revenue" fill="#8884d8" />
+                  <Bar dataKey="totalRevenue" fill="#8884d8" />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -142,14 +148,16 @@ const Dashboard = () => {
           <div className="top-users">
             <h3>Top Users</h3>
             <ul>
-              <li>Helena - email@figmasfakedomain.net</li>
-              <li>Oscar - email@figmasfakedomain.net</li>
+              {topUser.map((user) => (
+                <li>{user.UserID} - {user.Name} - Success Order: {user.orderCount}</li>
+              ))}
+              {/* <li>Oscar - email@figmasfakedomain.net</li>
               <li>Daniel - email@figmasfakedomain.net</li>
               <li>Daniel Jay Park - email@figmasfakedomain.net</li>
-              <li>Mark Rojas - email@figmasfakedomain.net</li>
+              <li>Mark Rojas - email@figmasfakedomain.net</li> */}
             </ul>
           </div>
-          <div className="source-statistics">
+          {/* <div className="source-statistics">
             <h3>Source Statistics</h3>
             <table>
               <thead>
@@ -197,7 +205,7 @@ const Dashboard = () => {
                 </tr>
               </tbody>
             </table>
-          </div>
+          </div> */}
         </div>
       </div >
     </>
