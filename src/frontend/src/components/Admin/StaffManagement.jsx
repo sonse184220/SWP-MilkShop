@@ -9,8 +9,12 @@ import { DisableAccount } from "../../services/admin/disableAccount";
 import { EnableAccount } from "../../services/admin/enableAccount";
 import { toast, ToastContainer } from "react-toastify";
 import { AddStaff } from "../../services/admin/addStaff";
+import { Logout } from "../../services/login/logout";
+import { useNavigate } from "react-router-dom";
 
 const StaffManagement = () => {
+  const navigate = useNavigate();
+
   const AdminToken = "Bearer " + sessionStorage.getItem("token");
 
   const [isOpen, setIsOpen] = useState(false);
@@ -132,6 +136,15 @@ const StaffManagement = () => {
     }
   }
 
+  const handleLogout = async () => {
+    // event.preventDefault();
+    const token = 'Bearer ' + sessionStorage.getItem('token');
+    await Logout(token);
+    sessionStorage.clear();
+    navigate("/Customer/home");
+    window.location.reload();
+  };
+
   return (
     <div className="staff-management-container">
       <Sidebar />
@@ -149,7 +162,7 @@ const StaffManagement = () => {
                   <a href="/Admin/AdminProfile">Profile</a>
                 </li>
                 <li>
-                  <a href="#">Logout</a>
+                  <a href="" onClick={(e) => { e.preventDefault(); handleLogout() }}>Logout</a>
                 </li>
               </ul>
             </div>
