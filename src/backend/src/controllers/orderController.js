@@ -153,6 +153,10 @@ export class OrderController {
                 }
             }
 
+            if ((status === "Shipping" || status === "Done") && order[0].PaymentStatus !== "Done") {
+                return res.status(403).send({ msg: "This order hasnt been paid yet." })
+            }
+
             const updatedOrder = await orderService.getOrder(orderId);
             return res.status(200).send(updatedOrder);
         } catch (err) {

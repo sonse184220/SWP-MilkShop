@@ -162,6 +162,10 @@ export class PreorderController {
                     return res.status(500).send({ error: "Failed to update user RewardPoints!" });
                 }
             }
+
+            if ((status === "Shipping" || status === "Done") && preorder[0].PaymentStatus !== "Done") {
+                return res.status(403).send({ msg: "This pre-order hasnt been paid yet." })
+            }
     
             const updatedPreorder = await preorderService.getPreorder(preorderId);
             return res.status(200).send(updatedPreorder);

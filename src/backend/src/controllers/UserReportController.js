@@ -141,6 +141,7 @@ export class UserReportController {
         try {
             const { orderType, orderId, preorderId, title, content } = req.body;
             const userId = req.user.userId;
+            const currentDate = new Date();
     
             let typeQuery = "";
             let typeQueryValue = "";
@@ -150,6 +151,11 @@ export class UserReportController {
                     const checkOrder = await orderService.getOrder(orderId);
                     if (checkOrder.length === 0) { return res.status(404).send({ error: "Order not found!" })  }
                     if (checkOrder[0].UserID !== userId) { return res.status(403).send({ msg: "Forbidden." })  }
+
+                    if (checkOrder[0].Status !== "Done") { return res.status(403).send({ msg: "This order hasnt been completed." }) }
+                    const orderDateDifference = (currentDate - checkOrder[0].updated) / (1000 * 60 * 60 * 24); // 1000ms, 60s, 60m, 24h
+                    if (orderDateDifference > 3){ return res.status(403).send({ msg: "The allowed reporting period for this order has expired (3 days since completed)." }) }
+
                     typeQuery = "OrderID,";
                     typeQueryValue = "?,";
                     typeValue = [orderId];
@@ -158,6 +164,11 @@ export class UserReportController {
                     const checkPreorder = await preorderService.getPreorder(preorderId);
                     if (checkPreorder.length === 0) { return res.status(404).send({ error: "Pre-order not found!" })  }
                     if (checkPreorder[0].UserID !== userId) { return res.status(403).send({ msg: "Forbidden." })  }
+
+                    if (checkPreorder[0].Status !== "Done") { return res.status(403).send({ msg: "This pre-order hasnt been completed." }) }
+                    const preorderDateDifference = (currentDate - checkOrder[0].updated) / (1000 * 60 * 60 * 24); // 1000ms, 60s, 60m, 24h
+                    if (preorderDateDifference > 3){ return res.status(403).send({ msg: "The allowed reporting period for this pre-order has expired (3 days since completed)." }) }
+
                     typeQuery = "PreorderID,";
                     typeQueryValue = "?,";
                     typeValue = [preorderId];
@@ -170,7 +181,6 @@ export class UserReportController {
             if (creatingReport.affectedRows === 0) {
                 return res.status(500).send({ error: "Failed to create user report!" })
             }
-            console.log(creatingReport.insertId);
             const createdReport = await userReportService.getReportById(creatingReport.insertId);
     
             return res.status(201).send(createdReport);
