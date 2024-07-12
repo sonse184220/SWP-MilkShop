@@ -84,7 +84,7 @@ const AllProducts = ({ isMember }) => {
     return (
         <div className="body">
             <div><Header isMember={isMember} /></div>
-            <img className='image' src="/img/milkbuying.jpeg" />
+            <img className='image' src="/img/pinkbg.jpg" />
             <div className='brand-product'>
                 <div className='brand-bar'><Brand onBrandClick={handleBrandClick} onSearch={handleSearchProductByName} setSearchInput={setSearchInput} /></div>
 

@@ -178,7 +178,7 @@ export const OrderHistory = ({ isMember }) => {
     return (
         <>
             <div><Header isMember={isMember} /></div>
-            <img className='image' src="/img/milkbuying.jpeg" />
+            <img className='image' src="/img/pinkbg.jpg" />
             <ToastContainer style={{ top: "110px" }} />
             <div className='history-order'>
                 <Modal

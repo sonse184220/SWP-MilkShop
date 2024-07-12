@@ -379,7 +379,7 @@ const ProductDetail = ({ isMember }) => {
     return (
         <div className='body'>
             <div><Header isMember={isMember} /></div>
-            <img className='image' src="/img/milkbuying.jpeg" />
+            <img className='image' src="/img/pinkbg.jpg" />
             {CurrentProduct && (
                 <Modal
                     isOpen={isOpenPreOrder}

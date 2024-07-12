@@ -74,7 +74,7 @@ const AllBlog = ({ isMember }) => {
 
   return (
     <>
-      <img className="image" src="/img/milkbuying.jpeg" alt="Blog Header" />
+      <img className="image" src="/img/pinkbg.jpg" alt="Blog Header" />
       <Header isMember={isMember} />
       <div className="container">
         <div className="row">

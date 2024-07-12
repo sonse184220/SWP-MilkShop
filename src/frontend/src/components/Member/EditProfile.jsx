@@ -35,8 +35,7 @@ const EditProfile = ({ isMember }) => {
         setPhone(userData.Phone);
         setAddress(userData.Address);
         // setImageSrc(btoa(String.fromCharCode.apply(null, userData.ProfilePicture.data)));
-        setImageSrc(
-          `data:image/jpeg;base64,${userData.ProfilePicture}`);
+        setImageSrc(`data:image/jpeg;base64,${userData.ProfilePicture}`);
       } catch (error) {
         setErrorMessage({ message: "Error fetching user data" });
       }
@@ -76,11 +75,22 @@ const EditProfile = ({ isMember }) => {
 
     try {
       const response = await putInfo(userId, formData);
+
       setSuccessMessage({ message: "Profile updated successfully!" });
-      setName(response.Name);
-      setEmail(response.Email);
-      setPhone(response.Phone);
-      setAddress(response.Address);
+      setName(response.user.Name);
+      setEmail(response.user.Email);
+      setPhone(response.user.Phone);
+      setAddress(response.user.Address);
+      setImageSrc(`data:image/jpeg;base64,${response.user.ProfilePicture}`);
+      const user = JSON.parse(sessionStorage.getItem("userData"));
+      user.Name = response.user.Name;
+      user.Email = response.user.Email;
+      user.Phone = response.user.Phone;
+      user.Address = response.user.Address;
+      user.ProfilePicture = response.user.ProfilePicture;
+      sessionStorage.setItem('userData', JSON.stringify(user));
+
+      window.dispatchEvent(new CustomEvent('userDataChanged', { detail: user }));
     } catch (error) {
       setErrorMessage({ message: "Error updating profile" });
     }
@@ -139,7 +149,7 @@ const EditProfile = ({ isMember }) => {
 
   return (
     <>
-      <img className="image" src="/img/milkbuying.jpeg" alt="Blog Header" />
+      <img className="image" src="/img/pinkbg.jpg" alt="Blog Header" />
       <Header isMember={isMember} />
       <div className="editProfile">
         <div className="wrapper">

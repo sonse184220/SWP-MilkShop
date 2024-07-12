@@ -77,33 +77,22 @@ export const Cart = ({ isMember }) => {
       if (response.data.orderId) {
         handleViewCart();
         setAppliedVoucher(null);
+        setAppliedVoucher2(null);
         handleGetVouchers();
+        setUserFormData({
+          Name: "",
+          Email: "",
+          Phone: "",
+          Address: "",
+          RewardPoints: "",
+          useRewardPoints: false,
+          paymentMethod: "COD",
+        });
         handleGetUserInfo();
         setIsOpen(false);
         setIsSuccessModalOpen(true);
         if (userFormData.paymentMethod === 'Banking') {
-          console.log('check banking worked');
-          setUserFormData({
-            Name: "",
-            Email: "",
-            Phone: "",
-            Address: "",
-            RewardPoints: "",
-            useRewardPoints: false,
-            paymentMethod: "COD",
-          });
-          console.log('check banking worked');
           navigate('/Customer/QRBanking');
-        } else {
-          setUserFormData({
-            Name: "",
-            Email: "",
-            Phone: "",
-            Address: "",
-            RewardPoints: "",
-            useRewardPoints: false,
-            paymentMethod: "COD",
-          });
         }
       }
     } catch (error) {
@@ -113,6 +102,7 @@ export const Cart = ({ isMember }) => {
             theme: "colored",
           });
           setIsOpen(false);
+
         }
       }
     } finally {
@@ -121,9 +111,11 @@ export const Cart = ({ isMember }) => {
     }
   };
 
-  const handleGetUserInfo = () => {
+  const handleGetUserInfo = async () => {
     try {
       const user = JSON.parse(sessionStorage.getItem("userData"));
+      const response = await getUser(user.UserID);
+      const point = response.RewardPoints;
       if (user) {
         // setUserInfo(user);
         setUserFormData({
@@ -131,12 +123,14 @@ export const Cart = ({ isMember }) => {
           Email: user.Email,
           Phone: user.Phone,
           Address: user.Address,
-          RewardPoints: user.RewardPoints,
+          RewardPoints: point,
           useRewardPoints: false,
           paymentMethod: "COD",
         });
       }
-    } catch (error) { }
+    } catch (error) {
+      console.error("Error fetching user info:", error);
+    }
   };
 
   const handleRemoveCart = async (pID) => {
@@ -224,10 +218,12 @@ export const Cart = ({ isMember }) => {
     const fetchVouchers = async () => {
       const response = await GetAllVouchersMember(MemberToken);
       if (Array.isArray(response.data)) {
-        const voucher = response.data.find((i) =>
-          (i.VoucherID === AppliedVoucher) && setAppliedVoucher2(i)
-        );
+        // response.data.find((i) =>
+        //   (i.VoucherID === AppliedVoucher) ? setAppliedVoucher2(i) : setAppliedVoucher2(null)
+        // );
         // setAppliedVoucher()
+        const foundVoucher = response.data.find(i => i.VoucherID === AppliedVoucher);
+        setAppliedVoucher2(foundVoucher || null);
       }
     };
     fetchVouchers();
@@ -242,7 +238,7 @@ export const Cart = ({ isMember }) => {
   return (
     <>
       <Header isMember={isMember} />
-      <img className="image" src="/img/milkbuying.jpeg" alt="Header Image" />
+      <img className="image" src="/img/pinkbg.jpg" alt="Header Image" />
       <Modal
         isOpen={isOpen}
         onRequestClose={() => setIsOpen(false)}

@@ -254,7 +254,7 @@ export const GuestCart = ({ isMember }) => {
     return (
         <>
             <Header isMember={isMember} />
-            <img className='image' src="/img/milkbuying.jpeg" alt="Header Image" />
+            <img className='image' src="/img/pinkbg.jpg" alt="Header Image" />
             <div className="GuestMiddle">
                 {/* <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
                     <h2>Confirm Order</h2>

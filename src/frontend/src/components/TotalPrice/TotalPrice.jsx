@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 import './TotalPrice.css'
 
-export const TotalPrice = ({ CartItems, AppliedVoucher, userFormData, handleMemberOrderAction, isOpen, setIsOpen, isMember }) => {
+export const TotalPrice = ({ CartItems, AppliedVoucher, userFormData, setIsOpen, isMember }) => {
 
 
     const calculateTotalPrice = () => {
@@ -18,7 +18,7 @@ export const TotalPrice = ({ CartItems, AppliedVoucher, userFormData, handleMemb
         // Apply voucher discount
         if (isMember) {
             if (AppliedVoucher) {
-                totalPrice -= AppliedVoucher.Discount;
+                totalPrice *= (1 - AppliedVoucher.Discount / 100);
             }
 
             // Apply reward points discount
@@ -27,7 +27,7 @@ export const TotalPrice = ({ CartItems, AppliedVoucher, userFormData, handleMemb
             }
         }
 
-        return totalPrice;
+        return Math.max(totalPrice, 0);
     };
 
     return (

@@ -16,6 +16,8 @@ export function Header({ onLogin, isMember }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
+  const [profilePicture, setProfilePicture] = useState(null);
+
   useEffect(() => {
     const handleScroll = () => {
       const header = headerRef.current;
@@ -47,6 +49,31 @@ export function Header({ onLogin, isMember }) {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
+
+  useEffect(() => {
+    const updateProfilePicture = () => {
+      const userDataString = sessionStorage.getItem('userData');
+      if (userDataString) {
+        const userData = JSON.parse(userDataString);
+        setProfilePicture(userData.ProfilePicture || null);
+      } else {
+        setProfilePicture(null);
+      }
+    };
+
+    updateProfilePicture();
+
+    const handleUserDataChange = (event) => {
+      const updatedUserData = event.detail;
+      setProfilePicture(updatedUserData.ProfilePicture || null);
+    };
+
+    window.addEventListener('userDataChanged', handleUserDataChange);
+
+    return () => {
+      window.removeEventListener('userDataChanged', handleUserDataChange);
+    };
+  }, []);
 
   //Chuyển sang Route('/login-register') lúc bấm nút logout
   const showLogin = async (event) => {
@@ -135,7 +162,11 @@ export function Header({ onLogin, isMember }) {
                 {isMember ? (
                   <li className="user-dropdown" ref={dropdownRef}>
                     <div className="profile-image" onClick={toggleDropdown}>
-                      <img src="/img/user.png" alt="User" />
+                      {/* <img src={`data:image/jpeg;base64,${null}`} alt="User" /> */}
+                      <img
+                        src={profilePicture ? `data:image/jpeg;base64,${profilePicture}` : "/img/user.png"}
+                        alt="User"
+                      />
                     </div>
                     <ul
                       className={`header-dropdown-menu ${isDropdownOpen ? "show" : ""

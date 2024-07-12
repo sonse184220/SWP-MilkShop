@@ -9,7 +9,7 @@ export function QR({ isMember }) {
                 width: '100%',
                 height: '155px',
                 objectFit: 'cover'
-            }} src="/img/milkbuying.jpeg" />
+            }} src="/img/pinkbg.jpg" />
             <h1 style={{ textAlign: 'center' }}>Banking QR</h1>
             <div style={{ textAlign: 'center', fontSize: '20px', margin: '10px auto' }}>Thanks for buying. Please scan this for banking payment and our staff will check your payment</div>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
