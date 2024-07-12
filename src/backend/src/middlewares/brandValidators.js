@@ -36,3 +36,22 @@ export async function checkBrandData(req, res, next) {
     Object.assign(req.body, matchedData(req));
     next();
 }
+
+export async function checkBrandUpdateData(req, res, next) {
+    await body("brandName")
+    .optional({ checkFalsy: true })
+    .trim()
+    .run(req);
+
+    await body("content")
+    .optional({ checkFalsy: true })
+    .trim()
+    .run(req);
+
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+        return res.status(400).send({ error: result.array() });
+    }
+    Object.assign(req.body, matchedData(req));
+    next();
+}

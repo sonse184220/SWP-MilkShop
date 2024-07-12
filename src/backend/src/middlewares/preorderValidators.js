@@ -18,7 +18,6 @@ export async function checkPreorderId(req, res, next) {
 
 export async function checkPreorderInputStatus(req, res, next) {
     const statusList = ["Waiting", "Cancelled", "Shipping", "Done"];
-
     await body("status")
     .trim()
     .escape()

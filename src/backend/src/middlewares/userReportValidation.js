@@ -1,5 +1,22 @@
 import { body, param, query, validationResult, matchedData } from 'express-validator';
 
+export async function checkReportId(req, res, next) {
+    await param("reportId")
+    .trim()
+    .escape()
+    .exists().withMessage("ReportID is required!")
+    .notEmpty().withMessage("ReportID can not be blank!")
+    .run(req);
+
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+        return res.status(400).send({ error: result.array() });
+    }
+    
+    Object.assign(req.param, matchedData(req));
+    next();
+}
+
 export async function checkPaginationQueryForUserReport(req, res, next) {
     await query("limit")
     .default("30")
@@ -78,6 +95,28 @@ export async function checkUserReportSubmitData(req, res, next) {
     .trim()
     .exists().withMessage("Content is required!")
     .notEmpty().withMessage("Content can not be blank!")
+    .run(req);
+
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+        return res.status(400).send({ error: result.array() });
+    }
+    Object.assign(req.body, matchedData(req));
+    next();
+}
+
+export async function checkUserReportUpdateData(req, res, next) {
+    const statusList = ["open", "closed"];
+    await body("status")
+    .optional({ checkFalsy: true })
+    .trim()
+    .toLowerCase()
+    .isIn(statusList).withMessage(`Invalid status input! status can only be: ${statusList.join(", ")}`)
+    .run(req);
+    
+    await body("response")
+    .optional({ checkFalsy: true })
+    .trim()
     .run(req);
 
     const result = validationResult(req);

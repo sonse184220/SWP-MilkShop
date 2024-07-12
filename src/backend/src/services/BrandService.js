@@ -21,4 +21,9 @@ export class BrandService {
         const [result] = await poolConnect.query("DELETE FROM brand WHERE BrandID = ?", [brandId]);
         return result;
     }
+
+    async updateBrand(brandId, updateQuery, updateValue) {
+        const [updatedBrand] = await poolConnect.query(`UPDATE brand SET ${updateQuery.join(", ")} WHERE BrandID = ?`, [...updateValue, brandId]);
+        return updatedBrand;
+    }
 }

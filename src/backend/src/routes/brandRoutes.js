@@ -3,7 +3,7 @@ import { BrandController } from "../controllers/BrandController.js"
 import express from 'express';
 import { checkAuthenticated } from "../middlewares/authMiddleware.js";
 import { isStaff } from "../middlewares/validationMiddleware.js";
-import { checkBrandData, checkBrandId } from "../middlewares/brandValidators.js";
+import { checkBrandData, checkBrandId, checkBrandUpdateData } from "../middlewares/brandValidators.js";
 
 const router = express.Router();
 const brandController = new BrandController();
@@ -20,6 +20,10 @@ router.post("/staff/create", checkAuthenticated, isStaff, checkBrandData, async 
 
 router.delete("/staff/:brandId/delete", checkAuthenticated, isStaff, checkBrandId, async (req, res) => {
     await brandController.deleteBrand(req, res);
+})
+
+router.patch("/staff/:brandId", checkAuthenticated, isStaff, checkBrandId, checkBrandUpdateData, async (req, res) => {
+    await brandController.updateBrand(req, res);
 })
 
 export { router as brandRoutes };
