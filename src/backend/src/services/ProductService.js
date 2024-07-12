@@ -110,13 +110,17 @@ export class ProductService {
     }
     // lấy feedback bằng id của nó
     async getFeedback(id) {
-        const [feedback] = await poolConnect.query("Select * FROM feedback WHERE FeedbackID = ?", [id]);
+        const [feedback] = await poolConnect.query(`Select f.*, u.Name, u.ProfilePicture
+                                                    FROM feedback as f 
+                                                    JOIN user as u
+                                                    ON f.UserID = u.UserID
+                                                    WHERE FeedbackID = ?`, [id]);
         return feedback;
     }
 
     // lấy feedbacks từ 1 product
     async getFeedbacksByProductID(id) {
-        const [feedbacks] = await poolConnect.query(`Select f.*, u.Name
+        const [feedbacks] = await poolConnect.query(`Select f.*, u.Name, u.ProfilePicture
                                                     FROM feedback as f 
                                                     JOIN user as u
                                                     ON f.UserID = u.UserID
@@ -130,7 +134,7 @@ export class ProductService {
         const [feedbacks] = await poolConnect.query(`SELECT 
                                                         f.FeedbackID, f.ProductID,
                                                         p.Name AS ProductName, p.BrandID, b.Name AS BrandName,
-                                                        f.UserID, u.Name, f.Rating, f.Content, f.created
+                                                        f.UserID, u.Name, u.ProfilePicture, f.Rating, f.Content, f.created
                                                     FROM feedback AS f
                                                     JOIN product AS p ON p.ProductID = f.ProductID
                                                     JOIN brand AS b ON b.BrandID = p.BrandID
