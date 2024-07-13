@@ -96,5 +96,12 @@ router.delete("/api/product/feedbacks/:id", checkAuthenticated, checkFeedbackId,
     await productController.deleteFeedback(req, res);
 });
 
+
+router.get('/api/products/latest', async (req, res) => {
+    await productController.getLatestProducts(req, res);
+});
+router.get('/api/products/bestsellers', async (req, res) => {
+    await productController.getBestSellingProducts(req, res);
+});
 // export router
 export { router as productRoutes };
