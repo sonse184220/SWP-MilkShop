@@ -15,11 +15,13 @@ import { GetPreOrderHistory } from '../../services/pre-order-history/getPreOrder
 import { useNavigate } from 'react-router-dom';
 import { CancelOrder } from '../../services/order-history/cancelOrder';
 import { CancelPreOrder } from '../../services/pre-order-history/cancelPreOrder';
+import { SendReport } from '../../services/report/sendReport';
 
 export const OrderHistory = ({ isMember }) => {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
 
+    const [isReportOpen, setIsReportOpen] = useState(false);
 
     const [selectedItem, setSelectedItem] = useState(null);
     const [itemType, setItemType] = useState('');
@@ -36,6 +38,14 @@ export const OrderHistory = ({ isMember }) => {
 
     const MemberToken = 'Bearer ' + sessionStorage.getItem('token');
     const userId = sessionStorage.getItem('userData') ? JSON.parse(sessionStorage.getItem('userData')).UserID : "Guest";
+
+    const [newreport, setNewReport] = useState({
+        orderType: "",
+        orderId: "",
+        preorderId: "",
+        title: "",
+        content: ""
+    });
 
     const handleGetOrder1User = async () => {
         try {
@@ -151,6 +161,55 @@ export const OrderHistory = ({ isMember }) => {
         }
     };
 
+    const openReportModal = (type, id) => {
+        if (type === 'order') {
+            setNewReport({
+                ...newreport,
+                orderType: type,
+                orderId: id
+            });
+        } else if (type === 'preorder') {
+            setNewReport({
+                ...newreport,
+                orderType: type,
+                preorderId: id
+            });
+        }
+        setIsReportOpen(true);
+    };
+
+    const handleSendReport = async () => {
+        if (newreport.title.length === 0 || newreport.content.length === 0) {
+            toast.error('Please filled all informations before submit', {
+                duration: 3000,
+                position: "top-right",
+            });
+            return;
+        }
+        try {
+            const response = await SendReport(MemberToken, newreport);
+            if (response.data[0].ReportID) {
+                toast.success('Report submitted successfully!', {
+                    duration: 3000,
+                    position: "top-right",
+                });
+                setIsReportOpen(false);
+                setNewReport({
+                    orderType: '',
+                    orderId: '',
+                    title: '',
+                    content: ''
+                });
+            }
+        } catch (error) {
+            console.error('Error sending report:', error);
+            toast.error('Failed to submit report. Please try again.', {
+                duration: 3000,
+                position: "top-right",
+            });
+        }
+    }
+
     useEffect(() => {
         handleGetOrder1User();
         handleGetPreOrder1User();
@@ -181,6 +240,70 @@ export const OrderHistory = ({ isMember }) => {
             <img className='image' src="/img/pinkbg.jpg" />
             <ToastContainer style={{ top: "110px" }} />
             <div className='history-order'>
+                <Modal
+                    isOpen={isReportOpen}
+                    onRequestClose={() => setIsReportOpen(false)}
+                    className="custom-modal-blog"
+                    overlayClassName="custom-overlay-blog"
+                >
+                    {/* <h2>Report</h2>
+                    <label htmlFor="old-password">OrderID: </label>
+                    <input
+                        type="password"
+                        id="old-password"
+                        placeholder="Enter old password"
+                   
+                    />
+                    <br />
+                    <label htmlFor="new-password">Title: </label>
+                    <input
+                        type="password"
+                        id="new-password"
+                        placeholder="Enter new password"
+                    
+                    />{" "}
+                    <br />
+                    <label htmlFor="confirm-new-password">
+                        Content:
+                    </label>{" "}
+                    <input
+                        type="password"
+                        id="confirm-new-password"
+                        placeholder="Confirm new password"
+                    
+                    />
+                    <br />
+                    <br /> */}
+                    <h2>Report</h2>
+                    <label htmlFor="report-title">Title: </label>
+                    <input
+                        type="text"
+                        id="report-title"
+                        placeholder="Enter report title"
+                        value={newreport.title}
+                        onChange={(e) => setNewReport({ ...newreport, title: e.target.value })}
+                    />
+                    <br />
+                    <label htmlFor="report-content">Content: </label>
+                    <textarea
+                        id="report-content"
+                        placeholder="Enter report content"
+                        style={{ width: '100%', height: '90px' }}
+                        value={newreport.content}
+                        onChange={(e) => setNewReport({ ...newreport, content: e.target.value })}
+                    />
+                    <br />
+                    <div className="modal-actions-blog">
+                        <button className="btn-confirm-blog"
+                            onClick={handleSendReport}
+                        >
+                            Send Report
+                        </button>
+                        <button onClick={() => setIsReportOpen(false)} className="btn-cancel-blog">
+                            Cancel
+                        </button>
+                    </div>
+                </Modal>
                 <Modal
                     isOpen={isCancelConfirm}
                     onRequestClose={() => setIsCancelConfirm(false)}
@@ -312,7 +435,7 @@ export const OrderHistory = ({ isMember }) => {
                                                                     {/* <a href="" onClick={(e) => { e.preventDefault(); setIsCancelConfirm(true); }} data-bs-toggle="modal" className="btn btn-secondary btn-sm"
                                                                         {preorder.Status !== 'Waiting' ? (disabled
                                                                             style={{ opacity: 0.5, cursor: 'not-allowed' }})}>Cancel</a> */}
-                                                                    {preorder.Status !== 'Waiting' ? (
+                                                                    {/* {preorder.Status !== 'Waiting' ? (
                                                                         <button
                                                                             className="btn btn-secondary btn-sm"
                                                                             disabled
@@ -331,7 +454,43 @@ export const OrderHistory = ({ isMember }) => {
                                                                         >
                                                                             Cancel
                                                                         </a>
-                                                                    )}
+                                                                    )} */}
+                                                                    {(() => {
+                                                                        if (preorder.Status === 'Waiting') {
+                                                                            return (
+                                                                                <a
+                                                                                    href=""
+                                                                                    onClick={(e) => {
+                                                                                        e.preventDefault();
+                                                                                        handleCancelOrder(preorder.PreorderID, 'pre-order');
+                                                                                    }}
+                                                                                    className="btn btn-secondary btn-sm"
+                                                                                >
+                                                                                    Cancel
+                                                                                </a>
+                                                                            );
+                                                                        } else if (preorder.Status === 'Done') {
+                                                                            return (
+                                                                                <button
+                                                                                    className="btn btn-warning btn-sm"
+                                                                                    onClick={() => openReportModal('preorder', preorder.PreorderID)}
+                                                                                // style={{ opacity: 0.7, cursor: 'not-allowed' }}
+                                                                                >
+                                                                                    Report
+                                                                                </button>
+                                                                            );
+                                                                        } else {
+                                                                            return (
+                                                                                <button
+                                                                                    className="btn btn-secondary btn-sm"
+                                                                                    disabled
+                                                                                    style={{ opacity: 0.5, cursor: 'not-allowed' }}
+                                                                                >
+                                                                                    Cancel
+                                                                                </button>
+                                                                            );
+                                                                        }
+                                                                    })()}
                                                                 </td>
                                                             </tr>
                                                         )))
@@ -443,7 +602,7 @@ export const OrderHistory = ({ isMember }) => {
                                                                 </td>
                                                                 <td>
                                                                     {/* <a href="" onClick={(e) => { e.preventDefault(); setIsCancelConfirm(true); }} data-bs-toggle="modal" className="btn btn-secondary btn-sm">Cancel</a> */}
-                                                                    {order.Status !== 'Waiting' ? (
+                                                                    {/* {order.Status !== 'Waiting' ? (
                                                                         <button
                                                                             className="btn btn-secondary btn-sm"
                                                                             disabled
@@ -462,7 +621,42 @@ export const OrderHistory = ({ isMember }) => {
                                                                         >
                                                                             Cancel
                                                                         </a>
-                                                                    )}
+                                                                    )} */}
+                                                                    {(() => {
+                                                                        if (order.Status === 'Waiting') {
+                                                                            return (
+                                                                                <a
+                                                                                    href=""
+                                                                                    onClick={(e) => {
+                                                                                        e.preventDefault();
+                                                                                        handleCancelOrder(order.OrderID, 'order');
+                                                                                    }}
+                                                                                    className="btn btn-secondary btn-sm"
+                                                                                >
+                                                                                    Cancel
+                                                                                </a>
+                                                                            );
+                                                                        } else if (order.Status === 'Done') {
+                                                                            return (
+                                                                                <button
+                                                                                    className="btn btn-warning btn-sm"
+                                                                                    onClick={() => openReportModal('order', order.OrderID)}
+                                                                                >
+                                                                                    Report
+                                                                                </button>
+                                                                            );
+                                                                        } else {
+                                                                            return (
+                                                                                <button
+                                                                                    className="btn btn-secondary btn-sm"
+                                                                                    disabled
+                                                                                    style={{ opacity: 0.5, cursor: 'not-allowed' }}
+                                                                                >
+                                                                                    Cancel
+                                                                                </button>
+                                                                            );
+                                                                        }
+                                                                    })()}
                                                                 </td>
                                                             </tr>
                                                         )))
