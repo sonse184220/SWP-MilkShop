@@ -9,7 +9,8 @@ export const checkAuthenticated = async (req, res, next) => {
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(401).json({ message: 'Invalid token header' });
+        req.user = { userId: 'guest' };
+        return next();
     }
 
     const token = authHeader.split(' ')[1];
@@ -26,7 +27,6 @@ export const checkAuthenticated = async (req, res, next) => {
         res.status(401).json({ message: 'Invalid token' });
     }
 };
-
 export const checkChatAuthenticated = async (req, res, next) => {
     const authHeader = req.headers.authorization;
 
