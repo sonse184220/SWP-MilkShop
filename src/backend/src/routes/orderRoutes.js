@@ -1,6 +1,6 @@
 import express from 'express';
 import { OrderController } from '../controllers/orderController.js';
-import { checkAuthenticated } from '../middlewares/authMiddleware.js';
+import { checkAuthenticated, checkOrderAuthenticated } from '../middlewares/authMiddleware.js';
 import { checkOrderId, checkOrderInputStatus } from '../middlewares/orderValidators.js';
 import { checkPaginationQuery } from '../middlewares/utilsMiddleware.js';
 import { isStaff, isStaffOrAdmin } from '../middlewares/validationMiddleware.js';
@@ -44,7 +44,7 @@ router.patch("/staff/:orderId/payment-done", checkAuthenticated, isStaff, checkO
     await orderController.updateOrderPaymentStatusDone(req, res);
 })
 
-router.post('/place-order', checkAuthenticated, orderController.placeOrder);
+router.post('/place-order', checkOrderAuthenticated, orderController.placeOrder);
 
 
 export { router as orderRoutes };
