@@ -28,12 +28,12 @@ export function Report({ isMember }) {
     const [reports, setReports] = React.useState([]);
 
     const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [rowsPerPage, setRowsPerPage] = React.useState(1);
     const [totalCount, setTotalCount] = React.useState(0);
 
     const handleGetUserReport = async () => {
         try {
-            let limit = rowsPerPage
+            let limit = 5
             let cpage = page + 1;
             let sort = "";
             let status = "";
@@ -53,7 +53,7 @@ export function Report({ isMember }) {
 
     React.useEffect(() => {
         handleGetUserReport();
-    }, [page, rowsPerPage])
+    }, [page])
 
 
     const handleChangePage = (event, newPage) => {
@@ -69,11 +69,20 @@ export function Report({ isMember }) {
         <>
             <div><Header isMember={isMember} /></div>
             <img className="image" src="/img/pinkbg.jpg" />
-            <div className='report-table'>
-                <TableContainer component={Paper} className="mb-4 rounded-lg overflow-hidden"
-                    style={{ boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}
+            <div className='report-table'
+                style={{
+                    borderRadius: '20px',
+                    overflow: 'hidden',
+                    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                }}>
+                <TableContainer component={Paper} className="mb-4 overflow-hidden"
+                    style={{
+
+
+                        border: '1px solid #ddd;'
+                    }}
                 >
-                    <Table aria-label="collapsible table" style={{ borderRadius: '20px' }}>
+                    <Table aria-label="collapsible table">
                         <TableHead>
                             <TableRow>
                                 <TableCell />
@@ -99,8 +108,10 @@ export function Report({ isMember }) {
                         page={page}
                         onPageChange={handleChangePage}
                         rowsPerPage={rowsPerPage}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
-                        rowsPerPageOptions={[5, 10, 15]}
+                        // onRowsPerPageChange={handleChangeRowsPerPage}
+                        rowsPerPageOptions={[]}
+                    // labelDisplayedRows={({ from, to, count }) => `${from}-${to} of ${count}`}    
+                    // ActionsComponent={TablePaginationActions}
                     />
                 </div>
             </div>

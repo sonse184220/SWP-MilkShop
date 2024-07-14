@@ -107,46 +107,49 @@ const AllProducts = ({ isMember }) => {
                             }}
                         />
                     ) : (
-                        <div className="product-container">
-                            {products.map((product) => (
-                                <Link to={`/Customer/ProductDetail/${product.ProductID}`} key={product.ProductID} className="product-preview">
-                                    <img src={`data:image/jpeg;base64,${product.Image}`} alt={product.Name} loading="lazy" />
-                                    <h3>{product.Name}</h3>
-                                    {/* <p>{product.Content}</p> */}
-                                    {/* <p><ReactQuill
+                        <>
+                            <div className="product-container">
+                                {products.map((product) => (
+                                    <Link to={`/Customer/ProductDetail/${product.ProductID}`} key={product.ProductID} className="product-preview">
+                                        <img src={`data:image/jpeg;base64,${product.Image}`} alt={product.Name} loading="lazy" />
+                                        <h3>{product.Name}</h3>
+                                        {/* <p>{product.Content}</p> */}
+                                        {/* <p><ReactQuill
                                         value={product.Content}
                                         readOnly={true}
                                         theme="bubble"
                                     /></p> */}
-                                    {/* <div dangerouslySetInnerHTML={{ __html: product.Content }}></div> */}
-                                    {/* <div dangerouslySetInnerHTML={{ __html: product.Content }}></div> */}
-                                    {/* <div dangerouslySetInnerHTML={{ __html: he.decode(product.Content) }}></div> */}
-                                    {/* <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product.Content) }} /> */}
-                                    <p>{product.Price.toLocaleString()} VND</p>
-                                </Link>
-                            ))}
-                        </div>
-                    )}
-                    <div className="pagination-container" style={{ marginTop: '20px' }}>
+                                        {/* <div dangerouslySetInnerHTML={{ __html: product.Content }}></div> */}
+                                        {/* <div dangerouslySetInnerHTML={{ __html: product.Content }}></div> */}
+                                        {/* <div dangerouslySetInnerHTML={{ __html: he.decode(product.Content) }}></div> */}
+                                        {/* <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product.Content) }} /> */}
+                                        <p>{product.Price.toLocaleString()} VND</p>
+                                    </Link>
+                                ))}
+                            </div>
+                            <div className="pagination-container" style={{ marginTop: '20px' }}>
 
-                        <ReactPaginate
-                            breakLabel="..."
-                            nextLabel="Next >"
-                            onPageChange={handlePageClick}
-                            pageRangeDisplayed={5}
-                            pageCount={pageCount}
-                            previousLabel="< Previous"
-                            renderOnZeroPageCount={null}
-                            containerClassName="pagination justify-content-center"
-                            pageClassName="page-item"
-                            pageLinkClassName="page-link"
-                            previousClassName="page-item"
-                            previousLinkClassName="page-link"
-                            nextClassName="page-item"
-                            nextLinkClassName="page-link"
-                            activeClassName="active"
-                        />
-                    </div>
+                                <ReactPaginate
+                                    breakLabel="..."
+                                    nextLabel="Next >"
+                                    onPageChange={handlePageClick}
+                                    pageRangeDisplayed={5}
+                                    pageCount={pageCount}
+                                    previousLabel="< Previous"
+                                    renderOnZeroPageCount={null}
+                                    containerClassName="pagination justify-content-center"
+                                    pageClassName="page-item"
+                                    pageLinkClassName="page-link"
+                                    previousClassName="page-item"
+                                    previousLinkClassName="page-link"
+                                    nextClassName="page-item"
+                                    nextLinkClassName="page-link"
+                                    activeClassName="active"
+                                />
+                            </div>
+                        </>
+                    )}
+
                 </div>
 
             </div>
