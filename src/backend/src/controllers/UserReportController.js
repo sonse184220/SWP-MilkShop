@@ -193,28 +193,17 @@ export class UserReportController {
         try {
             const staffId = req.user.userId;
             const reportId = req.params.reportId;
-            const { status, response } = req.body;
+            const response = req.body.response;
     
             const checkReport = await userReportService.getReportById(reportId);
             if (checkReport.length === 0) {
                 return res.status(404).send({ error: "Report not found!" })
             }
-    
-            let queryField = [];
-            let valueField = [];
-            if (status && status !== checkReport[0].Status) {
-                queryField.push("Status = ?")
-                valueField.push(status);
-            }
-            if (response && response !== checkReport[0].Response) {
-                queryField.push("Response = ?")
-                valueField.push(response);
-            }
-            if (queryField.length === 0) {
-                return res.status(200).send(checkReport);
+            if (checkReport[0].Status === "closed") {
+                return res.status(403).send({ error: "Cant update an already closed report!" })
             }
     
-            const updatingReport = await userReportService.updateReport(reportId, staffId, queryField, valueField);
+            const updatingReport = await userReportService.updateReport(reportId, staffId, response);
             if (updatingReport.affectedRows === 0) {
                 return res.status(500).send({ error: "Cant update report!" })
             }

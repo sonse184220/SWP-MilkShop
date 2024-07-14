@@ -45,7 +45,7 @@ router.patch("/api/user-reports/staff/:reportId", checkAuthenticated, isStaff, c
     await userReportController.updateReport(req, res);
 })
 
-router.delete("/api/user-reports/staff/:reportId", checkAuthenticated, checkReportId, async (req, res) => {
+router.delete("/api/user-reports/staff/:reportId", checkAuthenticated, isStaff, checkReportId, async (req, res) => {
     await userReportController.deleteReport(req, res);
 })
 
