@@ -1,0 +1,73 @@
+<div style="background-color: #f1f1f1;">
+    <div style="max-width: 600px; margin: 0 auto; border: 4px solid #F8A9E5; border-radius: 10px; background-color: #FFFAFA">
+        
+        <div style="position: relative; width: 100%; height: 150px; overflow: hidden;">
+            <img src="https://i.postimg.cc/0y5DKM8Y/milk.png" style="width: 100%; height: 150px; object-fit: cover;">
+        </div>
+
+        <div style="text-align: center; color: #e67e22; font-family: Arial, sans-serif; margin: 20px 0;">
+            <h1 style="font-weight: bold;">Thank you for your purchased!</h1>
+        </div>
+
+        <div style="padding: 10px;">
+
+            <h2 style="font-family: Arial, sans-serif; color: black;">Here are your order details:</h2>
+            <h3 style="font-family: Arial, sans-serif; color: black; margin: 20px 0 0 0;">OrderID: <span style="color: #27ae60; font-size: 25px;"><%= orderId %></span></h3>
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                    <td style="padding: 10px; border: none; font-family: Arial, sans-serif; color: black;">Name:</td>
+                    <td style="padding: 10px; border: none; font-family: Arial, sans-serif; font-weight: bold; color: black;"><%= contactInfo.Name %></td>
+                    <td style="padding: 10px; border: none; font-family: Arial, sans-serif; color: black;">Phone:</td>
+                    <td style="padding: 10px; border: none; font-family: Arial, sans-serif; font-weight: bold; color: black;"><%= contactInfo.Phone %></td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; border: none; font-family: Arial, sans-serif; color: black;">Email:</td>
+                    <td style="padding: 10px; border: none; font-family: Arial, sans-serif; font-weight: bold; color: black;"><%= contactInfo.Email %></td>
+                    <td style="padding: 10px; border: none; font-family: Arial, sans-serif; color: black;">Address:</td>
+                    <td style="padding: 10px; border: none; font-family: Arial, sans-serif; font-weight: bold; color: black;"><%= contactInfo.Address %></td>
+                </tr>
+            </table>
+
+            <h3 style="font-family: Arial, sans-serif; color: black; margin: 20px 0 0 0;">Items:</h3>
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                    <th style="padding: 10px; border: 1px solid #ddd; font-family: Arial, sans-serif; background-color: #3498db; color: white;">Product ID</th>
+                    <th style="padding: 10px; border: 1px solid #ddd; font-family: Arial, sans-serif; background-color: #3498db; color: white;">Product Name</th>
+                    <th style="padding: 10px; border: 1px solid #ddd; font-family: Arial, sans-serif; background-color: #3498db; color: white;">Quantity</th>
+                    <th style="padding: 10px; border: 1px solid #ddd; font-family: Arial, sans-serif; background-color: #3498db; color: white;">Price</th>
+                </tr>
+                <% cartItems.forEach(item => { %>
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #ddd; font-family: Arial, sans-serif; text-align: center;"><%= item.ProductID %></td>
+                    <td style="padding: 10px; border: 1px solid #ddd; font-family: Arial, sans-serif;"><%= item.ProductName %></td>
+                    <td style="padding: 10px; border: 1px solid #ddd; font-family: Arial, sans-serif; text-align: center;"><%= item.CartQuantity %></td>
+                    <td style="padding: 10px; border: 1px solid #ddd; font-family: Arial, sans-serif; text-align: center;"><%= item.Price %></td>
+                </tr>
+                <% }) %>
+            </table>
+
+            <h3 style="font-family: Arial, sans-serif; color: black; margin: 20px 0 0 0;">Vouchers used:</h3>
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                    <th style="padding: 10px; border: 1px solid #ddd; font-family: Arial, sans-serif; background-color: #3498db; color: white;">Voucher ID</th>
+                    <th style="padding: 10px; border: 1px solid #ddd; font-family: Arial, sans-serif; background-color: #3498db; color: white;">Discount</th>
+                    <th style="padding: 10px; border: 1px solid #ddd; font-family: Arial, sans-serif; background-color: #3498db; color: white;">Content</th>
+                </tr>
+                <% vouchers.forEach(voucher => { %>
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #ddd; font-family: Arial, sans-serif; text-align: center;"><%= voucher.VoucherID %></td>
+                    <td style="padding: 10px; border: 1px solid #ddd; font-family: Arial, sans-serif; text-align: center;"><%= voucher.Discount %></td>
+                    <td style="padding: 10px; border: 1px solid #ddd; font-family: Arial, sans-serif;"><%= voucher.Content %></td>
+                </tr>
+                <% }) %>
+            </table>
+
+            <div style="padding: 30px 0 0 0; margin-bottom: 0; font-size: 15px; text-align: right;">
+                <p style="font-family: Arial, sans-serif; color: black; margin: 0;">Initial Total Price: <span style="color: #27ae60; font-size: 18px; font-weight: bolder;"><%= initialTotalPrice %></span></p>
+                <p style="font-family: Arial, sans-serif; color: black; margin: 0;">Total Price after Discounts: <span style="color: #27ae60; font-size: 18px; font-weight: bolder;"><%= totalPrice %></span></p>
+            </div>
+
+        </div>
+
+    </div>
+</div>

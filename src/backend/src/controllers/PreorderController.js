@@ -123,7 +123,6 @@ export class PreorderController {
             const sendingPreorderEmail = await emailService.sendPreorderConfirmationEmail(finalizePreorder.insertId, 
                                                                                         {productId, productName: product[0].Name, quantity, price: product[0].Price}, 
                                                                                         totalPrice, {name, email, phone, address});
-            console.log(`Pre-order confirmation email sent: ${sendingPreorderEmail.response}`);
     
             const preorder = await preorderService.getPreorder(finalizePreorder.insertId);
             return res.status(201).send(preorder);
