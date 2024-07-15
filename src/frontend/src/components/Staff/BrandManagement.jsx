@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import he from 'he';
+
 import Modal from "react-modal";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -75,8 +77,8 @@ function BrandManagement() {
 
     try {
       const brandData = {
-        Name: selectedBrand.brandName,
-        Content: selectedBrand.content,
+        brandName: selectedBrand.Name,
+        content: selectedBrand.Content,
       };
 
       const response = await UpdateBrand(
@@ -85,7 +87,9 @@ function BrandManagement() {
         brandData
       );
 
-      if (response.data && response.data.message) {
+      console.log('worked', response)
+
+      if (response.data.length > 0) {
         toast.success("Brand updated successfully", {
           duration: 3000,
           position: "top-right",
@@ -161,7 +165,7 @@ function BrandManagement() {
             <tr key={brand.BrandID}>
               <td>{brand.BrandID}</td>
               <td>{brand.Name}</td>
-              <td>{brand.Content}</td>
+              <td><div dangerouslySetInnerHTML={{ __html: he.decode(brand.Content) }}></div></td>
               <td className="deleteDiv">
                 <div className="delete">
                   <button
