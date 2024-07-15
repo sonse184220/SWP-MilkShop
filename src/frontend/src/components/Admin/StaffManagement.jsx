@@ -21,6 +21,12 @@ const StaffManagement = () => {
   const [isAddOpen, setIsAddOpen] = useState(false);
   const dropdownRef = useRef(null);
 
+  const [isConfirm, setIsConfirm] = useState(true);
+  const [action, setAction] = useState({
+    type: "",
+    userId: ""
+  })
+
   const [currentPage, setCurrentPage] = useState(1);
   const [pageCount, setPageCount] = useState(1);
 
@@ -67,47 +73,65 @@ const StaffManagement = () => {
     setCurrentPage(event.selected + 1);
   };
 
-  const handleDisable = async (userId) => {
+  const handleEnableDisable = async () => {
     try {
 
       const userID = {
-        "userId": userId
+        "userId": action.userId
       }
 
-      const response = await DisableAccount(AdminToken, userID);
-      if (response.data.message) {
-        toast.success(response.data.message, {
-          duration: 3000,
-          position: "top-right",
-          // backgroundColor: 'red',
-          // theme: "warning"
-        });
-        handleGetAllAccount();
+      if (action.type === 'disable') {
+        const response = await DisableAccount(AdminToken, userID);
+        if (response.data.message) {
+          toast.success(response.data.message, {
+            duration: 3000,
+            position: "top-right",
+            // backgroundColor: 'red',
+            // theme: "warning"
+          });
+          handleGetAllAccount();
+          setAction({
+            type: "",
+            userId: ""
+          })
+        }
+      }
+
+      if (action.type === 'enable') {
+        const response = await EnableAccount(AdminToken, userID);
+        console.log('check');
+        if (response.data.message) {
+          toast.success(response.data.message, {
+            duration: 3000,
+            position: "top-right",
+            theme: 'colored'
+          });
+          console.log('check');
+          handleGetAllAccount();
+          setAction({
+            type: "",
+            userId: ""
+          })
+        }
       }
     } catch (error) {
-
+      console.error(`Error ${action.type}ing account:`, error);
+      toast.error(`Failed to ${action.type} account. Please try again.`, {
+        duration: 3000,
+        position: "top-right",
+        theme: 'colored'
+      });
+    } finally {
+      setIsConfirm(false);
     }
   }
 
-  const handleEnable = async (userId) => {
-    try {
-      const userID = {
-        "userId": userId
-      }
-      const response = await EnableAccount(AdminToken, userID);
-      console.log('check');
-      if (response.data.message) {
-        toast.success(response.data.message, {
-          duration: 3000,
-          position: "top-right",
-          theme: 'colored'
-        });
-        console.log('check');
-        handleGetAllAccount();
-      }
-    } catch (error) {
-
-    }
+  const handleOpenConfirm = async (Type, UserId) => {
+    setAction({
+      type: Type,
+      userId: UserId
+    });
+    setIsConfirm(true);
   }
 
   const handleAddStaff = async () => {
@@ -149,6 +173,26 @@ const StaffManagement = () => {
     <div className="staff-management-container">
       <Sidebar />
       <ToastContainer />
+      <Modal
+        isOpen={isConfirm}
+        onRequestClose={() => setIsConfirm(false)}
+        className="custom-modal"
+        overlayClassName="custom-overlay"
+      >
+        <h2>Confirm Change</h2>
+        <p>Are you sure you want to {action.type} this account?</p>
+        <div className="modal-actions">
+          <button onClick={handleEnableDisable} className="btn-confirm">
+            Confirm
+          </button>
+          <button
+            onClick={() => setIsConfirm(false)}
+            className="btn-cancel"
+          >
+            Cancel
+          </button>
+        </div>
+      </Modal>
       <div className="content">
         <div className="content-header">
           <h1>User Management</h1>
@@ -211,7 +255,7 @@ const StaffManagement = () => {
                       </button> */}
                       {user.activeStatus === 'active' ? (
                         <button
-                          onClick={() => handleDisable(user.UserID)}
+                          onClick={() => handleOpenConfirm('disable', user.UserID)}
                           className="btn-confirm"
                           style={{ backgroundColor: 'red' }}
                         >
@@ -219,7 +263,7 @@ const StaffManagement = () => {
                         </button>
                       ) : (
                         <button
-                          onClick={() => handleEnable(user.UserID)}
+                          onClick={() => handleOpenConfirm('enable', user.UserID)}
                           className="btn-confirm"
                         // disabled
                         // style={{ opacity: 0.5, cursor: 'not-allowed' }}
