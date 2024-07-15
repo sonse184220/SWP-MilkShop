@@ -11,14 +11,14 @@ export class ProductController {
     async getProductById(req, res) {
         try {
             const id = req.params.id;
-    
+
             const product = await productService.getProduct(id);
             if (product.length === 0) {
                 return res.status(404).send({ error: "Product not found!" });
             }
-    
+
             const feedbacks = await productService.getFeedbacksByProductID(id)
-    
+
             return res.status(200).send({
                 product: product[0],
                 feedbacks: feedbacks
@@ -35,7 +35,7 @@ export class ProductController {
             const page = parseInt(req.query.page);
             const sort = req.query.sort;
             const offset = (page - 1) * limit;
-    
+
             let sortBy;
             switch (sort) {
                 case "newest":
@@ -53,10 +53,10 @@ export class ProductController {
                 default:
                     sortBy = "updated DESC";
             }
-    
+
             const products = await productService.searchProducts(name, limit, sortBy, offset);
             const total = await productService.getTotalProductsByName(name);
-    
+
             return res.status(200).send({
                 total: total,
                 page: page,
@@ -75,7 +75,7 @@ export class ProductController {
             const page = parseInt(req.query.page);
             const sort = req.query.sort;
             const offset = (page - 1) * limit;
-    
+
             let sortBy;
             switch (sort) {
                 case "newest":
@@ -93,10 +93,10 @@ export class ProductController {
                 default:
                     sortBy = "updated DESC";
             }
-    
+
             const products = await productService.searchProductsByBrand(id, limit, sortBy, offset);
             const total = await productService.getTotalProductsByBrand(id);
-    
+
             return res.status(200).send({
                 total: total,
                 page: page,
@@ -153,22 +153,22 @@ export class ProductController {
             const userId = req.user.userId;
             const rating = req.body.rating;
             const content = req.body.content;
-    
+
             const product = await productService.getProduct(productId);
             if (product.length === 0) {
                 return res.status(404).send({ error: "Product not found!" });
             }
-    
+
             const hasPurchasedProduct = await productService.checkHasUserPurchasedProduct(userId, productId);
             if (!hasPurchasedProduct[0].result) {
                 return res.status(403).send({ msg: "You haven't purchased this product" });
             }
-    
+
             const creatingFeedback = await productService.createFeedback(productId, userId, rating, content);
             if (creatingFeedback.affectedRows === 0) {
                 return res.status(500).send({ error: "Feedback failed to create!" });
             }
-    
+
             const createdFeedback = await productService.getFeedback(creatingFeedback.insertId);
             return res.status(201).send(createdFeedback);
         } catch (err) {
@@ -182,17 +182,17 @@ export class ProductController {
             const limit = parseInt(req.query.limit);
             const page = parseInt(req.query.page);
             const offset = (page - 1) * limit;
-    
+
             let filterField = "";
             let valueField = [];
-    
+
             switch (filter) {
                 case "user":
                     const checkUser = await userService.checkUserExisted(fuid);
                     if (checkUser.length === 0) {
                         return res.status(404).send({ error: "User not found!" })
                     }
-    
+
                     filterField = "AND f.UserID = ?";
                     valueField = [fuid];
                     break;
@@ -201,7 +201,7 @@ export class ProductController {
                     if (checkProduct.length === 0) {
                         return res.status(404).send({ error: "Product not found!" });
                     }
-    
+
                     filterField = "AND f.ProductID = ?"
                     valueField = [fpid];
                     break;
@@ -213,14 +213,14 @@ export class ProductController {
                     if (checkUserAndProduct[1].length === 0) {
                         return res.status(404).send({ error: "Product not found!" });
                     }
-    
+
                     filterField = "AND f.UserID = ? AND f.ProductID = ?"
                     valueField = [fuid, fpid]
                     break;
                 default:
                 // nothing
             }
-    
+
             let sortBy;
             switch (sort) {
                 case "newest":
@@ -238,10 +238,10 @@ export class ProductController {
                 default:
                     sortBy = "created DESC";
             }
-    
+
             const feedbacks = await productService.searchFeedbacks(content, filterField, valueField, limit, sortBy, offset);
             const total = await productService.getTotalSearchFeedbacks(content, filterField, valueField)
-    
+
             return res.status(200).send({
                 total: total,
                 page: page,
@@ -256,7 +256,7 @@ export class ProductController {
     async deleteFeedback(req, res) {
         try {
             const feedbackId = req.params.id;
-    
+
             const checkExist = await productService.getFeedback(feedbackId);
             if (checkExist.length === 0) {
                 return res.status(404).send({ error: "Feedback not found!" });
@@ -264,12 +264,12 @@ export class ProductController {
             if (req.user.userId !== checkExist[0].UserID && !req.user.isAdmin && !req.user.isStaff) {
                 return res.status(403).send({ msg: "Forbidden." });
             }
-    
+
             const deletedFeedback = await productService.removeFeedback(feedbackId);
             if (deletedFeedback.affectedRows === 0) {
                 return res.status(500).send({ msg: "Failed to delete feedback!" });
             }
-    
+
             return res.status(200).send({ msg: `Feedback ${feedbackId} successfully deleted!` });
         } catch (err) {
             res.status(500).json({ error: err.message });
@@ -297,6 +297,24 @@ export class ProductController {
         } catch (error) {
             console.error("Error updating product:", error);
             res.status(500).json({ error: error.message || "Error updating product" });
+        }
+    }
+
+    async getLatestProducts(req, res) {
+        try {
+            const products = await productService.getLatestProducts();
+            return res.status(200).json(products);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
+
+    async getBestSellingProducts(req, res) {
+        try {
+            const products = await productService.getBestSellingProducts();
+            return res.status(200).json(products);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
         }
     }
 }

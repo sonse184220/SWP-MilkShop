@@ -275,4 +275,39 @@ export class ProductService {
             throw new Error(error.message || "Error updating product");
         }
     }
+    async getLatestProducts() {
+        try {
+            const query = `
+                Select * FROM product 
+                WHERE Status = 'available' AND Quantity > 0 
+                ORDER BY created DESC 
+                LIMIT 8
+            `;
+            const [products] = await poolConnect.query(query);
+            return products;
+        } catch (error) {
+            console.error("Cant get lastest products", error);
+            throw new Error("Cant get lastest products");
+        }
+    }
+
+    async getBestSellingProducts() {
+        try {
+            const query = `
+                Select p.*, SUM(od.Quantity) as totalSold
+                FROM product AS p
+                JOIN order_details AS od ON p.ProductID = od.ProductID
+                JOIN \`order\` AS o ON od.OrderID = o.OrderID
+                WHERE o.Status = 'Done' AND MONTH(o.created) = MONTH(CURRENT_DATE())
+                GROUP BY p.ProductID
+                ORDER BY totalSold DESC
+                LIMIT 5
+            `;
+            const [products] = await poolConnect.query(query);
+            return products;
+        } catch (error) {
+            console.error("Cant get best selling products:", error);
+            throw new Error("Cant get best selling products");
+        }
+    }
 }

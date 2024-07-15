@@ -15,6 +15,7 @@ import { Cart } from '../components/Cart/Cart.jsx';
 import { GuestCart } from '../components/Guest/GuestCart.jsx';
 import { OrderHistory } from '../components/OrderHistory/OrderHistory.jsx';
 import { QR } from '../components/QR/QR.jsx';
+import { Report } from '../components/Report/Report.jsx';
 
 const TokenHandler = ({ children }) => {
     const location = useLocation();
@@ -95,6 +96,7 @@ export function CustomerRoutes({ isMember }) {
             <Route path='GuestCart' element={<GuestCart />} />
             <Route path='OrderHistory' element={<OrderHistory isMember={isMember} />} />
             <Route path='QRBanking' element={<QR isMember={isMember} />} />
+            <Route path='ReportHistory' element={<Report isMember={isMember} />} />
             {/* <Route path='complete-registration' element={<Register showLogin={handleShowLogin} isCompleteRegistration={true} />} /> */}
             {/* <Route path='complete-registration' element={<CompleteRegistrationWrapper />} /> */}
             {/* <Route path='complete-registration' element={<CompleteRegistrationWrapper />} /> */}

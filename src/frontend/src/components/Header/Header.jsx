@@ -191,6 +191,15 @@ export function Header({ onLogin, isMember }) {
                         </button>
                       </li>
                       <li>
+                        <button
+                          onClick={() => {
+                            navigate("/Customer/ReportHistory");
+                          }}
+                        >
+                          Report History
+                        </button>
+                      </li>
+                      <li>
                         <button onClick={showLogin}>Logout</button>
                       </li>
                     </ul>

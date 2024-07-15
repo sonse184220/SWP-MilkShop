@@ -46,8 +46,8 @@ export class UserReportService {
         return report;
     }
 
-    async updateReport(reportId, staffId, updateQuery, updateValue) {
-        const [report] = await poolConnect.query(`UPDATE user_report SET StaffID = ?, ${updateQuery.join(", ")} WHERE ReportID = ?`, [staffId, ...updateValue, reportId])
+    async updateReport(reportId, staffId, response) {
+        const [report] = await poolConnect.query(`UPDATE user_report SET StaffID = ?, Response = ?, Status = 'closed' WHERE ReportID = ?`, [staffId, response, reportId])
         return report;
     }
 

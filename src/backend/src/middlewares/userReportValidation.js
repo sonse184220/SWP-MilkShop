@@ -106,17 +106,10 @@ export async function checkUserReportSubmitData(req, res, next) {
 }
 
 export async function checkUserReportUpdateData(req, res, next) {
-    const statusList = ["open", "closed"];
-    await body("status")
-    .optional({ checkFalsy: true })
-    .trim()
-    .toLowerCase()
-    .isIn(statusList).withMessage(`Invalid status input! status can only be: ${statusList.join(", ")}`)
-    .run(req);
-    
     await body("response")
-    .optional({ checkFalsy: true })
     .trim()
+    .exists().withMessage("Response is required!")
+    .notEmpty().withMessage("Response can not be blank!")
     .run(req);
 
     const result = validationResult(req);
