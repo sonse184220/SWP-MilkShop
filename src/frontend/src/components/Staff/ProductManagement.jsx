@@ -17,6 +17,7 @@ import { UpdateProduct } from "../../services/staff/product/updateProduct";
 import { AddProduct } from "../../services/staff/product/addProduct";
 import { handleAllBrand } from "../../services/brand/getAllBrand";
 import { Logout } from "../../services/login/logout";
+import BrandManagement from "./BrandManagement.jsx";
 
 function ProductManagement() {
   const navigate = useNavigate();
@@ -642,6 +643,9 @@ function ProductManagement() {
                 </button>
               </div>
             </Modal>
+          </div>
+          <div className="brand-section">
+            <BrandManagement />
           </div>
         </div>
       </div>

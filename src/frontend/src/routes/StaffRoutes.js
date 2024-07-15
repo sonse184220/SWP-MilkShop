@@ -17,6 +17,7 @@ export function StaffRoutes() {
             <Route path='VoucherManagement' element={<VoucherManagement />} />
             <Route path='ReportManagement' element={<ReportManagement />} />
             <Route path='StaffProfile' element={<StaffProfile />} />
+            
         </Routes>
     )
 }
