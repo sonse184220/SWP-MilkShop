@@ -6,7 +6,7 @@ function SidebarAdmin() {
       <h1>Admin</h1>
       <div className="sidebar-content">
         <div>
-          <a href="/Admin/StaffManagement">User</a>
+          <a href="/Admin/UserManagement">User</a>
         </div>
         {/* <div>
           <a href="/Admin/MemberManagement">Member</a>

@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { GetAllReport } from "../../services/staff/report/getAllReport";
 import { GetReportDetail } from "../../services/staff/report/getReportDetail";
 import { UpdateReport } from "../../services/staff/report/updateReport";
+import { Logout } from "../../services/login/logout";
 
 const ReportManagement = () => {
   const navigate = useNavigate();
@@ -40,8 +41,10 @@ const ReportManagement = () => {
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     // event.preventDefault();
+    const token = "Bearer " + sessionStorage.getItem("token");
+    await Logout(token);
     sessionStorage.clear();
     navigate("/Customer/home");
     window.location.reload();
@@ -84,7 +87,7 @@ const ReportManagement = () => {
         setCurrentReport(response.data[0]);
         setIsAddOpen(true);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const handleOpenResponseModal = async (reportId) => {
@@ -226,7 +229,7 @@ const ReportManagement = () => {
                         <button
                           onClick={"() => handleDisable(user.UserID)"}
                           className="btn-confirm"
-                          // style={{ backgroundColor: 'red' }}
+                        // style={{ backgroundColor: 'red' }}
                         >
                           Solve
                         </button>
