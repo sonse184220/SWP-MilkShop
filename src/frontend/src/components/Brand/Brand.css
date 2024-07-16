@@ -41,3 +41,36 @@
     color: #666;
     font-size: 16px;
 }
+
+.brand-container .sidebar-content {
+    max-height: 390px;
+    overflow-y: auto;
+}
+
+.brand-container .sidebar-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.brand-container .sidebar-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.brand-container .sidebar-content::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
+
+.brand-container .sidebar-content::-webkit-scrollbar-thumb:hover {
+    background: #aaa;
+}
+
+/* Firefox scrollbar styles */
+.brand-container .sidebar-content {
+    scrollbar-width: thin;
+    scrollbar-color: #ccc #f1f1f1;
+}
+
+.brand-container .active {
+    color: #f5a425
+}

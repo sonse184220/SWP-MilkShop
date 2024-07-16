@@ -49,6 +49,15 @@ export const Wishlist = ({ isMember }) => {
     const handleAddToCart = async (e, pID) => {
         e.preventDefault();
         try {
+            const check = await getProductById(pID);
+            if (check.data.product.Quantity === 0) {
+                toast.error(`You can't add out-of-stock product to cart. Please Pre-Order!`, {
+                    duration: 3000,
+                    position: "top-right",
+                    theme: 'colored'
+                });
+                return;
+            }
             // const MemberToken = 'Bearer ' + sessionStorage.getItem('token');
             const prInfo = {
                 "ProductID": pID,
@@ -230,8 +239,8 @@ export const Wishlist = ({ isMember }) => {
                                             <div className="col-md-8">
                                                 <div className="modal-add-cart-info"><i className="fa fa-check-square"></i>Added to cart successfully!</div>
                                                 <div className="modal-add-cart-product-cart-buttons">
-                                                    <a href="cart.html">View Cart</a>
-                                                    <a href="checkout.html">Checkout</a>
+                                                    <a href="/Customer/Cart">View Cart</a>
+                                                    {/* <a href="checkout.html">Checkout</a> */}
                                                 </div>
                                             </div>
                                         </div>
