@@ -1,53 +1,16 @@
 import { useRef, useEffect, useState } from "react";
 import { Oval } from "react-loader-spinner";
-
 import BlogCard from "./BlogCard";
 import "./BlogList.css";
 import { fetchBlogs } from "../../services/blog/blogService";
 import { Link } from "react-router-dom";
+
 const BlogList = ({ columnLayout = false }) => {
   const blogListRef = useRef(null);
-  const blogs = [
-    {
-      title: "The Benefits of Drinking Milk",
-      authorName: "John Doe",
-      authorDescription: "Nutritionist and Blogger",
-      authorImage: "https://via.placeholder.com/40",
-    },
-    {
-      title: "Different Types of Milk and Their Uses",
-      authorName: "Jane Smith",
-      authorDescription: "Food Scientist and Writer",
-      authorImage: "https://via.placeholder.com/40",
-    },
-    {
-      title: "How Milk Can Help You Build Muscle",
-      authorName: "Mark Johnson",
-      authorDescription: "Fitness Expert and Author",
-      authorImage: "https://via.placeholder.com/40",
-    },
-    {
-      title: "“Another great review”",
-      authorName: "Name",
-      authorDescription: "Description",
-      authorImage: "https://via.placeholder.com/40",
-    },
-    {
-      title: "“A genuinely glowing review”",
-      authorName: "Name",
-      authorDescription: "Description",
-      authorImage: "https://via.placeholder.com/40",
-    },
-    {
-      title: "“Another great review”",
-      authorName: "Name",
-      authorDescription: "Description",
-      authorImage: "https://via.placeholder.com/40",
-    },
-  ];
   const [blog, setBlogs] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [autoScroll, setAutoScroll] = useState(!columnLayout);
 
   const scrollLeft = () => {
     blogListRef.current.scrollBy({ left: -525, behavior: "smooth" });
@@ -57,6 +20,32 @@ const BlogList = ({ columnLayout = false }) => {
     blogListRef.current.scrollBy({ left: 525, behavior: "smooth" });
   };
 
+  const autoScrollHandler = () => {
+    if (blogListRef.current) {
+      const isAtEnd =
+        blogListRef.current.scrollLeft + blogListRef.current.clientWidth >=
+        blogListRef.current.scrollWidth;
+      if (isAtEnd) {
+        blogListRef.current.scrollTo({ left: 0, behavior: "smooth" });
+      } else {
+        blogListRef.current.scrollBy({ left: 600, behavior: "smooth" });
+      }
+    }
+  };
+
+  const pauseAutoScroll = () => setAutoScroll(false);
+  const resumeAutoScroll = () => setAutoScroll(true);
+
+  useEffect(() => {
+    let intervalId;
+    if (autoScroll) {
+      intervalId = setInterval(autoScrollHandler, 3000); // Cuộn mỗi 3 giây
+    }
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
+  }, [autoScroll]);
+
   useEffect(() => {
     const loadBlogs = async () => {
       try {
@@ -65,7 +54,6 @@ const BlogList = ({ columnLayout = false }) => {
         let page = "";
         let sort = "";
         const fetchedBlogs = await fetchBlogs(limit, page, sort);
-        console.log("1", fetchBlogs);
         if (Array.isArray(fetchedBlogs.data.data)) {
           setBlogs(fetchedBlogs.data.data);
         } else {
@@ -73,7 +61,6 @@ const BlogList = ({ columnLayout = false }) => {
         }
       } catch (err) {
         setError(err.message);
-        setBlogs(blogs);
         console.error("Error loading blogs:", err);
       } finally {
         setIsLoading(false);
@@ -81,24 +68,33 @@ const BlogList = ({ columnLayout = false }) => {
     };
     loadBlogs();
   }, []);
+
   return (
     <div
       className={`blog-list-container ${columnLayout ? "column-layout" : ""}`}
     >
       <div className="blog-list-content">
         <h2>Suggested blogs</h2>
-        <Link to="/Customer/Blogs">All Blog</Link>
       </div>
-      <div className="blog-list-wrapper">
-        <button className="scroll-button left" onClick={scrollLeft}>
-          &lt;
-        </button>
+      <div
+        className="blog-list-wrapper"
+        onMouseEnter={!columnLayout ? pauseAutoScroll : null}
+        onMouseLeave={!columnLayout ? resumeAutoScroll : null}
+      >
+        {!columnLayout && (
+          <button
+            className="scroll-button left"
+            onClick={() => {
+              scrollLeft();
+              pauseAutoScroll();
+            }}
+          >
+            &lt;
+          </button>
+        )}
         <div className="blog-list" ref={blogListRef}>
           {isLoading ? (
             <Oval
-              // height={20}
-              // width={20}
-              // color="#fff"
               wrapperStyle={{
                 display: "flex",
                 justifyContent: "center",
@@ -111,9 +107,17 @@ const BlogList = ({ columnLayout = false }) => {
             <BlogCard blogs={blog} />
           )}
         </div>
-        <button className="scroll-button right" onClick={scrollRight}>
-          &gt;
-        </button>
+        {!columnLayout && (
+          <button
+            className="scroll-button right"
+            onClick={() => {
+              scrollRight();
+              pauseAutoScroll();
+            }}
+          >
+            &gt;
+          </button>
+        )}
       </div>
     </div>
   );

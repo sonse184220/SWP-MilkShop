@@ -21,7 +21,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-
 }
 
 .blog-list {
@@ -34,21 +33,31 @@
   border: 1px solid #dee2e6;
   border-radius: 5px;
   margin-top: 20px;
+  scroll-behavior: smooth; /* Smooth scrolling */
+}
 
+.blog-list::-webkit-scrollbar {
+  display: none;
 }
 
 .scroll-button {
   position: absolute;
-  background-color: #fff;
+  background-color: #f8a9e5;
   border: 1px solid #ced4da;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  border-radius: 10%;
+  width: 30px;
+  height: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   z-index: 1;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.scroll-button:hover {
+  background-color: #fff;
+  transform: scale(1.1); /* Slight zoom effect on hover */
 }
 
 .scroll-button.left {
@@ -72,65 +81,3 @@
   overflow-y: auto;
   overflow-x: hidden;
 }
-
-/* 
-.blog-list-container {
-  padding: 20px;
-}
-
-.blog-list-content{
-  display: flex;
-  justify-content: space-between;
-}
-
-.blog-list-content h2{
-    font-size: 24px;
-    margin-bottom: 20px;
-}
-
-.blog-list-content a{
-  margin-bottom: 20px;
-  padding-top: 30px;
-}
-
-.blog-list-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.blog-list {
-  display: flex;
-  overflow-x: auto;
-  justify-content: space-around;
-  gap: 10%;
-  background-color: hsl(0, 0%, 97%);
-  padding: 20px;
-  border: 1px solid hsl(0, 0%, 91%);
-  border-radius: 5px;
-  padding-bottom: 20px;
-  max-width: 80%;
-}
-
-.scroll-button {
-  position: absolute;
-  background-color: hsl(0, 0%, 100%);
-  border: 1px solid hsl(0, 0%, 80%);
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 1;
-}
-
-.scroll-button.left {
-  left: 100px;
-}
-
-.scroll-button.right {
-  right: 100px;
-} */

@@ -19,6 +19,7 @@
 .createdDate {
   margin-top: 20px;
   display: flex;
+  justify-content: flex-end;
   align-items: flex-end;
 }
 

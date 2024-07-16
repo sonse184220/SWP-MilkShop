@@ -85,3 +85,22 @@
   .btn-cancel-brand:hover {
     background-color: #c82333;
   }
+
+  .addBrandButton{
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .addBrandButton button{
+    border: 1px solid;
+    color: snow;
+    background-color: palevioletred;
+    border-radius: 5px;
+    margin-bottom: 10px;
+  }
+
+
+  .addBrandButton button:hover {
+    background-color: snow;
+    color: palevioletred;
+  }

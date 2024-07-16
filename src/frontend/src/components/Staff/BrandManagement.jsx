@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import he from 'he';
+import he from "he";
 
 import Modal from "react-modal";
 import ReactQuill from "react-quill";
@@ -87,7 +87,7 @@ function BrandManagement() {
         brandData
       );
 
-      console.log('worked', response)
+      console.log("worked", response);
 
       if (response.data.length > 0) {
         toast.success("Brand updated successfully", {
@@ -138,18 +138,21 @@ function BrandManagement() {
   return (
     <>
       <h2 style={{ marginTop: "10px" }}>Brands</h2>
-      <button
-        className="addBrand"
-        onClick={() => {
-          setSelectedBrand({
-            Name: "",
-            Content: "",
-          });
-          setIsAddModalOpen(true);
-        }}
-      >
-        Add Brand
-      </button>
+      <div className="addBrandButton">
+        {" "}
+        <button
+          className="addBrand"
+          onClick={() => {
+            setSelectedBrand({
+              Name: "",
+              Content: "",
+            });
+            setIsAddModalOpen(true);
+          }}
+        >
+          Add Brand
+        </button>
+      </div>
       <table className="issues-table">
         <thead>
           <tr>
@@ -165,7 +168,11 @@ function BrandManagement() {
             <tr key={brand.BrandID}>
               <td>{brand.BrandID}</td>
               <td>{brand.Name}</td>
-              <td><div dangerouslySetInnerHTML={{ __html: he.decode(brand.Content) }}></div></td>
+              <td>
+                <div
+                  dangerouslySetInnerHTML={{ __html: he.decode(brand.Content) }}
+                ></div>
+              </td>
               <td className="deleteDiv">
                 <div className="delete">
                   <button
