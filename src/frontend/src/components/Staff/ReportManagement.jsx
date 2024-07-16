@@ -31,8 +31,8 @@ const ReportManagement = () => {
 
   const [currentReport, setCurrentReport] = useState(null);
   const [updateReport, setUpdateReport] = useState({
-    response: ""
-  })
+    response: "",
+  });
 
   const toggleDropdown = () => {
     if (dropdownRef.current) {
@@ -53,7 +53,13 @@ const ReportManagement = () => {
       let page = currentPage;
       let sort = "";
       let status = "";
-      const response = await GetAllReport(StaffToken, limit, page, sort, status);
+      const response = await GetAllReport(
+        StaffToken,
+        limit,
+        page,
+        sort,
+        status
+      );
       if (response.data.total > 0) {
         setReports(response.data.data);
         setPageCount(response.data.totalPages);
@@ -73,16 +79,13 @@ const ReportManagement = () => {
 
   const handleViewReportDetail = async (reportId) => {
     try {
-
       const response = await GetReportDetail(StaffToken, reportId);
       if (response.data.length > 0) {
         setCurrentReport(response.data[0]);
         setIsAddOpen(true);
       }
-    } catch (error) {
-
-    }
-  }
+    } catch (error) {}
+  };
 
   const handleOpenResponseModal = async (reportId) => {
     const response = await GetReportDetail(StaffToken, reportId);
@@ -90,16 +93,20 @@ const ReportManagement = () => {
       setCurrentReport(response.data[0]);
       setIsUpdateOpen(true);
     }
-  }
+  };
 
   const handleSendResponse = async () => {
     try {
-      console.log('worked')
-      const response = await UpdateReport(StaffToken, currentReport.ReportID, updateReport);
+      console.log("worked");
+      const response = await UpdateReport(
+        StaffToken,
+        currentReport.ReportID,
+        updateReport
+      );
       if (response.data.length > 0) {
         setIsUpdateOpen(false);
         setUpdateReport({
-          response: ""
+          response: "",
         });
         handleGetAllReport();
         toast.success("Report response updated", {
@@ -115,13 +122,13 @@ const ReportManagement = () => {
         position: "top-right",
       });
     }
-  }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setUpdateReport(prevState => ({
+    setUpdateReport((prevState) => ({
       ...prevState,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -150,9 +157,6 @@ const ReportManagement = () => {
             </button>
             <div ref={dropdownRef} className="dropdown-menu">
               <ul className="dropdown">
-                {/* <li>
-                  <a href="/Staff/StaffProfile">Profile</a>
-                </li> */}
                 <li>
                   <a href="#" onClick={handleLogout}>
                     Logout
@@ -169,54 +173,72 @@ const ReportManagement = () => {
             <input type="text" placeholder="Search" className="search-input" />
             <button className="searchProduct">Search</button>
           </div>
-          <table className="issues-table">
-            <thead>
-              <tr>
-                <th>ReportID</th>
-                <th>User</th>
-                <th>Staff</th>
-                <th>Detail</th>
-                <th>Created</th>
-                <th>Updated</th>
-                <th></th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {reports.map((report) => (
-                <tr key={report.ReportID}>
-                  <td>{report.ReportID}</td>
-                  <td>{report.UserID} - {report.userName}</td>
-                  <td>{report.StaffID} - {report.staffName}</td>
-                  <td><button onClick={() => handleViewReportDetail(report.ReportID)}>View report details</button></td>
-                  <td>{formatDate(report.created)}</td>
-                  <td>{formatDate(report.updated)}</td>
-                  <td>
-                    <div className="action">
-                      <button
-                        onClick={() => handleOpenResponseModal(report.ReportID)}
-                        className="btn-confirm"
-                        style={{ padding: '10px' }}
-                      >
-                        Response
-                      </button>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="action">
-                      <button
-                        onClick={'() => handleDisable(user.UserID)'}
-                        className="btn-confirm"
-                      // style={{ backgroundColor: 'red' }}
-                      >
-                        Solve
-                      </button>
-                    </div>
-                  </td>
+          {reports.length > 0 ? (
+            <table className="issues-table">
+              <thead>
+                <tr>
+                  <th>ReportID</th>
+                  <th>User</th>
+                  <th>Staff</th>
+                  <th>Detail</th>
+                  <th>Created</th>
+                  <th>Updated</th>
+                  <th></th>
+                  <th></th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {reports.map((report) => (
+                  <tr key={report.ReportID}>
+                    <td>{report.ReportID}</td>
+                    <td>
+                      {report.UserID} - {report.userName}
+                    </td>
+                    <td>
+                      {report.StaffID} - {report.staffName}
+                    </td>
+                    <td>
+                      <button
+                        onClick={() => handleViewReportDetail(report.ReportID)}
+                      >
+                        View report details
+                      </button>
+                    </td>
+                    <td>{formatDate(report.created)}</td>
+                    <td>{formatDate(report.updated)}</td>
+                    <td>
+                      <div className="action">
+                        <button
+                          onClick={() =>
+                            handleOpenResponseModal(report.ReportID)
+                          }
+                          className="btn-confirm"
+                          style={{
+                            padding: "10px",
+                          }}
+                        >
+                          Response
+                        </button>
+                      </div>
+                    </td>
+                    <td>
+                      <div className="action">
+                        <button
+                          onClick={"() => handleDisable(user.UserID)"}
+                          className="btn-confirm"
+                          // style={{ backgroundColor: 'red' }}
+                        >
+                          Solve
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p>No reports available</p>
+          )}
           <div>
             <ReactPaginate
               breakLabel="..."
@@ -237,43 +259,63 @@ const ReportManagement = () => {
             />
           </div>
           {currentReport && (
-
             <>
               <Modal
                 isOpen={isAddOpen}
-                onRequestClose={() => { setIsAddOpen(false); setCurrentReport(null) }}
+                onRequestClose={() => {
+                  setIsAddOpen(false);
+                  setCurrentReport(null);
+                }}
                 className="custom-modal-blog"
                 overlayClassName="custom-overlay-blog"
               >
                 <>
                   <h2>Report Detail</h2>
                   <label>Report ID </label>
-                  <input className="form-control" value={currentReport.ReportID} readOnly />
+                  <input
+                    className="form-control"
+                    value={currentReport.ReportID}
+                    readOnly
+                  />
                   <label>Title </label>
-                  <input className="form-control" value={currentReport.Title} readOnly />
+                  <input
+                    className="form-control"
+                    value={currentReport.Title}
+                    readOnly
+                  />
                   <label>Content </label>
-                  <textarea className="form-control" value={currentReport.Content} readOnly
-                    style={{ height: '110px' }}
+                  <textarea
+                    className="form-control"
+                    value={currentReport.Content}
+                    readOnly
+                    style={{ height: "110px" }}
                   />
                 </>
               </Modal>
               <Modal
                 isOpen={isUpdateOpen}
-                onRequestClose={() => { setIsUpdateOpen(false); setCurrentReport(null) }}
+                onRequestClose={() => {
+                  setIsUpdateOpen(false);
+                  setCurrentReport(null);
+                }}
                 className="custom-modal-blog"
                 overlayClassName="custom-overlay-blog"
               >
                 <>
                   <h2>Send Response</h2>
                   <label>Report ID</label>
-                  <input className="form-control" value={currentReport.ReportID} readOnly />
+                  <input
+                    className="form-control"
+                    value={currentReport.ReportID}
+                    readOnly
+                  />
                   <label>Response</label>
                   <textarea
                     className="form-control"
                     name="response"
                     value={updateReport.response}
                     onChange={handleInputChange}
-                    style={{ height: '110px' }}
+                    style={{ height: "110px" }}
                   />
                   <button onClick={handleSendResponse} className="btn-confirm">
                     Send Response
@@ -282,7 +324,6 @@ const ReportManagement = () => {
               </Modal>
             </>
           )}
-
         </div>
       </div>
     </div>

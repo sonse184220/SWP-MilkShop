@@ -28,9 +28,9 @@
   overflow-x: auto;
   justify-content: flex-start;
   gap: 20%;
-  background-color: #f8f9fa;
+  background-color: snow;
   padding: 20px;
-  border: 1px solid #dee2e6;
+  border: 1px solid #f8a9e5;
   border-radius: 5px;
   margin-top: 20px;
   scroll-behavior: smooth; /* Smooth scrolling */

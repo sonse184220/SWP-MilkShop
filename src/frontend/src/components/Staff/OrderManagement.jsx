@@ -445,9 +445,6 @@ const OrderManagement = () => {
             </button>
             <div ref={dropdownRef} className="dropdown-menu">
               <ul className="dropdown">
-                {/* <li>
-                  <a href="/Staff/StaffProfile">Profile</a>
-                </li> */}
                 <li>
                   <a href="" onClick={handleLogout}>
                     Logout
@@ -457,6 +454,7 @@ const OrderManagement = () => {
             </div>
           </header>
         </div>
+
         <div className="table-container">
           <div className="table-actions">
             <label>Search Order:</label>
@@ -471,122 +469,126 @@ const OrderManagement = () => {
             className="table-wrapper"
             style={{ width: "100%", overflowX: "auto" }}
           >
-            <table
-              className="issues-table"
-              style={{ width: "100%", minWidth: "1100px" }}
-            >
-              <thead>
-                <tr>
-                  <th>PreOrderID</th>
-                  <th style={{ width: "10%" }}>Product</th>
-                  <th>PreOrder Date</th>
-                  <th>Update Date</th>
-                  <th>Price</th>
-                  <th style={{ width: "15%" }}>Estimated delivery date</th>
-                  <th>Customer Info</th>
-                  <th>Payment Method</th>
-                  <th>Status</th>
-                  <th>Payment Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {PreOrders.map((order) => (
-                  <tr key={order.PreorderID}>
-                    <td>{order.PreorderID}</td>
-                    <td style={{ width: "fit-content" }}>
-                      <div className="flex-grow-1">
-                        <h6 className="fs-15 mb-1">{order.ProductID}</h6>
-                        <p className="mb-0 product-info">
-                          <span className="info-label">Quantity:</span>
-                          <span className="info-value">{order.Quantity}</span>
-                        </p>
-                      </div>
-                    </td>
-                    <td>{formatDate(order.created)}</td>
-                    <td>{formatDate(order.updated)}</td>
-                    <td>{order.TotalPrice}</td>
-                    <td>
-                      <input
-                        type="date"
-                        value={formatDateForDisplay(order.ETA)}
-                        style={{
-                          padding: "5px 10px",
-                          borderRadius: "4px",
-                          border: "1px solid #ccc",
-                          fontSize: "14px",
-                          width: "150px",
-                          cursor: "pointer",
-                        }}
-                        onChange={(e) =>
-                          handleUpdatePreOrderETA(
-                            order.PreorderID,
-                            e.target.value
-                          )
-                        }
-                      />
-                    </td>
-                    <td>
-                      <a
-                        href=""
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleGetPreOrderInfo(order.PreorderID);
-                        }}
-                      >
-                        View Customer Info
-                      </a>
-                    </td>
-                    <td>{order.PaymentMethod}</td>
-                    <td>
-                      <div className="select1">
-                        <select
-                          id="statusDropdown"
-                          value={order.Status}
+            {PreOrders.length > 0 ? (
+              <table
+                className="issues-table"
+                style={{ width: "100%", minWidth: "1100px" }}
+              >
+                <thead>
+                  <tr>
+                    <th>PreOrderID</th>
+                    <th style={{ width: "10%" }}>Product</th>
+                    <th>PreOrder Date</th>
+                    <th>Update Date</th>
+                    <th>Price</th>
+                    <th style={{ width: "15%" }}>Estimated delivery date</th>
+                    <th>Customer Info</th>
+                    <th>Payment Method</th>
+                    <th>Status</th>
+                    <th>Payment Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {PreOrders.map((order) => (
+                    <tr key={order.PreorderID}>
+                      <td>{order.PreorderID}</td>
+                      <td style={{ width: "fit-content" }}>
+                        <div className="flex-grow-1">
+                          <h6 className="fs-15 mb-1">{order.ProductID}</h6>
+                          <p className="mb-0 product-info">
+                            <span className="info-label">Quantity:</span>
+                            <span className="info-value">{order.Quantity}</span>
+                          </p>
+                        </div>
+                      </td>
+                      <td>{formatDate(order.created)}</td>
+                      <td>{formatDate(order.updated)}</td>
+                      <td>{order.TotalPrice}</td>
+                      <td>
+                        <input
+                          type="date"
+                          value={formatDateForDisplay(order.ETA)}
+                          style={{
+                            padding: "5px 10px",
+                            borderRadius: "4px",
+                            border: "1px solid #ccc",
+                            fontSize: "14px",
+                            width: "150px",
+                            cursor: "pointer",
+                          }}
                           onChange={(e) =>
-                            handleStatusChange(
+                            handleUpdatePreOrderETA(
                               order.PreorderID,
-                              e.target.value,
-                              "preorder"
+                              e.target.value
                             )
                           }
+                        />
+                      </td>
+                      <td>
+                        <a
+                          href=""
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleGetPreOrderInfo(order.PreorderID);
+                          }}
                         >
-                          <option value="Waiting">Waiting</option>
-                          <option value="Cancelled">Cancelled</option>
-                          <option value="Shipping">Shipping</option>
-                          <option value="Done">Done</option>
-                        </select>
-                      </div>
-                    </td>
-
-                    <td>
-                      <div className="select1">
-                        {order.PaymentStatus === "Pending" ? (
-                          <button
-                            onClick={() =>
-                              handleUpdatePreOrderPaymentStatus(
-                                order.PreorderID
+                          View Customer Info
+                        </a>
+                      </td>
+                      <td>{order.PaymentMethod}</td>
+                      <td>
+                        <div className="select1">
+                          <select
+                            id="statusDropdown"
+                            value={order.Status}
+                            onChange={(e) =>
+                              handleStatusChange(
+                                order.PreorderID,
+                                e.target.value,
+                                "preorder"
                               )
                             }
-                            className="btn-confirm"
                           >
-                            Done
-                          </button>
-                        ) : (
-                          <button
-                            onClick={() => setIsStatusChangeOpen(false)}
-                            className="btn-confirm"
-                            disabled
-                            style={{ opacity: 0.5, cursor: "not-allowed" }}
-                          >
-                            Done
-                          </button>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                            <option value="Waiting">Waiting</option>
+                            <option value="Cancelled">Cancelled</option>
+                            <option value="Shipping">Shipping</option>
+                            <option value="Done">Done</option>
+                          </select>
+                        </div>
+                      </td>
+
+                      <td>
+                        <div className="select1">
+                          {order.PaymentStatus === "Pending" ? (
+                            <button
+                              onClick={() =>
+                                handleUpdatePreOrderPaymentStatus(
+                                  order.PreorderID
+                                )
+                              }
+                              className="btn-confirm"
+                            >
+                              Done
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => setIsStatusChangeOpen(false)}
+                              className="btn-confirm"
+                              disabled
+                              style={{ opacity: 0.5, cursor: "not-allowed" }}
+                            >
+                              Done
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p>No pre-order available</p>
+            )}
           </div>
           <div>
             <ReactPaginate
@@ -608,104 +610,107 @@ const OrderManagement = () => {
             />
           </div>
           <h2 style={{ marginTop: "10px" }}>Orders</h2>
-          <table className="issues-table">
-            <thead>
-              <tr>
-                <th>OrderID</th>
-                <th>Products</th>
-                <th>Order Date</th>
-                <th>Update Date</th>
-                <th>Price</th>
-                <th>VoucherId</th>
-                <th>Customer Info</th>
-                <th>Payment Method</th>
-                <th>Status</th>
-                <th>Payment Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Orders.map((order) => (
-                <tr key={order.OrderID}>
-                  <td>{order.OrderID}</td>
-                  <td>
-                    <a
-                      href=""
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleViewOrderDetail(order.OrderID);
-                      }}
-                    >
-                      View products in this order
-                    </a>
-                  </td>
-                  <td>{formatDate(order.created)}</td>
-                  <td>{formatDate(order.updated)}</td>
-                  <td>{order.TotalPrice}</td>
-                  <td>{order.VoucherID ? order.VoucherID : "No voucher"}</td>
-                  <td>
-                    <a
-                      href=""
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleGetCustomerInfo(order.OrderID);
-                      }}
-                    >
-                      View Customer Info
-                    </a>
-                  </td>
-                  <td>{order.PaymentMethod}</td>
-                  <td>
-                    <div className="select1">
-                      <select
-                        id="statusDropdown"
-                        value={order.Status}
-                        onChange={(e) =>
-                          handleStatusChange(
-                            order.OrderID,
-                            e.target.value,
-                            "order"
-                          )
-                        }
+          {Orders.length > 0 ? (
+            <table className="issues-table">
+              <thead>
+                <tr>
+                  <th>OrderID</th>
+                  <th>Products</th>
+                  <th>Order Date</th>
+                  <th>Update Date</th>
+                  <th>Price</th>
+                  <th>VoucherId</th>
+                  <th>Customer Info</th>
+                  <th>Payment Method</th>
+                  <th>Status</th>
+                  <th>Payment Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Orders.map((order) => (
+                  <tr key={order.OrderID}>
+                    <td>{order.OrderID}</td>
+                    <td>
+                      <a
+                        href=""
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleViewOrderDetail(order.OrderID);
+                        }}
                       >
-                        <option value="Waiting">Waiting</option>
-                        <option value="Cancelled">Cancelled</option>
-                        <option value="Shipping">Shipping</option>
-                        <option value="Done">Done</option>
-                      </select>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="select1">
-                      {/* <select id="statusDropdown">
+                        View products in this order
+                      </a>
+                    </td>
+                    <td>{formatDate(order.created)}</td>
+                    <td>{formatDate(order.updated)}</td>
+                    <td>{order.TotalPrice}</td>
+                    <td>{order.VoucherID ? order.VoucherID : "No voucher"}</td>
+                    <td>
+                      <a
+                        href=""
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleGetCustomerInfo(order.OrderID);
+                        }}
+                      >
+                        View Customer Info
+                      </a>
+                    </td>
+                    <td>{order.PaymentMethod}</td>
+                    <td>
+                      <div className="select1">
+                        <select
+                          id="statusDropdown"
+                          value={order.Status}
+                          onChange={(e) =>
+                            handleStatusChange(
+                              order.OrderID,
+                              e.target.value,
+                              "order"
+                            )
+                          }
+                        >
+                          <option value="Waiting">Waiting</option>
+                          <option value="Cancelled">Cancelled</option>
+                          <option value="Shipping">Shipping</option>
+                          <option value="Done">Done</option>
+                        </select>
+                      </div>
+                    </td>
+                    <td>
+                      <div className="select1">
+                        {/* <select id="statusDropdown">
                         <option value="Pending">Pending</option>
                         <option value="Done">Done</option>
                       </select> */}
-                      {order.PaymentStatus === "Pending" ? (
-                        <button
-                          onClick={() =>
-                            handleUpdateOrderPaymentStatus(order.OrderID)
-                          }
-                          className="btn-confirm"
-                        >
-                          Done
-                        </button>
-                      ) : (
-                        <button
-                          onClick={() => setIsStatusChangeOpen(false)}
-                          className="btn-confirm"
-                          disabled
-                          style={{ opacity: 0.5, cursor: "not-allowed" }}
-                        >
-                          Done
-                        </button>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
+                        {order.PaymentStatus === "Pending" ? (
+                          <button
+                            onClick={() =>
+                              handleUpdateOrderPaymentStatus(order.OrderID)
+                            }
+                            className="btn-confirm"
+                          >
+                            Done
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => setIsStatusChangeOpen(false)}
+                            className="btn-confirm"
+                            disabled
+                            style={{ opacity: 0.5, cursor: "not-allowed" }}
+                          >
+                            Done
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p>No orders available</p>
+          )}
           <div>
             <ReactPaginate
               breakLabel="..."

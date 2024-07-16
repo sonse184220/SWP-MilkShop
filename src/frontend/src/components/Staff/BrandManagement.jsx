@@ -153,54 +153,59 @@ function BrandManagement() {
           Add Brand
         </button>
       </div>
-      <table className="issues-table">
-        <thead>
-          <tr>
-            <th>BrandID</th>
-            <th>Brand Name</th>
-            <th>Content</th>
-            <th></th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {brands.map((brand) => (
-            <tr key={brand.BrandID}>
-              <td>{brand.BrandID}</td>
-              <td>{brand.Name}</td>
-              <td>
-                <div
-                  dangerouslySetInnerHTML={{ __html: he.decode(brand.Content) }}
-                ></div>
-              </td>
-              <td className="deleteDiv">
-                <div className="delete">
-                  <button
-                    className="delete-button"
-                    onClick={() => handleDeleteBrand(brand.BrandID)}
-                  >
-                    <a href="#">Delete</a>
-                  </button>
-                </div>
-              </td>
-              <td className="updateDiv">
-                <div className="delete">
-                  <button
-                    className="delete-button"
-                    onClick={() => {
-                      setSelectedBrand(brand);
-                      setIsUpdateModalOpen(true);
-                    }}
-                  >
-                    Update
-                  </button>
-                </div>
-              </td>
+      {brands.length > 0 ? (
+        <table className="issues-table">
+          <thead>
+            <tr>
+              <th>BrandID</th>
+              <th>Brand Name</th>
+              <th>Content</th>
+              <th></th>
+              <th></th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-
+          </thead>
+          <tbody>
+            {brands.map((brand) => (
+              <tr key={brand.BrandID}>
+                <td>{brand.BrandID}</td>
+                <td>{brand.Name}</td>
+                <td>
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: he.decode(brand.Content),
+                    }}
+                  ></div>
+                </td>
+                <td className="deleteDiv">
+                  <div className="delete">
+                    <button
+                      className="delete-button"
+                      onClick={() => handleDeleteBrand(brand.BrandID)}
+                    >
+                      <a href="#">Delete</a>
+                    </button>
+                  </div>
+                </td>
+                <td className="updateDiv">
+                  <div className="delete">
+                    <button
+                      className="delete-button"
+                      onClick={() => {
+                        setSelectedBrand(brand);
+                        setIsUpdateModalOpen(true);
+                      }}
+                    >
+                      Update
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p>No brands available</p>
+      )}
       {/* Add Brand Modal */}
       <Modal
         isOpen={isAddModalOpen}

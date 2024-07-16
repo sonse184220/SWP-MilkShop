@@ -54,6 +54,7 @@
 
 .issues-table th {
   background-color: palevioletred;
+  text-align: center;
 }
 
 .custom-modal-blog {

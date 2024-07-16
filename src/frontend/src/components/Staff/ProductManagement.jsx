@@ -23,13 +23,9 @@ function ProductManagement() {
   const navigate = useNavigate();
 
   const StaffToken = "Bearer " + sessionStorage.getItem("token");
-  const userId = sessionStorage.getItem("userData")
-    ? JSON.parse(sessionStorage.getItem("userData")).UserID
-    : "Guest";
 
   const staffData = sessionStorage.getItem("staffData");
 
-  const staffId = staffData ? JSON.parse(staffData).UserID : "";
   const staffName = staffData ? JSON.parse(staffData).Name : "";
 
   const [isOpen, setIsOpen] = useState(false);
@@ -273,9 +269,6 @@ function ProductManagement() {
               </button>
               <div ref={dropdownRef} className="dropdown-menu">
                 <ul className="dropdown">
-                  {/* <li>
-                    <a href="/Staff/StaffProfile">Profile</a>
-                  </li> */}
                   <li>
                     <a href="" onClick={handleLogout}>
                       Logout
@@ -298,58 +291,62 @@ function ProductManagement() {
                 Add Product
               </button>
             </div>
-            <table className="issues-table">
-              <thead>
-                <tr>
-                  <th>Image</th>
-                  <th>ProductID</th>
-                  <th>Product Name</th>
-                  <th>Quantity</th>
-                  <th>Created Date</th>
-                  <th>Updated Date</th>
-                  <th>Price</th>
-                  <th>Expiration</th>
-                  <th></th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {products.map((item) => (
-                  <tr key={item.ProductID}>
-                    <td>
-                      <img
-                        src={`data:image/jpeg;base64,${item.Image}`}
-                        alt={`${item.Name}`}
-                      />
-                    </td>
-                    <td>{item.ProductID}</td>
-                    <td>{item.Name}</td>
-                    <td>{item.Quantity}</td>
-                    <td>{formatDate(item.created)}</td>
-                    <td>{formatDate(item.updated)}</td>
-                    <td>{item.Price}</td>
-                    <td>{formatDate(item.Expiration)}</td>
-                    <td className="deleteDiv">
-                      <div className="delete">
-                        <button className="delete-button">
-                          <a href="#">Delete</a>
-                        </button>
-                      </div>
-                    </td>
-                    <td className="updateDiv">
-                      <div className="delete">
-                        <button
-                          className="delete-button"
-                          onClick={() => handleGetAProduct(item.ProductID)}
-                        >
-                          Update
-                        </button>
-                      </div>
-                    </td>
+            {products.length > 0 ? (
+              <table className="issues-table">
+                <thead>
+                  <tr>
+                    <th>Image</th>
+                    <th>ProductID</th>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Created Date</th>
+                    <th>Updated Date</th>
+                    <th>Price</th>
+                    <th>Expiration</th>
+                    <th></th>
+                    <th></th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {products.map((item) => (
+                    <tr key={item.ProductID}>
+                      <td>
+                        <img
+                          src={`data:image/jpeg;base64,${item.Image}`}
+                          alt={`${item.Name}`}
+                        />
+                      </td>
+                      <td>{item.ProductID}</td>
+                      <td>{item.Name}</td>
+                      <td>{item.Quantity}</td>
+                      <td>{formatDate(item.created)}</td>
+                      <td>{formatDate(item.updated)}</td>
+                      <td>{item.Price}</td>
+                      <td>{formatDate(item.Expiration)}</td>
+                      <td className="deleteDiv">
+                        <div className="delete">
+                          <button className="delete-button">
+                            <a href="#">Delete</a>
+                          </button>
+                        </div>
+                      </td>
+                      <td className="updateDiv">
+                        <div className="delete">
+                          <button
+                            className="delete-button"
+                            onClick={() => handleGetAProduct(item.ProductID)}
+                          >
+                            Update
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p>No products available</p>
+            )}
             <div>
               <ReactPaginate
                 breakLabel="..."

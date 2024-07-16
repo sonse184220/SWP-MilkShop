@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import he from 'he';
+import he from "he";
 import ReactReadMoreReadLess from "react-read-more-read-less";
 import { useParams } from "react-router-dom";
 import { blogDetail } from "../../services/blog/blogDetail"; // Adjust the path as per your structure
@@ -17,18 +17,18 @@ const BlogDetail = ({ isMember }) => {
 
   function formatDate(dateString) {
     const date = new Date(dateString);
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = date.toLocaleString('default', { month: 'short' });
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = date.toLocaleString("default", { month: "short" });
     const year = date.getFullYear();
     return `${day} ${month}, ${year}`;
   }
 
   const decodeContent = (content) => {
-    if (!content) return '';
+    if (!content) return "";
     // First, decode the HTML entities
     const decodedContent = he.decode(content);
     // Then, remove any HTML tags
-    return decodedContent.replace(/<[^>]*>/g, '');
+    return decodedContent.replace(/<[^>]*>/g, "");
   };
 
   useEffect(() => {
@@ -58,10 +58,8 @@ const BlogDetail = ({ isMember }) => {
             <div className="blog-detail">
               <h1>{blog.Title}</h1>
               <div className="blog-meta">
-                <span className="blog-date">
-                  {formatDate(blog.updated)}
-                </span>
                 <span className="blog-author">{blog.Author}</span>
+                <span className="blog-date">{formatDate(blog.updated)}</span>
               </div>
               <div className="blog-detail-image">
                 <img src={`data:image/jpeg;base64,${blog.Image}`} />
@@ -80,10 +78,10 @@ const BlogDetail = ({ isMember }) => {
                     {decodeContent(blog.Content)}
                   </ReactReadMoreReadLess>
                 </> */}
-                <div dangerouslySetInnerHTML={{ __html: he.decode(blog.Content) }}></div>
+                <div
+                  dangerouslySetInnerHTML={{ __html: he.decode(blog.Content) }}
+                ></div>
               </div>
-
-
             </div>
           </div>
           <div className="col-lg-4 blogDetail">
@@ -91,7 +89,9 @@ const BlogDetail = ({ isMember }) => {
           </div>
         </div>
       </div>
-      {relatedProduct.length > 0 && <ProductList products={relatedProduct || []} />}
+      {relatedProduct.length > 0 && (
+        <ProductList products={relatedProduct || []} />
+      )}
       <Footer />
     </>
   );

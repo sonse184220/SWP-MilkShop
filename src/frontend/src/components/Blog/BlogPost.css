@@ -48,3 +48,8 @@
   color: #666;
   font-size: 0.9rem;
 }
+
+.blogDate{
+  display: flex;
+  justify-content: flex-end;
+}

@@ -244,9 +244,6 @@ const VoucherManagement = () => {
             </button>
             <div ref={dropdownRef} className="dropdown-menu">
               <ul className="dropdown">
-                {/* <li>
-                  <a href="/Staff/StaffProfile">Profile</a>
-                </li> */}
                 <li>
                   <a href="" onClick={handleLogout}>
                     Logout

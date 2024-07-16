@@ -9,7 +9,6 @@ import ReactPaginate from "react-paginate";
 import "./BlogManagement.css"; // Import CSS file
 import Sidebar from "./Sidebar";
 import Modal from "react-modal";
-import StaffProfile from "./StaffProfile";
 import { fetchBlogs } from "../../services/blog/blogService";
 import { AddBlog } from "../../services/staff/blog/addBlog";
 import { blogDetail } from "../../services/blog/blogDetail";
@@ -26,7 +25,6 @@ const BlogManagement = () => {
 
   const staffData = sessionStorage.getItem("staffData");
 
-  const staffId = staffData ? JSON.parse(staffData).UserID : "";
   const staffName = staffData ? JSON.parse(staffData).Name : "";
 
   const [isOpen, setIsOpen] = useState(false);
@@ -241,9 +239,6 @@ const BlogManagement = () => {
             </button>
             <div ref={dropdownRef} className="dropdown-menu">
               <ul className="dropdown">
-                {/* <li>
-                  <a href="/Staff/StaffProfile">Profile</a>
-                </li> */}
                 <li>
                   <a href="" onClick={handleLogout}>
                     Logout
@@ -270,7 +265,6 @@ const BlogManagement = () => {
                 <th>BlogID</th>
                 <th>Author</th>
                 <th>BlogName</th>
-                {/* <th>Content</th> */}
                 <th>Created</th>
                 <th>Updated</th>
                 <th></th>
@@ -290,7 +284,6 @@ const BlogManagement = () => {
                   <td>{blog.BlogID}</td>
                   <td>{blog.UserID}</td>
                   <td>{blog.Title}</td>
-                  {/* <td>{blog.Content}</td> */}
                   <td>{formatDate(blog.created)}</td>
                   <td>{formatDate(blog.updated)}</td>
                   <td className="deleteDiv">
@@ -354,15 +347,6 @@ const BlogManagement = () => {
               <div className="col-6">
                 <label>Blog ID: </label>
                 <input name="blogId" value={updateBlog.BlogID} readOnly />
-
-                {/* <label>User ID: </label>
-                <input
-                  name="userId"
-                  value={updateBlog.userId}
-                  onChange={(e) =>
-                    setUpdateBlog({ ...updateBlog, userId: e.target.value })
-                  }
-                /> */}
 
                 <label>Blog title: </label>
                 <input
@@ -431,16 +415,6 @@ const BlogManagement = () => {
             <h2>Add Blog</h2>
             <div className="row">
               <div className="col-6">
-                {/* <label>User ID: </label>
-                <input
-                  name="userId"
-                  placeholder="Enter user id"
-                  value={newBlog.userId}
-                  onChange={(e) =>
-                    setNewBlog({ ...newBlog, userId: e.target.value })
-                  }
-                /> */}
-
                 <label>Blog title: </label>
                 <input
                   name="title"

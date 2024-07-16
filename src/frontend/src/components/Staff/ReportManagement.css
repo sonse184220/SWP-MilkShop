@@ -37,6 +37,14 @@
     align-items: center;
   }
   
+  .action{
+    display: flex;
+    justify-content: center;
+  }
+
+  .action button:hover{
+    background-color: palevioletred;
+  }
   .report-management__search-input {
     margin-left: 10px;
   }

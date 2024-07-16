@@ -18,12 +18,15 @@
 .blog-meta {
   margin-bottom: 20px;
   color: #777;
+  display: flex;
+  justify-content: space-between;
 }
 
-.blog-author,
-.blog-date {
-  margin-right: 10px;
+.blog-author{
+  margin-left: 20px;
+  text-decoration: underline;
 }
+
 
 .blog-detail-image img {
   width: 100%;
