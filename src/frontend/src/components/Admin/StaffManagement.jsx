@@ -21,7 +21,7 @@ const StaffManagement = () => {
   const [isAddOpen, setIsAddOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  const [isConfirm, setIsConfirm] = useState(true);
+  const [isConfirm, setIsConfirm] = useState(false);
   const [action, setAction] = useState({
     type: "",
     userId: ""
