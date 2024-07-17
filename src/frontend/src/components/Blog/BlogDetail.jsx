@@ -84,7 +84,7 @@ const BlogDetail = ({ isMember }) => {
               </div>
             </div>
           </div>
-          <div className="col-lg-4 blogDetail">
+          <div className="col-lg-3 all-blog-list-container">
             <BlogList columnLayout />
           </div>
         </div>
