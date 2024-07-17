@@ -44,7 +44,7 @@ const Dashboard = () => {
       if (response.data.monthlyRevenue) {
         setMonthlyRevenue(response.data.monthlyRevenue);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const handleGetWeeklyRevenue = async () => {
@@ -53,7 +53,7 @@ const Dashboard = () => {
       if (response.data.Weeks.length > 0) {
         setWeeklyRevenue(response.data.Weeks);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
   const formatXAxis = (tickItem) => {
     return `Week ${tickItem}`;
@@ -65,7 +65,7 @@ const Dashboard = () => {
       if (response.data.topUsers.length > 0) {
         setTopUser(response.data.topUsers);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const handleLogout = async () => {
@@ -98,9 +98,9 @@ const Dashboard = () => {
               </button>
               <div ref={dropdownRef} className="dropdown-menu">
                 <ul className="dropdownAdmin">
-                  <li>
+                  {/* <li>
                     <a href="/Admin/AdminProfile">Profile</a>
-                  </li>
+                  </li> */}
                   <li>
                     <a
                       href=""

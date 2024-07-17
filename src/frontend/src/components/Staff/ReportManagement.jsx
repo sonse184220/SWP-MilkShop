@@ -41,8 +41,8 @@ const ReportManagement = () => {
     }
   };
 
-  const handleLogout = async () => {
-    // event.preventDefault();
+  const handleLogout = async (e) => {
+    e.preventDefault();
     const token = "Bearer " + sessionStorage.getItem("token");
     await Logout(token);
     sessionStorage.clear();
@@ -87,7 +87,7 @@ const ReportManagement = () => {
         setCurrentReport(response.data[0]);
         setIsAddOpen(true);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const handleOpenResponseModal = async (reportId) => {
@@ -224,7 +224,7 @@ const ReportManagement = () => {
                         <button
                           onClick={"() => handleDisable(user.UserID)"}
                           className="btn-confirm"
-                          // style={{ backgroundColor: 'red' }}
+                        // style={{ backgroundColor: 'red' }}
                         >
                           Solve
                         </button>

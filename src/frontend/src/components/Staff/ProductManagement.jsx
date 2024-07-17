@@ -246,8 +246,8 @@ function ProductManagement() {
     handleGetProducts();
   }, [currentPage]);
 
-  const handleLogout = async () => {
-    // event.preventDefault();
+  const handleLogout = async (e) => {
+    e.preventDefault();
     const token = "Bearer " + sessionStorage.getItem("token");
     await Logout(token);
     sessionStorage.clear();

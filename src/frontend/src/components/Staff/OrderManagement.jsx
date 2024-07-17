@@ -114,7 +114,7 @@ const OrderManagement = () => {
         setOrderDetail(response.data.detail);
         setIsDetail(true);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const handleGetCustomerInfo = async (orderId) => {
@@ -135,7 +135,7 @@ const OrderManagement = () => {
         });
         setIsInfoOpen(true);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const handleStatusChange = (id, newStatus, type) => {
@@ -168,8 +168,7 @@ const OrderManagement = () => {
 
       if (response.data[0].OrderID || response.data[0].PreorderID) {
         toast.success(
-          `${
-            itemType === "order" ? "Order" : "Pre-order"
+          `${itemType === "order" ? "Order" : "Pre-order"
           } status updated successfully!`,
           {
             duration: 3000,
@@ -265,7 +264,7 @@ const OrderManagement = () => {
           position: "top-right",
         });
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const handleUpdatePreOrderPaymentStatus = async (orderId) => {
@@ -278,7 +277,7 @@ const OrderManagement = () => {
           position: "top-right",
         });
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -291,8 +290,8 @@ const OrderManagement = () => {
     handleGetAllPreOrders();
   }, [currentPage, POcurrentPage]);
 
-  const handleLogout = async () => {
-    // event.preventDefault();
+  const handleLogout = async (e) => {
+    e.preventDefault();
     const token = "Bearer " + sessionStorage.getItem("token");
     await Logout(token);
     sessionStorage.clear();

@@ -249,7 +249,7 @@ export const Wishlist = ({ isMember }) => {
                                         <ul className="modal-add-cart-product-shipping-info">
                                             <li><strong><i className="icon-shopping-cart"></i> There Are {CartItems.length} Items In Your Cart.</strong></li>
                                             <li><strong>TOTAL PRICE: </strong> <span>{calculateTotalPrice().toLocaleString()} VND</span></li>
-                                            <li className="modal-continue-button"><a href="#" data-bs-dismiss="modal" onClick={closeModal}>CONTINUE SHOPPING</a></li>
+                                            <li className="modal-continue-button"><a href="/Customer/home" data-bs-dismiss="modal">CONTINUE SHOPPING</a></li>
                                         </ul>
                                     </div>
                                 </div>
