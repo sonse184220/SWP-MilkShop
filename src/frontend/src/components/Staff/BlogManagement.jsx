@@ -258,65 +258,69 @@ const BlogManagement = () => {
               Add Blog
             </button>
           </div>
-          <table className="issues-table">
-            <thead>
-              <tr>
-                <th>Blog Image</th>
-                <th>BlogID</th>
-                <th>Author</th>
-                <th>BlogName</th>
-                <th>Created</th>
-                <th>Updated</th>
-                <th></th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {blogs.map((blog) => (
-                <tr key={blog.BlogID}>
-                  <td>
-                    <img
-                      style={{ width: "100%" }}
-                      src={`data:image/jpeg;base64,${blog.Image}`}
-                      alt=""
-                    />
-                  </td>
-                  <td>{blog.BlogID}</td>
-                  <td>{blog.UserID}</td>
-                  <td>{blog.Title}</td>
-                  <td>{formatDate(blog.created)}</td>
-                  <td>{formatDate(blog.updated)}</td>
-                  <td className="deleteDiv">
-                    <div className="delete">
-                      <button className="delete-button">
-                        <a
-                          href="#"
-                          onClick={() => handleDeleteBlog(blog.BlogID)}
-                        >
-                          Delete
-                        </a>
-                      </button>
-                    </div>
-                  </td>
-                  <td className="deleteDiv">
-                    <div className="delete">
-                      <button className="delete-button">
-                        <a
-                          href=""
-                          onClick={(e) => {
-                            e.preventDefault();
-                            handleGetABlog(blog.BlogID);
-                          }}
-                        >
-                          Update
-                        </a>
-                      </button>
-                    </div>
-                  </td>
+          {blogs.length > 0 ? (
+            <table className="issues-table">
+              <thead>
+                <tr>
+                  <th>Blog Image</th>
+                  <th>BlogID</th>
+                  <th>Author</th>
+                  <th>BlogName</th>
+                  <th>Created</th>
+                  <th>Updated</th>
+                  <th></th>
+                  <th></th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {blogs.map((blog) => (
+                  <tr key={blog.BlogID}>
+                    <td>
+                      <img
+                        style={{ width: "100%" }}
+                        src={`data:image/jpeg;base64,${blog.Image}`}
+                        alt=""
+                      />
+                    </td>
+                    <td>{blog.BlogID}</td>
+                    <td>{blog.UserID}</td>
+                    <td>{blog.Title}</td>
+                    <td>{formatDate(blog.created)}</td>
+                    <td>{formatDate(blog.updated)}</td>
+                    <td className="deleteDiv">
+                      <div className="delete">
+                        <button className="delete-button">
+                          <a
+                            href="#"
+                            onClick={() => handleDeleteBlog(blog.BlogID)}
+                          >
+                            Delete
+                          </a>
+                        </button>
+                      </div>
+                    </td>
+                    <td className="deleteDiv">
+                      <div className="delete">
+                        <button className="delete-button">
+                          <a
+                            href=""
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handleGetABlog(blog.BlogID);
+                            }}
+                          >
+                            Update
+                          </a>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p>No vouchers available</p>
+          )}
           <div>
             <ReactPaginate
               breakLabel="..."

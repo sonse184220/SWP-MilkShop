@@ -24,6 +24,9 @@ const Dashboard = () => {
 
   const AdminToken = "Bearer " + sessionStorage.getItem("token");
 
+  const adminData = sessionStorage.getItem("adminData");
+
+  const adminName = adminData ? JSON.parse(adminData).Name : "";
   const [monthlyRevenue, setMonthlyRevenue] = useState([]);
   const [weeklyRevenue, setWeeklyRevenue] = useState([]);
   const [topUser, setTopUser] = useState([]);
@@ -41,10 +44,8 @@ const Dashboard = () => {
       if (response.data.monthlyRevenue) {
         setMonthlyRevenue(response.data.monthlyRevenue);
       }
-    } catch (error) {
-
-    }
-  }
+    } catch (error) {}
+  };
 
   const handleGetWeeklyRevenue = async () => {
     try {
@@ -52,10 +53,8 @@ const Dashboard = () => {
       if (response.data.Weeks.length > 0) {
         setWeeklyRevenue(response.data.Weeks);
       }
-    } catch (error) {
-
-    }
-  }
+    } catch (error) {}
+  };
   const formatXAxis = (tickItem) => {
     return `Week ${tickItem}`;
   };
@@ -64,16 +63,14 @@ const Dashboard = () => {
     try {
       const response = await GetTopUser(AdminToken);
       if (response.data.topUsers.length > 0) {
-        setTopUser(response.data.topUsers)
+        setTopUser(response.data.topUsers);
       }
-    } catch (error) {
-
-    }
-  }
+    } catch (error) {}
+  };
 
   const handleLogout = async () => {
     // event.preventDefault();
-    const token = 'Bearer ' + sessionStorage.getItem('token');
+    const token = "Bearer " + sessionStorage.getItem("token");
     await Logout(token);
     sessionStorage.clear();
     navigate("/Customer/home");
@@ -84,20 +81,20 @@ const Dashboard = () => {
     handleGetMonthlyRevenue();
     handleGetWeeklyRevenue();
     handleGetTopUsers();
-  }, [])
+  }, []);
 
   return (
     <>
       <div className="row">
         <div className="col-lg-2">
-          <SidebarAdmin style={{ width: '100%' }} />
+          <SidebarAdmin style={{ width: "100%" }} />
         </div>
         <div className="col-lg-10 dashboard">
           <div className="content-header">
             <h1>Dashboard</h1>
             <header>
               <button className="admin-name" onClick={toggleDropdown}>
-                Admin Name
+                {adminName}
               </button>
               <div ref={dropdownRef} className="dropdown-menu">
                 <ul className="dropdownAdmin">
@@ -105,7 +102,15 @@ const Dashboard = () => {
                     <a href="/Admin/AdminProfile">Profile</a>
                   </li>
                   <li>
-                    <a href="" onClick={(e) => { e.preventDefault(); handleLogout() }}>Logout</a>
+                    <a
+                      href=""
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleLogout();
+                      }}
+                    >
+                      Logout
+                    </a>
                   </li>
                 </ul>
               </div>
@@ -129,7 +134,10 @@ const Dashboard = () => {
             <div className="chart">
               <h3>Monthly Revenue</h3>
               <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={monthlyRevenue} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                <LineChart
+                  data={monthlyRevenue}
+                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                >
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="month" />
                   <YAxis />
@@ -162,7 +170,9 @@ const Dashboard = () => {
             <h3>Top Users</h3>
             <ul>
               {topUser.map((user) => (
-                <li>{user.UserID} - {user.Name} - Success Order: {user.orderCount}</li>
+                <li>
+                  {user.UserID} - {user.Name} - Success Order: {user.orderCount}
+                </li>
               ))}
               {/* <li>Oscar - email@figmasfakedomain.net</li>
               <li>Daniel - email@figmasfakedomain.net</li>
@@ -220,7 +230,7 @@ const Dashboard = () => {
             </table>
           </div> */}
         </div>
-      </div >
+      </div>
     </>
   );
 };

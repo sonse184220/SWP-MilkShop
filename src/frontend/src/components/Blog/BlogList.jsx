@@ -1,50 +1,25 @@
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Oval } from "react-loader-spinner";
 import BlogCard from "./BlogCard";
 import "./BlogList.css";
 import { fetchBlogs } from "../../services/blog/blogService";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import { Link } from "react-router-dom";
 
 const BlogList = ({ columnLayout = false }) => {
-  const blogListRef = useRef(null);
-  const [blog, setBlogs] = useState([]);
+  const [blogs, setBlogs] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [autoScroll, setAutoScroll] = useState(!columnLayout);
 
-  const scrollLeft = () => {
-    blogListRef.current.scrollBy({ left: -525, behavior: "smooth" });
-  };
-
-  const scrollRight = () => {
-    blogListRef.current.scrollBy({ left: 525, behavior: "smooth" });
-  };
-
-  const autoScrollHandler = () => {
-    if (blogListRef.current) {
-      const isAtEnd =
-        blogListRef.current.scrollLeft + blogListRef.current.clientWidth >=
-        blogListRef.current.scrollWidth;
-      if (isAtEnd) {
-        blogListRef.current.scrollTo({ left: 0, behavior: "smooth" });
-      } else {
-        blogListRef.current.scrollBy({ left: 600, behavior: "smooth" });
-      }
-    }
-  };
-
-  const pauseAutoScroll = () => setAutoScroll(false);
-  const resumeAutoScroll = () => setAutoScroll(true);
-
-  useEffect(() => {
-    let intervalId;
-    if (autoScroll) {
-      intervalId = setInterval(autoScrollHandler, 3000); // Cuộn mỗi 3 giây
-    }
-    return () => {
-      if (intervalId) clearInterval(intervalId);
-    };
-  }, [autoScroll]);
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = date.toLocaleString("default", { month: "short" });
+    const year = date.getFullYear();
+    return `${day} ${month}, ${year}`;
+  }
 
   useEffect(() => {
     const loadBlogs = async () => {
@@ -69,6 +44,32 @@ const BlogList = ({ columnLayout = false }) => {
     loadBlogs();
   }, []);
 
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 4,
+    slidesToScroll: 1,
+    autoplay: !columnLayout,
+    autoplaySpeed: 3000,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 3,
+        },
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+        },
+      },
+    ],
+  };
+
   return (
     <div
       className={`blog-list-container ${columnLayout ? "column-layout" : ""}`}
@@ -76,49 +77,40 @@ const BlogList = ({ columnLayout = false }) => {
       <div className="blog-list-content">
         <h2>Suggested blogs</h2>
       </div>
-      <div
-        className="blog-list-wrapper"
-        onMouseEnter={!columnLayout ? pauseAutoScroll : null}
-        onMouseLeave={!columnLayout ? resumeAutoScroll : null}
-      >
-        {!columnLayout && (
-          <button
-            className="scroll-button left"
-            onClick={() => {
-              scrollLeft();
-              pauseAutoScroll();
+      <div className="blog-list-wrapper">
+        {isLoading ? (
+          <Oval
+            wrapperStyle={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%",
+              width: "100%",
             }}
-          >
-            &lt;
-          </button>
-        )}
-        <div className="blog-list" ref={blogListRef}>
-          {isLoading ? (
-            <Oval
-              wrapperStyle={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "100%",
-                width: "100%",
-              }}
-            />
-          ) : (
-            <BlogCard blogs={blog} />
-          )}
-        </div>
-        {!columnLayout && (
-          <button
-            className="scroll-button right"
-            onClick={() => {
-              scrollRight();
-              pauseAutoScroll();
-            }}
-          >
-            &gt;
-          </button>
+          />
+        ) : columnLayout ? (
+          <BlogCard blogs={blogs} />
+        ) : (
+          <Slider {...settings}>
+            {blogs.map((blog) => (
+              <Link
+                to={`/Customer/BlogDetail/${blog.BlogID}`}
+                key={blog.BlogID}
+              >
+                <div className="blog-card">
+                  <div className="blog-name">
+                    {blog.Title}
+                    <div className="createdDate">
+                      {formatDate(blog.updated)}
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </Slider>
         )}
       </div>
+      {error && <div className="error">{error}</div>}
     </div>
   );
 };

@@ -1,7 +1,5 @@
-/* BlogList.css */
-
 .blog-list-container {
-  padding: 20px;
+  padding: 10px;
 }
 
 .blog-list-content {
@@ -18,36 +16,51 @@
 
 .blog-list-wrapper {
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 100%;
+  height: 300px;
+  border-radius: 10px;
+  border: 3px solid palevioletred;
+  margin-bottom: 20px;
+  background-color: snow;
 }
 
 .blog-list {
   display: flex;
-  overflow-x: auto;
   justify-content: flex-start;
-  gap: 20%;
+  gap: 20px;
   background-color: snow;
   padding: 20px;
   border: 1px solid #f8a9e5;
   border-radius: 5px;
   margin-top: 20px;
-  scroll-behavior: smooth; /* Smooth scrolling */
 }
 
-.blog-list::-webkit-scrollbar {
-  display: none;
+.column-layout .blog-list-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: none;
 }
 
-.scroll-button {
-  position: absolute;
+.column-layout .blog-list {
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Slick slider specific styles */
+.slick-slider {
+  margin-top: 20px;
+}
+
+.slick-prev,
+.slick-next {
   background-color: #f8a9e5;
   border: 1px solid #ced4da;
   border-radius: 10%;
   width: 30px;
-  height: 100px;
-  display: flex;
+  height: 30px;
+  display: flex !important;
   align-items: center;
   justify-content: center;
   cursor: pointer;
@@ -55,29 +68,24 @@
   transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-.scroll-button:hover {
+.slick-prev:hover,
+.slick-next:hover {
   background-color: #fff;
-  transform: scale(1.1); /* Slight zoom effect on hover */
+  transform: scale(1.1);
 }
 
-.scroll-button.left {
+.slick-prev {
   left: -15px;
 }
 
-.scroll-button.right {
+.slick-next {
   right: -15px;
 }
 
-.column-layout .blog-list-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.slick-dots li button:before {
+  color: #f8a9e5; /* Custom dot color */
 }
 
-.column-layout .blog-list {
-  align-items: center;
-  flex-direction: column;
-  max-height: 500px;
-  overflow-y: auto;
-  overflow-x: hidden;
+.slick-dots li.slick-active button:before {
+  color: #f08ae0; /* Custom active dot color */
 }

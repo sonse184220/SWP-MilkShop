@@ -17,6 +17,9 @@ const StaffManagement = () => {
 
   const AdminToken = "Bearer " + sessionStorage.getItem("token");
 
+  const adminData = sessionStorage.getItem("adminData");
+
+  const adminName = adminData ? JSON.parse(adminData).Name : "";
   const [isOpen, setIsOpen] = useState(false);
   const [isAddOpen, setIsAddOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -24,8 +27,8 @@ const StaffManagement = () => {
   const [isConfirm, setIsConfirm] = useState(true);
   const [action, setAction] = useState({
     type: "",
-    userId: ""
-  })
+    userId: "",
+  });
 
   const [currentPage, setCurrentPage] = useState(1);
   const [pageCount, setPageCount] = useState(1);
@@ -37,7 +40,7 @@ const StaffManagement = () => {
     Name: "",
     Email: "",
     Phone: "",
-    Address: ""
+    Address: "",
   });
 
   const handleGetAllAccount = async () => {
@@ -50,10 +53,8 @@ const StaffManagement = () => {
         setStaffMembers(response.data.accounts.accounts);
         setPageCount(response.data.totalPages);
       }
-    } catch (error) {
-
-    }
-  }
+    } catch (error) {}
+  };
 
   useEffect(() => {
     handleGetAllAccount();
@@ -61,7 +62,7 @@ const StaffManagement = () => {
 
   useEffect(() => {
     handleGetAllAccount();
-  }, [currentPage])
+  }, [currentPage]);
 
   const toggleDropdown = () => {
     if (dropdownRef.current) {
@@ -75,12 +76,11 @@ const StaffManagement = () => {
 
   const handleEnableDisable = async () => {
     try {
-
       const userID = {
-        "userId": action.userId
-      }
+        userId: action.userId,
+      };
 
-      if (action.type === 'disable') {
+      if (action.type === "disable") {
         const response = await DisableAccount(AdminToken, userID);
         if (response.data.message) {
           toast.success(response.data.message, {
@@ -92,26 +92,26 @@ const StaffManagement = () => {
           handleGetAllAccount();
           setAction({
             type: "",
-            userId: ""
-          })
+            userId: "",
+          });
         }
       }
 
-      if (action.type === 'enable') {
+      if (action.type === "enable") {
         const response = await EnableAccount(AdminToken, userID);
-        console.log('check');
+        console.log("check");
         if (response.data.message) {
           toast.success(response.data.message, {
             duration: 3000,
             position: "top-right",
-            theme: 'colored'
+            theme: "colored",
           });
-          console.log('check');
+          console.log("check");
           handleGetAllAccount();
           setAction({
             type: "",
-            userId: ""
-          })
+            userId: "",
+          });
         }
       }
     } catch (error) {
@@ -119,20 +119,20 @@ const StaffManagement = () => {
       toast.error(`Failed to ${action.type} account. Please try again.`, {
         duration: 3000,
         position: "top-right",
-        theme: 'colored'
+        theme: "colored",
       });
     } finally {
       setIsConfirm(false);
     }
-  }
+  };
 
   const handleOpenConfirm = async (Type, UserId) => {
     setAction({
       type: Type,
-      userId: UserId
+      userId: UserId,
     });
     setIsConfirm(true);
-  }
+  };
 
   const handleAddStaff = async () => {
     try {
@@ -148,7 +148,7 @@ const StaffManagement = () => {
           Name: "",
           Email: "",
           Phone: "",
-          Address: ""
+          Address: "",
         });
         handleGetAllAccount();
       }
@@ -158,11 +158,11 @@ const StaffManagement = () => {
         position: "top-right",
       });
     }
-  }
+  };
 
   const handleLogout = async () => {
     // event.preventDefault();
-    const token = 'Bearer ' + sessionStorage.getItem('token');
+    const token = "Bearer " + sessionStorage.getItem("token");
     await Logout(token);
     sessionStorage.clear();
     navigate("/Customer/home");
@@ -185,10 +185,7 @@ const StaffManagement = () => {
           <button onClick={handleEnableDisable} className="btn-confirm">
             Confirm
           </button>
-          <button
-            onClick={() => setIsConfirm(false)}
-            className="btn-cancel"
-          >
+          <button onClick={() => setIsConfirm(false)} className="btn-cancel">
             Cancel
           </button>
         </div>
@@ -198,15 +195,20 @@ const StaffManagement = () => {
           <h1>User Management</h1>
           <header>
             <button className="admin-name" onClick={toggleDropdown}>
-              Admin Name
+              {adminName}
             </button>
             <div ref={dropdownRef} className="dropdown-menu">
               <ul className="dropdownAdmin">
                 <li>
-                  <a href="/Admin/AdminProfile">Profile</a>
-                </li>
-                <li>
-                  <a href="" onClick={(e) => { e.preventDefault(); handleLogout() }}>Logout</a>
+                  <a
+                    href=""
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleLogout();
+                    }}
+                  >
+                    Logout
+                  </a>
                 </li>
               </ul>
             </div>
@@ -253,20 +255,24 @@ const StaffManagement = () => {
                           Update
                         </a>
                       </button> */}
-                      {user.activeStatus === 'active' ? (
+                      {user.activeStatus === "active" ? (
                         <button
-                          onClick={() => handleOpenConfirm('disable', user.UserID)}
+                          onClick={() =>
+                            handleOpenConfirm("disable", user.UserID)
+                          }
                           className="btn-confirm"
-                          style={{ backgroundColor: 'red' }}
+                          style={{ backgroundColor: "red" }}
                         >
                           Disable
                         </button>
                       ) : (
                         <button
-                          onClick={() => handleOpenConfirm('enable', user.UserID)}
+                          onClick={() =>
+                            handleOpenConfirm("enable", user.UserID)
+                          }
                           className="btn-confirm"
-                        // disabled
-                        // style={{ opacity: 0.5, cursor: 'not-allowed' }}
+                          // disabled
+                          // style={{ opacity: 0.5, cursor: 'not-allowed' }}
                         >
                           Enable
                         </button>
@@ -283,9 +289,8 @@ const StaffManagement = () => {
                 </tr>
               ))}
             </tbody>
-
           </table>
-          <div style={{ marginTop: '15px' }}>
+          <div style={{ marginTop: "15px" }}>
             <ReactPaginate
               breakLabel="..."
               nextLabel="Next >"
@@ -344,14 +349,18 @@ const StaffManagement = () => {
             <input
               type="password"
               value={newStaff.Password}
-              onChange={(e) => setNewStaff({ ...newStaff, Password: e.target.value })}
+              onChange={(e) =>
+                setNewStaff({ ...newStaff, Password: e.target.value })
+              }
               placeholder="Enter staff password"
             />
             <br />
             <label>Staff name: </label>
             <input
               value={newStaff.Name}
-              onChange={(e) => setNewStaff({ ...newStaff, Name: e.target.value })}
+              onChange={(e) =>
+                setNewStaff({ ...newStaff, Name: e.target.value })
+              }
               placeholder="Enter staff name"
             />
             <br />
@@ -359,21 +368,27 @@ const StaffManagement = () => {
             <input
               type="email"
               value={newStaff.Email}
-              onChange={(e) => setNewStaff({ ...newStaff, Email: e.target.value })}
+              onChange={(e) =>
+                setNewStaff({ ...newStaff, Email: e.target.value })
+              }
               placeholder="Enter email"
             />
             <br />
             <label>Phone: </label>
             <input
               value={newStaff.Phone}
-              onChange={(e) => setNewStaff({ ...newStaff, Phone: e.target.value })}
+              onChange={(e) =>
+                setNewStaff({ ...newStaff, Phone: e.target.value })
+              }
               placeholder="Enter phone"
             />
             <br />
             <label>Address: </label>
             <input
               value={newStaff.Address}
-              onChange={(e) => setNewStaff({ ...newStaff, Address: e.target.value })}
+              onChange={(e) =>
+                setNewStaff({ ...newStaff, Address: e.target.value })
+              }
               placeholder="Enter address"
             />
             <br />

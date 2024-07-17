@@ -1,5 +1,6 @@
 .sidebar {
   height: 175vh;
+  width: 220px;
 }
 
 .col-lg-2 .sidebar {
@@ -69,4 +70,11 @@
   background-color: palevioletred;
   color: snow;
   text-align: center;
+}
+
+.admin-name{
+  text-decoration: underline;
+  font-weight: bold;
+  font-size: 12px;
+  font-family: Arial, Helvetica, sans-serif;
 }
