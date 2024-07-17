@@ -28,8 +28,7 @@
 }
 
 .sidebar-content div.active:hover {
-  background-color: snow;
-  color: palevioletred;
+  background-color: palevioletred;
 }
 
 .sidebar .sidebar-content a {

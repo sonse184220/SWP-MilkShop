@@ -42,6 +42,7 @@
   overflow-x: hidden;
   align-items: flex-start;
   justify-content: center;
+
 }
 
 .all-blog-list-container .blog-list-wrapper {
@@ -50,6 +51,9 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
+  height: 500px;
+  width: 500px;
+  background-color: white;
 }
 
 .heading-blog-list h3{
