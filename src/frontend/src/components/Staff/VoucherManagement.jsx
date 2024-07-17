@@ -31,6 +31,9 @@ const VoucherManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageCount, setPageCount] = useState(1);
 
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [voucherToDelete, setVoucherToDelete] = useState(null);
+
   const [newVoucher, setNewVoucher] = useState({
     Discount: "",
     Quantity: "",
@@ -161,9 +164,9 @@ const VoucherManagement = () => {
     }
   };
 
-  const handleDeleteVoucher = async (voucherID) => {
+  const handleDeleteVoucher = async () => {
     try {
-      await deleteVoucher(StaffToken, voucherID);
+      await deleteVoucher(StaffToken, voucherToDelete);
       toast.success("Voucher deleted successfully", {
         duration: 3000,
         position: "top-right",
@@ -176,6 +179,8 @@ const VoucherManagement = () => {
         position: "top-right",
       });
     }
+    setIsDeleteModalOpen(false);
+    setVoucherToDelete(null);
   };
 
   const handleUpdateVoucher = async () => {
@@ -255,9 +260,6 @@ const VoucherManagement = () => {
         </div>
         <div className="table-container">
           <div className="table-actions">
-            <label>Search Voucher:</label>
-            <input type="text" placeholder="Search" className="search-input" />
-            <button className="searchProduct">Search</button>
             <button className="addOrder" onClick={() => setIsAddOpen(true)}>
               Add Voucher
             </button>
@@ -288,9 +290,12 @@ const VoucherManagement = () => {
                       <div className="delete">
                         <button
                           className="delete-button"
-                          onClick={() => handleDeleteVoucher(voucher.VoucherID)}
+                          onClick={() => {
+                            setVoucherToDelete(voucher.VoucherID);
+                            setIsDeleteModalOpen(true);
+                          }}
                         >
-                          <a href="#">Delete</a>
+                          Delete
                         </button>
                       </div>
                     </td>
@@ -458,6 +463,31 @@ const VoucherManagement = () => {
               <button
                 onClick={() => setIsAddOpen(false)}
                 className="btn-cancel-product"
+              >
+                Cancel
+              </button>
+            </div>
+          </Modal>
+
+          {/* Delete Brand Confirmation Modal */}
+          <Modal
+            isOpen={isDeleteModalOpen}
+            onRequestClose={() => setIsDeleteModalOpen(false)}
+            className="custom-modal-deletebrand"
+            overlayClassName="custom-overlay-brand"
+          >
+            <h2>Confirm Delete</h2>
+            <p>Do you want to delete this voucher?</p>
+            <div className="modal-actions-brand">
+              <button
+                onClick={handleDeleteVoucher}
+                className="btn-confirm-brand"
+              >
+                Confirm
+              </button>
+              <button
+                onClick={() => setIsDeleteModalOpen(false)}
+                className="btn-cancel-brand"
               >
                 Cancel
               </button>

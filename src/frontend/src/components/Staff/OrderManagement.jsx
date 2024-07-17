@@ -457,9 +457,6 @@ const OrderManagement = () => {
 
         <div className="table-container">
           <div className="table-actions">
-            <label>Search Order:</label>
-            <input type="text" placeholder="Search" className="search-input" />
-            <button className="searchOrder">Search</button>
             <button className="addOrder" onClick={() => setIsAddOpen(true)}>
               Add Order
             </button>

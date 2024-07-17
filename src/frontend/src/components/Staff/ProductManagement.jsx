@@ -280,13 +280,6 @@ function ProductManagement() {
           </div>
           <div className="table-container">
             <div className="table-actions">
-              <label>Search Product:</label>
-              <input
-                type="text"
-                placeholder="Search"
-                className="search-input"
-              />
-              <button className="searchProduct">Search</button>
               <button className="addOrder" onClick={() => setIsAddOpen(true)}>
                 Add Product
               </button>
@@ -303,7 +296,6 @@ function ProductManagement() {
                     <th>Updated Date</th>
                     <th>Price</th>
                     <th>Expiration</th>
-                    <th></th>
                     <th></th>
                   </tr>
                 </thead>
@@ -323,13 +315,6 @@ function ProductManagement() {
                       <td>{formatDate(item.updated)}</td>
                       <td>{item.Price}</td>
                       <td>{formatDate(item.Expiration)}</td>
-                      <td className="deleteDiv">
-                        <div className="delete">
-                          <button className="delete-button">
-                            <a href="#">Delete</a>
-                          </button>
-                        </div>
-                      </td>
                       <td className="updateDiv">
                         <div className="delete">
                           <button

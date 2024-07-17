@@ -50,6 +50,8 @@ const BlogManagement = () => {
   });
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState("");
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [blogToDelete, setBlogToDelete] = useState(null);
 
   const toggleDropdown = () => {
     if (dropdownRef.current) {
@@ -199,9 +201,9 @@ const BlogManagement = () => {
     handleGetBlogs();
   }, [currentPage]);
 
-  const handleDeleteBlog = async (blogId) => {
+  const handleDeleteBlog = async () => {
     try {
-      await deleteBlog(StaffToken, blogId);
+      await deleteBlog(StaffToken, blogToDelete);
       toast.success("Blog deleted successfully", {
         duration: 3000,
         position: "top-right",
@@ -214,6 +216,8 @@ const BlogManagement = () => {
         position: "top-right",
       });
     }
+    setIsDeleteModalOpen(false);
+    setBlogToDelete(null);
   };
 
   const handleLogout = async () => {
@@ -251,9 +255,6 @@ const BlogManagement = () => {
 
         <div className="table-container">
           <div className="table-actions">
-            <label>Search Blog:</label>
-            <input type="text" placeholder="Search" className="search-input" />
-            <button className="searchProduct">Search</button>
             <button className="addOrder" onClick={() => setIsAddOpen(true)}>
               Add Blog
             </button>
@@ -289,13 +290,14 @@ const BlogManagement = () => {
                     <td>{formatDate(blog.updated)}</td>
                     <td className="deleteDiv">
                       <div className="delete">
-                        <button className="delete-button">
-                          <a
-                            href="#"
-                            onClick={() => handleDeleteBlog(blog.BlogID)}
-                          >
-                            Delete
-                          </a>
+                        <button
+                          className="delete-button"
+                          onClick={() => {
+                            setBlogToDelete(blog.BlogID);
+                            setIsDeleteModalOpen(true);
+                          }}
+                        >
+                          Delete
                         </button>
                       </div>
                     </td>
@@ -472,6 +474,28 @@ const BlogManagement = () => {
               <button
                 onClick={() => setIsAddOpen(false)}
                 className="btn-cancel-blog"
+              >
+                Cancel
+              </button>
+            </div>
+          </Modal>
+
+          {/* Delete Brand Confirmation Modal */}
+          <Modal
+            isOpen={isDeleteModalOpen}
+            onRequestClose={() => setIsDeleteModalOpen(false)}
+            className="custom-modal-deletebrand"
+            overlayClassName="custom-overlay-brand"
+          >
+            <h2>Confirm Delete</h2>
+            <p>Do you want to delete this blog?</p>
+            <div className="modal-actions-brand">
+              <button onClick={handleDeleteBlog} className="btn-confirm-brand">
+                Confirm
+              </button>
+              <button
+                onClick={() => setIsDeleteModalOpen(false)}
+                className="btn-cancel-brand"
               >
                 Cancel
               </button>

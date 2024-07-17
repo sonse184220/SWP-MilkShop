@@ -87,7 +87,7 @@ const ReportManagement = () => {
         setCurrentReport(response.data[0]);
         setIsAddOpen(true);
       }
-    } catch (error) { }
+    } catch (error) {}
   };
 
   const handleOpenResponseModal = async (reportId) => {
@@ -171,11 +171,6 @@ const ReportManagement = () => {
         </div>
 
         <div className="table-container">
-          <div className="table-actions">
-            <label>Search Report:</label>
-            <input type="text" placeholder="Search" className="search-input" />
-            <button className="searchProduct">Search</button>
-          </div>
           {reports.length > 0 ? (
             <table className="issues-table">
               <thead>
@@ -229,7 +224,7 @@ const ReportManagement = () => {
                         <button
                           onClick={"() => handleDisable(user.UserID)"}
                           className="btn-confirm"
-                        // style={{ backgroundColor: 'red' }}
+                          // style={{ backgroundColor: 'red' }}
                         >
                           Solve
                         </button>

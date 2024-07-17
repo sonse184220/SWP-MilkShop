@@ -81,6 +81,25 @@
   align-items: center;
 }
 
+.custom-modal-deleteblog {
+  position: relative;
+  width: 60%;
+  height: 30%;
+  margin: 50px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.custom-modal-deleteblog p{
+  font-size: 20px;
+  font-weight: bold;
+}
+
+
 .custom-modal-blog h2 {
   margin-top: 0;
   font-size: 30px;

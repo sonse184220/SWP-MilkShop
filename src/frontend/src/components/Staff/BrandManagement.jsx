@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import he from "he";
-
 import Modal from "react-modal";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -17,10 +16,12 @@ function BrandManagement() {
   const [brands, setBrands] = useState([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedBrand, setSelectedBrand] = useState({
     Name: "",
     Content: "",
   });
+  const [brandToDelete, setBrandToDelete] = useState(null);
 
   const handleGetAllBrand = async () => {
     try {
@@ -43,10 +44,7 @@ function BrandManagement() {
         content: cleanContent,
       };
 
-      console.log("Selected Brand Data:", brandData);
-
       const response = await AddBrand(StaffToken, brandData);
-      console.log(response);
       if (response.data.message) {
         toast.success("Brand added successfully", {
           duration: 3000,
@@ -87,9 +85,7 @@ function BrandManagement() {
         brandData
       );
 
-      console.log("worked", response);
-
-      if (response.data.length > 0) {
+      if (response.data.message) {
         toast.success("Brand updated successfully", {
           duration: 3000,
           position: "top-right",
@@ -99,8 +95,8 @@ function BrandManagement() {
       handleGetAllBrand();
       setIsUpdateModalOpen(false);
       setSelectedBrand({
-        brandName: "",
-        content: "",
+        Name: "",
+        Content: "",
       });
     } catch (error) {
       console.error("Update Brand Error:", error);
@@ -112,9 +108,9 @@ function BrandManagement() {
     }
   };
 
-  const handleDeleteBrand = async (brandID) => {
+  const handleDeleteBrand = async () => {
     try {
-      const response = await DeleteBrand(StaffToken, brandID);
+      const response = await DeleteBrand(StaffToken, brandToDelete);
       if (response.data.message) {
         handleGetAllBrand();
         toast.success("Brand deleted successfully", {
@@ -128,6 +124,8 @@ function BrandManagement() {
         position: "top-right",
       });
     }
+    setIsDeleteModalOpen(false);
+    setBrandToDelete(null);
     handleGetAllBrand();
   };
 
@@ -139,7 +137,6 @@ function BrandManagement() {
     <>
       <h2 style={{ marginTop: "10px" }}>Brands</h2>
       <div className="addBrandButton">
-        {" "}
         <button
           className="addBrand"
           onClick={() => {
@@ -180,9 +177,12 @@ function BrandManagement() {
                   <div className="delete">
                     <button
                       className="delete-button"
-                      onClick={() => handleDeleteBrand(brand.BrandID)}
+                      onClick={() => {
+                        setBrandToDelete(brand.BrandID);
+                        setIsDeleteModalOpen(true);
+                      }}
                     >
-                      <a href="#">Delete</a>
+                      Delete
                     </button>
                   </div>
                 </td>
@@ -273,6 +273,28 @@ function BrandManagement() {
           </button>
           <button
             onClick={() => setIsUpdateModalOpen(false)}
+            className="btn-cancel-brand"
+          >
+            Cancel
+          </button>
+        </div>
+      </Modal>
+
+      {/* Delete Brand Confirmation Modal */}
+      <Modal
+        isOpen={isDeleteModalOpen}
+        onRequestClose={() => setIsDeleteModalOpen(false)}
+        className="custom-modal-deletebrand"
+        overlayClassName="custom-overlay-brand"
+      >
+        <h2>Confirm Delete</h2>
+        <p>Do you want to delete this brand?</p>
+        <div className="modal-actions-brand">
+          <button onClick={handleDeleteBrand} className="btn-confirm-brand">
+            Confirm
+          </button>
+          <button
+            onClick={() => setIsDeleteModalOpen(false)}
             className="btn-cancel-brand"
           >
             Cancel
