@@ -53,7 +53,7 @@ const StaffManagement = () => {
         setStaffMembers(response.data.accounts.accounts);
         setPageCount(response.data.totalPages);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -153,7 +153,7 @@ const StaffManagement = () => {
         handleGetAllAccount();
       }
     } catch (error) {
-      toast.error("Failed to add staff. Please try again!", {
+      toast.error(error.response.data.error[0].msg, {
         duration: 3000,
         position: "top-right",
       });
@@ -271,8 +271,8 @@ const StaffManagement = () => {
                             handleOpenConfirm("enable", user.UserID)
                           }
                           className="btn-confirm"
-                          // disabled
-                          // style={{ opacity: 0.5, cursor: 'not-allowed' }}
+                        // disabled
+                        // style={{ opacity: 0.5, cursor: 'not-allowed' }}
                         >
                           Enable
                         </button>
@@ -344,7 +344,16 @@ const StaffManagement = () => {
             className="custom-modal-staff"
             overlayClassName="custom-overlay-staff"
           >
-            <h2>Add Staff</h2>
+            <h2>Add Staff Account</h2>
+            <label>Staff name: </label>
+            <input
+              value={newStaff.Name}
+              onChange={(e) =>
+                setNewStaff({ ...newStaff, Name: e.target.value })
+              }
+              placeholder="Enter staff name"
+            />
+            <br />
             <label>Password: </label>
             <input
               type="password"
@@ -353,15 +362,6 @@ const StaffManagement = () => {
                 setNewStaff({ ...newStaff, Password: e.target.value })
               }
               placeholder="Enter staff password"
-            />
-            <br />
-            <label>Staff name: </label>
-            <input
-              value={newStaff.Name}
-              onChange={(e) =>
-                setNewStaff({ ...newStaff, Name: e.target.value })
-              }
-              placeholder="Enter staff name"
             />
             <br />
             <label>Email: </label>
