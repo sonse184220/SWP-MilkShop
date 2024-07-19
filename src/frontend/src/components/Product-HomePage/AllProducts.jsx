@@ -74,12 +74,16 @@ const AllProducts = ({ isMember }) => {
             let response;
             if (brandId) {
                 response = await GetProductByBrandID(brandId, page, limit, 'newest');
+                setProducts(applySort(response.data.data));
+                setOriginProduct(response.data.data);
             } else {
                 response = await GetAvailableProduct(page, limit);
+                setProducts(applySort(response.data.products));
+                setOriginProduct(response.data.products);
             }
 
-            setProducts(applySort(response.data.products) || applySort(response.data.data));
-            setOriginProduct(response.data.products || response.data.data);
+            // setProducts(applySort(response.data.products) || applySort(response.data.data));
+            // setOriginProduct(response.data.products || response.data.data);
             setPageCount(response.data.totalPages);
         } catch (error) {
             console.error('Failed to fetch products:', error);
