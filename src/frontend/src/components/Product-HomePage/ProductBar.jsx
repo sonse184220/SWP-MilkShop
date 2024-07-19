@@ -86,7 +86,7 @@ const ProductBar = () => {
                         {products.map((product) => (
                             <div key={product.ProductID} className="product-slide">
                                 <Link to={`/Customer/ProductDetail/${product.ProductID}`} className="product-preview">
-                                    <img src={`data:image/jpeg;base64,${product.Image}`} alt={product.Name} />
+                                    <div style={{ display: 'flex', justifyContent: 'center' }}><img src={`data:image/jpeg;base64,${product.Image}`} alt={product.Name} loading='lazy' /></div>
                                     <h3>{product.Name}</h3>
                                     {/* <p>{product.Content}</p> */}
                                     <p>{product.Price.toLocaleString()} VND</p>
