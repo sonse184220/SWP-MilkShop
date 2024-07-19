@@ -99,10 +99,13 @@ const BlogList = ({ columnLayout = false }) => {
               >
                 <div className="blog-card">
                   <div className="blog-name">
-                    {blog.Title}
-                    <div className="createdDate">
-                      {formatDate(blog.updated)}
-                    </div>
+                    <img
+                      src={`data:image/jpeg;base64,${blog.Image}`}
+                      width="200px"
+                      height="150px"
+                    />
+
+                    <div>{blog.Title}</div>
                   </div>
                 </div>
               </Link>

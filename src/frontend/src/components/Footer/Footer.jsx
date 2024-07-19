@@ -28,7 +28,8 @@ function Footer() {
                 </li>
                 <li>
                   <a href="">
-                    <span style={{ color: "#132743" }}>Email: </span>fpt.edu.vn
+                    <span style={{ color: "#132743" }}>Email: </span>
+                    milkshopsupport@gmail.com
                   </a>
                 </li>
               </ul>
@@ -36,9 +37,11 @@ function Footer() {
 
             <div className="topic-list col-3">
               <h4>Customer Support</h4>
-              <ul >
+              <ul>
                 <li>
-                  <a href="/Customer/QRBanking">Regulations & payment methods</a>
+                  <a href="/Customer/QRBanking">
+                    Regulations & payment methods
+                  </a>
                 </li>
                 <li>
                   <a href="">Warranty & Maintenance</a>
@@ -51,7 +54,7 @@ function Footer() {
 
             <div className="topic-list col-3">
               <h4>About Us</h4>
-              <ul >
+              <ul>
                 <li>
                   <a href="#">
                     We are dedicated to providing high-quality milk products for
