@@ -25,6 +25,7 @@ import { getUser } from "../../services/editprofile/getUser";
 import { MemberOrder } from "../../services/order/memberOrder";
 import { GetAllVouchers } from "../../services/voucher/GetAllVouchers";
 import { GetAllVouchersMember } from "../../services/voucher/getVoucherMember";
+import getProductById from "../../services/product/getProductByID";
 
 export const Cart = ({ isMember }) => {
   const navigate = useNavigate();
@@ -160,6 +161,13 @@ export const Cart = ({ isMember }) => {
       const prInfo = {
         ProductID: pID,
         CartQuantity: currentQuantity + 1,
+      };
+      const validProduct = await getProductById(pID);
+      if (validProduct.data.product.Quantity < prInfo.CartQuantity) {
+        toast.error("Product quantity in stock is not enough", {
+          theme: "colored",
+        });
+        return;
       };
       const response = await UpdateCart(MemberToken, prInfo);
       console.log(response);

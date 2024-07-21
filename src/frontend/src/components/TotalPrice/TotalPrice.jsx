@@ -30,6 +30,17 @@ export const TotalPrice = ({ CartItems, AppliedVoucher, userFormData, setIsOpen,
         return Math.max(totalPrice, 0);
     };
 
+    const CalculateProductsPrice = () => {
+        let productPrice = 0;
+
+        if (CartItems) {
+            productPrice = CartItems.reduce((total, item) => {
+                return total + (item.Price * item.CartQuantity);
+            }, 0);
+        }
+        return Math.max(productPrice, 0);
+    }
+
     return (
         <section className="h-100 gradient-custom">
             <div className="container py-5">
@@ -45,7 +56,7 @@ export const TotalPrice = ({ CartItems, AppliedVoucher, userFormData, setIsOpen,
                                     <li
                                         className="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
                                         Products
-                                        <span>{calculateTotalPrice().toLocaleString()} VND</span>
+                                        <span>{CalculateProductsPrice().toLocaleString()} VND</span>
                                     </li>
                                     <li className="list-group-item d-flex justify-content-between align-items-center px-0">
                                         Shipping
