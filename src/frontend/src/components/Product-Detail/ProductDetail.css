@@ -211,7 +211,7 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     z-index: 1000;
     width: 500px;
-    height: 400px;
+    height: 440px;
 }
 
 .pre-order-intro {
@@ -238,7 +238,7 @@
 }
 
 .custom-modal-preorder .pre-order-form {
-    height: 90%;
+    height: 70%;
 }
 
 .pre-order-form-group {
