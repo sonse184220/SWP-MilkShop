@@ -13,12 +13,12 @@
 }
 
 .cart {
-    width: 60%;
+    /* width: 60%; */
     height: 600px;
 }
 
 .voucher {
-    width: 35%;
+    width: 75%;
     height: 450px;
 }
 
@@ -321,7 +321,7 @@
 }
 
 .totalpricebox {
-    width: 40%;
+    width: 75%;
 }
 
 .totalpricebox .col-md-4 {
