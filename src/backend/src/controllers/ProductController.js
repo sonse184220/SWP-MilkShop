@@ -54,8 +54,15 @@ export class ProductController {
                     sortBy = "updated DESC";
             }
 
-            const products = await productService.searchProducts(name, limit, sortBy, offset);
-            const total = await productService.getTotalProductsByName(name);
+            let products;
+            let total;
+            if (req.user.isStaff || req.user.isAdmin) {
+                products = await productService.searchAllProducts(name, limit, sortBy, offset);
+                total = await productService.getTotalAllProductsByName(name);
+            } else {
+                products = await productService.searchProducts(name, limit, sortBy, offset);
+                total = await productService.getTotalProductsByName(name);
+            }
 
             return res.status(200).send({
                 total: total,

@@ -153,7 +153,7 @@ export class OrderController {
                 }
             }
 
-            if ((status === "Shipping" || status === "Done") && order[0].PaymentStatus !== "Done") {
+            if ((status === "Shipping" || status === "Done") && order[0].PaymentStatus !== "Done" && order[0].PaymentMethod !== "COD") {
                 return res.status(403).send({ msg: "This order hasnt been paid yet." })
             }
 

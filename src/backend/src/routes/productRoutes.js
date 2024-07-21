@@ -2,7 +2,7 @@ import { Router } from "express";
 import multer from 'multer';
 import { ProductController } from "../controllers/ProductController.js";
 import { checkProductId, checkProductSearch, checkProductSearchBrand, checkFeedbackData, checkFeedbackId, checkProductData, checkFeedbackSearchInput } from "../middlewares/productValidators.js";
-import { checkAuthenticated } from "../middlewares/authMiddleware.js";
+import { checkAuthenticated, checkAuthenticatedAllowGuest } from "../middlewares/authMiddleware.js";
 import { isStaff } from "../middlewares/validationMiddleware.js";
 import { checkPaginationQuery } from "../middlewares/utilsMiddleware.js";
 
@@ -27,7 +27,7 @@ router.get("/api/product/:id", checkProductId, async (req, res) => {
  * - "page" là số trang. Nếu không cung cấp, "page" mặc định là 1
  * - "sort" là cách sắp xếp. Nếu không cung cấp, "sort" mặc định là newest. "sort" bao gồm [newest, oldest, highest, lowest]
  */
-router.get("/api/products/search", checkProductSearch, checkPaginationQuery, async (req, res) => {
+router.get("/api/products/search", checkAuthenticatedAllowGuest, checkProductSearch, checkPaginationQuery, async (req, res) => {
     await productController.searchProducts(req, res);
 });
 

@@ -44,15 +44,31 @@ export class ProductService {
         const [products] = await poolConnect.query(`SELECT p.*, b.Name AS BrandName
                                                     FROM PRODUCT AS p
                                                     JOIN brand AS b ON p.BrandID = b.BrandID
-                                                    WHERE p.Name LIKE ? ORDER BY ${sortBy} LIMIT ? OFFSET ?`, [search, limit, offset]);
+                                                    WHERE p.Name LIKE ? AND p.Status = 'available' ORDER BY ${sortBy} LIMIT ? OFFSET ?`, [search, limit, offset]);
         return products;
     }
-
     // đếm số lượng product trong database bằng name
     async getTotalProductsByName(name) {
         const search = `%${name}%`;
 
-        const [total] = await poolConnect.query('SELECT COUNT(*) as count FROM PRODUCT WHERE Name LIKE ?', [search]);
+        const [total] = await poolConnect.query("SELECT COUNT(*) as count FROM PRODUCT WHERE Name LIKE ? AND Status = 'available'", [search]);
+        const count = total[0].count;
+        return count;
+    }
+    // tương tư như trên nhưng all cho staff
+    async searchAllProducts(name, limit, sortBy, offset) {
+        const search = `%${name}%`;
+
+        const [products] = await poolConnect.query(`SELECT p.*, b.Name AS BrandName
+                                                    FROM PRODUCT AS p
+                                                    JOIN brand AS b ON p.BrandID = b.BrandID
+                                                    WHERE p.Name LIKE ? ORDER BY ${sortBy} LIMIT ? OFFSET ?`, [search, limit, offset]);
+        return products;
+    }
+    async getTotalAllProductsByName(name) {
+        const search = `%${name}%`;
+
+        const [total] = await poolConnect.query("SELECT COUNT(*) as count FROM PRODUCT WHERE Name LIKE ?", [search]);
         const count = total[0].count;
         return count;
     }
@@ -62,7 +78,7 @@ export class ProductService {
         const [products] = await poolConnect.query(`SELECT p.*, b.Name AS BrandName 
                                                     FROM PRODUCT AS p
                                                     JOIN brand AS b ON p.BrandID = b.BrandID
-                                                    WHERE p.BrandID = ? ORDER BY ${sortBy} LIMIT ? OFFSET ?`, [id, limit, offset]);
+                                                    WHERE p.BrandID = ? AND p.Status = 'available' ORDER BY ${sortBy} LIMIT ? OFFSET ?`, [id, limit, offset]);
         return products;
     }
 
@@ -70,8 +86,8 @@ export class ProductService {
     async getTotalProductsByBrand(id) {
         const search = id;
         const [total] = await poolConnect.query(`SELECT COUNT(*) as count 
-                                                                        FROM PRODUCT 
-                                                                        WHERE BrandID = ?`, [search]);
+                                                FROM PRODUCT 
+                                                WHERE BrandID = ? AND Status = 'available'`, [search]);
 
         const count = total[0].count;
         return count;
