@@ -20,6 +20,7 @@ import { RemoveCart } from '../../services/cart/removeCart';
 import { UserInfoForm } from '../UserInfoForm/UserInfoForm';
 import { MemberOrder } from '../../services/order/memberOrder';
 import { GuestOrder } from '../../services/order/guestOrder';
+import getProductById from '../../services/product/getProductByID';
 
 export const GuestCart = ({ isMember }) => {
     const navigate = useNavigate();
@@ -157,16 +158,22 @@ export const GuestCart = ({ isMember }) => {
     //     }
     // }
 
-    const handleIncrement = (productId) => {
+    const handleIncrement = async (productId) => {
         let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
         const existingProductIndex = cart.findIndex(item => item.ProductID === productId);
 
         if (existingProductIndex !== -1) {
-            // If the product exists, increment the quantity
+
             cart[existingProductIndex].CartQuantity += 1;
+            const validProduct = await getProductById(productId);
+            if (validProduct.data.product.Quantity < cart[existingProductIndex].CartQuantity) {
+                toast.error("Product quantity in stock is not enough", {
+                    theme: "colored",
+                });
+                return;
+            };
             sessionStorage.setItem('cart', JSON.stringify(cart));
-            // You might want to update state here if you're using React state to render the cart
-            // setCartItems    }
+
             handleViewCart();
         }
     };
@@ -396,6 +403,7 @@ export const GuestCart = ({ isMember }) => {
                         // handleMemberOrderAction={handleMemberOrderAction}
                         isOpen={isOpen}
                         setIsOpen={setIsOpen}
+                        CartItems={CartItems}
                     />
                     </div>
 
