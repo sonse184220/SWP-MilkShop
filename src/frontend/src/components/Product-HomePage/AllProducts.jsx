@@ -66,7 +66,7 @@ const AllProducts = ({ isMember }) => {
     //     }
     // }
 
-    const GetAllProduct = async (brandId = null) => {
+    const GetAllProduct = async (brandId) => {
         setIsLoading(true);
         try {
             let page = currentPage;
@@ -76,10 +76,15 @@ const AllProducts = ({ isMember }) => {
                 response = await GetProductByBrandID(brandId, page, limit, 'newest');
                 setProducts(applySort(response.data.data));
                 setOriginProduct(response.data.data);
+
+
+
             } else {
                 response = await GetAvailableProduct(page, limit);
+
                 setProducts(applySort(response.data.products));
                 setOriginProduct(response.data.products);
+
             }
 
             // setProducts(applySort(response.data.products) || applySort(response.data.data));
@@ -183,9 +188,9 @@ const AllProducts = ({ isMember }) => {
     }, [currentPage, currentBrandId]);
 
     useEffect(() => {
-        GetAllProduct(currentBrandId);
+        // GetAllProduct(currentBrandId);
         // handleBrandClick();
-    }, [])
+    }, []);
 
     return (
         <div className="body">
