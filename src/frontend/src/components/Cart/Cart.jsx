@@ -303,166 +303,172 @@ export const Cart = ({ isMember }) => {
           Close
         </button> */}
       </Modal>
-      <div className="middle-part">
-        <ToastContainer style={{ top: "110px" }} />
-
-        <div className="cart">
-          <section className="h-100 gradient-custom">
-            <div className="container py-5">
-              <div className="row d-flex justify-content-center my-4">
-                <div className="col-md-8">
-                  <div className="card mb-4">
-                    <div className="card-header py-3">
-                      <h5 className="mb-0">Cart - {CartItems.length} items</h5>
-                    </div>
-                    <div className="cart-list">
-                      {CartItems.length > 0 ? (
-                        CartItems.map((item) => (
-                          <div className="card-body" key={item.ProductID}>
-                            <div className="row">
-                              <div className="col-lg-3 col-md-12 mb-4 mb-lg-0">
-                                <div
-                                  className="bg-image hover-overlay hover-zoom ripple rounded"
-                                  data-mdb-ripple-color="light"
-                                >
-                                  <img
-                                    src={`data:image/jpeg;base64,${item.Image}`}
-                                    className="w-100"
-                                    alt="Blue Jeans Jacket"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="col-lg-5 col-md-6 mb-4 mb-lg-0">
-                                <p className="title">
-                                  <strong>{item.Name}</strong>
-                                </p>
-                                {/* <p><strong>{item.Name}</strong></p> */}
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    handleRemoveCart(item.ProductID)
-                                  }
-                                  data-mdb-button-init
-                                  data-mdb-ripple-init
-                                  className="btn btn-primary btn-sm me-1 mb-2"
-                                  data-mdb-tooltip-init
-                                  title="Remove item"
-                                >
-                                  <i className="fas fa-trash"></i>
-                                </button>
-                              </div>
-
-                              <div className="col-lg-4 col-md-6 mb-4 mb-lg-0">
-                                <div className="price">
-                                  <strong>
-                                    {item.Price.toLocaleString()}đ
-                                  </strong>
-                                </div>
-
-                                <div className="quantity">
-                                  <Quantity
-                                    value={item.CartQuantity}
-                                    increment={() =>
-                                      handleIncrement(
-                                        item.ProductID,
-                                        item.CartQuantity
-                                      )
-                                    }
-                                    decrement={() =>
-                                      handleDecrement(
-                                        item.ProductID,
-                                        item.CartQuantity
-                                      )
-                                    }
-                                  />
-                                </div>
-                                <div className="total-price">
-                                  <p className="total">
-                                    Total:{" "}
-                                    <strong>
-                                      {(
-                                        item.Price * item.CartQuantity
-                                      ).toLocaleString()}{" "}
-                                      VND
-                                    </strong>
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-
-                            <hr className="my-4" />
-                          </div>
-                        ))
-                      ) : (
-                        <div className="empty-cart-section section-fluid">
-                          <div className="emptycart-wrapper">
-                            <div className="container">
+      {/* <div className="middle-part"> */}
+      <ToastContainer style={{ top: "110px" }} />
+      <div className="flex row">
+        <div className="flex-column col-7">
+          <div className="cart ">
+            <section className="h-100 gradient-custom">
+              <div className="container py-5">
+                <div className="row d-flex justify-content-center my-4">
+                  <div className="col-md-8">
+                    <div className="card mb-4">
+                      <div className="card-header py-3">
+                        <h5 className="mb-0">Cart - {CartItems.length} items</h5>
+                      </div>
+                      <div className="cart-list">
+                        {CartItems.length > 0 ? (
+                          CartItems.map((item) => (
+                            <div className="card-body" key={item.ProductID}>
                               <div className="row">
-                                <div className="emptycart-content text-center">
-                                  <div className="cart-image">
+                                <div className="col-lg-3 col-md-12 mb-4 mb-lg-0">
+                                  <div
+                                    className="bg-image hover-overlay hover-zoom ripple rounded"
+                                    data-mdb-ripple-color="light"
+                                  >
                                     <img
-                                      className="img-fluid"
-                                      src="/img/empty-cart.png"
-                                      alt="Empty Cart"
+                                      src={`data:image/jpeg;base64,${item.Image}`}
+                                      className="w-100"
+                                      alt="Blue Jeans Jacket"
                                     />
                                   </div>
-                                  <h4 className="title">Your Cart is Empty</h4>
-                                  <h6 className="sub-title">
-                                    Sorry... No item Found inside your cart!
-                                  </h6>
-                                  <a
-                                    href=""
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      navigate("/Customer/home");
-                                    }}
-                                    className="btn btn-lg btn-golden"
+                                </div>
+
+                                <div className="col-lg-5 col-md-6 mb-4 mb-lg-0">
+                                  <p className="title">
+                                    <strong>{item.Name}</strong>
+                                  </p>
+                                  {/* <p><strong>{item.Name}</strong></p> */}
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      handleRemoveCart(item.ProductID)
+                                    }
+                                    data-mdb-button-init
+                                    data-mdb-ripple-init
+                                    className="btn btn-primary btn-sm me-1 mb-2"
+                                    data-mdb-tooltip-init
+                                    title="Remove item"
                                   >
-                                    Continue Shopping
-                                  </a>
+                                    <i className="fas fa-trash"></i>
+                                  </button>
+                                </div>
+
+                                <div className="col-lg-4 col-md-6 mb-4 mb-lg-0">
+                                  <div className="price">
+                                    <strong>
+                                      {item.Price.toLocaleString()}đ
+                                    </strong>
+                                  </div>
+
+                                  <div className="quantity">
+                                    <Quantity
+                                      value={item.CartQuantity}
+                                      increment={() =>
+                                        handleIncrement(
+                                          item.ProductID,
+                                          item.CartQuantity
+                                        )
+                                      }
+                                      decrement={() =>
+                                        handleDecrement(
+                                          item.ProductID,
+                                          item.CartQuantity
+                                        )
+                                      }
+                                    />
+                                  </div>
+                                  <div className="total-price">
+                                    <p className="total">
+                                      Total:{" "}
+                                      <strong>
+                                        {(
+                                          item.Price * item.CartQuantity
+                                        ).toLocaleString()}{" "}
+                                        VND
+                                      </strong>
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <hr className="my-4" />
+                            </div>
+                          ))
+                        ) : (
+                          <div className="empty-cart-section section-fluid">
+                            <div className="emptycart-wrapper">
+                              <div className="container">
+                                <div className="row">
+                                  <div className="emptycart-content text-center">
+                                    <div className="cart-image">
+                                      <img
+                                        className="img-fluid"
+                                        src="/img/empty-cart.png"
+                                        alt="Empty Cart"
+                                      />
+                                    </div>
+                                    <h4 className="title">Your Cart is Empty</h4>
+                                    <h6 className="sub-title">
+                                      Sorry... No item Found inside your cart!
+                                    </h6>
+                                    <a
+                                      href=""
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        navigate("/Customer/home");
+                                      }}
+                                      className="btn btn-lg btn-golden"
+                                    >
+                                      Continue Shopping
+                                    </a>
+                                  </div>
                                 </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      )}
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </section>
+            </section>
+          </div>
+          <div className="totalpricebox">
+            <TotalPrice
+              CartItems={CartItems}
+              AppliedVoucher={AppliedVoucher2}
+              userFormData={userFormData}
+              handleMemberOrderAction={handleMemberOrderAction}
+              isOpen={isOpen}
+              setIsOpen={setIsOpen}
+              isMember={isMember}
+            // AppliedVoucher={AppliedVoucher}
+            />
+          </div>
         </div>
-        <div className="voucher">
-          <Voucher
-            vouchers={vouchers}
-            AppliedVoucher={AppliedVoucher}
-            setAppliedVoucher={setAppliedVoucher}
-          />
+        <div className="flex-column col-5">
+          <div className="voucher">
+            <Voucher
+              vouchers={vouchers}
+              AppliedVoucher={AppliedVoucher}
+              setAppliedVoucher={setAppliedVoucher}
+            />
+          </div>
+          {/* </div> */}
+          {/* <div className="middle2"> */}
+
+          <div className="infoform">
+            <UserInfoForm
+              userFormData={userFormData}
+              setUserFormData={setUserFormData}
+              isMember={isMember}
+            />
+          </div>
         </div>
       </div>
-      <div className="middle2">
-        <div className="totalpricebox">
-          <TotalPrice
-            CartItems={CartItems}
-            AppliedVoucher={AppliedVoucher2}
-            userFormData={userFormData}
-            handleMemberOrderAction={handleMemberOrderAction}
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-            isMember={isMember}
-          // AppliedVoucher={AppliedVoucher}
-          />
-        </div>
-        <div className="infoform">
-          <UserInfoForm
-            userFormData={userFormData}
-            setUserFormData={setUserFormData}
-            isMember={isMember}
-          />
-        </div>
-      </div>
+      {/* </div> */}
       <Footer />
     </>
   );

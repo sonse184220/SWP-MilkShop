@@ -4,8 +4,8 @@ const Page404 = () => {
             <div className="container" >
                 <div className="row" >
                     <div className="error-form" >
-                        <h1 className="big-title aos-init aos-animate" data-aos="fade-up" data-aos-delay="0" > 404</h1 >
-                        <h4 className="sub-title aos-init aos-animate" data-aos="fade-up" data-aos-delay="200" > Opps! PRODUCT NOT BE FOUND</h4 >
+                        <h1 > Product Not Found</h1 >
+                        {/* <h4 className="sub-title aos-init aos-animate" data-aos="fade-up" data-aos-delay="200" > Opps! PRODUCT NOT BE FOUND</h4 > */}
                         <p data-aos="fade-up" data-aos-delay="400" className="aos-init aos-animate" > Sorry but the product you are looking for does not exist, have been < br /> removed, name changed or is temporarily unavailable.</p >
                         <div className="row" >
                             <div className="col-10 offset-1 col-md-4 offset-md-4" >
