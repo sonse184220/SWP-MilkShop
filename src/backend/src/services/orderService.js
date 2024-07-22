@@ -1,5 +1,5 @@
 import { EmailService } from './EmailService.js';
-import { connection, poolConnect } from '../utils/dbConnection.js';
+import { poolConnect } from '../utils/dbConnection.js';
 
 export class OrderService {
     constructor() {
