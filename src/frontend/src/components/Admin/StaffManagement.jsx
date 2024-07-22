@@ -217,11 +217,11 @@ const StaffManagement = () => {
 
         <div className="table-container">
           <div className="table-actions">
-            <label>Search Staff:</label>
+            {/* <label>Search Staff:</label>
             <input type="text" placeholder="Search" className="search-input" />
-            <button className="searchStaff">Search</button>
+            <button className="searchStaff">Search</button> */}
             <button className="addStaff" onClick={() => setIsAddOpen(true)}>
-              Add Staff
+              Add Staff Account
             </button>
           </div>
           <table className="staff-table">

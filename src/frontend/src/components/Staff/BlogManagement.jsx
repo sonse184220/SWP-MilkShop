@@ -15,6 +15,7 @@ import { blogDetail } from "../../services/blog/blogDetail";
 import { UpdateBlog } from "../../services/staff/blog/updateBlog";
 import { deleteBlog } from "../../services/staff/blog/deleteBlog";
 import { Logout } from "../../services/login/logout";
+import { searchBlogs } from "../../services/blog/searchBlogs";
 const BlogManagement = () => {
   const navigate = useNavigate();
 
@@ -52,6 +53,8 @@ const BlogManagement = () => {
   const [imagePreview, setImagePreview] = useState("");
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [blogToDelete, setBlogToDelete] = useState(null);
+
+  const [searchQuery, setSearchQuery] = useState("");
 
   const toggleDropdown = () => {
     if (dropdownRef.current) {
@@ -229,6 +232,24 @@ const BlogManagement = () => {
     window.location.reload();
   };
 
+  const handleSearch = async () => {
+    try {
+      if (searchQuery.length === 0) {
+        handleGetBlogs();
+
+        return;
+      }
+      let limit = 5;
+      let page = 1;
+      let sort = "";
+      const searchedBlogs = await searchBlogs(searchQuery, limit, page, sort);
+      setBlogs(searchedBlogs.data);
+      setPageCount(1);
+    } catch (err) {
+      console.error("Error searching blogs:", err);
+    }
+  };
+
   return (
     <div className="blog-management-container">
       <Sidebar />
@@ -255,6 +276,18 @@ const BlogManagement = () => {
 
         <div className="table-container">
           <div className="table-actions">
+            <div className="col-8">
+              <label>Search Blog:</label>
+              {/* <input type="text" placeholder="Search" className="search-input" /> */}
+              <input
+                type="text"
+                placeholder="Search"
+                className="search-input"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <button className="searchProduct" onClick={handleSearch}>Search</button>
+            </div>
             <button className="addOrder" onClick={() => setIsAddOpen(true)}>
               Add Blog
             </button>
@@ -321,7 +354,7 @@ const BlogManagement = () => {
               </tbody>
             </table>
           ) : (
-            <p>No vouchers available</p>
+            <p>No blogs available</p>
           )}
           <div>
             <ReactPaginate

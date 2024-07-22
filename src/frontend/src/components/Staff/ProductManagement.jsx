@@ -18,6 +18,7 @@ import { AddProduct } from "../../services/staff/product/addProduct";
 import { handleAllBrand } from "../../services/brand/getAllBrand";
 import { Logout } from "../../services/login/logout";
 import BrandManagement from "./BrandManagement.jsx";
+import { StaffSearchProductByName } from "../../services/staff/product/searchProduct.js";
 
 function ProductManagement() {
   const navigate = useNavigate();
@@ -61,6 +62,8 @@ function ProductManagement() {
   });
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState("");
+
+  const [searchInput, setSearchInput] = useState('');
 
   const dropdownRef = useRef(null);
   const toggleDropdown = () => {
@@ -237,6 +240,24 @@ function ProductManagement() {
     }
   };
 
+  const handleSearchProductByName = async () => {
+    try {
+      if (searchInput.length === 0) {
+        handleGetProducts();
+        return;
+      }
+      const response = await StaffSearchProductByName(StaffToken, searchInput);
+      console.log(response)
+      if (response.data.data) {
+        setProducts(response.data.data);
+        setPageCount(1);
+      }
+    } catch (error) {
+      console.error("Error searching products:", error);
+      toast.error("Failed to search products. Please try again!");
+    }
+  };
+
   useEffect(() => {
     handleGetProducts();
     handleGetAllBrand();
@@ -280,7 +301,21 @@ function ProductManagement() {
           </div>
           <div className="table-container">
             <div className="table-actions">
-              <button className="addOrder" onClick={() => setIsAddOpen(true)}>
+              <div className="col-8">
+                <label>Search Productt:</label>
+                {/* <input type="text" placeholder="Search" className="search-input" /> */}
+                <input
+                  type="text"
+                  placeholder="Search"
+                  className="search-input"
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                />
+                <button className="searchProduct" onClick={handleSearchProductByName}>Search</button>
+              </div>
+              <button
+                style={{ width: '15%' }}
+                className="addOrder" onClick={() => setIsAddOpen(true)}>
                 Add Product
               </button>
             </div>

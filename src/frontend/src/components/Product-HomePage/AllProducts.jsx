@@ -35,10 +35,16 @@ const AllProducts = ({ isMember }) => {
 
     const handleSearchProductByName = async () => {
         try {
+            if (searchInput.length === 0) {
+                handleBrandClick(null);
+                GetAllProduct(currentBrandId);
+                return;
+            }
             const response = await SearchProductByName(searchInput);
-            console.log("================", response);
+            // console.log("================", response);
             setProducts(applySort(response.data.data))
             setOriginProduct(response.data.data);
+            setPageCount(1);
         } catch (error) {
 
         }
