@@ -35,6 +35,7 @@ const AllProducts = ({ isMember }) => {
 
     const handleSearchProductByName = async () => {
         try {
+            setIsLoading(true);
             if (searchInput.length === 0) {
                 handleBrandClick(null);
                 GetAllProduct(currentBrandId);
@@ -47,6 +48,8 @@ const AllProducts = ({ isMember }) => {
             setPageCount(1);
         } catch (error) {
 
+        } finally {
+            setIsLoading(false);
         }
     }
 
@@ -79,9 +82,13 @@ const AllProducts = ({ isMember }) => {
             let limit = 6;
             let response;
             if (brandId) {
-                response = await GetProductByBrandID(brandId, page, limit, 'newest');
-                setProducts(applySort(response.data.data));
-                setOriginProduct(response.data.data);
+                if (brandId === 'BestSellers') {
+                    await handleGetBestSellers();
+                } else {
+                    response = await GetProductByBrandID(brandId, page, limit, 'newest');
+                    setProducts(applySort(response.data.data));
+                    setOriginProduct(response.data.data);
+                }
 
 
 
@@ -127,18 +134,20 @@ const AllProducts = ({ isMember }) => {
     };
 
     const handleGetBestSellers = async () => {
+        // setIsLoading(true);
         try {
-            setIsLoading(true);
+
             const response = await GetBestSellers();
             if (response.data && response.data.length > 0) {
                 setProducts(applySort(response.data));
                 setOriginProduct(response.data);
                 setPageCount(1);
+                // setIsLoading(false);
             }
         } catch (error) {
             console.error("Failed to fetch best sellers", error);
         } finally {
-            setIsLoading(false);
+            // setIsLoading(false);
         }
     }
 

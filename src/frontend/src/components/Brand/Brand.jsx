@@ -91,7 +91,11 @@ function Brand({ onBrandClick, onSearch, setSearchInput, sort, setSort, handleCh
                 <h6 className="sidebar-title">CATEGORIES</h6>
                 <div className="sidebar-content">
                     <ul className="sidebar-menu">
-                        <li ><a className={activeBrandId === 'BestSellers' ? 'active' : ''} onClick={(e) => { e.preventDefault(); handleGetBestSellers(); onBrandClick('BestSellers') }} href="#" >Best Sellers</a></li>
+                        <li ><a className={activeBrandId === 'BestSellers' ? 'active' : ''} onClick={(e) => {
+                            e.preventDefault();
+                            // handleGetBestSellers();
+                            onBrandClick('BestSellers')
+                        }} href="#" >Best Sellers</a></li>
                         <li><a
                             className={activeBrandId === null ? 'active' : ''}
                             // className='active'
