@@ -31,6 +31,7 @@ const OrderManagement = () => {
   const [POcurrentPage, setPOCurrentPage] = useState(1);
 
   const [isStatusChangeOpen, setIsStatusChangeOpen] = useState(false);
+  const [isPaymentStatusChangeOpen, setIsPaymentStatusChangeOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [newStatus, setNewStatus] = useState("");
   const [itemType, setItemType] = useState("");
@@ -254,6 +255,12 @@ const OrderManagement = () => {
     return date.toISOString().split("T")[0]; // Returns "YYYY-MM-DD"
   }
 
+  const handleOpenPaymentStatusModal = (item, type) => {
+    setSelectedItem(item);
+    setItemType(type);
+    setIsPaymentStatusChangeOpen(true);
+  };
+
   const handleUpdateOrderPaymentStatus = async (orderId) => {
     try {
       const response = await UpdateOrderPaymentStatus(StaffToken, orderId);
@@ -280,6 +287,25 @@ const OrderManagement = () => {
     } catch (error) { }
   };
 
+  const updatePaymentStatus = async () => {
+    try {
+      if (itemType === "order") {
+        await handleUpdateOrderPaymentStatus(selectedItem.OrderID);
+      } else {
+        await handleUpdatePreOrderPaymentStatus(selectedItem.PreorderID);
+      }
+      setIsPaymentStatusChangeOpen(false);
+      setSelectedItem(null);
+      setItemType("");
+    } catch (error) {
+      console.error(`Error updating ${itemType} payment status:`, error);
+      toast.error(`Failed to update ${itemType} payment status. Please try again.`, {
+        duration: 3000,
+        position: "top-right",
+      });
+    }
+  };
+
   useEffect(() => {
     handleGetAllOrders();
     handleGetAllPreOrders();
@@ -303,6 +329,26 @@ const OrderManagement = () => {
     <div className="order-management-container">
       <ToastContainer style={{ top: "110px" }} />
       <Sidebar />
+      <Modal
+        isOpen={isPaymentStatusChangeOpen}
+        onRequestClose={() => setIsPaymentStatusChangeOpen(false)}
+        className="custom-modal"
+        overlayClassName="custom-overlay"
+      >
+        <h2>Confirm Payment Status Change</h2>
+        <p>Are you sure you want to set this {itemType}'s payment status to Done?</p>
+        <div className="modal-actions">
+          <button onClick={updatePaymentStatus} className="btn-confirm">
+            Confirm
+          </button>
+          <button
+            onClick={() => setIsPaymentStatusChangeOpen(false)}
+            className="btn-cancel"
+          >
+            Cancel
+          </button>
+        </div>
+      </Modal>
       <Modal
         isOpen={isStatusChangeOpen}
         onRequestClose={() => setIsStatusChangeOpen(false)}
@@ -557,11 +603,12 @@ const OrderManagement = () => {
                         <div className="select1">
                           {order.PaymentStatus === "Pending" ? (
                             <button
-                              onClick={() =>
-                                handleUpdatePreOrderPaymentStatus(
-                                  order.PreorderID
-                                )
-                              }
+                              // onClick={() =>
+                              //   handleUpdatePreOrderPaymentStatus(
+                              //     order.PreorderID
+                              //   )
+                              // }
+                              onClick={() => handleOpenPaymentStatusModal(order, "preorder")}
                               className="btn-confirm"
                             >
                               Done
@@ -681,9 +728,10 @@ const OrderManagement = () => {
                       </select> */}
                         {order.PaymentStatus === "Pending" ? (
                           <button
-                            onClick={() =>
-                              handleUpdateOrderPaymentStatus(order.OrderID)
-                            }
+                            // onClick={() =>
+                            //   handleUpdateOrderPaymentStatus(order.OrderID)
+                            // }
+                            onClick={() => handleOpenPaymentStatusModal(order, "order")}
                             className="btn-confirm"
                           >
                             Done
