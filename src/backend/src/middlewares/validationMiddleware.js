@@ -16,7 +16,9 @@ export const checkRegister = [
     body('Phone')
         .trim()
         .exists().withMessage('Phone is required')
-        .notEmpty().withMessage('Phone cannot be empty'),
+        .notEmpty().withMessage('Phone cannot be empty')
+        .isLength({ max: 10 }).withMessage('Phone cannot be more than 10 digits')
+        .isNumeric().withMessage('Phone must contain only numbers'),
     body('Address')
         .trim()
         .exists().withMessage('Address is required')
