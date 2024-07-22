@@ -7,7 +7,7 @@ export class LogoutService {
     async logoutUser(token) {
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            const expiry = new Date(decoded.exp * 1000); // Convert expiry to milliseconds
+            const expiry = new Date(decoded.exp * 1000);
             await blacklistService.addTokenToBlacklist(token, expiry);
             return { message: 'Logout successful' };
         } catch (err) {
