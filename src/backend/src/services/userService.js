@@ -1,6 +1,6 @@
 import sharp from 'sharp';
 import bcrypt from 'bcryptjs';
-import { connection, poolConnect } from '../utils/dbConnection.js';
+import { poolConnect } from '../utils/dbConnection.js';
 
 export class UserService {
     async getUserInfo(userId) {
