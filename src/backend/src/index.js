@@ -4,7 +4,6 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import cors from "cors";
 import passport from './utils/passportConfig.js';
-import { configureSocket } from './utils/socketConfig.js';
 import { authRoutes } from './routes/authRoutes.js';
 import { brandRoutes } from './routes/brandRoutes.js';
 import { productRoutes } from "./routes/productRoutes.js";
@@ -32,7 +31,6 @@ const server = app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 
-const io = configureSocket(server);
 
 app.use(session({
     secret: process.env.SESSION_SECRET,
