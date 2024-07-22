@@ -77,8 +77,6 @@ export function Report({ isMember }) {
                 }}>
                 <TableContainer component={Paper} className="mb-4 overflow-hidden"
                     style={{
-
-
                         border: '1px solid #ddd;'
                     }}
                 >
@@ -154,7 +152,7 @@ function Row(props) {
             >
                 <TableCell>
                     <IconButton
-                        aria-label="expand row"
+                        // aria-label="expand row"
                         size="small"
                         onClick={() => setOpen(!open)}
                     >
