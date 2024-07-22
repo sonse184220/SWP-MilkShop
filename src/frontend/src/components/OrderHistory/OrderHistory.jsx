@@ -415,11 +415,6 @@ export const OrderHistory = ({ isMember }) => {
                                                                 </td>
                                                                 <td>
                                                                     <div className="d-flex gap-3">
-                                                                        <div className="avatar-sm flex-shrink-0">
-                                                                            <div className="avatar-title bg-light rounded">
-                                                                                <img src="/img/" alt="" className="avatar-xs" />
-                                                                            </div>
-                                                                        </div>
                                                                         <div className="flex-grow-1">
                                                                             <h6 className="fs-15 mb-1">{preorder.productName}</h6>
                                                                             {/* <p className="mb-0 text-muted fs-13">Quantity: {preorder.Quantity}</p> */}
@@ -606,11 +601,6 @@ export const OrderHistory = ({ isMember }) => {
                                                                 </td>
                                                                 <td>
                                                                     <div className="d-flex gap-3">
-                                                                        <div className="avatar-sm flex-shrink-0">
-                                                                            <div className="avatar-title bg-light rounded">
-                                                                                <img src="/img/" alt="" className="avatar-xs" />
-                                                                            </div>
-                                                                        </div>
                                                                         <div className="flex-grow-1">
                                                                             <a href="" className="view-products-link" onClick={(e) => { e.preventDefault(); handleViewOrderDetail(order.OrderID) }}>
                                                                                 <h6 className="fs-15 mb-1">View Your Products</h6>
@@ -728,7 +718,7 @@ export const OrderHistory = ({ isMember }) => {
                             pageLinkClassName="page-link"
                             previousClassName="page-item"
                             previousLinkClassName="page-link"
-                            nextClassName="page-item"
+                            // nextClassName="page-item"
                             nextLinkClassName="page-link"
                             activeClassName="active"
                         />

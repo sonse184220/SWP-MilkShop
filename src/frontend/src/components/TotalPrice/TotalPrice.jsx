@@ -60,7 +60,7 @@ export const TotalPrice = ({ CartItems, AppliedVoucher, userFormData, setIsOpen,
                                     </li>
                                     <li className="list-group-item d-flex justify-content-between align-items-center px-0">
                                         Shipping
-                                        <span>COD</span>
+                                        <span>{userFormData ? userFormData.paymentMethod : 'COD'}</span>
                                     </li>
                                     <li
                                         className="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
@@ -74,7 +74,7 @@ export const TotalPrice = ({ CartItems, AppliedVoucher, userFormData, setIsOpen,
                                     </li>
                                 </ul>
                                 {/* onClick={handleMemberOrderAction} */}
-                                <button onClick={() => setIsOpen(true)} type="button" data-mdb-button-init data-mdb-ripple-init className="btn btn-primary btn-lg btn-block">
+                                <button onClick={() => setIsOpen(true)} type="button" className="btn btn-primary btn-lg btn-block">
                                     Go to checkout
                                 </button>
 
