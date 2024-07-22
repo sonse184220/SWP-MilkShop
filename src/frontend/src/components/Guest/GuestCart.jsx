@@ -90,9 +90,17 @@ export const GuestCart = ({ isMember }) => {
             }
             const response = await GuestOrder(OrderInfo);
             if (response.data.orderId) {
-                console.log("order success==========", response.data.message);
+                // console.log("order success==========", response.data.message);
+                sessionStorage.removeItem('cart');
                 handleViewCart();
                 setIsOpen(false);
+                setUserFormData({
+                    Name: "",
+                    Email: "",
+                    Phone: "",
+                    Address: ""
+                })
+
                 setIsSuccessModalOpen(true);
             }
         } catch (error) {

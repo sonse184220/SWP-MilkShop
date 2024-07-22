@@ -210,6 +210,21 @@ export const OrderHistory = ({ isMember }) => {
         }
     }
 
+    const isReportDisabled = (updatedDate) => {
+        const currentDate = new Date();
+        const orderUpdatedDate = new Date(updatedDate);
+
+
+        currentDate.setHours(0, 0, 0, 0);
+        orderUpdatedDate.setHours(0, 0, 0, 0);
+
+
+        const diffTime = currentDate - orderUpdatedDate;
+        const diffDays = diffTime / (1000 * 60 * 60 * 24);
+
+        return diffDays > 3;
+    };
+
     useEffect(() => {
         handleGetOrder1User();
         handleGetPreOrder1User();
@@ -239,6 +254,7 @@ export const OrderHistory = ({ isMember }) => {
             <div><Header isMember={isMember} /></div>
             <img className='image' src="/img/pinkbg.jpg" />
             <ToastContainer style={{ top: "110px" }} />
+            <h4 style={{ fontStyle: 'italic', textAlign: 'center' }}>Note: You can only cancel product when status is Waiting, and send report in 3 days after success order (Done status)</h4>
             <div className='history-order'>
                 <Modal
                     isOpen={isReportOpen}
@@ -470,15 +486,27 @@ export const OrderHistory = ({ isMember }) => {
                                                                                 </a>
                                                                             );
                                                                         } else if (preorder.Status === 'Done') {
+                                                                            const isDisabled = isReportDisabled(preorder.updated);
                                                                             return (
                                                                                 <button
                                                                                     className="btn btn-warning btn-sm"
                                                                                     onClick={() => openReportModal('preorder', preorder.PreorderID)}
-                                                                                // style={{ opacity: 0.7, cursor: 'not-allowed' }}
+                                                                                    disabled={isDisabled}
+                                                                                    style={isDisabled ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
                                                                                 >
                                                                                     Report
                                                                                 </button>
                                                                             );
+                                                                            // else if (preorder.Status === 'Done') {
+                                                                            //     return (
+                                                                            //         <button
+                                                                            //             className="btn btn-warning btn-sm"
+                                                                            //             onClick={() => openReportModal('preorder', preorder.PreorderID)}
+                                                                            //         style={{ opacity: 0.7, cursor: 'not-allowed' }}
+                                                                            //         >
+                                                                            //             Report
+                                                                            //         </button>
+                                                                            //     );
                                                                         } else {
                                                                             return (
                                                                                 <button
@@ -637,14 +665,26 @@ export const OrderHistory = ({ isMember }) => {
                                                                                 </a>
                                                                             );
                                                                         } else if (order.Status === 'Done') {
+                                                                            const isDisabled = isReportDisabled(order.updated);
                                                                             return (
                                                                                 <button
                                                                                     className="btn btn-warning btn-sm"
                                                                                     onClick={() => openReportModal('order', order.OrderID)}
+                                                                                    disabled={isDisabled}
+                                                                                    style={isDisabled ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
                                                                                 >
                                                                                     Report
                                                                                 </button>
                                                                             );
+                                                                            // else if (order.Status === 'Done') {
+                                                                            //     return (
+                                                                            //         <button
+                                                                            //             className="btn btn-warning btn-sm"
+                                                                            //             onClick={() => openReportModal('order', order.OrderID)}
+                                                                            //         >
+                                                                            //             Report
+                                                                            //         </button>
+                                                                            //     );
                                                                         } else {
                                                                             return (
                                                                                 <button
