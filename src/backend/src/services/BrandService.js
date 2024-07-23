@@ -11,6 +11,11 @@ export class BrandService {
         return brand;
     }
 
+    async getAllBrands() {
+        const [brands] = await poolConnect.query('Select * from Brand');
+        return brands;
+    }
+
     async createBrand(brandId, brandName, content) {
         const [brand] = await poolConnect.query(`INSERT INTO brand (BrandID, Name, Content)
                                                  VALUES (?,?,?)`, [brandId, brandName, content]);
