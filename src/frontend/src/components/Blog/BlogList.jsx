@@ -104,7 +104,6 @@ const BlogList = ({ columnLayout = false }) => {
                       width="200px"
                       height="150px"
                     />
-
                     <div>{blog.Title}</div>
                   </div>
                 </div>
