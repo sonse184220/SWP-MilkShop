@@ -40,15 +40,15 @@ function Footer() {
               <ul>
                 <li>
                   <a href="/Customer/QRBanking">
-                    Regulations & payment methods
+                    Payment methods
                   </a>
                 </li>
-                <li>
+                {/* <li>
                   <a href="">Warranty & Maintenance</a>
                 </li>
                 <li>
                   <a href="">Returns & Refunds</a>
-                </li>
+                </li> */}
               </ul>
             </div>
 

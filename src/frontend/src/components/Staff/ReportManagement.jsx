@@ -170,7 +170,7 @@ const ReportManagement = () => {
           </header>
         </div>
 
-        <div className="table-container">
+        <div className="table-container table-responsive">
           {reports.length > 0 ? (
             <table className="issues-table">
               <thead>
@@ -181,6 +181,7 @@ const ReportManagement = () => {
                   <th>Detail</th>
                   <th>Created</th>
                   <th>Updated</th>
+                  <th>Status</th>
                   <th></th>
                   {/* <th></th> */}
                 </tr>
@@ -204,19 +205,45 @@ const ReportManagement = () => {
                     </td>
                     <td>{formatDate(report.created)}</td>
                     <td>{formatDate(report.updated)}</td>
+                    <td >
+                      {report.Status === 'open' ? (
+                        <span className="badge bg-success-subtle text-success">{report.Status}</span>
+                      ) : (
+                        <span className="badge bg-danger-subtle text-danger">{report.Status}</span>
+                      )}
+                    </td>
                     <td>
                       <div className="action">
-                        <button
-                          onClick={() =>
-                            handleOpenResponseModal(report.ReportID)
-                          }
-                          className="btn-confirm"
-                          style={{
-                            padding: "10px",
-                          }}
-                        >
-                          Response
-                        </button>
+
+                        {report.Status === 'open' ? (
+                          <button
+                            onClick={() =>
+                              handleOpenResponseModal(report.ReportID)
+                            }
+                            className="btn-confirm"
+                            style={{
+                              padding: "10px",
+                            }}
+                          >
+                            Response
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() =>
+                              handleOpenResponseModal(report.ReportID)
+                            }
+                            className="btn-confirm"
+                            disabled
+                            style={{
+                              padding: "10px",
+                              cursor: 'not-allowed',
+                              opacity: 0.5,
+                            }}
+                          >
+                            Response
+                          </button>
+                        )}
+
                       </div>
                     </td>
                     {/* <td>
@@ -324,7 +351,7 @@ const ReportManagement = () => {
           )}
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 

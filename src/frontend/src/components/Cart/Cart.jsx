@@ -63,6 +63,16 @@ export const Cart = ({ isMember }) => {
 
   const handleMemberOrderAction = async () => {
     try {
+      if (userFormData.Name.length === 0 ||
+        userFormData.Email.length === 0 ||
+        userFormData.Phone.length === 0 ||
+        userFormData.Address.length === 0) {
+        toast.error("Please input all order info fields", {
+          theme: "colored",
+        });
+        setIsOpen(false);
+        return;
+      }
       setIsConfirmLoading(true);
       // const MemberToken = 'Bearer ' + localStorage.getItem('token');
       const OrderInfo = {
