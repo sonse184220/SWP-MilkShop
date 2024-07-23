@@ -62,7 +62,7 @@ const ProductBar = () => {
     return (
         <div className="product-bar">
             <div className='header'>
-                <h2 className='title'>Products</h2>
+                <h2 className='title'>New Products</h2>
                 <Link to={"/Customer/Products"} className="view-all">
                     View all
                 </Link>

@@ -233,7 +233,7 @@ const ProductDetail = ({ isMember }) => {
                 // }
             } else {
                 setInWishlist(prevState => !prevState);
-                const response = await RemoveWishlist(MemberToken, userId, ProductID);
+                const response = await RemoveWishlist(MemberToken, ProductID);
                 console.log(response.data.msg);
                 if (response.data.msg) {
                     toast.success('Removed from wishlist', {

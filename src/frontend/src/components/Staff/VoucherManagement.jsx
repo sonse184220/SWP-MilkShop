@@ -117,7 +117,7 @@ const VoucherManagement = () => {
       isNaN(voucherData.discount) ||
       isNaN(voucherData.quantity) ||
       voucherData.discount <= 0 ||
-      voucherData.discount > 20 ||
+      voucherData.discount > 100 ||
       voucherData.quantity <= 1 ||
       !voucherData.expiration ||
       !voucherData.content
