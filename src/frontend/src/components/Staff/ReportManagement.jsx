@@ -182,7 +182,7 @@ const ReportManagement = () => {
                   <th>Created</th>
                   <th>Updated</th>
                   <th></th>
-                  <th></th>
+                  {/* <th></th> */}
                 </tr>
               </thead>
               <tbody>
@@ -219,17 +219,17 @@ const ReportManagement = () => {
                         </button>
                       </div>
                     </td>
-                    <td>
+                    {/* <td>
                       <div className="action">
                         <button
                           onClick={"() => handleDisable(user.UserID)"}
                           className="btn-confirm"
-                        // style={{ backgroundColor: 'red' }}
+                        style={{ backgroundColor: 'red' }}
                         >
                           Solve
                         </button>
                       </div>
-                    </td>
+                    </td> */}
                   </tr>
                 ))}
               </tbody>

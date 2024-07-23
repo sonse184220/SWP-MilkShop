@@ -4,15 +4,14 @@ import { NavLink, useNavigate, Link, useLocation } from "react-router-dom";
 import { FaSignInAlt } from "react-icons/fa";
 import { Logout } from "../../services/login/logout";
 
-//prop onLogin chuyền từ app.js -> HomePage.jsx -> Header.jsx
-//dùng để set state isLogin
+
 export function Header({ onLogin, isMember }) {
   const navigate = useNavigate();
 
   const location = useLocation();
 
   const headerRef = useRef(null);
-  // const headerRef = React.createRef();
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -22,7 +21,6 @@ export function Header({ onLogin, isMember }) {
     const handleScroll = () => {
       const header = headerRef.current;
       if (header) {
-        // Check if header is not null
         if (window.scrollY > 0) {
           header.classList.add("background-header");
         } else {

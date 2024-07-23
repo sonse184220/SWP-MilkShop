@@ -26,12 +26,12 @@ const TokenHandler = ({ children }) => {
 
     useEffect(() => {
         if (token) {
-            // If there's a token, store it and remove from URL
+
             console.log('home token')
             // sessionStorage.setItem('token', token);
             navigate('/Customer/home', { replace: true, state: { token } });
         } else if (tempUserToken) {
-            // If there's a tempUserToken, store it and redirect to complete-registration
+
             // sessionStorage.setItem('tempUserToken', tempUserToken);
             navigate('/Customer/complete-registration', { replace: true, state: { tempUserToken, showLoginSuccess: true } });
             console.log('complete token')

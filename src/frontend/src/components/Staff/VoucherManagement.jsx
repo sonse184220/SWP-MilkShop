@@ -136,7 +136,7 @@ const VoucherManagement = () => {
         fetchVouchers();
         setIsAddOpen(false);
         setNewVoucher({
-          Discount: "", // Clear input fields after successful addition
+          Discount: "",
           Quantity: "",
           Expiration: "",
           Content: "",

@@ -140,7 +140,7 @@ export const Wishlist = ({ isMember }) => {
                 <div className="wishlist-item-count">
                     {wishlistItems.length + ' items in wishlist'}
                 </div>
-                <div className="wishlish-table-wrapper aos-init aos-animate" data-aos="fade-up" data-aos-delay="0">
+                <div className="wishlish-table-wrapper aos-init aos-animate" >
                     <div className="container" style={{ width: '80%' }}>
                         <div className="row">
                             <div className="col-12">
@@ -216,15 +216,15 @@ export const Wishlist = ({ isMember }) => {
                 </div>
             </div>
 
-            <div className={`modal fade ${showModal ? 'show' : ''}`} id="modalAddcart" tabIndex="-1" style={{ display: showModal ? 'block' : 'none' }} aria-hidden={!showModal} aria-modal={showModal ? 'true' : undefined} role={showModal ? 'dialog' : undefined}>
-                <div className="modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div className={`modal fade ${showModal ? 'show' : ''}`} id="modalAddcart" style={{ display: showModal ? 'block' : 'none' }} >
+                <div className="modal-dialog modal-dialog-centered modal-xl" >
                     <div className="modal-content">
                         <div className="modal-body">
                             <div className="container-fluid">
                                 <div className="row">
                                     <div className="col text-right">
-                                        <button type="button" className="close modal-close" data-bs-dismiss="modal" aria-label="Close" onClick={closeModal}>
-                                            <span aria-hidden="true"><i className="fa fa-times"></i></span>
+                                        <button type="button" className="close modal-close" onClick={closeModal}>
+                                            <span ><i className="fa fa-times"></i></span>
                                         </button>
                                     </div>
                                 </div>
@@ -249,7 +249,7 @@ export const Wishlist = ({ isMember }) => {
                                         <ul className="modal-add-cart-product-shipping-info">
                                             <li><strong><i className="icon-shopping-cart"></i> There Are {CartItems.length} Items In Your Cart.</strong></li>
                                             <li><strong>TOTAL PRICE: </strong> <span>{calculateTotalPrice().toLocaleString()} VND</span></li>
-                                            <li className="modal-continue-button"><a href="/Customer/home" data-bs-dismiss="modal">CONTINUE SHOPPING</a></li>
+                                            <li className="modal-continue-button"><a href="/Customer/home" >CONTINUE SHOPPING</a></li>
                                         </ul>
                                     </div>
                                 </div>

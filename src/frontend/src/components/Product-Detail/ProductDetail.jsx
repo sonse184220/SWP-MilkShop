@@ -149,17 +149,17 @@ const ProductDetail = ({ isMember }) => {
                     console.log('adddddddddddddddd')
                 }
             } else {
-                // Handle localStorage cart for non-members
+
                 let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
 
-                // Check if the product is already in the cart
+
                 const existingProductIndex = cart.findIndex(item => item.ProductID === ProductID);
 
                 if (existingProductIndex !== -1) {
-                    // If the product exists, update the quantity
+
                     cart[existingProductIndex].CartQuantity += quantity;
                 } else {
-                    // If the product doesn't exist, add it to the cart
+
                     cart.push({
                         ProductID: CurrentProduct.ProductID,
                         Name: CurrentProduct.Name,
@@ -169,7 +169,7 @@ const ProductDetail = ({ isMember }) => {
                     });
                 }
 
-                // Save the updated cart back to localStorage
+
                 sessionStorage.setItem('cart', JSON.stringify(cart));
 
                 toast.success('Added to cart', {
@@ -351,9 +351,9 @@ const ProductDetail = ({ isMember }) => {
 
     const decodeContent = (content) => {
         if (!content) return '';
-        // First, decode the HTML entities
+
         const decodedContent = he.decode(content);
-        // Then, remove any HTML tags
+
         return decodedContent.replace(/<[^>]*>/g, '');
     };
 
@@ -465,7 +465,7 @@ const ProductDetail = ({ isMember }) => {
                                     <div style={{ height: '15px' }}>{PreOrderFormData.Address.length === 0 && <p className="pOinfo-error-message">*Please input name</p>}</div>
                                 </form>
                             </div>
-                            <a onClick={handlePreOrderAction} className="btn btn-block btn-lg btn-black-default-hover" data-bs-toggle="modal" data-bs-target="#modalAddcart">
+                            <a onClick={handlePreOrderAction} className="btn btn-block btn-lg btn-black-default-hover" >
                                 {isPreOrderLoading ? (
                                     <div className="oval-container">
                                         <Oval
@@ -512,7 +512,7 @@ const ProductDetail = ({ isMember }) => {
                                             alt={CurrentProduct.Name}
                                         />
                                     </div>
-                                    <div className="product-details-content-area product-details--golden aos-init aos-animate detail-info" data-aos="fade-up" data-aos-delay="200">
+                                    <div className="product-details-content-area product-details--golden aos-init aos-animate detail-info" >
                                         <div className="product-details-text">
                                             <h4 className="title">{CurrentProduct.Name}</h4>
                                             <div className="price">{CurrentProduct.Price.toLocaleString()} VND</div>
@@ -568,8 +568,7 @@ const ProductDetail = ({ isMember }) => {
                                                             href="#"
                                                             onClick={(e) => { e.preventDefault(); setIsOpenPreOrder(true) }}
                                                             className="btn btn-block btn-lg btn-black-default-hover"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#modalAddcart"
+
                                                         >
                                                             Pre-Order
                                                         </a>
@@ -578,8 +577,7 @@ const ProductDetail = ({ isMember }) => {
                                                             href="#"
                                                             onClick={handleAddToCart}
                                                             className="btn btn-block btn-lg btn-black-default-hover"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#modalAddcart"
+
                                                         >
                                                             + Add To Cart
                                                         </a>
@@ -598,7 +596,7 @@ const ProductDetail = ({ isMember }) => {
                                         <div className="product-details-catagory mb-2">
                                             <span className="title">CATEGORY:</span>
                                             <ul>
-                                                <li><a href="#">{CurrentProduct.BrandName}</a></li>
+                                                <li><a href="#" disabled style={{ cursor: 'disabled' }}>{CurrentProduct.BrandName}</a></li>
                                                 {/* <li><a href="#">KITCHEN UTENSILS</a></li>
                                         <li><a href="#"></a></li> */}
                                             </ul>

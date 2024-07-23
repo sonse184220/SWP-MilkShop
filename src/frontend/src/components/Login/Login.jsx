@@ -126,7 +126,16 @@ const Login = ({ onLogin, showLogin }) => {
                     errorMessage = error.response.data || 'An error occurred';
                 else if (Array.isArray(error.response.data) && error.response.data.length > 0)
                     errorMessage = error.response.data[0];
-
+                if (error.response.data.error === 'Account is inactive. Please contact support.') {
+                    toast.error(error.response.data.error, {
+                        style: {
+                            backgroundColor: '#ef4444',
+                            color: '#ffffff',
+                            fontWeight: 'bold',
+                        },
+                    });
+                    return;
+                }
                 // setErrorMessage(errorMessage);
                 toast.error("Email/Phone Number or Password is incorrect. Please input again!", {
                     style: {

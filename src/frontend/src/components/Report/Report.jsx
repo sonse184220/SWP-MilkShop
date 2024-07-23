@@ -65,6 +65,8 @@ export function Report({ isMember }) {
         setPage(0);
     };
 
+
+
     return (
         <>
             <div><Header isMember={isMember} /></div>
@@ -77,8 +79,6 @@ export function Report({ isMember }) {
                 }}>
                 <TableContainer component={Paper} className="mb-4 overflow-hidden"
                     style={{
-
-
                         border: '1px solid #ddd;'
                     }}
                 >
@@ -89,8 +89,8 @@ export function Report({ isMember }) {
                                 <TableCell>ReportID</TableCell>
                                 <TableCell align="center">OrderType</TableCell>
                                 <TableCell align="center">OrderID</TableCell>
-                                <TableCell align="right">Status</TableCell>
-                                <TableCell align="right">Report Date</TableCell>
+                                <TableCell align="center">Status</TableCell>
+                                <TableCell align="center">Report Date</TableCell>
                                 <TableCell align="center">Update Date</TableCell>
                             </TableRow>
                         </TableHead>
@@ -110,8 +110,6 @@ export function Report({ isMember }) {
                         rowsPerPage={rowsPerPage}
                         // onRowsPerPageChange={handleChangeRowsPerPage}
                         rowsPerPageOptions={[]}
-                    // labelDisplayedRows={({ from, to, count }) => `${from}-${to} of ${count}`}    
-                    // ActionsComponent={TablePaginationActions}
                     />
                 </div>
             </div>
@@ -120,41 +118,24 @@ export function Report({ isMember }) {
     );
 };
 
-// function createData(name, calories, fat, carbs, protein, price) {
-//     return {
-//         name,
-//         calories,
-//         fat,
-//         carbs,
-//         protein,
-//         price,
-//         history: [
-//             {
-//                 date: '2020-01-05',
-//                 customerId: '11091700',
-//                 amount: 3,
-//             },
-//             {
-//                 date: '2020-01-02',
-//                 customerId: 'Anonymous',
-//                 amount: 1,
-//             },
-//         ],
-//     };
-// }
 
 function Row(props) {
     const { row } = props;
     const [open, setOpen] = React.useState(false);
 
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = date.toLocaleString('default', { month: 'short' });
+        const year = date.getFullYear();
+        return `${day} ${month}, ${year}`;
+    }
+
     return (
         <React.Fragment>
-            <TableRow
-            // sx={{ '& > *': { borderBottom: 'unset' } }}
-            >
+            <TableRow>
                 <TableCell>
                     <IconButton
-                        aria-label="expand row"
                         size="small"
                         onClick={() => setOpen(!open)}
                     >
@@ -164,11 +145,11 @@ function Row(props) {
                 <TableCell component="th" scope="row">
                     {row.ReportID}
                 </TableCell>
-                <TableCell align="right">{row.OrderType}</TableCell>
-                <TableCell align="right">{row.OrderID}</TableCell>
-                <TableCell align="right">{!row.StaffID ? 'Processing' : 'Done'}</TableCell>
-                <TableCell align="right">{row.created}</TableCell>
-                <TableCell align="right">{row.updated}</TableCell>
+                <TableCell align="center">{row.OrderType}</TableCell>
+                <TableCell align="center">{row.OrderID}</TableCell>
+                <TableCell align="center">{row.Status === 'open' ? 'Processing' : 'Done'}</TableCell>
+                <TableCell align="center">{formatDate(row.created)}</TableCell>
+                <TableCell align="center">{formatDate(row.updated)}</TableCell>
             </TableRow>
             <TableRow>
                 <TableCell
@@ -208,30 +189,6 @@ function Row(props) {
                                     />
                                 </div>
                             </div>
-                            {/* <Table size="small" aria-label="purchases">
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>Date</TableCell>
-                                        <TableCell>Customer</TableCell>
-                                        <TableCell align="right">Amount</TableCell>
-                                        <TableCell align="right">Total price ($)</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {row.history.map((historyRow) => (
-                                        <TableRow key={historyRow.date}>
-                                            <TableCell component="th" scope="row">
-                                                {historyRow.date}
-                                            </TableCell>
-                                            <TableCell>{historyRow.customerId}</TableCell>
-                                            <TableCell align="right">{historyRow.amount}</TableCell>
-                                            <TableCell align="right">
-                                                {Math.round(historyRow.amount * row.price * 100) / 100}
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table> */}
                         </Box>
                     </Collapse>
                 </TableCell>
@@ -239,53 +196,3 @@ function Row(props) {
         </React.Fragment>
     );
 }
-
-// Row.propTypes = {
-//     row: PropTypes.shape({
-//         calories: PropTypes.number.isRequired,
-//         carbs: PropTypes.number.isRequired,
-//         fat: PropTypes.number.isRequired,
-//         history: PropTypes.arrayOf(
-//             PropTypes.shape({
-//                 amount: PropTypes.number.isRequired,
-//                 customerId: PropTypes.string.isRequired,
-//                 date: PropTypes.string.isRequired,
-//             }),
-//         ).isRequired,
-//         name: PropTypes.string.isRequired,
-//         price: PropTypes.number.isRequired,
-//         protein: PropTypes.number.isRequired,
-//     }).isRequired,
-// };
-
-// const rows = [
-//     createData('Frozen yoghurt', 159, 6.0, 24, 4.0, 3.99),
-//     createData('Ice cream sandwich', 237, 9.0, 37, 4.3, 4.99),
-//     createData('Eclair', 262, 16.0, 24, 6.0, 3.79),
-//     createData('Cupcake', 305, 3.7, 67, 4.3, 2.5),
-//     createData('Gingerbread', 356, 16.0, 49, 3.9, 1.5),
-// ];
-
-// export default function CollapsibleTable() {
-//     return (
-//         <TableContainer component={Paper}>
-//             <Table aria-label="collapsible table">
-//                 <TableHead>
-//                     <TableRow>
-//                         <TableCell />
-//                         <TableCell>Dessert (100g serving)</TableCell>
-//                         <TableCell align="right">Calories</TableCell>
-//                         <TableCell align="right">Fat&nbsp;(g)</TableCell>
-//                         <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-//                         <TableCell align="right">Protein&nbsp;(g)</TableCell>
-//                     </TableRow>
-//                 </TableHead>
-//                 <TableBody>
-//                     {rows.map((row) => (
-//                         <Row key={row.name} row={row} />
-//                     ))}
-//                 </TableBody>
-//             </Table>
-//         </TableContainer>
-//     );
-// }
