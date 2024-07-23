@@ -104,7 +104,7 @@ const ReportManagement = () => {
       const response = await UpdateReport(
         StaffToken,
         currentReport.ReportID,
-        updateReport
+        updateReport.response
       );
       if (response.data.length > 0) {
         setIsUpdateOpen(false);

@@ -56,11 +56,11 @@ function Footer() {
               <h4>About Us</h4>
               <ul>
                 <li>
-                  <a href="#">
-                    We are dedicated to providing high-quality milk products for
-                    mothers and children, ensuring optimal nutrition at every
-                    stage of growth and development.
-                  </a>
+                  {/* <a href="#"> */}
+                  We are dedicated to providing high-quality milk products for
+                  mothers and children, ensuring optimal nutrition at every
+                  stage of growth and development.
+                  {/* </a> */}
                 </li>
               </ul>
             </div>
